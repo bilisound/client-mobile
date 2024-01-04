@@ -1,0 +1,91 @@
+{
+  "expo": {
+    "name": "Bilisound",
+    "slug": "bilisound-client-mobile",
+    "version": "1.0.0-rc1",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "bilisound",
+    "userInterfaceStyle": "automatic",
+    "primaryColor": "#00ba9d",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#8EBEA7"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Bilisound 需要通过摄像头扫描二维码",
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      },
+      "bundleIdentifier": "moe.bilisound.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#97E7DC"
+      },
+      "permissions": [
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.CAMERA"
+      ],
+      "package": "moe.bilisound.app",
+      "splash": {
+        "resizeMode": "cover",
+        "backgroundColor": "#8EBEA7",
+        "mdpi": "./assets/images/splash-mdpi.png",
+        "hdpi": "./assets/images/splash-hdpi.png",
+        "xhdpi": "./assets/images/splash-xhdpi.png",
+        "xxhdpi": "./assets/images/splash-xxhdpi.png",
+        "xxxhdpi": "./assets/images/splash.png"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Bilisound 需要通过摄像头扫描二维码"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 33,
+            "targetSdkVersion": 33,
+            "minSdkVersion": 28,
+            "buildToolsVersion": "33.0.2",
+            "usesCleartextTraffic": true,
+            "enableProguardInReleaseBuilds": true
+          },
+          "ios": {
+            "deploymentTarget": "15.0"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "e35f5bd0-80cc-4e24-a130-b66b7145ff7a"
+      }
+    }
+  }
+}

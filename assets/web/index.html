@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-hans-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body style="background-color: transparent">
+<div class="markdown-body">
+    <!--<h1>示例页面</h1>
+    <h2>标题 Header</h2>
+    <h1>一级标题 H1</h1>
+    <h2>二级标题 H2</h2>
+    <h3>三级标题 H3</h3>
+    <h4>四级标题 H4</h4>
+    <h5>五级标题 H5</h5>
+    <h6>六级标题 H6</h6>
+    <h2>正文 Paragraph</h2>
+    <p>我能够吞下玻璃而不伤身体。The quick brown fox jumps over the lazy dog. 我能够吞下玻璃而不伤身体。The quick brown
+        fox jumps over the lazy dog. 我能够吞下玻璃而不伤身体。The quick brown fox jumps over the lazy dog.
+        我能够吞下玻璃而不伤身体。The quick brown fox jumps over the lazy dog. 我能够吞下玻璃而不伤身体。The quick brown
+        fox jumps over the lazy dog. 我能够吞下玻璃而不伤身体。The quick brown fox jumps over the lazy dog.
+        我能够吞下玻璃而不伤身体。The quick brown fox jumps over the lazy dog. 我能够吞下玻璃而不伤身体。The quick brown
+        fox jumps over the lazy dog. 我能够吞下玻璃而不伤身体。The quick brown fox jumps over the lazy dog.
+        我能够吞下玻璃而不伤身体。The quick brown fox jumps over the lazy dog. </p>
+    <h3>强调 Emphasis</h3>
+    <p>强调包括<strong>加重强调</strong>与<em>强调</em>。</p>
+    <p>混合起来的<em><strong>特殊强调</strong></em>也不错。</p>
+    <h3>引用 Quotes</h3>
+    <blockquote>
+        <p>Markdown 是一种轻量级标记语言，创始人为约翰·格鲁伯（John Gruber）。
+            它允许人们“使用易读易写的纯文本格式编写文档，然后转换成有效的 XHTML（或者 HTML）文档”。
+            这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。</p>
+    </blockquote>
+    <p>也可以嵌入引用</p>
+    <blockquote>
+        <p>另一个引用</p>
+        <blockquote>
+            <p>Markdown 是一种轻量级标记语言，创始人为约翰·格鲁伯（John Gruber）。
+                它允许人们“使用易读易写的纯文本格式编写文档，然后转换成有效的 XHTML（或者 HTML）文档”。
+                这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。</p>
+        </blockquote>
+        <p>非常容易！</p>
+    </blockquote>
+    <p>也可以嵌入代码</p>
+    <blockquote>
+        <p>一个 Python 循环</p>
+        <pre><code>for i in range(0, 5):
+    print i
+</code></pre>
+    </blockquote>
+    <h3>列表 List</h3>
+    <h4>无序列表</h4>
+    <ul>
+        <li>一个无序列表项</li>
+        <li>另一个无序列表项</li>
+        <li>以及又一个</li>
+    </ul>
+    <h4>有序列表</h4>
+    <ol>
+        <li>这是一个有序列表</li>
+        <li>我排在第二位</li>
+        <li>我是说楼上各位都是垃圾</li>
+    </ol>
+    <h4>分行的无序列表</h4>
+    <ul>
+        <li>无序列表可以<br>分成多行<br>以及更多行</li>
+        <li>就像我现在做的<br>这样</li>
+    </ul>
+    <h4>分行的有序列表</h4>
+    <ol>
+        <li>有序列表也<br>可以分行</li>
+        <li>这是另一项<br>还是再分一行吧
+            <blockquote>
+                <p>甚至加入一行引用</p>
+            </blockquote>
+        </li>
+    </ol>
+    <h2>代码 Codes</h2>
+    <p>代码可以直接写在正文中，例如<code>echo -e "\033[32mHello"</code>或者<code>looooool</code>，也可以写成代码块的形式，例如
+    </p>
+    <pre><code>def get_header(self):
+    page_list = []
+    for page in self.global_pages:
+        if page['hidden']:
+            continue
+        else:
+            page_info = {
+                'url': self._page_url + page['url'],
+                'title': page['title']
+            }
+            if not page['title']:
+                page_info['title'] = page['url']
+            page_list.append(page_info)
+    return page_list
+</code></pre>
+    <h2>链接 Links</h2>
+    <p>行内式链接：<a href="http://github.com/">GitHub</a></p>
+    <p>参考式链接：<a href="https://www.wikipedia.org/">Wikipedia</a></p>
+    <p>电子邮件：<a href="mailto:email@example.com">email@example.com</a></p>
+    <h2>图片 Images</h2>
+    <p>图片与链接的语法非常接近。</p>
+    <p><img src="./assets/723044-1.png" alt="test"></p>
+    <h2>水平线</h2>
+    <hr>
+    <hr>
+    <hr>
+    <h2>表格 Tables</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>一</th>
+            <th>二</th>
+            <th>三</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>选项1</td>
+            <td>选项1</td>
+            <td>选项1</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>选项2</td>
+            <td>选项2</td>
+            <td>选项2</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>选项3</td>
+            <td>选项3</td>
+            <td>选项3</td>
+        </tr>
+        </tbody>
+    </table>-->
+    <h2 style="margin-top: 0">常见问题</h2>
+    <p>Q：Bilisound 会很费流量吗？</p>
+    <p>A：不会，因为我们直接单独获取视频的音频流数据，省去了对本应用无用的视频流数据。通常情况下，一个 4 分钟的音乐视频只需要消耗 3~10 MB 的流量。</p>
+    <p class="ios-only">Q：我该如何用手机自带音乐播放器播放保存下来的音频文件？</p>
+    <p class="ios-only">A：由于 iOS 的系统限制，我们无法直接将音频文件保存到手机自带的音乐应用上。你需要先将音频文件保存到手机本地或 iCloud，然后用电脑将音频文件导出，再导入到手机的 iTunes 媒体库中。</p>
+    <p>Q：为什么你们的软件转出来的文件是 m4a，我从来没见过这个格式，我的设备支持吗？</p>
+    <p>A：由于时代的进步，我们采用了比 MP3 更先进的 AAC（MPEG-4 Audio）编码技术，这个编码能将音频在 1-2 秒内从视频中提取出来，并且提供比
+        MP3 更好的音质以及更小的文件。 m4a 可以在索尼 WALKMAN，iPod，MP3，MP4（如果无法识别，请将其扩展名改为
+        aac）等设备上正常播放，同时也可以在手机上正常播放，所以不存在兼容性问题。</p>
+    <p>推荐阅读：</p>
+    <ul>
+        <li><a href="https://www.zhihu.com/question/19895040">iTunes Store 中销售的歌曲为什么采用 AAC（.m4a）格式而不是
+            MP3 或其他格式？</a>&nbsp;(via 知乎)
+        </li>
+        <li><a href="https://www.zhihu.com/question/20303076">为什么说「64kbps HE-AAC 编码的音频文件效果可以完爆低音质
+            MP3」？</a>&nbsp;(via 知乎)
+        </li>
+    </ul>
+    <h2>免责申明</h2>
+    <ul>
+        <li>本应用为 Bilisound 团队出于兴趣所编写，任何第三方不得盗用或者以此盈利。</li>
+        <li>利用本应用下载的音频只能用于个人学习、研究或者欣赏，请勿利用本程序进行违法违规行为。</li>
+        <li>用户在使用本应用提取音频后，不得将音频分享和传播。</li>
+    </ul>
+</div>
+<!--    <div style="width: 100px; height: 600px; background-color: red"></div>-->
+</body>
+</html>
