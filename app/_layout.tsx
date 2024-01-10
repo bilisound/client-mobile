@@ -63,22 +63,16 @@ SplashScreen.preventAutoHideAsync();
 
 const RootLayoutNav = () => {
     const colorScheme = useColorScheme();
-    // const themeType = useTheme();
 
     // 初始化界面
-    useEffect(() => {
-        (async () => {
-            // https://stackoverflow.com/questions/74999835/trying-to-make-the-android-navigation-bar-transparent-in-expo
-            if (Platform.OS === "android") {
-                await NavigationBar.setPositionAsync("absolute");
-                await NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#00262401" : "#ffffff01");
-            }
-        })();
-    }, [colorScheme]);
-
-    useEffect(() => {
-        SystemUI.setBackgroundColorAsync(colorScheme === "dark" ? "#000" : "#00a48e").then(() => {});
-    }, [colorScheme]);
+    (async ()=> {
+        // https://stackoverflow.com/questions/74999835/trying-to-make-the-android-navigation-bar-transparent-in-expo
+        if (Platform.OS === "android") {
+            await NavigationBar.setPositionAsync("absolute");
+            await NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#00262401" : "#ffffff01");
+        }
+        await SystemUI.setBackgroundColorAsync(colorScheme === "dark" ? "#000" : "#00a48e");
+    })();
 
     const modalSettings: any =
         Platform.OS === "ios"
@@ -94,7 +88,6 @@ const RootLayoutNav = () => {
 
     return (
         <>
-            {/* <IconRegistry icons={EvaIconsPack} /> */}
             <GluestackUIProvider config={config} colorMode={(colorScheme ?? "light") as COLORMODES}>
                 <SafeAreaProvider>
                     <Stack

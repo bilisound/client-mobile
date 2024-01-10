@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, {useCallback, useEffect, useRef} from "react";
 import { router } from "expo-router";
 import WebView from "react-native-webview";
 import { useAssets } from "expo-asset";
@@ -16,8 +16,6 @@ const History: React.FC = () => {
     const colorScheme = useColorScheme();
     const safeAreaInsets = useSafeAreaInsets();
 
-    const webviewRef = useRef<WebView>(null);
-
     const colorSchemeJSON = JSON.stringify(colorScheme);
 
     const getSetMarginJavaScript = () => `
@@ -33,15 +31,12 @@ const History: React.FC = () => {
         }
     `;
 
-    useEffect(() => {
-        webviewRef.current?.injectJavaScript(getSetColorSchemeJavaScript());
-    }, [colorScheme]);
-
-    useEffect(() => {
-        webviewRef.current?.injectJavaScript(`
+    const webviewRef = useCallback((item: WebView | null) => {
+        item?.injectJavaScript(getSetColorSchemeJavaScript());
+        item?.injectJavaScript(`
             ${getSetMarginJavaScript()}
         `);
-    }, [safeAreaInsets]);
+    },[colorScheme, safeAreaInsets]);
 
     return (
         <CommonFrameNew
