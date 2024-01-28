@@ -12,7 +12,7 @@ import useCommonColors from "../../hooks/useCommonColors";
 
 const SearchIcon = ({ color }: { color: string }) => <FontAwesome5 name="search" size={20} color={color} />;
 const HistoryIcon = ({ color }: { color: string }) => <Ionicons name="play-circle" size={24} color={color} />;
-const SettingsIcon = ({ color }: { color: string }) => <Ionicons name="md-settings-sharp" size={22} color={color} />;
+const SettingsIcon = ({ color }: { color: string }) => <Ionicons name="settings-sharp" size={22} color={color} />;
 
 const TabBar = (props: BottomTabBarProps) => (
     <View>

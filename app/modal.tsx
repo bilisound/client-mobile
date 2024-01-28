@@ -16,6 +16,14 @@ const ModalScreen: React.FC = () => {
         })
         .runOnJS(true);
 
+    if (Platform.OS === "ios") {
+        return (
+            <Box w="100%" h="100%">
+                <AudioPlayerModal />
+            </Box>
+        );
+    }
+
     return (
         <GestureDetector gesture={flingGesture}>
             <Box w="100%" h="100%">

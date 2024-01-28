@@ -20,6 +20,7 @@ import { loadTrackData } from "../utils/track-data";
 import { config } from "../config/gluestack-ui.config";
 import log from "../utils/logger";
 import useSettingsStore from "../store/settings";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 export {
     // Catch any errors thrown by the Layout component.
