@@ -1,12 +1,13 @@
 import { Alert, StatusBar } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { BarCodeScannedCallback, BarCodeScanner, PermissionStatus } from "expo-barcode-scanner";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Box, ButtonText, Pressable, Text, Button } from "@gluestack-ui/themed";
 import { Ionicons } from "@expo/vector-icons";
 import { resolveVideo } from "../utils/format";
 import log from "../utils/logger";
+import { CameraView, Camera, PermissionStatus } from "expo-camera/next";
+import {BarcodeScanningResult} from "expo-camera/build/next/Camera.types";
 
 const ScannerPage: React.FC = () => {
     const [hasPermission, setHasPermission] = useState<PermissionStatus | null>(null);
@@ -15,7 +16,7 @@ const ScannerPage: React.FC = () => {
     const safeAreaInsets = useSafeAreaInsets();
 
     const getBarCodeScannerPermissions = async () => {
-        const { status } = await BarCodeScanner.requestPermissionsAsync();
+        const { status } = await Camera.requestCameraPermissionsAsync();
         setHasPermission(status);
     };
 
@@ -45,7 +46,7 @@ const ScannerPage: React.FC = () => {
         getBarCodeScannerPermissions();
     }, []);
 
-    const handleBarCodeScanned: BarCodeScannedCallback = async (args) => {
+    const handleBarCodeScanned = async (args: BarcodeScanningResult) => {
         if (scanned.current) {
             return;
         }
@@ -158,9 +159,11 @@ const ScannerPage: React.FC = () => {
                     );
                 } */
                 return (
-                    <BarCodeScanner
-                        onBarCodeScanned={handleBarCodeScanned}
-                        barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+                    <CameraView
+                        onBarcodeScanned={handleBarCodeScanned}
+                        barcodeScannerSettings={{
+                            barCodeTypes: ["qr"]
+                        }}
                         style={{
                             position: "absolute",
                             left: 0,
