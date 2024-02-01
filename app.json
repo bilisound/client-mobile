@@ -54,7 +54,7 @@
     "plugins": [
       "expo-router",
       [
-        "expo-barcode-scanner",
+        "expo-camera",
         {
           "cameraPermission": "Bilisound 需要通过摄像头扫描二维码"
         }

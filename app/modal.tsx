@@ -1,5 +1,5 @@
 import React from "react";
-import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler";
+import {Directions, Gesture, GestureDetector, GestureHandlerRootView} from "react-native-gesture-handler";
 import { Box, Text } from "@gluestack-ui/themed";
 import { router } from "expo-router";
 import { Platform } from "react-native";
@@ -25,11 +25,13 @@ const ModalScreen: React.FC = () => {
     }
 
     return (
-        <GestureDetector gesture={flingGesture}>
-            <Box w="100%" h="100%">
-                <AudioPlayerModal />
-            </Box>
-        </GestureDetector>
+        <GestureHandlerRootView>
+            <GestureDetector gesture={flingGesture}>
+                <Box w="100%" h="100%">
+                    <AudioPlayerModal />
+                </Box>
+            </GestureDetector>
+        </GestureHandlerRootView>
     );
 };
 export default ModalScreen;
