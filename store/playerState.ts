@@ -1,6 +1,4 @@
-import { createWithEqualityFn } from "zustand/traditional";
-import { shallow } from "zustand/shallow";
-import { State } from "react-native-track-player";
+import {create} from "zustand";
 
 export interface PlayingInformation {
     id: string;
@@ -21,14 +19,13 @@ export interface PlayerStateStoreMethods {
     setPlayingRequest: (playingRequest: PlayingInformation | null) => void;
 }
 
-const usePlayerStateStore = createWithEqualityFn<PlayerStateStoreProps & PlayerStateStoreMethods>()(
+const usePlayerStateStore = create<PlayerStateStoreProps & PlayerStateStoreMethods>()(
     (set, get) => ({
         playingRequest: null,
         setPlayingRequest: (playingRequest) => set(() => ({ playingRequest })),
         playingNow: null,
         setPlayingNow: (playingNow) => set(() => ({ playingNow })),
     }),
-    shallow,
 );
 
 export default usePlayerStateStore;

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {memo, useEffect} from "react";
 import { ActivityIndicator, useWindowDimensions, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useRequest } from "ahooks";
@@ -31,7 +31,7 @@ interface ListEntryProps {
     item: GetBilisoundMetadataResponse["pages"][number];
 }
 
-const ListEntry: React.FC<ListEntryProps> = ({
+const ListEntryRaw: React.FC<ListEntryProps> = ({
     isActiveTrack,
     isDownloaded,
     isCurrentRequesting,
@@ -162,6 +162,16 @@ const ListEntry: React.FC<ListEntryProps> = ({
         </Pressable>
     );
 };
+
+const ListEntry = memo(ListEntryRaw, (a, b) => {
+    return (
+        a.isActiveTrack === b.isActiveTrack &&
+        a.isDownloaded === b.isDownloaded &&
+        a.isCurrentRequesting === b.isCurrentRequesting &&
+        a.isPlaying === b.isPlaying &&
+        a.item === b.item
+    )
+});
 
 const QueryIdScreen: React.FC = () => {
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();

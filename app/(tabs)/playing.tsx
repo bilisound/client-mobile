@@ -1,12 +1,12 @@
-import { StyleSheet, useColorScheme } from "react-native";
-import React, { useRef, useState } from "react";
-import TrackPlayer, { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
-import { Track } from "react-native-track-player/lib/interfaces";
-import { Entypo, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { remove } from "react-native-track-player/lib/trackPlayer";
-import { router } from "expo-router";
-import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import {useColorScheme} from "react-native";
+import React, {memo, useRef, useState} from "react";
+import TrackPlayer, {State, useActiveTrack, usePlaybackState} from "react-native-track-player";
+import {Track} from "react-native-track-player/lib/interfaces";
+import {Entypo, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
+import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {remove} from "react-native-track-player/lib/trackPlayer";
+import {router} from "expo-router";
+import {FlashList, ListRenderItem} from "@shopify/flash-list";
 import {
     Actionsheet,
     ActionsheetBackdrop,
@@ -16,24 +16,24 @@ import {
     ActionsheetItem,
     ActionsheetItemText,
     Box,
-    Text,
-    Pressable,
     Button,
-    ButtonText,
-    CheckIcon,
-    CheckboxIndicator,
-    CheckboxIcon,
-    Checkbox,
-    CheckboxLabel,
     ButtonIcon,
+    ButtonText,
+    Checkbox,
+    CheckboxIcon,
+    CheckboxIndicator,
+    CheckboxLabel,
+    CheckIcon,
+    Pressable,
+    Text,
 } from "@gluestack-ui/themed";
-import { Image } from "expo-image";
-import { formatSecond, saveFile } from "../../utils/misc";
-import { handleTogglePlay } from "../../utils/player-control";
+import {Image} from "expo-image";
+import {formatSecond, saveFile} from "../../utils/misc";
+import {handleTogglePlay} from "../../utils/player-control";
 import useTracks from "../../hooks/useTracks";
-import { getFileName } from "../../utils/format";
+import {getFileName} from "../../utils/format";
 import useSettingsStore from "../../store/settings";
-import { COMMON_FRAME_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "../../constants/style";
+import {COMMON_FRAME_BUTTON_STYLE, COMMON_TOUCH_COLOR} from "../../constants/style";
 import useCommonColors from "../../hooks/useCommonColors";
 import CommonFrameNew from "../../components/CommonFrameNew";
 import log from "../../utils/logger";
@@ -52,7 +52,7 @@ interface PlayListItemProps {
 }
 
 // 播放列表项目
-const PlayListItem: React.FC<PlayListItemProps> = ({
+const PlayListItemRaw: React.FC<PlayListItemProps> = ({
     index,
     item,
     isThisSong,
@@ -155,6 +155,18 @@ const PlayListItem: React.FC<PlayListItemProps> = ({
         </Pressable>
     );
 };
+
+const PlayListItem = memo(PlayListItemRaw, (a, b) => {
+    return (
+        a.index === b.index &&
+        a.item === b.item &&
+        a.isThisSong === b.isThisSong &&
+        a.isPlaying === b.isPlaying &&
+        a.isEditing === b.isEditing &&
+        a.isSelected === b.isSelected &&
+        a.trackLength === b.trackLength
+    )
+});
 
 const TabPlaying: React.FC = () => {
     const playbackState = usePlaybackState();
