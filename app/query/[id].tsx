@@ -22,11 +22,19 @@ import useCommonColors from "../../hooks/useCommonColors";
 import CommonFrameNew from "../../components/CommonFrameNew";
 import { BILIBILI_VIDEO_URL_PREFIX } from "../../constants/network";
 
+function PlayingIcon() {
+    // 播放列表渲染
+    const playingState = usePlaybackState().state;
+    const isPlaying = playingState === State.Playing;
+    const { accentColor } = useCommonColors();
+
+    return <FontAwesome5 name={isPlaying ? "pause" : "play"} size={20} color={accentColor} />;
+}
+
 interface ListEntryProps {
     isActiveTrack: boolean;
     isDownloaded: boolean;
     isCurrentRequesting: boolean;
-    isPlaying: boolean;
     onRequestPlay: () => void;
     item: GetBilisoundMetadataResponse["pages"][number];
 }
@@ -35,7 +43,6 @@ const ListEntryRaw: React.FC<ListEntryProps> = ({
     isActiveTrack,
     isDownloaded,
     isCurrentRequesting,
-    isPlaying,
     onRequestPlay,
     item,
 }) => {
@@ -143,7 +150,7 @@ const ListEntryRaw: React.FC<ListEntryProps> = ({
                     {isCurrentRequesting ? (
                         <ActivityIndicator color={accentColor} />
                     ) : (
-                        <FontAwesome5 name={isPlaying ? "pause" : "play"} size={20} color={accentColor} />
+                        <PlayingIcon />
                     )}
                 </Box>
                 {/* {downloadEntry ? (
@@ -168,7 +175,6 @@ const ListEntry = memo(ListEntryRaw, (a, b) => {
         a.isActiveTrack === b.isActiveTrack &&
         a.isDownloaded === b.isDownloaded &&
         a.isCurrentRequesting === b.isCurrentRequesting &&
-        a.isPlaying === b.isPlaying &&
         a.item === b.item
     )
 });
@@ -216,9 +222,6 @@ const QueryIdScreen: React.FC = () => {
     }));
 
     // 播放列表渲染
-    const playingState = usePlaybackState().state;
-    const isPlaying = playingState === State.Playing;
-
     const renderItem = ({ item }: { item: GetBilisoundMetadataResponse["pages"][number] }) => {
         const rootData = data!.data;
         const isActiveTrackMatch =
@@ -239,7 +242,6 @@ const QueryIdScreen: React.FC = () => {
             <ListEntry
                 isDownloaded={false}
                 isActiveTrack={isActiveTrack}
-                isPlaying={isPlaying}
                 isCurrentRequesting={isCurrentRequesting}
                 onRequestPlay={() => {
                     if (playingRequest) {
@@ -263,7 +265,7 @@ const QueryIdScreen: React.FC = () => {
     const dataLength = Math.max(dataList.length, 1);
     const activeTrackString = `${activeTrack?.bilisoundId}__${activeTrack?.bilisoundEpisode}`;
     const requestTrackString = `${playingRequest?.id}__${playingRequest?.episode}`;
-    const updateTriggerString = `${activeTrackString}__${requestTrackString}__${isPlaying}__${!!activeTrack}`;
+    const updateTriggerString = `${activeTrackString}__${requestTrackString}__${!!activeTrack}`;
 
     return (
         <CommonFrameNew
