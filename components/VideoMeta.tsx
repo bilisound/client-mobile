@@ -133,9 +133,8 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                         fontSize: 16,
                         fontWeight: "bold",
                         marginBottom: 16,
+                        lineHeight: 24
                     }}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
                     selectable
                 >
                     {meta.title}
