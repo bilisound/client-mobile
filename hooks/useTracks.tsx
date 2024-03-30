@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Track } from "react-native-track-player/lib/interfaces";
+import { Track } from "react-native-track-player";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { saveTrackData } from "../utils/track-data";
 import log from "../utils/logger";

@@ -1,5 +1,5 @@
 import TrackPlayer, { Event, State } from "react-native-track-player";
-import { getPlaybackState, getProgress } from "react-native-track-player/lib/trackPlayer";
+import {getPlaybackState, getProgress} from "react-native-track-player/src/trackPlayer";
 
 export async function handleTogglePlay() {
     if ((await TrackPlayer.getPlaybackState()).state === State.Playing) {

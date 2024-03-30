@@ -1,10 +1,8 @@
 import {useColorScheme} from "react-native";
 import React, {memo, useRef, useState} from "react";
-import TrackPlayer, {State, useActiveTrack, usePlaybackState} from "react-native-track-player";
-import {Track} from "react-native-track-player/lib/interfaces";
+import TrackPlayer, {State, Track, useActiveTrack, usePlaybackState} from "react-native-track-player";
 import {Entypo, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {remove} from "react-native-track-player/lib/trackPlayer";
 import {router} from "expo-router";
 import {FlashList, ListRenderItem} from "@shopify/flash-list";
 import {
@@ -37,6 +35,7 @@ import {COMMON_FRAME_BUTTON_STYLE, COMMON_TOUCH_COLOR} from "../../constants/sty
 import useCommonColors from "../../hooks/useCommonColors";
 import CommonFrameNew from "../../components/CommonFrameNew";
 import log from "../../utils/logger";
+import { remove } from "react-native-track-player/src/trackPlayer";
 
 interface PlayListItemProps {
     index: number;

@@ -1,6 +1,6 @@
 import RNFS from "react-native-fs";
 import TrackPlayer from "react-native-track-player";
-import { Track } from "react-native-track-player/lib/interfaces";
+import { Track } from "react-native-track-player";
 import { BILISOUND_OFFLINE_PATH, BILISOUND_PLAYLIST_PATH } from "../constants/file";
 
 export async function saveTrackData() {
