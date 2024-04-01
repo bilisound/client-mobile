@@ -21,6 +21,7 @@ import { config } from "../config/gluestack-ui.config";
 import log from "../utils/logger";
 import useSettingsStore from "../store/settings";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -62,6 +63,9 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+// Query Client
+const queryClient = new QueryClient();
+
 const RootLayoutNav = () => {
     const colorScheme = useColorScheme();
 
@@ -90,33 +94,35 @@ const RootLayoutNav = () => {
     return (
         <>
             <GluestackUIProvider config={config} colorMode={(colorScheme ?? "light") as COLORMODES}>
-                <SafeAreaProvider>
-                    <Stack
-                        screenOptions={{
-                            contentStyle: {
-                                backgroundColor: colorScheme === "dark" ? "#002624" : "#fff",
-                            },
-                        }}
-                    >
-                        <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: "slide_from_right" }} />
-                        <Stack.Screen
-                            name="query/[id]"
-                            options={{ headerShown: false, animation: "slide_from_right" }}
-                        />
-                        <Stack.Screen name="history" options={{ headerShown: false, animation: "slide_from_right" }} />
-                        {/* <Stack.Screen name="settings" options={{ headerShown: false }} /> */}
-                        <Stack.Screen name="about" options={{ headerShown: false, animation: "slide_from_right" }} />
-                        <Stack.Screen name="readme" options={{ headerShown: false, animation: "slide_from_right" }} />
-                        <Stack.Screen name="barcode" options={{ headerShown: false, animation: "fade" }} />
-                        <Stack.Screen
-                            name="notification.click"
-                            options={{ headerShown: false, animation: "slide_from_right" }}
-                        />
-                        <Stack.Screen name="modal" options={modalSettings} />
-                        <Stack.Screen name="log-show" options={{ headerShown: false, animation: "slide_from_right" }} />
-                    </Stack>
-                    <AudioManager />
-                </SafeAreaProvider>
+                <QueryClientProvider client={queryClient}>
+                    <SafeAreaProvider>
+                        <Stack
+                            screenOptions={{
+                                contentStyle: {
+                                    backgroundColor: colorScheme === "dark" ? "#002624" : "#fff",
+                                },
+                            }}
+                        >
+                            <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: "slide_from_right" }} />
+                            <Stack.Screen
+                                name="query/[id]"
+                                options={{ headerShown: false, animation: "slide_from_right" }}
+                            />
+                            <Stack.Screen name="history" options={{ headerShown: false, animation: "slide_from_right" }} />
+                            {/* <Stack.Screen name="settings" options={{ headerShown: false }} /> */}
+                            <Stack.Screen name="about" options={{ headerShown: false, animation: "slide_from_right" }} />
+                            <Stack.Screen name="readme" options={{ headerShown: false, animation: "slide_from_right" }} />
+                            <Stack.Screen name="barcode" options={{ headerShown: false, animation: "fade" }} />
+                            <Stack.Screen
+                                name="notification.click"
+                                options={{ headerShown: false, animation: "slide_from_right" }}
+                            />
+                            <Stack.Screen name="modal" options={modalSettings} />
+                            <Stack.Screen name="log-show" options={{ headerShown: false, animation: "slide_from_right" }} />
+                        </Stack>
+                        <AudioManager />
+                    </SafeAreaProvider>
+                </QueryClientProvider>
             </GluestackUIProvider>
         </>
     );

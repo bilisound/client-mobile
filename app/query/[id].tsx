@@ -1,7 +1,6 @@
 import React, {memo, useEffect} from "react";
 import { ActivityIndicator, useWindowDimensions, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { useRequest } from "ahooks";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 import * as Linking from "expo-linking";
@@ -21,6 +20,7 @@ import { convertToHTTPS } from "../../utils/string";
 import useCommonColors from "../../hooks/useCommonColors";
 import CommonFrameNew from "../../components/CommonFrameNew";
 import { BILIBILI_VIDEO_URL_PREFIX } from "../../constants/network";
+import {useQuery} from "@tanstack/react-query";
 
 function PlayingIcon() {
     // 播放列表渲染
@@ -186,12 +186,9 @@ const QueryIdScreen: React.FC = () => {
     const { textBasicColor } = useCommonColors();
 
     // 数据请求
-    const { data, error, loading } = useRequest(getBilisoundMetadata, {
-        defaultParams: [
-            {
-                id: `${id}`,
-            },
-        ],
+    const { data, isLoading, error } = useQuery({
+        queryKey: [id],
+        queryFn: () => getBilisoundMetadata({ id })
     });
 
     // 增加历史记录条目
