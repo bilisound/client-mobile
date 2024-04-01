@@ -35,7 +35,7 @@ const AudioProgressBar: React.FC = () => {
                     top: 6.5,
                     height: 3,
                     borderRadius: 2,
-                    backgroundColor: "$primary200",
+                    backgroundColor: "$trueGray200",
                     _dark: {
                         backgroundColor: "$primary900",
                     },
@@ -46,7 +46,7 @@ const AudioProgressBar: React.FC = () => {
                 <Box
                     sx={{
                         height: "100%",
-                        backgroundColor: "$primary200",
+                        backgroundColor: "$trueGray200",
                         _dark: {
                             backgroundColor: "$primary900",
                         },
