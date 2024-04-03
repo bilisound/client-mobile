@@ -30,7 +30,7 @@ function ProgressBar({ item }: { item: string }) {
         downloadList: state.downloadList,
     }));
     const downloadEntry = downloadList.get(item);
-    const { primaryColor } = useCommonColors();
+    const { accentColor } = useCommonColors();
 
     if (!downloadEntry) {
         return null;
@@ -41,7 +41,7 @@ function ProgressBar({ item }: { item: string }) {
             sx={{
                 height: 3,
                 position: "absolute",
-                backgroundColor: primaryColor,
+                backgroundColor: accentColor,
                 left: 0,
                 bottom: 0,
                 width: `${(downloadEntry.progress.bytesWritten / downloadEntry.progress.contentLength) * 100}%`,
