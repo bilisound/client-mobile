@@ -1,29 +1,57 @@
-import React, {memo, useEffect} from "react";
-import { ActivityIndicator, useWindowDimensions, View } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
-import * as Linking from "expo-linking";
-import { FlashList } from "@shopify/flash-list";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { v4 } from "uuid";
 import { Box, Fab, Pressable, Text } from "@gluestack-ui/themed";
-import { formatSecond } from "../../utils/misc";
+import { FlashList } from "@shopify/flash-list";
+import { useQuery } from "@tanstack/react-query";
+import * as Linking from "expo-linking";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { Fragment, memo, useCallback, useEffect, useRef } from "react";
+import { ActivityIndicator, useWindowDimensions, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
+import { v4 } from "uuid";
+
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "../../api/bilisound";
-import usePlayerStateStore from "../../store/playerState";
-import useHistoryStore from "../../store/history";
-import { handleTogglePlay } from "../../utils/player-control";
+import CommonFrameNew from "../../components/CommonFrameNew";
 import VideoMeta from "../../components/VideoMeta";
 import QuerySkeleton from "../../components/local/query/QuerySkeleton";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "../../constants/style";
-import { convertToHTTPS } from "../../utils/string";
-import useCommonColors from "../../hooks/useCommonColors";
-import CommonFrameNew from "../../components/CommonFrameNew";
 import { BILIBILI_VIDEO_URL_PREFIX } from "../../constants/network";
-import {useQuery} from "@tanstack/react-query";
+import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "../../constants/style";
+import useCommonColors from "../../hooks/useCommonColors";
+import useDownloadStore from "../../store/download";
+import useHistoryStore from "../../store/history";
+import usePlayerStateStore from "../../store/playerState";
+import { formatSecond } from "../../utils/misc";
+import { handleTogglePlay } from "../../utils/player-control";
+import { convertToHTTPS } from "../../utils/string";
 
+// 加载进度条
+function ProgressBar({ item }: { item: string }) {
+    const { downloadList } = useDownloadStore(state => ({
+        downloadList: state.downloadList,
+    }));
+    const downloadEntry = downloadList.get(item);
+    const { primaryColor } = useCommonColors();
+
+    if (!downloadEntry) {
+        return null;
+    }
+
+    return (
+        <Box
+            sx={{
+                height: 3,
+                position: "absolute",
+                backgroundColor: primaryColor,
+                left: 0,
+                bottom: 0,
+                width: `${(downloadEntry.progress.bytesWritten / downloadEntry.progress.contentLength) * 100}%`,
+            }}
+        />
+    );
+}
+
+// 播放状态图标
 function PlayingIcon() {
-    // 播放列表渲染
     const playingState = usePlaybackState().state;
     const isPlaying = playingState === State.Playing;
     const { accentColor } = useCommonColors();
@@ -36,14 +64,17 @@ interface ListEntryProps {
     isDownloaded: boolean;
     isCurrentRequesting: boolean;
     onRequestPlay: () => void;
+    belongId: string;
     item: GetBilisoundMetadataResponse["pages"][number];
 }
 
+// 列表项目
 const ListEntryRaw: React.FC<ListEntryProps> = ({
     isActiveTrack,
     isDownloaded,
     isCurrentRequesting,
     onRequestPlay,
+    belongId,
     item,
 }) => {
     const { width } = useWindowDimensions();
@@ -138,33 +169,21 @@ const ListEntryRaw: React.FC<ListEntryProps> = ({
                         </Box>
                     </Box>
                 </Box>
-                <Box
-                    sx={{
-                        flex: 0,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: 32,
-                        display: isActiveTrack ? "flex" : "none",
-                    }}
-                >
-                    {isCurrentRequesting ? (
-                        <ActivityIndicator color={accentColor} />
-                    ) : (
-                        <PlayingIcon />
-                    )}
-                </Box>
-                {/* {downloadEntry ? (
-                    <Box
-                        sx={{
-                            height: 3,
-                            position: "absolute",
-                            backgroundColor: "color-accent-default",
-                            left: 0,
-                            bottom: 0,
-                            width: `${(downloadEntry.progress.totalBytesWritten / downloadEntry.progress.totalBytesExpectedToWrite) * 100}%`,
-                        }}
-                    />
-                ) : null} */}
+                {isActiveTrack ? (
+                    <>
+                        <Box
+                            sx={{
+                                flex: 0,
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: 32,
+                            }}
+                        >
+                            {isCurrentRequesting ? <ActivityIndicator color={accentColor} /> : <PlayingIcon />}
+                        </Box>
+                        {isCurrentRequesting ? <ProgressBar item={`${belongId}_${item.page}`} /> : null}
+                    </>
+                ) : null}
             </Box>
         </Pressable>
     );
@@ -175,24 +194,28 @@ const ListEntry = memo(ListEntryRaw, (a, b) => {
         a.isActiveTrack === b.isActiveTrack &&
         a.isDownloaded === b.isDownloaded &&
         a.isCurrentRequesting === b.isCurrentRequesting &&
-        a.item === b.item
-    )
+        a.item === b.item &&
+        a.belongId === b.belongId
+    );
 });
 
 const QueryIdScreen: React.FC = () => {
+    const renderingTime = useRef(0);
+    console.log("TabPlaying 被渲染", renderingTime.current++);
+
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
     // const navigation = useNavigation();
     const edgeInsets = useSafeAreaInsets();
     const { textBasicColor } = useCommonColors();
 
     // 数据请求
-    const { data, isLoading, error } = useQuery({
+    const { data, error } = useQuery({
         queryKey: [id],
-        queryFn: () => getBilisoundMetadata({ id })
+        queryFn: () => getBilisoundMetadata({ id }),
     });
 
     // 增加历史记录条目
-    const { appendHistoryList } = useHistoryStore((state) => ({
+    const { appendHistoryList } = useHistoryStore(state => ({
         appendHistoryList: state.appendHistoryList,
     }));
 
@@ -207,56 +230,60 @@ const QueryIdScreen: React.FC = () => {
                 key: v4(),
             });
         }
-    }, [data]);
+    }, [appendHistoryList, data, noHistory]);
 
     // 播放列表
     const activeTrack = useActiveTrack();
 
     // 播放状态
-    const { setPlayingRequest, playingRequest } = usePlayerStateStore((state) => ({
+    const { setPlayingRequest, playingRequest } = usePlayerStateStore(state => ({
         setPlayingRequest: state.setPlayingRequest,
         playingRequest: state.playingRequest,
     }));
 
     // 播放列表渲染
-    const renderItem = ({ item }: { item: GetBilisoundMetadataResponse["pages"][number] }) => {
-        const rootData = data!.data;
-        const isActiveTrackMatch =
-            activeTrack?.bilisoundId === rootData.bvid && activeTrack?.bilisoundEpisode === item.page;
-        const isRequestTrackMatch = playingRequest?.id === rootData.bvid && playingRequest?.episode === item.page;
-        const isCurrentRequesting = !!playingRequest;
+    const renderItem = useCallback(
+        ({ item }: { item: GetBilisoundMetadataResponse["pages"][number] }) => {
+            const rootData = data!.data;
+            const isActiveTrackMatch =
+                activeTrack?.bilisoundId === rootData.bvid && activeTrack?.bilisoundEpisode === item.page;
+            const isRequestTrackMatch = playingRequest?.id === rootData.bvid && playingRequest?.episode === item.page;
+            const isCurrentRequesting = !!playingRequest;
 
-        let isActiveTrack = false;
-        // 可能存在的情况：请求的曲目发生变化，但是当前活动的曲目没有变化
-        if (isActiveTrackMatch && !isCurrentRequesting) {
-            isActiveTrack = true;
-        }
-        if (isRequestTrackMatch) {
-            isActiveTrack = true;
-        }
+            let isActiveTrack = false;
+            // 可能存在的情况：请求的曲目发生变化，但是当前活动的曲目没有变化
+            if (isActiveTrackMatch && !isCurrentRequesting) {
+                isActiveTrack = true;
+            }
+            if (isRequestTrackMatch) {
+                isActiveTrack = true;
+            }
 
-        return (
-            <ListEntry
-                isDownloaded={false}
-                isActiveTrack={isActiveTrack}
-                isCurrentRequesting={isCurrentRequesting}
-                onRequestPlay={() => {
-                    if (playingRequest) {
-                        return;
-                    }
-                    setPlayingRequest({
-                        id: rootData.bvid,
-                        episode: item.page,
-                        artist: data!.data.owner.name,
-                        artwork: data!.data.pic,
-                        duration: item.duration,
-                        title: item.part,
-                    });
-                }}
-                item={item}
-            />
-        );
-    };
+            return (
+                <ListEntry
+                    isDownloaded={false}
+                    isActiveTrack={isActiveTrack}
+                    isCurrentRequesting={isCurrentRequesting}
+                    belongId={rootData.bvid}
+                    onRequestPlay={() => {
+                        if (playingRequest) {
+                            return;
+                        }
+                        setPlayingRequest({
+                            id: rootData.bvid,
+                            episode: item.page,
+                            artist: data!.data.owner.name,
+                            artwork: data!.data.pic,
+                            duration: item.duration,
+                            title: item.part,
+                        });
+                    }}
+                    item={item}
+                />
+            );
+        },
+        [activeTrack, data, playingRequest, setPlayingRequest],
+    );
 
     const dataList = data?.data.pages ?? [];
     const dataLength = Math.max(dataList.length, 1);
@@ -302,7 +329,7 @@ const QueryIdScreen: React.FC = () => {
                 <FlashList
                     data={dataList}
                     extraData={updateTriggerString}
-                    keyExtractor={(item) => `${item.page}`}
+                    keyExtractor={item => `${item.page}`}
                     ListHeaderComponent={data ? <VideoMeta meta={data.data} /> : <View />}
                     ListFooterComponent={<View style={{ height: edgeInsets.bottom + (activeTrack ? 58 + 36 : 0) }} />}
                     renderItem={renderItem}

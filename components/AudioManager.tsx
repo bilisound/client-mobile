@@ -1,40 +1,41 @@
+import { Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
+import { filesize } from "filesize";
 import React, { useEffect } from "react";
+import { EmitterSubscription } from "react-native";
+import RNFS from "react-native-fs";
 import TrackPlayer, { Event, State, useTrackPlayerEvents } from "react-native-track-player";
 import { v4 as uuidv4 } from "uuid";
-import RNFS from "react-native-fs";
-import { EmitterSubscription } from "react-native";
-import { filesize } from "filesize";
-import { Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
-import usePlayerStateStore from "../store/playerState";
-import { USER_AGENT_BILIBILI } from "../constants/network";
+
 import { getBilisoundResourceUrl, getVideoUrl } from "../api/bilisound";
-import { getCacheAudioPath, requestWrapper } from "../utils/misc";
+import { USER_AGENT_BILIBILI } from "../constants/network";
 import useDownloadStore from "../store/download";
+import usePlayerStateStore from "../store/playerState";
 import useSettingsStore from "../store/settings";
+import log from "../utils/logger";
+import { getCacheAudioPath, requestWrapper } from "../utils/misc";
 import { convertToHTTPS } from "../utils/string";
 import { saveTrackData } from "../utils/track-data";
-import log from "../utils/logger";
 
 const events = [Event.PlaybackState, Event.PlaybackError];
 
 const AudioManager: React.FC = () => {
     const toast = useToast();
 
-    const { playingRequest, setPlayingRequest } = usePlayerStateStore((state) => ({
+    const { playingRequest, setPlayingRequest } = usePlayerStateStore(state => ({
         playingRequest: state.playingRequest,
         setPlayingRequest: state.setPlayingRequest,
     }));
 
-    const { updateDownloadItem, removeDownloadItem } = useDownloadStore((state) => ({
+    const { updateDownloadItem, removeDownloadItem } = useDownloadStore(state => ({
         updateDownloadItem: state.updateDownloadItem,
         removeDownloadItem: state.removeDownloadItem,
     }));
 
-    const { filterResourceURL } = useSettingsStore((state) => ({
+    const { filterResourceURL } = useSettingsStore(state => ({
         filterResourceURL: state.filterResourceURL,
     }));
 
-    useTrackPlayerEvents(events, (event) => {
+    useTrackPlayerEvents(events, event => {
         if (event.type === Event.PlaybackError) {
             toast.show({
                 placement: "top",
@@ -74,7 +75,7 @@ const AudioManager: React.FC = () => {
             // 播放列表中有，直接跳转
             const list = await TrackPlayer.getQueue();
             const found = list.findIndex(
-                (e) => e.bilisoundId === playingRequest.id && e.bilisoundEpisode === playingRequest.episode,
+                e => e.bilisoundId === playingRequest.id && e.bilisoundEpisode === playingRequest.episode,
             );
             if (found >= 0) {
                 log.debug("播放列表中已有相同内容，直接跳转");
@@ -120,9 +121,8 @@ const AudioManager: React.FC = () => {
                         "user-agent": USER_AGENT_BILIBILI,
                     },
                     cacheable: true,
-                    progressInterval: 1000, // 过快的下载进度更新会导致 UI 跟不上
-                    progress: (res) => {
-                        // console.log(res);
+                    progressInterval: 100, // 过快的下载进度更新会导致 UI 跟不上
+                    progress: res => {
                         // 更新状态管理器中的内容
                         updateDownloadItem(id, {
                             id: playingRequest.id,
@@ -161,7 +161,7 @@ const AudioManager: React.FC = () => {
             // await TrackPlayer.play();
 
             log.debug("正在等待播放服务准备就绪");
-            eventHandler = TrackPlayer.addEventListener(Event.PlaybackState, async (e) => {
+            eventHandler = TrackPlayer.addEventListener(Event.PlaybackState, async e => {
                 if (e.state === State.Ready) {
                     log.debug("播放服务准备就绪，开始播放");
                     await TrackPlayer.play();
@@ -180,7 +180,7 @@ const AudioManager: React.FC = () => {
             .then(() => {
                 // 操作成功
             })
-            .catch((e) => {
+            .catch(e => {
                 // 操作失败
                 toast.show({
                     placement: "top",

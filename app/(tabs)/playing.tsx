@@ -252,9 +252,6 @@ function LongPressActionsRaw({ showActionSheet, displayTrack, onAction, onClose 
 const LongPressActions = memo(LongPressActionsRaw);
 
 const TabPlaying: React.FC = () => {
-    const renderingTime = useRef(0);
-    console.log("TabPlaying 被渲染", renderingTime.current++);
-
     const activeTrack = useActiveTrack();
     const colorScheme = useColorScheme();
     const { primaryColor } = useCommonColors();
