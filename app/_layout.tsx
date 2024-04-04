@@ -3,6 +3,7 @@ import "react-native-url-polyfill/auto";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { COLORMODES } from "@gluestack-style/react/lib/typescript/types";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
+import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import * as NavigationBar from "expo-navigation-bar";
@@ -36,7 +37,7 @@ const queryClient = new QueryClient();
 const RootLayoutNav = () => {
     const colorScheme = useColorScheme();
 
-    const modalSettings: any =
+    const modalSettings: NativeStackNavigationOptions =
         Platform.OS === "ios"
             ? {
                   presentation: "modal",
