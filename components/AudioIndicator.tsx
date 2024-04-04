@@ -1,15 +1,16 @@
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Pressable, Text, Box } from "@gluestack-ui/themed";
+import { Image } from "expo-image";
+import { router } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import { Image } from "expo-image";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { Pressable, Text, Box } from "@gluestack-ui/themed";
-import { handleTogglePlay } from "../utils/player-control";
+
 import { COMMON_TOUCH_COLOR } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
+import { handleTogglePlay } from "../utils/player-control";
 
-const AudioPlayerMini: React.FC = () => {
+const AudioIndicator: React.FC = () => {
     const activeTrack = useActiveTrack();
     const playbackState = usePlaybackState();
     const { primaryColor } = useCommonColors();
@@ -90,4 +91,4 @@ const AudioPlayerMini: React.FC = () => {
     );
 };
 
-export default AudioPlayerMini;
+export default AudioIndicator;

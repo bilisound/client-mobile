@@ -1,18 +1,19 @@
-import { Platform, StatusBar, useColorScheme } from "react-native";
-import React, { useState } from "react";
-import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
-import { Image } from "expo-image";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { router } from "expo-router";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Pressable, Text, Box } from "@gluestack-ui/themed";
+import { Image } from "expo-image";
+import { router } from "expo-router";
+import React, { useState } from "react";
+import { Platform, StatusBar, useColorScheme } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
+
 import AudioProgressBar from "./AudioProgressBar";
-import { formatSecond, saveFile } from "../utils/misc";
-import { handlePrev, handleTogglePlay } from "../utils/player-control";
-import useSettingsStore from "../store/settings";
-import { getFileName } from "../utils/format";
 import { COMMON_TOUCH_COLOR } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
+import useSettingsStore from "../store/settings";
+import { getFileName } from "../utils/format";
+import { formatSecond, saveFile } from "../utils/misc";
+import { handlePrev, handleTogglePlay } from "../utils/player-control";
 
 const AudioPlayerModal: React.FC = () => {
     const colorScheme = useColorScheme();
@@ -22,7 +23,7 @@ const AudioPlayerModal: React.FC = () => {
     const safeAreaInsets = useSafeAreaInsets();
     const { position, duration } = useProgress();
     const [smallestSize, setSmallestSize] = useState(0);
-    const { useLegacyID } = useSettingsStore((state) => ({
+    const { useLegacyID } = useSettingsStore(state => ({
         useLegacyID: state.useLegacyID,
     }));
 
@@ -78,7 +79,7 @@ const AudioPlayerModal: React.FC = () => {
                     alignItems: "center",
                     justifyContent: "center",
                 }}
-                onLayout={(e) => {
+                onLayout={e => {
                     const layout = e.nativeEvent.layout;
                     setSmallestSize(Math.min(layout.width, layout.height) - 64);
                 }}

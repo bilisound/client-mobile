@@ -6,7 +6,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 
-import AudioPlayerMini from "../../components/AudioPlayerMini";
+import AudioIndicator from "../../components/AudioIndicator";
 import YuruChara from "../../components/YuruChara";
 import useCommonColors from "../../hooks/useCommonColors";
 
@@ -17,7 +17,7 @@ const ListIcon = ({ color }: { color: string }) => <Entypo name="list" size={22}
 
 const TabBar = (props: BottomTabBarProps) => (
     <View>
-        <AudioPlayerMini />
+        <AudioIndicator />
         <BottomTabBar {...props} />
     </View>
 );
