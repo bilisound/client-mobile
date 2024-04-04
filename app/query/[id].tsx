@@ -11,7 +11,7 @@ import { State, useActiveTrack, usePlaybackState } from "react-native-track-play
 import { v4 } from "uuid";
 
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "../../api/bilisound";
-import CommonFrameNew from "../../components/CommonFrameNew";
+import CommonLayout from "../../components/CommonLayout";
 import VideoMeta from "../../components/VideoMeta";
 import QuerySkeleton from "../../components/local/query/QuerySkeleton";
 import { BILIBILI_VIDEO_URL_PREFIX } from "../../constants/network";
@@ -292,7 +292,7 @@ const QueryIdScreen: React.FC = () => {
     const updateTriggerString = `${activeTrackString}__${requestTrackString}__${!!activeTrack}`;
 
     return (
-        <CommonFrameNew
+        <CommonLayout
             title="查看详情"
             extendToBottom
             leftAccessories={
@@ -350,7 +350,7 @@ const QueryIdScreen: React.FC = () => {
                     <FontAwesome5 name="headphones" size={24} color="#fff" />
                 </Fab>
             ) : null}
-        </CommonFrameNew>
+        </CommonLayout>
     );
 };
 

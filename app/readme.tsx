@@ -1,12 +1,13 @@
-import React, {useCallback, useEffect, useRef} from "react";
-import { router } from "expo-router";
-import WebView from "react-native-webview";
+import { Ionicons } from "@expo/vector-icons";
+import { Pressable } from "@gluestack-ui/themed";
 import { useAssets } from "expo-asset";
+import { router } from "expo-router";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Linking, Platform, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Pressable } from "@gluestack-ui/themed";
-import { Ionicons } from "@expo/vector-icons";
-import CommonFrameNew from "../components/CommonFrameNew";
+import WebView from "react-native-webview";
+
+import CommonLayout from "../components/CommonLayout";
 import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../constants/style";
 
 const indexHtml = require("../assets/web/index.html");
@@ -31,15 +32,18 @@ const History: React.FC = () => {
         }
     `;
 
-    const webviewRef = useCallback((item: WebView | null) => {
-        item?.injectJavaScript(getSetColorSchemeJavaScript());
-        item?.injectJavaScript(`
+    const webviewRef = useCallback(
+        (item: WebView | null) => {
+            item?.injectJavaScript(getSetColorSchemeJavaScript());
+            item?.injectJavaScript(`
             ${getSetMarginJavaScript()}
         `);
-    },[colorScheme, safeAreaInsets]);
+        },
+        [colorScheme, safeAreaInsets],
+    );
 
     return (
-        <CommonFrameNew
+        <CommonLayout
             title="用户说明"
             leftAccessories={
                 <Pressable sx={COMMON_FRAME_SOLID_BUTTON_STYLE} onPress={() => router.back()}>
@@ -61,7 +65,7 @@ const History: React.FC = () => {
                         document.documentElement.dataset.platform = ${JSON.stringify(Platform.OS)};
                     `}
                     // https://stackoverflow.com/a/54115883
-                    onShouldStartLoadWithRequest={(event) => {
+                    onShouldStartLoadWithRequest={event => {
                         if (event.url !== html[0].uri) {
                             Linking.openURL(event.url);
                             return false;
@@ -69,11 +73,11 @@ const History: React.FC = () => {
                         return true;
                     }}
                     // https://stackoverflow.com/questions/46690261/injectedjavascript-is-not-working-in-webview-of-react-native
-                    onMessage={(event) => {}}
+                    onMessage={event => {}}
                     webviewDebuggingEnabled
                 />
             )}
-        </CommonFrameNew>
+        </CommonLayout>
     );
 };
 

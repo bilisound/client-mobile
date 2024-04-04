@@ -1,15 +1,16 @@
-import React from "react";
-import { router } from "expo-router";
-import { Image } from "expo-image";
-import { Linking, ScrollView } from "react-native";
-import { Box, Text, Pressable } from "@gluestack-ui/themed";
 import { Ionicons } from "@expo/vector-icons";
+import { Box, Text, Pressable } from "@gluestack-ui/themed";
+import { Image } from "expo-image";
+import { router } from "expo-router";
+import React from "react";
+import { Linking, ScrollView } from "react-native";
+
+import CommonLayout from "../components/CommonLayout";
 import { BILISOUND_OFFICIAL_WEBSITE } from "../constants/branding";
-import CommonFrameNew from "../components/CommonFrameNew";
 import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../constants/style";
 
 const History: React.FC = () => (
-    <CommonFrameNew
+    <CommonLayout
         title="关于"
         extendToBottom
         leftAccessories={
@@ -72,7 +73,7 @@ const History: React.FC = () => (
                 </Box>
             </Box>
         </ScrollView>
-    </CommonFrameNew>
+    </CommonLayout>
 );
 
 export default History;

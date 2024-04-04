@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, Switch } from "react-native";
-import { router } from "expo-router";
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { filesize } from "filesize";
 import path from "path-browserify";
+import React, { useEffect, useState } from "react";
+import { ScrollView, Switch } from "react-native";
 import TrackPlayer from "react-native-track-player";
-import SettingMenuItem, { SettingMenuItemIcon } from "../../components/SettingMenuItem";
-import useSettingsStore from "../../store/settings";
-import { checkDirectorySize, cleanAudioCache } from "../../utils/misc";
-import { BILISOUND_OFFLINE_PATH } from "../../constants/file";
-import CommonFrameNew from "../../components/CommonFrameNew";
-import log from "../../utils/logger";
 
-const LinkIcon: SettingMenuItemIcon = (iconProps) => <Entypo name="link" {...iconProps} />;
-const CDNIcon: SettingMenuItemIcon = (iconProps) => <Entypo name="cloud" {...iconProps} />;
-const DeleteIcon: SettingMenuItemIcon = (iconProps) => <MaterialIcons name="delete" {...iconProps} />;
-const InfoIcon: SettingMenuItemIcon = (iconProps) => <FontAwesome5 name="info-circle" {...iconProps} />;
-const ReadmeIcon: SettingMenuItemIcon = (iconProps) => <Entypo name="help-with-circle" {...iconProps} />;
-const DeveloperIcon: SettingMenuItemIcon = (iconProps) => <Entypo name="code" {...iconProps} />;
-const BugIcon: SettingMenuItemIcon = (iconProps) => <FontAwesome5 name="bug" {...iconProps} />;
+import CommonLayout from "../../components/CommonLayout";
+import SettingMenuItem, { SettingMenuItemIcon } from "../../components/SettingMenuItem";
+import { BILISOUND_OFFLINE_PATH } from "../../constants/file";
+import useSettingsStore from "../../store/settings";
+import log from "../../utils/logger";
+import { checkDirectorySize, cleanAudioCache } from "../../utils/misc";
+
+const LinkIcon: SettingMenuItemIcon = iconProps => <Entypo name="link" {...iconProps} />;
+const CDNIcon: SettingMenuItemIcon = iconProps => <Entypo name="cloud" {...iconProps} />;
+const DeleteIcon: SettingMenuItemIcon = iconProps => <MaterialIcons name="delete" {...iconProps} />;
+const InfoIcon: SettingMenuItemIcon = iconProps => <FontAwesome5 name="info-circle" {...iconProps} />;
+const ReadmeIcon: SettingMenuItemIcon = iconProps => <Entypo name="help-with-circle" {...iconProps} />;
+const DeveloperIcon: SettingMenuItemIcon = iconProps => <Entypo name="code" {...iconProps} />;
+const BugIcon: SettingMenuItemIcon = iconProps => <FontAwesome5 name="bug" {...iconProps} />;
 
 const Settings: React.FC = () => {
-    const { useLegacyID, filterResourceURL, debugMode, toggle } = useSettingsStore((state) => ({
+    const { useLegacyID, filterResourceURL, debugMode, toggle } = useSettingsStore(state => ({
         useLegacyID: state.useLegacyID,
         filterResourceURL: state.filterResourceURL,
         debugMode: state.debugMode,
@@ -41,7 +42,7 @@ const Settings: React.FC = () => {
             const cacheFreeSizeRaw = await checkDirectorySize(BILISOUND_OFFLINE_PATH, {
                 fileFilter(fileName) {
                     const name = path.parse(fileName).name;
-                    return !tracks.find((e) => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
+                    return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
                 },
             });
             setCacheSize(cacheSizeRaw);
@@ -77,7 +78,7 @@ const Settings: React.FC = () => {
     );
 
     return (
-        <CommonFrameNew title="设置" extendToBottom titleBarTheme="transparent">
+        <CommonLayout title="设置" extendToBottom titleBarTheme="transparent">
             <ScrollView>
                 <SettingMenuItem
                     icon={LinkIcon}
@@ -103,7 +104,7 @@ const Settings: React.FC = () => {
                     }
                     onPress={async () => {
                         await cleanAudioCache();
-                        setCacheRefreshFlag((prevState) => !prevState);
+                        setCacheRefreshFlag(prevState => !prevState);
                     }}
                     disabled={cacheSizeFree <= 0}
                 />
@@ -134,7 +135,7 @@ const Settings: React.FC = () => {
                 />
                 {debugMode ? developerOptions : null}
             </ScrollView>
-        </CommonFrameNew>
+        </CommonLayout>
     );
 };
 

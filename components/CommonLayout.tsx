@@ -1,7 +1,8 @@
-import React, { PropsWithChildren } from "react";
 import { Box, Text } from "@gluestack-ui/themed";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import React, { PropsWithChildren } from "react";
 import { StatusBar } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import useCommonColors from "../hooks/useCommonColors";
 
 export interface CommonFrameNewProps {
@@ -12,7 +13,7 @@ export interface CommonFrameNewProps {
     rightAccessories?: React.ReactNode;
 }
 
-const CommonFrameNew: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
+const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     children,
     title,
     titleBarTheme = "solid",
@@ -104,4 +105,4 @@ const CommonFrameNew: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     );
 };
 
-export default CommonFrameNew;
+export default CommonLayout;

@@ -28,7 +28,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, { State, Track, useActiveTrack, usePlaybackState } from "react-native-track-player";
 import { remove } from "react-native-track-player/src/trackPlayer";
 
-import CommonFrameNew from "../../components/CommonFrameNew";
+import CommonLayout from "../../components/CommonLayout";
 import { COMMON_FRAME_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "../../constants/style";
 import useCommonColors from "../../hooks/useCommonColors";
 import useTracks from "../../hooks/useTracks";
@@ -363,7 +363,7 @@ const TabPlaying: React.FC = () => {
     };
 
     return (
-        <CommonFrameNew
+        <CommonLayout
             title="正在播放"
             titleBarTheme="transparent"
             extendToBottom
@@ -521,7 +521,7 @@ const TabPlaying: React.FC = () => {
                     }
                 }}
             />
-        </CommonFrameNew>
+        </CommonLayout>
     );
 };
 

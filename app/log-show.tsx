@@ -1,18 +1,19 @@
-import { Pressable } from "@gluestack-ui/themed";
-import React, { useEffect, useRef, useState } from "react";
-import { router } from "expo-router";
 import { Ionicons, Octicons } from "@expo/vector-icons";
-import RNFS from "react-native-fs";
-import WebView from "react-native-webview";
-import { Platform, useColorScheme } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import path from "path-browserify";
-import * as Sharing from "expo-sharing";
+import { Pressable } from "@gluestack-ui/themed";
 import * as Device from "expo-device";
+import { router } from "expo-router";
+import * as Sharing from "expo-sharing";
 import { filesize } from "filesize";
-import CommonFrameNew from "../components/CommonFrameNew";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../constants/style";
+import path from "path-browserify";
+import React, { useEffect, useRef, useState } from "react";
+import { Platform, useColorScheme } from "react-native";
+import RNFS from "react-native-fs";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import WebView from "react-native-webview";
+
+import CommonLayout from "../components/CommonLayout";
 import { BILISOUND_LOG_PATH } from "../constants/file";
+import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
 
 const webTemplate = (content: string) => `
@@ -85,7 +86,7 @@ const App: React.FC = () => {
         }
         // desc
         fileList.sort((a, b) => (+(a.mtime ?? 0) < +(b.mtime ?? 0) ? 1 : -1));
-        const filePath = fileList.map((e) => e.path).filter((e) => e.endsWith(".log"));
+        const filePath = fileList.map(e => e.path).filter(e => e.endsWith(".log"));
         let combined = "";
         for (let i = 0; i < Math.min(filePath.length, 3); i++) {
             const header = `=============================
@@ -129,7 +130,7 @@ ${filePath[i]} 文件内容
     }, [handleCombineLog]);
 
     return (
-        <CommonFrameNew
+        <CommonLayout
             title="导出日志"
             leftAccessories={
                 <Pressable sx={COMMON_FRAME_SOLID_BUTTON_STYLE} onPress={() => router.back()}>
@@ -157,11 +158,11 @@ ${filePath[i]} 文件内容
                         document.body.style.display = "";
                     `}
                     // https://stackoverflow.com/questions/46690261/injectedjavascript-is-not-working-in-webview-of-react-native
-                    onMessage={(event) => {}}
+                    onMessage={event => {}}
                     webviewDebuggingEnabled
                 />
             ) : null}
-        </CommonFrameNew>
+        </CommonLayout>
     );
 };
 

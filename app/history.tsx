@@ -1,20 +1,21 @@
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Box, Button, Text, Pressable, ButtonText } from "@gluestack-ui/themed";
+import { FlashList } from "@shopify/flash-list";
+import { Image } from "expo-image";
+import { router } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import { Alert, View } from "react-native";
-import { router } from "expo-router";
-import { Image } from "expo-image";
-import { FlashList } from "@shopify/flash-list";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Box, Button, Text, Pressable, ButtonText } from "@gluestack-ui/themed";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import useHistoryStore, { HistoryItem } from "../store/history";
+
+import CommonLayout from "../components/CommonLayout";
 import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "../constants/style";
-import CommonFrameNew from "../components/CommonFrameNew";
+import useHistoryStore, { HistoryItem } from "../store/history";
 
 const History: React.FC = () => {
     const edgeInsets = useSafeAreaInsets();
 
     // 历史记录信息
-    const { historyList, clearHistoryList, removeHistoryList, repairHistoryList } = useHistoryStore((state) => ({
+    const { historyList, clearHistoryList, removeHistoryList, repairHistoryList } = useHistoryStore(state => ({
         historyList: state.historyList,
         clearHistoryList: state.clearHistoryList,
         removeHistoryList: state.removeHistoryList,
@@ -31,10 +32,10 @@ const History: React.FC = () => {
         <FlashList
             ref={flashListRef}
             data={historyList}
-            keyExtractor={(item) => `${item?.key}`}
+            keyExtractor={item => `${item?.key}`}
             ListFooterComponent={<View style={{ height: edgeInsets.bottom }} />}
             estimatedItemSize={historyList.length}
-            renderItem={(item) => {
+            renderItem={item => {
                 const data = item.item;
                 const i = item.index;
                 if (!item.item) {
@@ -98,7 +99,7 @@ const History: React.FC = () => {
     );
 
     return (
-        <CommonFrameNew
+        <CommonLayout
             title="历史记录"
             extendToBottom
             leftAccessories={
@@ -153,7 +154,7 @@ const History: React.FC = () => {
                     </Button>
                 </Box>
             )}
-        </CommonFrameNew>
+        </CommonLayout>
     );
 };
 
