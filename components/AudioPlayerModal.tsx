@@ -74,7 +74,7 @@ const AudioProgressBar: React.FC = () => {
                     }}
                 />
             </Box>
-            <Box position="absolute" px={8}>
+            <Box position="absolute" px={8} w="100%">
                 <Slider
                     value={value}
                     onValueChange={([v]) => setValue(v)}
@@ -118,7 +118,7 @@ const AudioProgressTimer: React.FC = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
-                paddingTop: 12,
+                paddingTop: 8,
             }}
         >
             <Text
