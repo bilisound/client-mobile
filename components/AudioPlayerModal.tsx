@@ -74,36 +74,37 @@ const AudioProgressBar: React.FC = () => {
                     }}
                 />
             </Box>
-            <Slider
-                value={value}
-                onValueChange={([v]) => setValue(v)}
-                onSlidingStart={() => {
-                    setValue(position);
-                    setHolding(true);
-                }}
-                onSlidingComplete={async val => {
-                    await TrackPlayer.seekTo(val[0]);
-                    setHolding(false);
-                }}
-                minimumValue={0}
-                maximumValue={duration}
-                containerStyle={{
-                    position: "absolute",
-                    width: "100%",
-                }}
-                trackStyle={{
-                    backgroundColor: "transparent",
-                }}
-                minimumTrackStyle={{
-                    backgroundColor: "transparent",
-                }}
-                thumbStyle={{
-                    width: 16,
-                    height: 16,
-                    backgroundColor: primaryColor,
-                }}
-                thumbTouchSize={{ width: 16, height: 16 }}
-            />
+            <Box position="absolute" px={8}>
+                <Slider
+                    value={value}
+                    onValueChange={([v]) => setValue(v)}
+                    onSlidingStart={() => {
+                        setValue(position);
+                        setHolding(true);
+                    }}
+                    onSlidingComplete={async val => {
+                        await TrackPlayer.seekTo(val[0]);
+                        setHolding(false);
+                    }}
+                    minimumValue={0}
+                    maximumValue={duration}
+                    containerStyle={{
+                        width: "100%",
+                    }}
+                    trackStyle={{
+                        backgroundColor: "transparent",
+                    }}
+                    minimumTrackStyle={{
+                        backgroundColor: "transparent",
+                    }}
+                    thumbStyle={{
+                        width: 16,
+                        height: 16,
+                        backgroundColor: primaryColor,
+                    }}
+                    thumbTouchSize={{ width: 16, height: 16 }}
+                />
+            </Box>
         </Box>
     );
 };
