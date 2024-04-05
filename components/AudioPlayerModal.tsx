@@ -1,4 +1,4 @@
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, Box } from "@gluestack-ui/themed";
 import { Slider } from "@miblanchard/react-native-slider";
 import { Image } from "expo-image";
@@ -209,6 +209,7 @@ const AudioPlayerModal: React.FC = () => {
                     }}
                 />
             </Box>
+            {/* todo 实现下方 Box 元素播放队列/封面图片的互相切换 */}
             <Box
                 sx={{
                     flex: 1,
@@ -295,19 +296,24 @@ const AudioPlayerModal: React.FC = () => {
                         alignItems: "center",
                         justifyContent: "space-between",
                         paddingTop: 20,
-                        paddingHorizontal: 18,
+                        paddingHorizontal: 20,
                     }}
                 >
-                    {/* 预留位置 */}
-                    <Box
+                    {/* 播放列表 */}
+                    <Pressable
                         sx={{
+                            ...COMMON_TOUCH_COLOR,
                             width: 40,
                             height: 40,
                             borderRadius: 999,
                             alignItems: "center",
                             justifyContent: "center",
                         }}
-                    />
+                        onPress={async () => {}}
+                    >
+                        <MaterialIcons name="playlist-play" size={34} color={textBasicColor} />
+                    </Pressable>
+
                     <Box
                         sx={{
                             flexDirection: "row",
