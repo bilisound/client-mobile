@@ -13,7 +13,7 @@ import { v4 } from "uuid";
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "../../api/bilisound";
 import CommonLayout from "../../components/CommonLayout";
 import VideoMeta from "../../components/VideoMeta";
-import QuerySkeleton from "../../components/local/query/QuerySkeleton";
+import VideoSkeleton from "../../components/VideoSkeleton";
 import { BILIBILI_VIDEO_URL_PREFIX } from "../../constants/network";
 import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "../../constants/style";
 import useCommonColors from "../../hooks/useCommonColors";
@@ -334,7 +334,7 @@ const QueryIdScreen: React.FC = () => {
                     ListFooterComponent={<View style={{ height: edgeInsets.bottom + (activeTrack ? 58 + 36 : 0) }} />}
                     renderItem={renderItem}
                     estimatedItemSize={dataLength * 64}
-                    ListEmptyComponent={<QuerySkeleton />}
+                    ListEmptyComponent={<VideoSkeleton />}
                 />
             )}
             {activeTrack ? (

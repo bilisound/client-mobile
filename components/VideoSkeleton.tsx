@@ -1,8 +1,9 @@
+import { Box } from "@gluestack-ui/themed";
 import React from "react";
 import { useWindowDimensions } from "react-native";
-import { Box } from "@gluestack-ui/themed";
-import { SCREEN_BREAKPOINTS } from "../../../constants/style";
-import useCommonColors from "../../../hooks/useCommonColors";
+
+import { SCREEN_BREAKPOINTS } from "../constants/style";
+import useCommonColors from "../hooks/useCommonColors";
 
 function generateRandomNumbers(amount: number, max = 1, min = 0) {
     const arr: number[] = [];
@@ -14,7 +15,7 @@ function generateRandomNumbers(amount: number, max = 1, min = 0) {
 
 const descriptionWidth = generateRandomNumbers(9, 100, 40);
 
-const QuerySkeleton: React.FC = () => {
+const VideoSkeleton: React.FC = () => {
     const { width } = useWindowDimensions();
     const { textBasicColor } = useCommonColors();
 
@@ -100,7 +101,7 @@ const QuerySkeleton: React.FC = () => {
                             gap: 5,
                         }}
                     >
-                        {descriptionWidth.map((e) => (
+                        {descriptionWidth.map(e => (
                             <Box sx={{ ...skeletonBlock, height: 16, width: `${e}%` }} key={e} />
                         ))}
                     </Box>
@@ -157,4 +158,4 @@ const QuerySkeleton: React.FC = () => {
     );
 };
 
-export default QuerySkeleton;
+export default VideoSkeleton;
