@@ -122,6 +122,9 @@ dependencies:
   react-native-drop-shadow:
     specifier: ^1.0.0
     version: 1.0.0(react-native@0.73.6)(react@18.2.0)
+  react-native-fast-shadow:
+    specifier: ^0.1.0
+    version: 0.1.0(react-native@0.73.6)(react@18.2.0)
   react-native-fs:
     specifier: ^2.20.0
     version: 2.20.0(react-native@0.73.6)
@@ -10755,6 +10758,16 @@ packages:
 
   /react-native-drop-shadow@1.0.0(react-native@0.73.6)(react@18.2.0):
     resolution: {integrity: sha512-om6oMDDn90ClFa+tEGMsFcACKlea5TO4jYur8PJKRpzfz+SnDIJlddhzp2kbOLpRTe7lleq6Md5QqC3u7RfOow==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+    dependencies:
+      react: 18.2.0
+      react-native: 0.73.6(@babel/core@7.24.3)(@babel/preset-env@7.24.3)(react@18.2.0)
+    dev: false
+
+  /react-native-fast-shadow@0.1.0(react-native@0.73.6)(react@18.2.0):
+    resolution: {integrity: sha512-Hh4BVHleioNMppnHNiwyZplEJLfOtEr7PcbUAla9x9gjaIsX26PkDRRBjQ4S8mdpRMmrHeGmmseL9wj+obA5uw==}
     peerDependencies:
       react: '*'
       react-native: '*'

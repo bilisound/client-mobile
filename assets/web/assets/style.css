@@ -19,7 +19,7 @@
 }
 
 :root[data-scheme="dark"] {
-    --bs-bg: #002624;
+    --bs-bg: #171717;
     --bs-text: #fff;
 }
 

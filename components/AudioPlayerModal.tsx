@@ -1,10 +1,11 @@
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Pressable, Text, Box } from "@gluestack-ui/themed";
+import { Pressable, Text, Box, useColorMode } from "@gluestack-ui/themed";
 import { Slider } from "@miblanchard/react-native-slider";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Platform, StatusBar, useColorScheme } from "react-native";
+import { ShadowedView } from "react-native-fast-shadow";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
 
@@ -153,6 +154,7 @@ const AudioPlayButtonIcon: React.FC = () => {
 
 const AudioPlayerModal: React.FC = () => {
     const colorScheme = useColorScheme();
+    const colorMode = useColorMode();
     const { textBasicColor } = useCommonColors();
     const activeTrack = useActiveTrack();
     const safeAreaInsets = useSafeAreaInsets();
@@ -160,8 +162,6 @@ const AudioPlayerModal: React.FC = () => {
     const { useLegacyID } = useSettingsStore(state => ({
         useLegacyID: state.useLegacyID,
     }));
-
-    console.log(activeTrack, activeTrack?.artwork);
 
     return (
         <Box
@@ -176,10 +176,6 @@ const AudioPlayerModal: React.FC = () => {
                     paddingLeft: 0,
                     paddingRight: 0,
                 },
-                /* backgroundColor: "$primary100",
-            _dark: {
-                backgroundColor: "$primary950",
-            }, */
                 backgroundColor: "$backgroundLight",
                 _dark: {
                     backgroundColor: "$backgroundDark",
@@ -221,15 +217,38 @@ const AudioPlayerModal: React.FC = () => {
                     setSmallestSize(Math.min(layout.width, layout.height) - 64);
                 }}
             >
-                <Image
-                    source={activeTrack?.artwork}
-                    style={{
-                        aspectRatio: "1/1",
-                        borderRadius: 16,
-                        width: smallestSize,
-                    }}
-                    contentFit="cover"
-                />
+                {colorMode === "dark" ? (
+                    <Image
+                        source={activeTrack?.artwork}
+                        style={{
+                            aspectRatio: "1/1",
+                            borderRadius: 16,
+                            width: smallestSize,
+                        }}
+                        contentFit="cover"
+                    />
+                ) : (
+                    <ShadowedView
+                        style={{
+                            shadowOpacity: 0.2,
+                            shadowRadius: 24,
+                            shadowOffset: {
+                                width: 4,
+                                height: 4,
+                            },
+                        }}
+                    >
+                        <Image
+                            source={activeTrack?.artwork}
+                            style={{
+                                aspectRatio: "1/1",
+                                borderRadius: 16,
+                                width: smallestSize,
+                            }}
+                            contentFit="cover"
+                        />
+                    </ShadowedView>
+                )}
             </Box>
             <Box
                 sx={{

@@ -1,6 +1,7 @@
 import { AnimationResolver } from "@gluestack-style/animation-resolver";
 import { MotionAnimationDriver } from "@gluestack-style/legend-motion-animation-driver";
 import { createConfig, createComponents } from "@gluestack-style/react";
+
 import * as componentsTheme from "./theme";
 
 export const gluestackUIConfig = createConfig({
@@ -447,7 +448,7 @@ export const gluestackUIConfig = createConfig({
             backgroundLightMuted: "#F6F6F7",
             backgroundDarkMuted: "#252526",
             backgroundLight: "#FFFFFF",
-            backgroundDark: "#002624",
+            backgroundDark: "#171717",
             white: "#FFFFFF",
             black: "#000000",
         },

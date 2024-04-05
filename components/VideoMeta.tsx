@@ -1,15 +1,16 @@
+import { Entypo } from "@expo/vector-icons";
+import { Pressable, Text, Box } from "@gluestack-ui/themed";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import { useWindowDimensions } from "react-native";
-import MaskedView from "@react-native-masked-view/masked-view";
-import { LinearGradient } from "expo-linear-gradient";
-import { Entypo } from "@expo/vector-icons";
-import { Image } from "expo-image";
-import { Pressable, Text, Box } from "@gluestack-ui/themed";
+
 import { GetBilisoundMetadataResponse } from "../api/bilisound";
-import { convertToHTTPS } from "../utils/string";
-import { formatDate } from "../utils/misc";
 import { SCREEN_BREAKPOINTS } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
+import { formatDate } from "../utils/misc";
+import { convertToHTTPS } from "../utils/string";
 
 const detailMaxHeight = 192;
 
@@ -18,7 +19,7 @@ export interface VideoMetaProps {
 }
 
 const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
-    const { primaryColor, textBasicColor } = useCommonColors();
+    const { textBasicColor, accentColor } = useCommonColors();
     const { width } = useWindowDimensions();
 
     // 展示更多
@@ -49,7 +50,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                         }}
                     >
                         <Text
-                            onLayout={(e) => {
+                            onLayout={e => {
                                 if (e.nativeEvent.layout.height < detailMaxHeight) {
                                     setShowMore(true);
                                 }
@@ -88,14 +89,14 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
             >
                 <Text
                     sx={{
-                        color: "$primary500",
+                        color: "$accent500",
                         fontWeight: "700",
                         fontSize: 14,
                     }}
                 >
                     查看更多
                 </Text>
-                <Entypo name="chevron-down" size={20} color={primaryColor} />
+                <Entypo name="chevron-down" size={20} color={accentColor} />
             </Box>
         </Pressable>
     );
@@ -133,7 +134,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                         fontSize: 16,
                         fontWeight: "bold",
                         marginBottom: 16,
-                        lineHeight: 24
+                        lineHeight: 24,
                     }}
                     selectable
                 >

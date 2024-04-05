@@ -56,7 +56,7 @@ const RootLayoutNav = () => {
                     <Stack
                         screenOptions={{
                             contentStyle: {
-                                backgroundColor: colorScheme === "dark" ? "#002624" : "#fff",
+                                backgroundColor: colorScheme === "dark" ? "#171717" : "#fff",
                             },
                         }}
                     >
@@ -97,7 +97,7 @@ const RootLayout: React.FC = () => {
             // https://stackoverflow.com/questions/74999835/trying-to-make-the-android-navigation-bar-transparent-in-expo
             if (Platform.OS === "android") {
                 await NavigationBar.setPositionAsync("absolute");
-                await NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#00262401" : "#ffffff01");
+                await NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#17171701" : "#ffffff01");
             }
             await SystemUI.setBackgroundColorAsync(colorScheme === "dark" ? "#000" : "#00a48e");
         })();
