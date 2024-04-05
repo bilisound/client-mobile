@@ -17,7 +17,7 @@ const LinkIcon: SettingMenuItemIcon = iconProps => <Entypo name="link" {...iconP
 const CDNIcon: SettingMenuItemIcon = iconProps => <Entypo name="cloud" {...iconProps} />;
 const DeleteIcon: SettingMenuItemIcon = iconProps => <MaterialIcons name="delete" {...iconProps} />;
 const InfoIcon: SettingMenuItemIcon = iconProps => <FontAwesome5 name="info-circle" {...iconProps} />;
-const ReadmeIcon: SettingMenuItemIcon = iconProps => <Entypo name="help-with-circle" {...iconProps} />;
+// const ReadmeIcon: SettingMenuItemIcon = iconProps => <Entypo name="help-with-circle" {...iconProps} />;
 const DeveloperIcon: SettingMenuItemIcon = iconProps => <Entypo name="code" {...iconProps} />;
 const BugIcon: SettingMenuItemIcon = iconProps => <FontAwesome5 name="bug" {...iconProps} />;
 

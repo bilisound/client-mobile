@@ -3,7 +3,6 @@ import { Pressable } from "@gluestack-ui/themed";
 import * as Device from "expo-device";
 import { router } from "expo-router";
 import * as Sharing from "expo-sharing";
-import { filesize } from "filesize";
 import path from "path-browserify";
 import React, { useEffect, useRef, useState } from "react";
 import { Platform, useColorScheme } from "react-native";

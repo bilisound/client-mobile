@@ -1,7 +1,8 @@
-import { Link, Stack } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
 import { useRoute } from "@react-navigation/core";
+import { Link, Stack } from "expo-router";
 import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+
 import log from "../utils/logger";
 
 const styles = StyleSheet.create({

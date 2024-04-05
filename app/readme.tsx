@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable } from "@gluestack-ui/themed";
 import { useAssets } from "expo-asset";
 import { router } from "expo-router";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback } from "react";
 import { Linking, Platform, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";

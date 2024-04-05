@@ -1,13 +1,14 @@
-import { Alert, StatusBar } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import { router } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Box, ButtonText, Pressable, Text, Button } from "@gluestack-ui/themed";
 import { Ionicons } from "@expo/vector-icons";
+import { Box, ButtonText, Pressable, Text, Button } from "@gluestack-ui/themed";
+import { BarcodeScanningResult } from "expo-camera/build/next/Camera.types";
+import { CameraView, Camera, PermissionStatus } from "expo-camera/next";
+import { router } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import { Alert, StatusBar } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import { resolveVideo } from "../utils/format";
 import log from "../utils/logger";
-import { CameraView, Camera, PermissionStatus } from "expo-camera/next";
-import {BarcodeScanningResult} from "expo-camera/build/next/Camera.types";
 
 const ScannerPage: React.FC = () => {
     const [hasPermission, setHasPermission] = useState<PermissionStatus | null>(null);
@@ -162,7 +163,7 @@ const ScannerPage: React.FC = () => {
                     <CameraView
                         onBarcodeScanned={handleBarCodeScanned}
                         barcodeScannerSettings={{
-                            barCodeTypes: ["qr"]
+                            barcodeTypes: ["qr"],
                         }}
                         style={{
                             position: "absolute",

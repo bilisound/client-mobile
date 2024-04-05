@@ -15,10 +15,9 @@ const History: React.FC = () => {
     const edgeInsets = useSafeAreaInsets();
 
     // 历史记录信息
-    const { historyList, clearHistoryList, removeHistoryList, repairHistoryList } = useHistoryStore(state => ({
+    const { historyList, clearHistoryList, repairHistoryList } = useHistoryStore(state => ({
         historyList: state.historyList,
         clearHistoryList: state.clearHistoryList,
-        removeHistoryList: state.removeHistoryList,
         repairHistoryList: state.repairHistoryList,
     }));
 
