@@ -1,10 +1,5 @@
-import { useWindowDimensions, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import React, { useState } from "react";
-import { useFonts } from "expo-font";
-import { Poppins_700Bold } from "@expo-google-fonts/poppins";
-import { router } from "expo-router";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Poppins_700Bold } from "@expo-google-fonts/poppins";
 import {
     AlertCircleIcon,
     Box,
@@ -17,9 +12,15 @@ import {
     Text,
     Input,
 } from "@gluestack-ui/themed";
-import { resolveVideo } from "../../utils/format";
-import useCommonColors from "../../hooks/useCommonColors";
+import { useFonts } from "expo-font";
+import { router } from "expo-router";
+import React, { useState } from "react";
+import { useWindowDimensions, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import { COMMON_FRAME_BUTTON_STYLE } from "../../constants/style";
+import useCommonColors from "../../hooks/useCommonColors";
+import { resolveVideo } from "../../utils/format";
 import log from "../../utils/logger";
 
 const TabIndexScreen: React.FC = () => {
@@ -37,10 +38,6 @@ const TabIndexScreen: React.FC = () => {
         <Box
             sx={{
                 alignItems: "center",
-                backgroundColor: "$backgroundLight",
-                _dark: {
-                    backgroundColor: "$backgroundDark",
-                },
                 height: "100%",
                 paddingLeft: insets.left,
                 paddingRight: insets.right,
@@ -95,11 +92,11 @@ const TabIndexScreen: React.FC = () => {
                                 fontSize: 16,
                             }}
                             value={value}
-                            onChangeText={(nextValue) => {
+                            onChangeText={nextValue => {
                                 setInputError(false);
                                 setValue(nextValue);
                             }}
-                            onSubmitEditing={async (e) => {
+                            onSubmitEditing={async e => {
                                 log.info("用户执行查询操作");
                                 log.debug(`查询关键词: ${value}`);
                                 try {
