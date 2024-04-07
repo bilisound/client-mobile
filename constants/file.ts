@@ -1,5 +1,16 @@
 import RNFS from "react-native-fs";
 
+/**
+ * 日志文件夹路径
+ */
 export const BILISOUND_LOG_PATH = `${RNFS.CachesDirectoryPath}/logs`;
+
+/**
+ * 离线缓存文件夹路径
+ */
 export const BILISOUND_OFFLINE_PATH = `${RNFS.DocumentDirectoryPath}/sounds`;
-export const BILISOUND_PLAYLIST_PATH = `${RNFS.DocumentDirectoryPath}/playlist.json`;
+
+/**
+ * 持久化播放队列路径
+ */
+export const BILISOUND_PERSIST_QUEUE_PATH = `${RNFS.DocumentDirectoryPath}/playlist.json`;

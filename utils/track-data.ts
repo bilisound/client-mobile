@@ -1,7 +1,7 @@
 import RNFS from "react-native-fs";
 import TrackPlayer, { Track } from "react-native-track-player";
 
-import { BILISOUND_OFFLINE_PATH, BILISOUND_PLAYLIST_PATH } from "../constants/file";
+import { BILISOUND_OFFLINE_PATH, BILISOUND_PERSIST_QUEUE_PATH } from "../constants/file";
 
 export async function saveTrackData() {
     const tracks = await TrackPlayer.getQueue();
@@ -11,12 +11,12 @@ export async function saveTrackData() {
         e.url = "";
     });
 
-    await RNFS.writeFile(BILISOUND_PLAYLIST_PATH, JSON.stringify({ tracks, current }), "utf8");
+    await RNFS.writeFile(BILISOUND_PERSIST_QUEUE_PATH, JSON.stringify({ tracks, current }), "utf8");
 }
 
 export async function loadTrackData() {
-    if (await RNFS.exists(BILISOUND_PLAYLIST_PATH)) {
-        const raw = await RNFS.readFile(BILISOUND_PLAYLIST_PATH, "utf8");
+    if (await RNFS.exists(BILISOUND_PERSIST_QUEUE_PATH)) {
+        const raw = await RNFS.readFile(BILISOUND_PERSIST_QUEUE_PATH, "utf8");
         const data = JSON.parse(raw);
         const tracks: Track[] = data?.tracks ?? [];
         tracks.forEach(e => {
