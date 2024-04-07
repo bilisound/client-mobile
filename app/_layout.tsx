@@ -3,6 +3,7 @@ import "react-native-url-polyfill/auto";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { COLORMODES } from "@gluestack-style/react/lib/typescript/types";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
+import { ThemeProvider } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
@@ -11,7 +12,6 @@ import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import React, { useEffect, useRef } from "react";
 import { Platform, useColorScheme } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import AudioManager from "../components/AudioManager";
 import { config } from "../config/gluestack-ui.config";
@@ -49,36 +49,56 @@ const RootLayoutNav = () => {
                   animation: "slide_from_bottom",
               };
 
+    const dark = colorScheme === "dark";
+
     return (
         <GluestackUIProvider config={config} colorMode={(colorScheme ?? "light") as COLORMODES}>
             <QueryClientProvider client={queryClient}>
-                <SafeAreaProvider>
-                    <Stack
-                        screenOptions={{
-                            contentStyle: {
-                                backgroundColor: colorScheme === "dark" ? "#171717" : "#fff",
-                            },
-                        }}
-                    >
-                        <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: "slide_from_right" }} />
+                <ThemeProvider
+                    value={{
+                        dark,
+                        colors: dark
+                            ? {
+                                  primary: "#00a48e",
+                                  background: "transparent",
+                                  card: "#171717",
+                                  text: "#ffffff",
+                                  border: "#262626",
+                                  notification: "red",
+                              }
+                            : {
+                                  primary: "#00a48e",
+                                  background: "transparent",
+                                  card: "#ffffff",
+                                  text: "#000000",
+                                  border: "#F1F1F1",
+                                  notification: "red",
+                              },
+                    }}
+                >
+                    <Stack>
                         <Stack.Screen
-                            name="query/[id]"
-                            options={{ headerShown: false, animation: "slide_from_right" }}
+                            name="(tabs)"
+                            options={{
+                                headerShown: false,
+                            }}
                         />
-                        <Stack.Screen name="history" options={{ headerShown: false, animation: "slide_from_right" }} />
-                        {/* <Stack.Screen name="settings" options={{ headerShown: false }} /> */}
-                        <Stack.Screen name="about" options={{ headerShown: false, animation: "slide_from_right" }} />
-                        <Stack.Screen name="readme" options={{ headerShown: false, animation: "slide_from_right" }} />
+                        <Stack.Screen name="query/[id]" options={{ headerShown: false }} />
+                        <Stack.Screen
+                            name="history"
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen name="about" options={{ headerShown: false }} />
+                        <Stack.Screen name="readme" options={{ headerShown: false }} />
                         <Stack.Screen name="barcode" options={{ headerShown: false, animation: "fade" }} />
-                        <Stack.Screen
-                            name="notification.click"
-                            options={{ headerShown: false, animation: "slide_from_right" }}
-                        />
+                        <Stack.Screen name="notification.click" options={{ headerShown: false }} />
                         <Stack.Screen name="modal" options={modalSettings} />
-                        <Stack.Screen name="log-show" options={{ headerShown: false, animation: "slide_from_right" }} />
+                        <Stack.Screen name="log-show" options={{ headerShown: false }} />
                     </Stack>
                     <AudioManager />
-                </SafeAreaProvider>
+                </ThemeProvider>
             </QueryClientProvider>
         </GluestackUIProvider>
     );
@@ -99,7 +119,7 @@ const RootLayout: React.FC = () => {
                 await NavigationBar.setPositionAsync("absolute");
                 await NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#17171701" : "#ffffff01");
             }
-            await SystemUI.setBackgroundColorAsync(colorScheme === "dark" ? "#000" : "#00a48e");
+            await SystemUI.setBackgroundColorAsync(colorScheme === "dark" ? "#171717" : "#ffffff");
         })();
     }, [colorScheme]);
 

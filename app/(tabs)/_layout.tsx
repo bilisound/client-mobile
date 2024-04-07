@@ -63,7 +63,7 @@ const TabLayout = () => {
                     }}
                 />
                 <Tabs.Screen
-                    name="playlist"
+                    name="(stack)"
                     options={{
                         title: "播放列表",
                         tabBarIcon: ListIcon,

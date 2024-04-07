@@ -26,10 +26,6 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     return (
         <Box
             sx={{
-                backgroundColor: "$backgroundLight",
-                _dark: {
-                    backgroundColor: "$backgroundDark",
-                },
                 height: "100%",
             }}
         >

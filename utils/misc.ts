@@ -1,12 +1,13 @@
 import * as Sharing from "expo-sharing";
-import { Platform, PressableProps, ToastAndroid } from "react-native";
-import { createDocument } from "react-native-saf-x";
-import RNFS from "react-native-fs";
 import path from "path-browserify";
+import { Platform, PressableProps, ToastAndroid } from "react-native";
+import RNFS from "react-native-fs";
+import { createDocument } from "react-native-saf-x";
 import TrackPlayer from "react-native-track-player";
+
+import log from "./logger";
 import { handleTogglePlay } from "./player-control";
 import { BILISOUND_OFFLINE_PATH } from "../constants/file";
-import log from "./logger";
 
 export function formatDate(date: number | string | Date, fmt = "yyyy-MM-dd hh:mm:ss") {
     date = new Date(date);
@@ -23,7 +24,7 @@ export function formatDate(date: number | string | Date, fmt = "yyyy-MM-dd hh:mm
     const testResultYear = /(y+)/.exec(fmt);
     if (testResultYear)
         fmt = fmt.replace(testResultYear[1], `${date.getFullYear()}`.slice(4 - testResultYear[1].length));
-    (Object.keys(o) as (keyof typeof o)[]).forEach((k) => {
+    (Object.keys(o) as (keyof typeof o)[]).forEach(k => {
         const testResult = new RegExp(`(${k})`).exec(fmt);
         if (testResult) {
             fmt = fmt.replace(
@@ -118,7 +119,7 @@ export interface CheckDirectorySizeOptions {
 }
 
 export async function checkDirectorySize(checkPath: string, options: CheckDirectorySizeOptions = {}) {
-    let items = (await RNFS.readdir(checkPath)).map((e) => path.join(checkPath, e));
+    let items = (await RNFS.readdir(checkPath)).map(e => path.join(checkPath, e));
     if (options.fileFilter) {
         items = items.filter(options.fileFilter);
     }
@@ -133,10 +134,10 @@ export async function checkDirectorySize(checkPath: string, options: CheckDirect
 export async function cleanAudioCache() {
     const tracks = await TrackPlayer.getQueue();
     const items = (await RNFS.readdir(BILISOUND_OFFLINE_PATH))
-        .map((e) => path.join(BILISOUND_OFFLINE_PATH, e))
-        .filter((fileName) => {
+        .map(e => path.join(BILISOUND_OFFLINE_PATH, e))
+        .filter(fileName => {
             const name = path.parse(fileName).name;
-            return !tracks.find((e) => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
+            return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
         });
     for (let i = 0; i < items.length; i++) {
         await RNFS.unlink(items[i]);

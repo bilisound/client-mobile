@@ -330,7 +330,14 @@ const AudioPlayerModal: React.FC = () => {
                         }}
                         onPress={async () => {}}
                     >
-                        <MaterialIcons name="playlist-play" size={34} color={textBasicColor} />
+                        <MaterialIcons
+                            name="playlist-play"
+                            size={34}
+                            color={textBasicColor}
+                            style={{
+                                transform: [{ translateX: 2 }],
+                            }}
+                        />
                     </Pressable>
 
                     <Box
