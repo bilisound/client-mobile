@@ -1,6 +1,7 @@
-import { persist } from "zustand/middleware";
 import { create } from "zustand";
-import { createStorage } from "../utils/store";
+import { persist } from "zustand/middleware";
+
+import { createStorage } from "../storage/zustand";
 
 export interface SettingsProps {
     useLegacyID: boolean;
@@ -26,7 +27,7 @@ const useSettingsStore = create<SettingsProps & SettingsMethods>()(
             update: (key, value) => {
                 set(() => ({ [key]: value }));
             },
-            toggle: (key) => {
+            toggle: key => {
                 const old = get()[key];
                 if (typeof old !== "boolean") {
                     throw new Error("要切换开关状态的值类型必须是布尔值");

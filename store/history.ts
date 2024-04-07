@@ -1,7 +1,8 @@
-import { persist } from "zustand/middleware";
-import { create } from "zustand";
 import { v4 } from "uuid";
-import { createStorage } from "../utils/store";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
+import { createStorage } from "../storage/zustand";
 import log from "../utils/logger";
 
 export interface HistoryItem {
@@ -52,8 +53,8 @@ const useHistoryStore = create<HistoryProps & HistoryMethods>()(
                     log.debug("历史记录列表不需要修复");
                 }
             },
-            setHistoryList: (historyList) => set(() => ({ historyList })),
-            appendHistoryList: (historyItem) => {
+            setHistoryList: historyList => set(() => ({ historyList })),
+            appendHistoryList: historyItem => {
                 let historyList = get().historyList;
 
                 // 重复打开不添加历史记录
@@ -62,7 +63,7 @@ const useHistoryStore = create<HistoryProps & HistoryMethods>()(
                 }
 
                 // 如果列表中有旧的同 ID 记录，先将其删除
-                const foundIndex = historyList.findIndex((e) => e.id === historyItem.id);
+                const foundIndex = historyList.findIndex(e => e.id === historyItem.id);
                 if (foundIndex >= 0) {
                     historyList.splice(foundIndex, 1);
                 }
@@ -87,7 +88,7 @@ const useHistoryStore = create<HistoryProps & HistoryMethods>()(
                 set(() => ({ historyList }));
             },
 
-            removeHistoryList: (index) => {
+            removeHistoryList: index => {
                 const historyList = get().historyList;
                 historyList.splice(index, 1);
 
