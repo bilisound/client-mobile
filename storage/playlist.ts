@@ -8,6 +8,7 @@ export interface PlaylistMeta {
     id: string;
     title: string;
     color: string;
+    amount: number;
 }
 
 export interface PlaylistDetailRow {

@@ -1,5 +1,8 @@
+// Polyfill
 import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
+import "core-js/actual/array/to-spliced";
+
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { COLORMODES } from "@gluestack-style/react/lib/typescript/types";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
