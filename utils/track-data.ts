@@ -7,11 +7,16 @@ export async function saveTrackData() {
     const tracks = await TrackPlayer.getQueue();
     const current = await TrackPlayer.getActiveTrackIndex();
 
-    tracks.forEach(e => {
-        e.url = "";
-    });
-
-    await RNFS.writeFile(BILISOUND_PERSIST_QUEUE_PATH, JSON.stringify({ tracks, current }), "utf8");
+    await RNFS.writeFile(
+        BILISOUND_PERSIST_QUEUE_PATH,
+        JSON.stringify({ tracks, current }, (key, value) => {
+            if (key === "url") {
+                return undefined;
+            }
+            return value;
+        }),
+        "utf8",
+    );
 }
 
 export async function loadTrackData() {
@@ -20,9 +25,13 @@ export async function loadTrackData() {
         const data = JSON.parse(raw);
         const tracks: Track[] = data?.tracks ?? [];
         tracks.forEach(e => {
-            e.url = `file://${encodeURI(`${BILISOUND_OFFLINE_PATH}/${e.bilisoundId}_${e.bilisoundEpisode}.m4a`)}`;
             if (typeof e.bilisoundIsLoaded === "undefined") {
                 e.bilisoundIsLoaded = true;
+            }
+            if (e.bilisoundIsLoaded) {
+                e.url = `file://${encodeURI(`${BILISOUND_OFFLINE_PATH}/${e.bilisoundId}_${e.bilisoundEpisode}.m4a`)}`;
+            } else {
+                e.url = require("../assets/placeholder.mp3");
             }
         });
 
