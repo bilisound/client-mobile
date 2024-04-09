@@ -20,14 +20,15 @@ import {
     Pressable,
     Text,
 } from "@gluestack-ui/themed";
-import { FlashList, ListRenderItemInfo } from "@shopify/flash-list";
+import { FlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
 import React, { createContext, useContext, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CommonLayout from "../../../components/CommonLayout";
 import Empty from "../../../components/Empty";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "../../../constants/style";
+import PlaylistItem from "../../../components/PlaylistItem";
+import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../../../constants/style";
 import useCommonColors from "../../../hooks/useCommonColors";
 import { PlaylistMeta, usePlaylistStorage } from "../../../storage/playlist";
 import log from "../../../utils/logger";
@@ -40,32 +41,19 @@ const PlaylistContext = createContext<PlaylistContextProps>({
     onLongPress: () => {},
 });
 
-function PlaylistItem(info: ListRenderItemInfo<PlaylistMeta>) {
+function PlaylistActionItem(item: PlaylistMeta) {
     const context = useContext(PlaylistContext);
 
     return (
-        <Pressable
-            gap="$1"
-            px="$5"
-            py="$3"
-            sx={COMMON_TOUCH_COLOR}
+        <PlaylistItem
+            item={item}
             onPress={() => {
-                router.push(`/(tabs)/(playlist)/detail/${info.item.id}`);
+                router.push(`/(tabs)/(playlist)/detail/${item.id}`);
             }}
             onLongPress={() => {
-                context.onLongPress(info.item.id);
+                context.onLongPress(item.id);
             }}
-        >
-            <Box flexDirection="row" alignItems="center" gap="$3">
-                <Box w="$3" h="$3" bg={info.item.color} borderRadius="$full" />
-                <Text fontSize="$md" lineHeight={24}>
-                    {info.item.title}
-                </Text>
-            </Box>
-            <Text ml="$6" fontSize="$sm" opacity={0.6} lineHeight={21}>
-                {`${info.item.amount} 首歌曲`}
-            </Text>
-        </Pressable>
+        />
     );
 }
 
@@ -240,7 +228,11 @@ export default function Page() {
                         }}
                     />
                 ) : (
-                    <FlashList renderItem={item => <PlaylistItem {...item} />} data={list} estimatedItemSize={73} />
+                    <FlashList
+                        renderItem={item => <PlaylistActionItem {...item.item} />}
+                        data={list}
+                        estimatedItemSize={73}
+                    />
                 )}
             </CommonLayout>
 

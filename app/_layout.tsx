@@ -87,6 +87,7 @@ const RootLayoutNav = () => {
                             }}
                         />
                         <Stack.Screen name="query/[id]" options={{ headerShown: false }} />
+                        <Stack.Screen name="query/apply/[id]" options={{ headerShown: false }} />
                         <Stack.Screen
                             name="history"
                             options={{
@@ -107,7 +108,7 @@ const RootLayoutNav = () => {
     );
 };
 
-const RootLayout: React.FC = () => {
+export default function RootLayout() {
     const [loaded, error] = useFonts({
         SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
         ...FontAwesome.font,
@@ -145,6 +146,4 @@ const RootLayout: React.FC = () => {
     }
 
     return <RootLayoutNav />;
-};
-
-export default RootLayout;
+}

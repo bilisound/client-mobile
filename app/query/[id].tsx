@@ -1,10 +1,22 @@
-import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Box, Fab, Pressable, Text } from "@gluestack-ui/themed";
+import { Entypo, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+    Actionsheet,
+    ActionsheetBackdrop,
+    ActionsheetContent,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper,
+    ActionsheetItem,
+    ActionsheetItemText,
+    Box,
+    Fab,
+    Pressable,
+    Text,
+} from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { Fragment, memo, useCallback, useEffect, useRef } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
@@ -23,6 +35,8 @@ import usePlayerStateStore from "../../store/playerState";
 import { formatSecond } from "../../utils/misc";
 import { handleTogglePlay } from "../../utils/player-control";
 import { convertToHTTPS } from "../../utils/string";
+
+type PageItem = GetBilisoundMetadataResponse["pages"][number];
 
 // 加载进度条
 function ProgressBar({ item }: { item: string }) {
@@ -64,8 +78,9 @@ interface ListEntryProps {
     isDownloaded: boolean;
     isCurrentRequesting: boolean;
     onRequestPlay: () => void;
+    onLongPress: () => void;
     belongId: string;
-    item: GetBilisoundMetadataResponse["pages"][number];
+    item: PageItem;
 }
 
 // 列表项目
@@ -74,6 +89,7 @@ const ListEntryRaw: React.FC<ListEntryProps> = ({
     isDownloaded,
     isCurrentRequesting,
     onRequestPlay,
+    onLongPress,
     belongId,
     item,
 }) => {
@@ -92,7 +108,7 @@ const ListEntryRaw: React.FC<ListEntryProps> = ({
                     onRequestPlay();
                 }
             }}
-            onLongPress={() => null}
+            onLongPress={onLongPress}
         >
             <Box
                 sx={{
@@ -199,14 +215,68 @@ const ListEntry = memo(ListEntryRaw, (a, b) => {
     );
 });
 
-const QueryIdScreen: React.FC = () => {
-    const renderingTime = useRef(0);
-    console.log("TabPlaying 被渲染", renderingTime.current++);
+const iconWrapperStyle = {
+    w: 24,
+    h: 24,
+    alignItems: "center",
+    justifyContent: "center",
+};
 
-    const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
-    // const navigation = useNavigation();
+interface LongPressActionsProps {
+    showActionSheet: boolean;
+    displayTrack?: PageItem;
+    onClose: () => void;
+    onAction: (action: "addPlaylist" | "addPlaylistRecent" | "close") => void;
+}
+
+/**
+ * 长按操作
+ */
+function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
     const edgeInsets = useSafeAreaInsets();
     const { textBasicColor } = useCommonColors();
+
+    return (
+        <Actionsheet isOpen={showActionSheet} onClose={onClose} zIndex={999}>
+            <ActionsheetBackdrop />
+            <ActionsheetContent zIndex={999} pb={edgeInsets.bottom}>
+                <ActionsheetDragIndicatorWrapper>
+                    <ActionsheetDragIndicator />
+                </ActionsheetDragIndicatorWrapper>
+                {!!displayTrack && (
+                    <Box alignItems="flex-start" w="100%" px="$4" py="$4" gap="$1">
+                        <Text fontWeight="700" ellipsizeMode="tail" numberOfLines={1}>
+                            {displayTrack.part}
+                        </Text>
+                        <Text fontSize="$sm" opacity={0.6}>
+                            {formatSecond(displayTrack.duration)}
+                        </Text>
+                    </Box>
+                )}
+                <ActionsheetItem onPress={() => onAction("addPlaylist")}>
+                    <Box sx={iconWrapperStyle}>
+                        <Entypo name="add-to-list" size={20} color={textBasicColor} />
+                    </Box>
+                    <ActionsheetItemText>添加到歌单</ActionsheetItemText>
+                </ActionsheetItem>
+                <ActionsheetItem onPress={() => onAction("close")}>
+                    <Box sx={iconWrapperStyle}>
+                        <MaterialIcons name="cancel" size={22} color={textBasicColor} />
+                    </Box>
+                    <ActionsheetItemText>取消</ActionsheetItemText>
+                </ActionsheetItem>
+            </ActionsheetContent>
+        </Actionsheet>
+    );
+}
+
+const QueryIdScreen: React.FC = () => {
+    const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
+    const edgeInsets = useSafeAreaInsets();
+    const { textBasicColor } = useCommonColors();
+
+    const [showActionSheet, setShowActionSheet] = useState(false);
+    const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
 
     // 数据请求
     const { data, error } = useQuery({
@@ -218,6 +288,11 @@ const QueryIdScreen: React.FC = () => {
     const { appendHistoryList } = useHistoryStore(state => ({
         appendHistoryList: state.appendHistoryList,
     }));
+
+    // 关闭菜单操作
+    const handleClose = () => {
+        setShowActionSheet(false);
+    };
 
     useEffect(() => {
         if (data && !noHistory) {
@@ -243,7 +318,7 @@ const QueryIdScreen: React.FC = () => {
 
     // 播放列表渲染
     const renderItem = useCallback(
-        ({ item }: { item: GetBilisoundMetadataResponse["pages"][number] }) => {
+        ({ item }: { item: PageItem }) => {
             const rootData = data!.data;
             const isActiveTrackMatch =
                 activeTrack?.bilisoundId === rootData.bvid && activeTrack?.bilisoundEpisode === item.page;
@@ -277,6 +352,10 @@ const QueryIdScreen: React.FC = () => {
                             duration: item.duration,
                             title: item.part,
                         });
+                    }}
+                    onLongPress={() => {
+                        setDisplayTrack(item);
+                        setShowActionSheet(true);
                     }}
                     item={item}
                 />
@@ -350,6 +429,21 @@ const QueryIdScreen: React.FC = () => {
                     <FontAwesome5 name="headphones" size={24} color="#fff" />
                 </Fab>
             ) : null}
+            <LongPressActions
+                showActionSheet={showActionSheet}
+                onClose={handleClose}
+                onAction={action => {
+                    handleClose();
+                    switch (action) {
+                        case "addPlaylist":
+                            router.push(`./apply/${data?.data.bvid}_${displayTrack?.page}`);
+                            break;
+                        case "close":
+                            break;
+                    }
+                }}
+                displayTrack={displayTrack}
+            />
         </CommonLayout>
     );
 };
