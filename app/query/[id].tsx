@@ -374,11 +374,7 @@ const QueryIdScreen: React.FC = () => {
         <CommonLayout
             title="查看详情"
             extendToBottom
-            leftAccessories={
-                <Pressable sx={COMMON_FRAME_SOLID_BUTTON_STYLE} onPress={() => router.back()}>
-                    <Ionicons name="arrow-back" size={24} color="#fff" />
-                </Pressable>
-            }
+            leftAccessories="backButton"
             rightAccessories={
                 <Pressable
                     sx={COMMON_FRAME_SOLID_BUTTON_STYLE}

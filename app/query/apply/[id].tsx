@@ -16,7 +16,7 @@ export default function Page() {
     });
 
     return (
-        <CommonLayout title="添加到歌单">
+        <CommonLayout title="添加到歌单" leftAccessories="backButton">
             <Text>{`你正在查看 ${id}, ${episode}`}</Text>
             <Text>{JSON.stringify(data, null, 2)}</Text>
         </CommonLayout>

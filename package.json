@@ -78,6 +78,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/core-js": "^2.5.8",
     "@types/path-browserify": "^1.0.2",
     "@types/react": "~18.2.45",
     "@types/uuid": "^9.0.6",

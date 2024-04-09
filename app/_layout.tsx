@@ -63,7 +63,7 @@ const RootLayoutNav = () => {
                         colors: dark
                             ? {
                                   primary: "#00a48e",
-                                  background: "transparent",
+                                  background: "#171717",
                                   card: "#171717",
                                   text: "#ffffff",
                                   border: "#262626",
@@ -71,7 +71,7 @@ const RootLayoutNav = () => {
                               }
                             : {
                                   primary: "#00a48e",
-                                  background: "transparent",
+                                  background: "#ffffff",
                                   card: "#ffffff",
                                   text: "#000000",
                                   border: "#F1F1F1",

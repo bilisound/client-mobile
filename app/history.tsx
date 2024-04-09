@@ -101,11 +101,7 @@ const History: React.FC = () => {
         <CommonLayout
             title="历史记录"
             extendToBottom
-            leftAccessories={
-                <Pressable sx={COMMON_FRAME_SOLID_BUTTON_STYLE} onPress={() => router.back()}>
-                    <Ionicons name="arrow-back" size={24} color="#fff" />
-                </Pressable>
-            }
+            leftAccessories="backButton"
             rightAccessories={
                 <Pressable
                     sx={COMMON_FRAME_SOLID_BUTTON_STYLE}

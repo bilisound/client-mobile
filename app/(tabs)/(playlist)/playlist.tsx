@@ -8,21 +8,13 @@ import {
     ActionsheetItem,
     ActionsheetItemText,
     Box,
-    Button,
-    ButtonText,
-    Heading,
-    Modal,
-    ModalBackdrop,
-    ModalBody,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
     Pressable,
     Text,
 } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
-import React, { createContext, useContext, useRef, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
+import { Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CommonLayout from "../../../components/CommonLayout";
@@ -54,61 +46,6 @@ function PlaylistActionItem(item: PlaylistMeta) {
                 context.onLongPress(item.id);
             }}
         />
-    );
-}
-
-interface DeleteConfirmDialogProps {
-    showModal: boolean;
-    onClose: (confirmed: boolean) => void;
-    displayTrack?: PlaylistMeta;
-}
-
-/**
- * 删除对话框
- */
-function DeleteConfirmDialog({ showModal, onClose, displayTrack }: DeleteConfirmDialogProps) {
-    const ref = useRef(null);
-    return (
-        <Modal
-            isOpen={showModal}
-            onClose={() => {
-                onClose(false);
-            }}
-            finalFocusRef={ref}
-        >
-            <ModalBackdrop />
-            <ModalContent>
-                <ModalHeader>
-                    <Heading size="lg">删除播放列表</Heading>
-                </ModalHeader>
-                <ModalBody>
-                    <Text>{`确定要删除播放列表「${displayTrack?.title}」吗？`}</Text>
-                </ModalBody>
-                <ModalFooter>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        action="secondary"
-                        mr="$3"
-                        onPress={() => {
-                            onClose(false);
-                        }}
-                    >
-                        <ButtonText>取消</ButtonText>
-                    </Button>
-                    <Button
-                        size="sm"
-                        action="negative"
-                        borderWidth="$0"
-                        onPress={() => {
-                            onClose(true);
-                        }}
-                    >
-                        <ButtonText>确定</ButtonText>
-                    </Button>
-                </ModalFooter>
-            </ModalContent>
-        </Modal>
     );
 }
 
@@ -177,7 +114,6 @@ export default function Page() {
     const [list, setList] = usePlaylistStorage();
 
     const [showActionSheet, setShowActionSheet] = useState(false);
-    const [showDeleteConfirmDialog, setShowDeleteConfirmDialog] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PlaylistMeta | undefined>();
 
     const handleClose = () => setShowActionSheet(prevState => !prevState);
@@ -187,11 +123,7 @@ export default function Page() {
         setShowActionSheet(true);
     };
 
-    const handleDelete = (ok: boolean) => {
-        setShowDeleteConfirmDialog(false);
-        if (!ok) {
-            return;
-        }
+    const handleDelete = () => {
         setList(prevValue => {
             log.info("用户删除歌单");
             const found = prevValue.findIndex(e => e.id === displayTrack?.id);
@@ -245,7 +177,19 @@ export default function Page() {
                     setShowActionSheet(false);
                     switch (action) {
                         case "delete":
-                            setShowDeleteConfirmDialog(true);
+                            Alert.alert("删除歌单确认", `确定要删除歌单「${displayTrack?.title}」吗？`, [
+                                {
+                                    text: "取消",
+                                    style: "cancel",
+                                },
+                                {
+                                    text: "确定",
+                                    style: "default",
+                                    onPress: () => {
+                                        handleDelete();
+                                    },
+                                },
+                            ]);
                             break;
                         case "close":
                             break;
@@ -255,13 +199,6 @@ export default function Page() {
                             break;
                     }
                 }}
-            />
-
-            {/* 确认删除对话框 */}
-            <DeleteConfirmDialog
-                showModal={showDeleteConfirmDialog}
-                onClose={handleDelete}
-                displayTrack={displayTrack}
             />
         </PlaylistContext.Provider>
     );

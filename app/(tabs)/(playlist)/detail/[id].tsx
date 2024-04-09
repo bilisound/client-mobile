@@ -7,7 +7,7 @@ export default function Page() {
     const { id } = useLocalSearchParams<{ id: string }>();
 
     return (
-        <CommonLayout title="查看详情" titleBarTheme="transparent">
+        <CommonLayout title="查看详情" titleBarTheme="transparent" leftAccessories="backButton">
             <Text>你正在查看 {id}</Text>
         </CommonLayout>
     );

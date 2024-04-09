@@ -43,15 +43,7 @@ const History: React.FC = () => {
     );
 
     return (
-        <CommonLayout
-            title="用户说明"
-            leftAccessories={
-                <Pressable sx={COMMON_FRAME_SOLID_BUTTON_STYLE} onPress={() => router.back()}>
-                    <Ionicons name="arrow-back" size={24} color="#fff" />
-                </Pressable>
-            }
-            extendToBottom
-        >
+        <CommonLayout title="用户说明" leftAccessories="backButton" extendToBottom>
             {html && (
                 <WebView
                     ref={webviewRef}

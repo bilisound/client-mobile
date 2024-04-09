@@ -1,15 +1,18 @@
-import { Box, Text } from "@gluestack-ui/themed";
+import { Ionicons } from "@expo/vector-icons";
+import { Box, Pressable, Text } from "@gluestack-ui/themed";
+import { router } from "expo-router";
 import React, { PropsWithChildren } from "react";
 import { StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { COMMON_FRAME_BUTTON_STYLE, COMMON_FRAME_SOLID_BUTTON_STYLE } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
 
 export interface CommonFrameNewProps {
     title?: string;
     titleBarTheme?: "transparent" | "solid";
     extendToBottom?: boolean;
-    leftAccessories?: React.ReactNode;
+    leftAccessories?: React.ReactNode | "backButton";
     rightAccessories?: React.ReactNode;
 }
 
@@ -68,7 +71,24 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                                 gap: 4,
                             }}
                         >
-                            {leftAccessories}
+                            {leftAccessories === "backButton" ? (
+                                <Pressable
+                                    sx={
+                                        titleBarTheme === "solid"
+                                            ? COMMON_FRAME_SOLID_BUTTON_STYLE
+                                            : COMMON_FRAME_BUTTON_STYLE
+                                    }
+                                    onPress={() => router.back()}
+                                >
+                                    <Ionicons
+                                        name="arrow-back"
+                                        size={24}
+                                        color={titleBarTheme === "solid" ? "#fff" : textBasicColor}
+                                    />
+                                </Pressable>
+                            ) : (
+                                leftAccessories
+                            )}
                         </Box>
                     ) : null}
                     {rightAccessories ? (

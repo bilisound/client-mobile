@@ -131,11 +131,7 @@ ${filePath[i]} 文件内容
     return (
         <CommonLayout
             title="导出日志"
-            leftAccessories={
-                <Pressable sx={COMMON_FRAME_SOLID_BUTTON_STYLE} onPress={() => router.back()}>
-                    <Ionicons name="arrow-back" size={24} color="#fff" />
-                </Pressable>
-            }
+            leftAccessories="backButton"
             rightAccessories={
                 <Pressable sx={COMMON_FRAME_SOLID_BUTTON_STYLE} onPress={() => handleShare()}>
                     <Octicons name="share" size={24} color="#fff" />
