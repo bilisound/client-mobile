@@ -21,6 +21,9 @@ export async function loadTrackData() {
         const tracks: Track[] = data?.tracks ?? [];
         tracks.forEach(e => {
             e.url = `file://${encodeURI(`${BILISOUND_OFFLINE_PATH}/${e.bilisoundId}_${e.bilisoundEpisode}.m4a`)}`;
+            if (typeof e.bilisoundIsLoaded === "undefined") {
+                e.bilisoundIsLoaded = true;
+            }
         });
 
         await TrackPlayer.setQueue(data?.tracks ?? []);
