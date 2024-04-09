@@ -1,6 +1,22 @@
-import { logger, fileAsyncTransport } from "react-native-logs";
 import RNFS from "react-native-fs";
+import { logger, fileAsyncTransport, consoleTransport, configLoggerType } from "react-native-logs";
+
 import { BILISOUND_LOG_PATH } from "../constants/file";
+
+let transport: Partial<configLoggerType> = {
+    transport: fileAsyncTransport,
+    transportOptions: {
+        FS: RNFS,
+        fileName: "bilisound_log_{date-today}.log",
+        filePath: BILISOUND_LOG_PATH,
+    },
+};
+
+if (process.env.NODE_ENV === "development") {
+    transport = {
+        transport: consoleTransport,
+    };
+}
 
 const config = {
     levels: {
@@ -15,12 +31,7 @@ const config = {
     printLevel: true,
     printDate: true,
     enabled: true,
-    transport: fileAsyncTransport,
-    transportOptions: {
-        FS: RNFS,
-        fileName: "bilisound_log_{date-today}.log",
-        filePath: BILISOUND_LOG_PATH,
-    },
+    ...transport,
 };
 
 const log = logger.createLogger<"debug" | "info" | "warn" | "error">(config);

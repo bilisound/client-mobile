@@ -12,7 +12,6 @@ export default async function init() {
     // 日志系统初始化
     await useSettingsStore.persist.rehydrate();
     const settings = useSettingsStore.getState();
-    console.log(settings);
     log.setSeverity(settings.debugMode ? "debug" : "info");
 
     // 目录初始化

@@ -67,8 +67,13 @@ function ProgressBar({ item }: { item: string }) {
 // 播放状态图标
 function PlayingIcon() {
     const playingState = usePlaybackState().state;
+    const activeTrack = useActiveTrack();
     const isPlaying = playingState === State.Playing;
     const { accentColor } = useCommonColors();
+
+    if (!activeTrack?.bilisoundIsLoaded) {
+        return <ActivityIndicator color={accentColor} />;
+    }
 
     return <FontAwesome5 name={isPlaying ? "pause" : "play"} size={20} color={accentColor} />;
 }
@@ -76,7 +81,6 @@ function PlayingIcon() {
 interface ListEntryProps {
     isActiveTrack: boolean;
     isDownloaded: boolean;
-    isCurrentRequesting: boolean;
     onRequestPlay: () => void;
     onLongPress: () => void;
     belongId: string;
@@ -87,14 +91,13 @@ interface ListEntryProps {
 const ListEntryRaw: React.FC<ListEntryProps> = ({
     isActiveTrack,
     isDownloaded,
-    isCurrentRequesting,
     onRequestPlay,
     onLongPress,
     belongId,
     item,
 }) => {
     const { width } = useWindowDimensions();
-    const { textBasicColor, accentColor } = useCommonColors();
+    const { textBasicColor } = useCommonColors();
 
     return (
         <Pressable
@@ -104,9 +107,7 @@ const ListEntryRaw: React.FC<ListEntryProps> = ({
                     await handleTogglePlay();
                     return;
                 }
-                if (!isCurrentRequesting) {
-                    onRequestPlay();
-                }
+                onRequestPlay();
             }}
             onLongPress={onLongPress}
         >
@@ -195,9 +196,9 @@ const ListEntryRaw: React.FC<ListEntryProps> = ({
                                 width: 32,
                             }}
                         >
-                            {isCurrentRequesting ? <ActivityIndicator color={accentColor} /> : <PlayingIcon />}
+                            <PlayingIcon />
                         </Box>
-                        {isCurrentRequesting ? <ProgressBar item={`${belongId}_${item.page}`} /> : null}
+                        <ProgressBar item={`${belongId}_${item.page}`} />
                     </>
                 ) : null}
             </Box>
@@ -209,7 +210,6 @@ const ListEntry = memo(ListEntryRaw, (a, b) => {
     return (
         a.isActiveTrack === b.isActiveTrack &&
         a.isDownloaded === b.isDownloaded &&
-        a.isCurrentRequesting === b.isCurrentRequesting &&
         a.item === b.item &&
         a.belongId === b.belongId
     );
@@ -320,30 +320,15 @@ const QueryIdScreen: React.FC = () => {
     const renderItem = useCallback(
         ({ item }: { item: PageItem }) => {
             const rootData = data!.data;
-            const isActiveTrackMatch =
+            const isActiveTrack =
                 activeTrack?.bilisoundId === rootData.bvid && activeTrack?.bilisoundEpisode === item.page;
-            const isRequestTrackMatch = playingRequest?.id === rootData.bvid && playingRequest?.episode === item.page;
-            const isCurrentRequesting = !!playingRequest;
-
-            let isActiveTrack = false;
-            // 可能存在的情况：请求的曲目发生变化，但是当前活动的曲目没有变化
-            if (isActiveTrackMatch && !isCurrentRequesting) {
-                isActiveTrack = true;
-            }
-            if (isRequestTrackMatch) {
-                isActiveTrack = true;
-            }
 
             return (
                 <ListEntry
                     isDownloaded={false}
                     isActiveTrack={isActiveTrack}
-                    isCurrentRequesting={isCurrentRequesting}
                     belongId={rootData.bvid}
                     onRequestPlay={() => {
-                        if (playingRequest) {
-                            return;
-                        }
                         setPlayingRequest({
                             id: rootData.bvid,
                             episode: item.page,
@@ -361,7 +346,7 @@ const QueryIdScreen: React.FC = () => {
                 />
             );
         },
-        [activeTrack, data, playingRequest, setPlayingRequest],
+        [activeTrack, data, setPlayingRequest],
     );
 
     const dataList = data?.data.pages ?? [];
