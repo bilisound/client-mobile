@@ -54,53 +54,57 @@ const RootLayoutNav = () => {
 
     const dark = colorScheme === "dark";
 
+    const theme = {
+        dark,
+        colors: dark
+            ? {
+                  primary: "#00a48e",
+                  background: "#171717",
+                  card: "#171717",
+                  text: "#ffffff",
+                  border: "#262626",
+                  notification: "red",
+              }
+            : {
+                  primary: "#00a48e",
+                  background: "#ffffff",
+                  card: "#ffffff",
+                  text: "#000000",
+                  border: "#F1F1F1",
+                  notification: "red",
+              },
+    };
+
+    const routes = (
+        <Stack>
+            <Stack.Screen
+                name="(tabs)"
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen name="query/[id]" options={{ headerShown: false }} />
+            <Stack.Screen
+                name="history"
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen name="about" options={{ headerShown: false }} />
+            <Stack.Screen name="readme" options={{ headerShown: false }} />
+            <Stack.Screen name="barcode" options={{ headerShown: false, animation: "fade" }} />
+            <Stack.Screen name="notification.click" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={modalSettings} />
+            <Stack.Screen name="log-show" options={{ headerShown: false }} />
+            <Stack.Screen name="apply-playlist" options={{ headerShown: false }} />
+        </Stack>
+    );
+
     return (
         <GluestackUIProvider config={config} colorMode={(colorScheme ?? "light") as COLORMODES}>
             <QueryClientProvider client={queryClient}>
-                <ThemeProvider
-                    value={{
-                        dark,
-                        colors: dark
-                            ? {
-                                  primary: "#00a48e",
-                                  background: "#171717",
-                                  card: "#171717",
-                                  text: "#ffffff",
-                                  border: "#262626",
-                                  notification: "red",
-                              }
-                            : {
-                                  primary: "#00a48e",
-                                  background: "#ffffff",
-                                  card: "#ffffff",
-                                  text: "#000000",
-                                  border: "#F1F1F1",
-                                  notification: "red",
-                              },
-                    }}
-                >
-                    <Stack>
-                        <Stack.Screen
-                            name="(tabs)"
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen name="query/[id]" options={{ headerShown: false }} />
-                        <Stack.Screen name="query/apply/[id]" options={{ headerShown: false }} />
-                        <Stack.Screen
-                            name="history"
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen name="about" options={{ headerShown: false }} />
-                        <Stack.Screen name="readme" options={{ headerShown: false }} />
-                        <Stack.Screen name="barcode" options={{ headerShown: false, animation: "fade" }} />
-                        <Stack.Screen name="notification.click" options={{ headerShown: false }} />
-                        <Stack.Screen name="modal" options={modalSettings} />
-                        <Stack.Screen name="log-show" options={{ headerShown: false }} />
-                    </Stack>
+                <ThemeProvider value={theme}>
+                    {routes}
                     <AudioManager />
                 </ThemeProvider>
             </QueryClientProvider>

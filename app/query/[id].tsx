@@ -24,45 +24,21 @@ import { v4 } from "uuid";
 
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "../../api/bilisound";
 import CommonLayout from "../../components/CommonLayout";
+import ProgressBar from "../../components/ProgressBar";
 import VideoMeta from "../../components/VideoMeta";
 import VideoSkeleton from "../../components/VideoSkeleton";
 import { BILIBILI_VIDEO_URL_PREFIX } from "../../constants/network";
 import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "../../constants/style";
 import useCommonColors from "../../hooks/useCommonColors";
-import useDownloadStore from "../../store/download";
+import useAddPlaylistStore from "../../store/addPlaylist";
 import useHistoryStore from "../../store/history";
 import usePlayerStateStore from "../../store/playerState";
+import log from "../../utils/logger";
 import { formatSecond } from "../../utils/misc";
 import { handleTogglePlay } from "../../utils/player-control";
 import { convertToHTTPS } from "../../utils/string";
 
 type PageItem = GetBilisoundMetadataResponse["pages"][number];
-
-// 加载进度条
-function ProgressBar({ item }: { item: string }) {
-    const { downloadList } = useDownloadStore(state => ({
-        downloadList: state.downloadList,
-    }));
-    const downloadEntry = downloadList.get(item);
-    const { accentColor } = useCommonColors();
-
-    if (!downloadEntry) {
-        return null;
-    }
-
-    return (
-        <Box
-            sx={{
-                height: 3,
-                position: "absolute",
-                backgroundColor: accentColor,
-                left: 0,
-                bottom: 0,
-                width: `${(downloadEntry.progress.bytesWritten / downloadEntry.progress.contentLength) * 100}%`,
-            }}
-        />
-    );
-}
 
 // 播放状态图标
 function PlayingIcon() {
@@ -278,6 +254,9 @@ const QueryIdScreen: React.FC = () => {
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
 
+    // 添加播放列表
+    const { setPlaylistDetail } = useAddPlaylistStore(state => ({ setPlaylistDetail: state.setPlaylistDetail }));
+
     // 数据请求
     const { data, error } = useQuery({
         queryKey: [id],
@@ -415,9 +394,23 @@ const QueryIdScreen: React.FC = () => {
                 onClose={handleClose}
                 onAction={action => {
                     handleClose();
+                    if (!displayTrack) {
+                        log.error("/query/[id]", `用户在没有指定操作目标的情况下，执行了菜单操作 ${action}`);
+                        return;
+                    }
                     switch (action) {
                         case "addPlaylist":
-                            router.push(`./apply/${data?.data.bvid}_${displayTrack?.page}`);
+                            router.push(`/apply-playlist`);
+                            setPlaylistDetail([
+                                {
+                                    author: data?.data.owner.name ?? "",
+                                    bvid: data?.data.bvid ?? "",
+                                    duration: displayTrack.duration,
+                                    episode: displayTrack.page,
+                                    title: displayTrack.part,
+                                    imgUrl: data?.data.pic ?? "",
+                                },
+                            ]);
                             break;
                         case "close":
                             break;

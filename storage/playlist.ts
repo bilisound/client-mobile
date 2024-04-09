@@ -14,11 +14,12 @@ export interface PlaylistMeta {
 }
 
 export interface PlaylistDetailRow {
-    id: string;
+    author: string;
     bvid: string;
+    duration: number;
     episode: number;
     title: string;
-    duration: number;
+    imgUrl: string;
 }
 
 export const playlistStorage = new MMKVLoader().withInstanceID("storage-playlist").initialize();
@@ -29,4 +30,26 @@ export function usePlaylistStorage() {
 
 export function usePlaylistLastUsed() {
     return useMMKVStorage<PlaylistMeta | undefined>(PLAYLIST_LAST_USED, playlistStorage, undefined);
+}
+
+export function addToPlaylist(id: string, row: PlaylistDetailRow | PlaylistDetailRow[]) {
+    const list = Array.isArray(row) ? row : [row];
+
+    const originalList = playlistStorage.getArray<PlaylistDetailRow>(PLAYLIST_ITEM_KEY_PREFIX + id) || [];
+    originalList.push(...list);
+    playlistStorage.setArray(PLAYLIST_ITEM_KEY_PREFIX + id, originalList);
+}
+
+export function syncPlaylistAmount(id: string) {
+    const playlistMetas = playlistStorage.getArray<PlaylistMeta>(PLAYLIST_INDEX_KEY) || [];
+    const playlistData = playlistStorage.getArray<PlaylistDetailRow>(PLAYLIST_ITEM_KEY_PREFIX + id) || [];
+
+    const len = playlistData.length;
+    const foundIndex = playlistMetas.findIndex(e => e.id === id);
+    if (foundIndex < 0) {
+        return;
+    }
+    playlistMetas[foundIndex].amount = len;
+
+    playlistStorage.setArray(PLAYLIST_INDEX_KEY, playlistMetas);
 }
