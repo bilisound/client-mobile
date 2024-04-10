@@ -1,21 +1,122 @@
-import { useColorMode } from "@gluestack-ui/themed";
+import { Ionicons } from "@expo/vector-icons";
+import { Box, Button, ButtonText, Text, useColorMode } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import Color from "color";
+import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { useMMKVStorage } from "react-native-mmkv-storage";
+import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "../../../../components/CommonLayout";
 import SongItem from "../../../../components/SongItem";
+import useCommonColors from "../../../../hooks/useCommonColors";
 import {
     PLAYLIST_ITEM_KEY_PREFIX,
     PlaylistDetailRow,
+    PlaylistMeta,
     playlistStorage,
     usePlaylistStorage,
 } from "../../../../storage/playlist";
+import { playlistToTracks } from "../../../../utils/track-data";
+
+function extractAndProcessImgUrls(playlistDetails: PlaylistDetailRow[]) {
+    const imgUrls = playlistDetails.map(detail => detail.imgUrl);
+    return Array.from(new Set(imgUrls));
+}
+
+const HEADER_BASE_SIZE = 120;
+
+function ImagesGroup({ images }: { images: string[] }) {
+    if (images.length === 0) {
+        return <Box bg="$trueGray500" w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" />;
+    }
+    if (images.length >= 1 && images.length <= 3) {
+        return (
+            <Box w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" overflow="hidden">
+                <Image
+                    source={images[0]}
+                    style={{
+                        width: HEADER_BASE_SIZE,
+                        height: HEADER_BASE_SIZE,
+                        objectFit: "cover",
+                    }}
+                />
+            </Box>
+        );
+    }
+    return (
+        <Box w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" overflow="hidden">
+            <Box flexDirection="row">
+                <Image
+                    source={images[0]}
+                    style={{
+                        width: HEADER_BASE_SIZE / 2,
+                        height: HEADER_BASE_SIZE / 2,
+                        objectFit: "cover",
+                    }}
+                />
+                <Image
+                    source={images[1]}
+                    style={{
+                        width: HEADER_BASE_SIZE / 2,
+                        height: HEADER_BASE_SIZE / 2,
+                        objectFit: "cover",
+                    }}
+                />
+            </Box>
+            <Box flexDirection="row">
+                <Image
+                    source={images[2]}
+                    style={{
+                        width: HEADER_BASE_SIZE / 2,
+                        height: HEADER_BASE_SIZE / 2,
+                        objectFit: "cover",
+                    }}
+                />
+                <Image
+                    source={images[3]}
+                    style={{
+                        width: HEADER_BASE_SIZE / 2,
+                        height: HEADER_BASE_SIZE / 2,
+                        objectFit: "cover",
+                    }}
+                />
+            </Box>
+        </Box>
+    );
+}
+
+function Header({ meta, images, onPlay }: { meta: PlaylistMeta; images: string[]; onPlay: () => void }) {
+    return (
+        <Box flexDirection="row" gap="$4" p="$4">
+            <ImagesGroup images={images} />
+            <Box>
+                <Text fontSize="$xl" fontWeight="700" lineHeight="$xl">
+                    {meta.title}
+                </Text>
+                <Text opacity={0.6} mt="$2">{`${meta.amount} 首歌曲`}</Text>
+                <Button
+                    mt="$4"
+                    rounded="$full"
+                    size="md"
+                    variant="solid"
+                    action="primary"
+                    isDisabled={false}
+                    isFocusVisible={false}
+                    onPress={onPlay}
+                >
+                    <Ionicons name="play" size={20} color="white" />
+                    <ButtonText> 播放</ButtonText>
+                </Button>
+            </Box>
+        </Box>
+    );
+}
 
 export default function Page() {
+    const { bgColor } = useCommonColors();
     const colorMode = useColorMode();
     const { id } = useLocalSearchParams<{ id: string }>();
 
@@ -24,12 +125,18 @@ export default function Page() {
 
     const meta = playlistMeta.find(e => e.id === id);
 
+    async function handleRequestPlay(index: number) {
+        const tracks = await playlistToTracks(playlistDetail);
+        await TrackPlayer.setQueue(tracks);
+        await TrackPlayer.skip(index);
+    }
+
     if (!meta) {
         return null;
     }
 
     const fromColor = Color(meta.color)
-        .lightness(colorMode === "dark" ? 20 : 90)
+        .lightness(colorMode === "dark" ? 20 : 95)
         .saturationl(100)
         .toString();
 
@@ -38,24 +145,47 @@ export default function Page() {
             title="查看详情"
             solidColor={fromColor}
             solidScheme={colorMode as "light" | "dark"}
+            bgColor={fromColor}
             leftAccessories="backButton"
+            extendToBottom
         >
-            <LinearGradient
-                colors={[`${fromColor}`, `transparent`]}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 0, y: 1 }}
-                style={{
-                    width: "100%",
-                    height: 250,
-                }}
-                aria-hidden
-            />
             <FlashList
                 renderItem={item => {
-                    return <SongItem data={item.item} index={item.index + 1} />;
+                    return (
+                        <SongItem
+                            data={item.item}
+                            index={item.index + 1}
+                            onRequestPlay={() => {
+                                handleRequestPlay(item.index);
+                            }}
+                        />
+                    );
                 }}
                 data={playlistDetail}
                 estimatedItemSize={68}
+                contentContainerStyle={{
+                    backgroundColor: playlistDetail.length > 0 ? bgColor : "transparent",
+                }}
+                ListHeaderComponent={
+                    <LinearGradient
+                        colors={[`${fromColor}`, `transparent`]}
+                        start={{ x: 0, y: 0.2 }}
+                        end={{ x: 0, y: 1 }}
+                        style={{
+                            width: "100%",
+                            height: 170,
+                        }}
+                        aria-hidden
+                    >
+                        <Header
+                            meta={meta}
+                            images={extractAndProcessImgUrls(playlistDetail)}
+                            onPlay={() => {
+                                handleRequestPlay(0);
+                            }}
+                        />
+                    </LinearGradient>
+                }
             />
         </CommonLayout>
     );

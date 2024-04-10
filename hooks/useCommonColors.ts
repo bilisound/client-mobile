@@ -10,10 +10,14 @@ const useCommonColors = () => {
     const textBasicColorLight = useToken("colors", "textLight700");
     const textBasicColorDark = useToken("colors", "textDark200");
     const textBasicColor = colorScheme === "dark" ? textBasicColorDark : textBasicColorLight;
+
+    const bgColor = colorScheme === "dark" ? "#171717" : "#ffffff";
+
     return {
         primaryColor,
         accentColor,
         textBasicColor,
+        bgColor,
     };
 };
 

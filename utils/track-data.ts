@@ -1,7 +1,14 @@
 import RNFS from "react-native-fs";
-import TrackPlayer, { Track } from "react-native-track-player";
+import TrackPlayer, { AddTrack, Track } from "react-native-track-player";
+import { v4 as uuidv4 } from "uuid";
 
+import log from "./logger";
+import { getCacheAudioPath } from "./misc";
+import { convertToHTTPS } from "./string";
 import { BILISOUND_OFFLINE_PATH, BILISOUND_PERSIST_QUEUE_PATH } from "../constants/file";
+import { PlaylistDetailRow } from "../storage/playlist";
+
+const placeholder = require("../assets/placeholder.mp3");
 
 export async function saveTrackData() {
     const tracks = await TrackPlayer.getQueue();
@@ -41,4 +48,39 @@ export async function loadTrackData() {
         }
         await TrackPlayer.stop();
     }
+}
+
+export async function playlistToTracks(input: PlaylistDetailRow[]) {
+    const newTracks: AddTrack[] = input.map(e => ({
+        url: placeholder,
+        title: e.title,
+        artist: e.author,
+        artwork: convertToHTTPS(e.imgUrl),
+        duration: e.duration,
+        bilisoundId: e.bvid,
+        bilisoundEpisode: e.episode,
+        bilisoundUniqueId: uuidv4(),
+        bilisoundIsLoaded: false,
+    }));
+    const promises: any[] = [];
+    newTracks.forEach((e, i) => {
+        promises.push(
+            (async () => {
+                const url = getCacheAudioPath(e.bilisoundId, e.bilisoundEpisode);
+                try {
+                    const found = await RNFS.exists(url);
+                    // log.debug("检测 " + url + " 是否存在。结果：" + found);
+                    if (found) {
+                        e.url = url;
+                        e.bilisoundIsLoaded = true;
+                    }
+                } catch (e) {
+                    log.error(`检测 ${url} 的存在时发生了预期外的错误`, e);
+                }
+            })(),
+        );
+    });
+    await Promise.allSettled(promises);
+    // console.log(JSON.stringify(newTracks, null, 2));
+    return newTracks;
 }

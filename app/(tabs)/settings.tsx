@@ -36,6 +36,7 @@ const Settings: React.FC = () => {
     const [cacheRefreshFlag, setCacheRefreshFlag] = useState(false);
 
     useEffect(() => {
+        let died = false;
         (async () => {
             const tracks = await TrackPlayer.getQueue();
             const cacheSizeRaw = await checkDirectorySize(BILISOUND_OFFLINE_PATH);
@@ -45,9 +46,15 @@ const Settings: React.FC = () => {
                     return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
                 },
             });
+            if (died) {
+                return;
+            }
             setCacheSize(cacheSizeRaw);
             setCacheSizeFree(cacheFreeSizeRaw);
         })();
+        return () => {
+            died = true;
+        };
     }, [cacheRefreshFlag]);
 
     const developerOptions = (

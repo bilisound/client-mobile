@@ -13,6 +13,7 @@ export interface CommonFrameNewProps {
     titleBarTheme?: "transparent" | "solid";
     solidColor?: string;
     solidScheme?: "dark" | "light";
+    bgColor?: string;
     extendToBottom?: boolean;
     leftAccessories?: React.ReactNode | "backButton";
     rightAccessories?: React.ReactNode;
@@ -24,6 +25,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     titleBarTheme = "solid",
     solidColor,
     solidScheme = "dark",
+    bgColor = "transparent",
     extendToBottom,
     leftAccessories,
     rightAccessories,
@@ -41,6 +43,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
         <Box
             sx={{
                 height: "100%",
+                backgroundColor: bgColor,
             }}
         >
             {titleBarTheme === "solid" && solidScheme === "dark" ? (

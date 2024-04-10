@@ -19,12 +19,23 @@ import { saveTrackData } from "../utils/track-data";
 
 const events = [Event.PlaybackState, Event.PlaybackError, Event.PlaybackActiveTrackChanged];
 
+const reDownloadLock = new Set<string>();
+
 async function handleReDownload() {
-    const { updateDownloadItem, removeDownloadItem } = useDownloadStore.getState();
+    const { updateDownloadItem, removeDownloadItem, downloadList } = useDownloadStore.getState();
     const { filterResourceURL } = useSettingsStore.getState();
     const { setPlayingRequest } = usePlayerStateStore.getState();
 
     const activeTrack = await getActiveTrack();
+
+    // 上锁处理
+    if (activeTrack) {
+        const id = `${activeTrack.bilisoundId}_${activeTrack.bilisoundEpisode}`;
+        if (reDownloadLock.has(id)) {
+            return;
+        }
+        reDownloadLock.add(id);
+    }
 
     if (activeTrack && !activeTrack.bilisoundIsLoaded) {
         log.debug("没有 isLoaded，开始进行处理");
@@ -32,18 +43,19 @@ async function handleReDownload() {
             id: activeTrack.bilisoundId,
             episode: activeTrack.bilisoundEpisode,
         };
+        const id = `${playingRequest.id}_${playingRequest.episode}`;
+
+        // 避免重复操作
+        if (downloadList.has(id)) {
+            log.debug("已经有相同任务在处理");
+            return;
+        }
         const checkUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode);
 
         if (await RNFS.exists(checkUrl)) {
             log.debug("本地缓存有对应内容，直接使用");
         } else {
             log.debug("本地缓存无对应内容，开始请求网络资源");
-            const url = await getBilisoundResourceUrl({
-                id: playingRequest.id,
-                episode: playingRequest.episode,
-                filterResourceURL,
-            });
-            const id = `${playingRequest.id}_${playingRequest.episode}`;
 
             // 在状态管理器创建下载任务
             updateDownloadItem(id, {
@@ -55,6 +67,13 @@ async function handleReDownload() {
                     contentLength: 0,
                     bytesWritten: 0,
                 },
+            });
+
+            // 获取源地址
+            const url = await getBilisoundResourceUrl({
+                id: playingRequest.id,
+                episode: playingRequest.episode,
+                filterResourceURL,
             });
 
             const beginTime = global.performance.now();
@@ -100,6 +119,7 @@ async function handleReDownload() {
         }
         await TrackPlayer.play();
         setPlayingRequest(null);
+        reDownloadLock.delete(id);
     }
 }
 
@@ -187,7 +207,6 @@ const AudioManager: React.FC = () => {
                     bilisoundId: playingRequest.id,
                     bilisoundEpisode: playingRequest.episode,
                     bilisoundUniqueId: uuidv4(),
-                    bilisoundCheckUrl: checkUrl,
                     bilisoundIsLoaded: isLoaded,
                 },
             ]);
@@ -233,7 +252,7 @@ const AudioManager: React.FC = () => {
         return () => {
             eventHandler?.remove();
         };
-    }, [playingRequest]);
+    }, [playingRequest, setPlayingRequest, toast]);
 
     return null;
 };
