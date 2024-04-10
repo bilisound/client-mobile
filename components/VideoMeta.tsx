@@ -1,14 +1,16 @@
-import { Entypo } from "@expo/vector-icons";
-import { Pressable, Text, Box } from "@gluestack-ui/themed";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { Pressable, Text, Box, ButtonText, Button } from "@gluestack-ui/themed";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { useWindowDimensions } from "react-native";
 
 import { GetBilisoundMetadataResponse } from "../api/bilisound";
 import { SCREEN_BREAKPOINTS } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
+import useAddPlaylistStore from "../store/addPlaylist";
 import { formatDate } from "../utils/misc";
 import { convertToHTTPS } from "../utils/string";
 
@@ -24,6 +26,28 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
 
     // 展示更多
     const [showMore, setShowMore] = useState(false);
+
+    // 添加播放列表
+    const { setPlaylistDetail, setName } = useAddPlaylistStore(state => ({
+        setPlaylistDetail: state.setPlaylistDetail,
+        setName: state.setName,
+    }));
+
+    // 批量添加操作
+    function handleCreatePlaylist() {
+        setPlaylistDetail(
+            meta.pages.map(e => ({
+                author: meta.owner.name ?? "",
+                bvid: meta.bvid ?? "",
+                duration: e.duration,
+                episode: e.page,
+                title: e.part,
+                imgUrl: meta.pic ?? "",
+            })),
+        );
+        setName(meta.title);
+        router.push(`/apply-playlist`);
+    }
 
     const showMoreEl = (
         <Text selectable fontSize={15} lineHeight={15 * 1.5}>
@@ -184,6 +208,23 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
 
                 {/* 简介 */}
                 {showMore ? showMoreEl : showMoreElHidden}
+
+                {/* 操作 */}
+                <Box flexDirection="row">
+                    <Button
+                        mt="$5"
+                        rounded="$full"
+                        size="md"
+                        variant="solid"
+                        action="positive"
+                        isDisabled={false}
+                        isFocusVisible={false}
+                        onPress={handleCreatePlaylist}
+                    >
+                        <MaterialIcons name="add" size={22} color="white" />
+                        <ButtonText> 创建播放列表</ButtonText>
+                    </Button>
+                </Box>
             </Box>
         </Box>
     );

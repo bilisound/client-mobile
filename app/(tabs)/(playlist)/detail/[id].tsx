@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Box, Button, ButtonText, Text, useColorMode } from "@gluestack-ui/themed";
+import { Box, Button, ButtonText, Text } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
+import { useColorScheme } from "react-native";
 import { useMMKVStorage } from "react-native-mmkv-storage";
 import TrackPlayer from "react-native-track-player";
 
@@ -88,7 +89,17 @@ function ImagesGroup({ images }: { images: string[] }) {
     );
 }
 
-function Header({ meta, images, onPlay }: { meta: PlaylistMeta; images: string[]; onPlay: () => void }) {
+function Header({
+    meta,
+    images,
+    onPlay,
+    showPlayButton,
+}: {
+    meta: PlaylistMeta;
+    images: string[];
+    onPlay: () => void;
+    showPlayButton: boolean;
+}) {
     return (
         <Box flexDirection="row" gap="$4" p="$4">
             <ImagesGroup images={images} />
@@ -97,19 +108,21 @@ function Header({ meta, images, onPlay }: { meta: PlaylistMeta; images: string[]
                     {meta.title}
                 </Text>
                 <Text opacity={0.6} mt="$2">{`${meta.amount} 首歌曲`}</Text>
-                <Button
-                    mt="$4"
-                    rounded="$full"
-                    size="md"
-                    variant="solid"
-                    action="primary"
-                    isDisabled={false}
-                    isFocusVisible={false}
-                    onPress={onPlay}
-                >
-                    <Ionicons name="play" size={20} color="white" />
-                    <ButtonText> 播放</ButtonText>
-                </Button>
+                {showPlayButton && (
+                    <Button
+                        mt="$5"
+                        rounded="$full"
+                        size="md"
+                        variant="solid"
+                        action="primary"
+                        isDisabled={false}
+                        isFocusVisible={false}
+                        onPress={onPlay}
+                    >
+                        <Ionicons name="play" size={20} color="white" />
+                        <ButtonText> 播放</ButtonText>
+                    </Button>
+                )}
             </Box>
         </Box>
     );
@@ -117,7 +130,7 @@ function Header({ meta, images, onPlay }: { meta: PlaylistMeta; images: string[]
 
 export default function Page() {
     const { bgColor } = useCommonColors();
-    const colorMode = useColorMode();
+    const colorMode = useColorScheme();
     const { id } = useLocalSearchParams<{ id: string }>();
 
     const [playlistMeta] = usePlaylistStorage();
@@ -145,7 +158,7 @@ export default function Page() {
             title="查看详情"
             solidColor={fromColor}
             solidScheme={colorMode as "light" | "dark"}
-            bgColor={fromColor}
+            bgColor={playlistDetail.length > 0 ? fromColor : bgColor}
             leftAccessories="backButton"
             extendToBottom
         >
@@ -164,11 +177,11 @@ export default function Page() {
                 data={playlistDetail}
                 estimatedItemSize={68}
                 contentContainerStyle={{
-                    backgroundColor: playlistDetail.length > 0 ? bgColor : "transparent",
+                    backgroundColor: bgColor,
                 }}
                 ListHeaderComponent={
                     <LinearGradient
-                        colors={[`${fromColor}`, `transparent`]}
+                        colors={[fromColor, bgColor]}
                         start={{ x: 0, y: 0.2 }}
                         end={{ x: 0, y: 1 }}
                         style={{
@@ -180,12 +193,14 @@ export default function Page() {
                         <Header
                             meta={meta}
                             images={extractAndProcessImgUrls(playlistDetail)}
+                            showPlayButton={playlistDetail.length > 0}
                             onPlay={() => {
                                 handleRequestPlay(0);
                             }}
                         />
                     </LinearGradient>
                 }
+                ListEmptyComponent={<Text h="100%">暂无内容</Text>}
             />
         </CommonLayout>
     );

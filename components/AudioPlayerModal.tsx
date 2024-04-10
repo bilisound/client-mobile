@@ -1,5 +1,5 @@
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Pressable, Text, Box, useColorMode } from "@gluestack-ui/themed";
+import { Pressable, Text, Box } from "@gluestack-ui/themed";
 import { Slider } from "@miblanchard/react-native-slider";
 import { Image } from "expo-image";
 import { router } from "expo-router";
@@ -154,7 +154,6 @@ const AudioPlayButtonIcon: React.FC = () => {
 
 const AudioPlayerModal: React.FC = () => {
     const colorScheme = useColorScheme();
-    const colorMode = useColorMode();
     const { textBasicColor } = useCommonColors();
     const activeTrack = useActiveTrack();
     const safeAreaInsets = useSafeAreaInsets();
@@ -217,7 +216,7 @@ const AudioPlayerModal: React.FC = () => {
                     setSmallestSize(Math.min(layout.width, layout.height) - 64);
                 }}
             >
-                {colorMode === "dark" ? (
+                {colorScheme === "dark" ? (
                     <Image
                         source={activeTrack?.artwork}
                         style={{

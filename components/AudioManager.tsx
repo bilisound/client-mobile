@@ -27,6 +27,7 @@ async function handleReDownload() {
     const { setPlayingRequest } = usePlayerStateStore.getState();
 
     const activeTrack = await getActiveTrack();
+    console.log(activeTrack);
 
     // 上锁处理
     if (activeTrack) {

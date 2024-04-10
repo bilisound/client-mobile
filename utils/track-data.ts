@@ -1,3 +1,4 @@
+import { Asset } from "expo-asset";
 import RNFS from "react-native-fs";
 import TrackPlayer, { AddTrack, Track } from "react-native-track-player";
 import { v4 as uuidv4 } from "uuid";
@@ -7,8 +8,6 @@ import { getCacheAudioPath } from "./misc";
 import { convertToHTTPS } from "./string";
 import { BILISOUND_OFFLINE_PATH, BILISOUND_PERSIST_QUEUE_PATH } from "../constants/file";
 import { PlaylistDetailRow } from "../storage/playlist";
-
-const placeholder = require("../assets/placeholder.mp3");
 
 export async function saveTrackData() {
     const tracks = await TrackPlayer.getQueue();
@@ -30,7 +29,7 @@ export async function loadTrackData() {
     if (await RNFS.exists(BILISOUND_PERSIST_QUEUE_PATH)) {
         const raw = await RNFS.readFile(BILISOUND_PERSIST_QUEUE_PATH, "utf8");
         const data = JSON.parse(raw);
-        const tracks: Track[] = data?.tracks ?? [];
+        const tracks: AddTrack[] = data?.tracks ?? [];
         tracks.forEach(e => {
             if (typeof e.bilisoundIsLoaded === "undefined") {
                 e.bilisoundIsLoaded = true;
@@ -38,7 +37,8 @@ export async function loadTrackData() {
             if (e.bilisoundIsLoaded) {
                 e.url = `file://${encodeURI(`${BILISOUND_OFFLINE_PATH}/${e.bilisoundId}_${e.bilisoundEpisode}.m4a`)}`;
             } else {
-                e.url = require("../assets/placeholder.mp3");
+                // 使用 `setQueue()` 添加的曲目，url 需要手动转换成 `Asset` 对象。然而使用 `add()` 添加就不需要……
+                e.url = Asset.fromModule(require("../assets/placeholder.mp3")) as any;
             }
         });
 
@@ -51,8 +51,8 @@ export async function loadTrackData() {
 }
 
 export async function playlistToTracks(input: PlaylistDetailRow[]) {
-    const newTracks: AddTrack[] = input.map(e => ({
-        url: placeholder,
+    const newTracks: Track[] = input.map(e => ({
+        url: Asset.fromModule(require("../assets/placeholder.mp3")) as any,
         title: e.title,
         artist: e.author,
         artwork: convertToHTTPS(e.imgUrl),

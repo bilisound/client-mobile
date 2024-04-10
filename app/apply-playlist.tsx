@@ -11,7 +11,10 @@ import useAddPlaylistStore from "../store/addPlaylist";
 
 export default function Page() {
     // 添加播放列表
-    const { playlistDetail } = useAddPlaylistStore(state => ({ playlistDetail: state.playlistDetail }));
+    const { playlistDetail } = useAddPlaylistStore(state => ({
+        playlistDetail: state.playlistDetail,
+        name: state.name,
+    }));
 
     const [playlistStorage] = usePlaylistStorage();
 

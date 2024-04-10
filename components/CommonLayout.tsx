@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Box, Pressable, Text, useColorMode, useToken } from "@gluestack-ui/themed";
 import { router } from "expo-router";
 import React, { PropsWithChildren } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { COMMON_FRAME_BUTTON_STYLE, COMMON_FRAME_SOLID_BUTTON_STYLE } from "../constants/style";
@@ -32,10 +32,10 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
 }) => {
     const edgeInsets = useSafeAreaInsets();
     const { textBasicColor } = useCommonColors();
-    const colorMode = useColorMode();
+    const colorMode = useColorScheme();
 
     const computedSolidColor = solidColor || (colorMode === "dark" ? "$primary900" : "$primary500");
-    const textSolidColorDark = useToken("colors", "textDark200");
+    const textSolidColorDark = useToken("colors", "white");
     const textSolidColorLight = useToken("colors", "textLight700");
     const textSolidColor = solidScheme === "dark" ? textSolidColorDark : textSolidColorLight;
 
