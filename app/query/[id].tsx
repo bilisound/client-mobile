@@ -1,4 +1,4 @@
-import { Entypo, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import {
     Actionsheet,
     ActionsheetBackdrop,
@@ -16,180 +16,28 @@ import { FlashList } from "@shopify/flash-list";
 import { useQuery } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { memo, useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, useWindowDimensions, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
+import { useActiveTrack } from "react-native-track-player";
 import { v4 } from "uuid";
 
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "../../api/bilisound";
 import CommonLayout from "../../components/CommonLayout";
-import ProgressBar from "../../components/ProgressBar";
+import SongItem from "../../components/SongItem";
 import VideoMeta from "../../components/VideoMeta";
 import VideoSkeleton from "../../components/VideoSkeleton";
 import { BILIBILI_VIDEO_URL_PREFIX } from "../../constants/network";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "../../constants/style";
+import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../../constants/style";
 import useCommonColors from "../../hooks/useCommonColors";
 import useAddPlaylistStore from "../../store/addPlaylist";
 import useHistoryStore from "../../store/history";
 import usePlayerStateStore from "../../store/playerState";
 import log from "../../utils/logger";
 import { formatSecond } from "../../utils/misc";
-import { handleTogglePlay } from "../../utils/player-control";
 import { convertToHTTPS } from "../../utils/string";
 
 type PageItem = GetBilisoundMetadataResponse["pages"][number];
-
-// 播放状态图标
-function PlayingIcon() {
-    const playingState = usePlaybackState().state;
-    const activeTrack = useActiveTrack();
-    const isPlaying = playingState === State.Playing;
-    const { accentColor } = useCommonColors();
-
-    if (!activeTrack?.bilisoundIsLoaded) {
-        return <ActivityIndicator color={accentColor} />;
-    }
-
-    return <FontAwesome5 name={isPlaying ? "pause" : "play"} size={20} color={accentColor} />;
-}
-
-interface ListEntryProps {
-    isActiveTrack: boolean;
-    isDownloaded: boolean;
-    onRequestPlay: () => void;
-    onLongPress: () => void;
-    belongId: string;
-    item: PageItem;
-}
-
-// 列表项目
-const ListEntryRaw: React.FC<ListEntryProps> = ({
-    isActiveTrack,
-    isDownloaded,
-    onRequestPlay,
-    onLongPress,
-    belongId,
-    item,
-}) => {
-    const { width } = useWindowDimensions();
-    const { textBasicColor } = useCommonColors();
-
-    return (
-        <Pressable
-            sx={COMMON_TOUCH_COLOR}
-            onPress={async () => {
-                if (isActiveTrack) {
-                    await handleTogglePlay();
-                    return;
-                }
-                onRequestPlay();
-            }}
-            onLongPress={onLongPress}
-        >
-            <Box
-                sx={{
-                    paddingHorizontal: width >= SCREEN_BREAKPOINTS.md ? 24 : 16,
-                    height: 64,
-                    flexDirection: "row",
-                    gap: 10,
-                    position: "relative",
-                    alignItems: "center",
-                }}
-            >
-                <Box
-                    sx={{
-                        flexDirection: "row",
-                        flex: 1,
-                        gap: 10,
-                        justifyContent: "flex-start",
-                    }}
-                >
-                    <Box
-                        sx={{
-                            backgroundColor: isActiveTrack ? "$accent500" : "$primary500",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            paddingLeft: 6,
-                            paddingRight: 6,
-                            height: 22,
-                            borderRadius: 6,
-                            flex: 0,
-                        }}
-                    >
-                        <Text
-                            sx={{
-                                fontSize: 14,
-                                fontWeight: "bold",
-                                color: "$white",
-                            }}
-                        >
-                            {item.page}
-                        </Text>
-                    </Box>
-                    <Box flex={1}>
-                        <Text
-                            sx={{
-                                lineHeight: 22,
-                                fontSize: 14,
-                                fontWeight: isActiveTrack ? "700" : "400",
-                                color: isActiveTrack ? "$accent500" : textBasicColor,
-                            }}
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                        >
-                            {item.part}
-                        </Text>
-                        <Box
-                            sx={{
-                                marginTop: 4,
-                                gap: 4,
-                                flexDirection: "row",
-                                alignItems: "center",
-                                opacity: 0.5,
-                            }}
-                        >
-                            {isDownloaded ? (
-                                <Ionicons name="checkmark-circle" size={14} color={textBasicColor} />
-                            ) : null}
-                            <Text
-                                sx={{
-                                    fontSize: 14,
-                                }}
-                            >
-                                {formatSecond(item.duration)}
-                            </Text>
-                        </Box>
-                    </Box>
-                </Box>
-                {isActiveTrack ? (
-                    <>
-                        <Box
-                            sx={{
-                                flex: 0,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                width: 32,
-                            }}
-                        >
-                            <PlayingIcon />
-                        </Box>
-                        <ProgressBar item={`${belongId}_${item.page}`} />
-                    </>
-                ) : null}
-            </Box>
-        </Pressable>
-    );
-};
-
-const ListEntry = memo(ListEntryRaw, (a, b) => {
-    return (
-        a.isActiveTrack === b.isActiveTrack &&
-        a.isDownloaded === b.isDownloaded &&
-        a.item === b.item &&
-        a.belongId === b.belongId
-    );
-});
 
 const iconWrapperStyle = {
     w: 24,
@@ -299,14 +147,9 @@ const QueryIdScreen: React.FC = () => {
     const renderItem = useCallback(
         ({ item }: { item: PageItem }) => {
             const rootData = data!.data;
-            const isActiveTrack =
-                activeTrack?.bilisoundId === rootData.bvid && activeTrack?.bilisoundEpisode === item.page;
 
             return (
-                <ListEntry
-                    isDownloaded={false}
-                    isActiveTrack={isActiveTrack}
-                    belongId={rootData.bvid}
+                <SongItem
                     onRequestPlay={() => {
                         setPlayingRequest({
                             id: rootData.bvid,
@@ -321,11 +164,18 @@ const QueryIdScreen: React.FC = () => {
                         setDisplayTrack(item);
                         setShowActionSheet(true);
                     }}
-                    item={item}
+                    data={{
+                        author: data!.data.owner.name,
+                        bvid: rootData.bvid,
+                        duration: item.duration,
+                        episode: item.page,
+                        title: item.part,
+                        imgUrl: data!.data.pic,
+                    }}
                 />
             );
         },
-        [activeTrack, data, setPlayingRequest],
+        [data, setPlayingRequest],
     );
 
     const dataList = data?.data.pages ?? [];

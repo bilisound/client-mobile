@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Box, Pressable, Text } from "@gluestack-ui/themed";
+import { Box, Pressable, Text, useColorMode, useToken } from "@gluestack-ui/themed";
 import { router } from "expo-router";
 import React, { PropsWithChildren } from "react";
 import { StatusBar } from "react-native";
@@ -11,6 +11,8 @@ import useCommonColors from "../hooks/useCommonColors";
 export interface CommonFrameNewProps {
     title?: string;
     titleBarTheme?: "transparent" | "solid";
+    solidColor?: string;
+    solidScheme?: "dark" | "light";
     extendToBottom?: boolean;
     leftAccessories?: React.ReactNode | "backButton";
     rightAccessories?: React.ReactNode;
@@ -20,31 +22,39 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     children,
     title,
     titleBarTheme = "solid",
+    solidColor,
+    solidScheme = "dark",
     extendToBottom,
     leftAccessories,
     rightAccessories,
 }) => {
     const edgeInsets = useSafeAreaInsets();
     const { textBasicColor } = useCommonColors();
+    const colorMode = useColorMode();
+
+    const computedSolidColor = solidColor || (colorMode === "dark" ? "$primary900" : "$primary500");
+    const textSolidColorDark = useToken("colors", "textDark200");
+    const textSolidColorLight = useToken("colors", "textLight700");
+    const textSolidColor = solidScheme === "dark" ? textSolidColorDark : textSolidColorLight;
+
     return (
         <Box
             sx={{
                 height: "100%",
             }}
         >
-            {titleBarTheme === "solid" ? <StatusBar barStyle="light-content" showHideTransition="none" /> : null}
+            {titleBarTheme === "solid" && solidScheme === "dark" ? (
+                <StatusBar barStyle="light-content" showHideTransition="none" />
+            ) : null}
             <Box
                 sx={{
                     paddingTop: edgeInsets.top,
                     flex: 0,
-                    backgroundColor: titleBarTheme === "solid" ? "$primary500" : "transparent",
-                    _dark: {
-                        backgroundColor: titleBarTheme === "solid" ? "$primary900" : "transparent",
-                    },
+                    backgroundColor: titleBarTheme === "solid" ? computedSolidColor : "transparent",
                 }}
             >
                 <Box
-                    style={{
+                    sx={{
                         height: 56,
                         padding: 8,
                         alignItems: "center",
@@ -55,7 +65,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                         sx={{
                             fontSize: 16,
                             fontWeight: "700",
-                            color: titleBarTheme === "solid" ? "#fff" : textBasicColor,
+                            color: titleBarTheme === "solid" ? textSolidColor : textBasicColor,
                         }}
                     >
                         {title}
@@ -83,7 +93,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                                     <Ionicons
                                         name="arrow-back"
                                         size={24}
-                                        color={titleBarTheme === "solid" ? "#fff" : textBasicColor}
+                                        color={titleBarTheme === "solid" ? textSolidColor : textBasicColor}
                                     />
                                 </Pressable>
                             ) : (
