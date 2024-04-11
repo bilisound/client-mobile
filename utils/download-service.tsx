@@ -180,6 +180,8 @@ export async function addTrackToQueue(
                 bilisoundIsLoaded: isLoaded,
             },
         ]);
+        log.debug("正在尝试播放刚添加的音频");
+        await TrackPlayer.skip(addResult || 0);
         await TrackPlayer.play();
 
         /*log.debug("正在等待播放服务准备就绪");
@@ -197,9 +199,6 @@ export async function addTrackToQueue(
         } catch (e) {
             log.error(`播放列表保存失败。错误信息：${e}`);
         }
-
-        log.debug("正在尝试播放刚添加的音频");
-        await TrackPlayer.skip(addResult || 0);
     } catch (e) {
         // 操作失败
         toast.show({
