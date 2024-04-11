@@ -5,7 +5,7 @@ import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import { useColorScheme } from "react-native";
 import { useMMKVStorage } from "react-native-mmkv-storage";
 import TrackPlayer from "react-native-track-player";
@@ -101,10 +101,10 @@ function Header({
     showPlayButton: boolean;
 }) {
     return (
-        <Box flexDirection="row" gap="$4" p="$4">
+        <Box flexDirection="row" gap="$4" px="$4" pt="$4" pb="$6">
             <ImagesGroup images={images} />
             <Box flex={1}>
-                <Text fontSize="$xl" fontWeight="700" lineHeight="$xl" wordBreak="break-all">
+                <Text fontSize="$xl" fontWeight="700" lineHeight="$xl">
                     {meta.title}
                 </Text>
                 <Text opacity={0.6} mt="$2">{`${meta.amount} 首歌曲`}</Text>
@@ -138,6 +138,10 @@ export default function Page() {
     const [playlistMeta] = usePlaylistStorage();
     const [playlistDetail] = useMMKVStorage<PlaylistDetailRow[]>(PLAYLIST_ITEM_KEY_PREFIX + id, playlistStorage, []);
 
+    const [contentHeight, setContentHeight] = useState(0);
+    const [viewHeight, setViewHeight] = useState(0);
+    const enableUnderLayerColor = contentHeight > viewHeight;
+
     const meta = playlistMeta.find(e => e.id === id);
 
     async function handleRequestPlay(index: number) {
@@ -160,7 +164,7 @@ export default function Page() {
             title="查看详情"
             solidColor={fromColor}
             solidScheme={colorMode as "light" | "dark"}
-            bgColor={playlistDetail.length > 0 ? fromColor : bgColor}
+            bgColor={enableUnderLayerColor ? fromColor : bgColor}
             leftAccessories="backButton"
             extendToBottom
         >
@@ -178,6 +182,16 @@ export default function Page() {
                 }}
                 data={playlistDetail}
                 estimatedItemSize={68}
+                onContentSizeChange={(contentWidth, contentHeight) => {
+                    setContentHeight(contentHeight);
+                }}
+                onLayout={({
+                    nativeEvent: {
+                        layout: { height },
+                    },
+                }) => {
+                    setViewHeight(height);
+                }}
                 contentContainerStyle={{
                     backgroundColor: bgColor,
                 }}
@@ -188,7 +202,6 @@ export default function Page() {
                         end={{ x: 0, y: 1 }}
                         style={{
                             width: "100%",
-                            height: 170,
                         }}
                         aria-hidden
                     >
