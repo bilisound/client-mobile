@@ -1,4 +1,5 @@
-import { Box, Text } from "@gluestack-ui/themed";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Box, Pressable, Text } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
@@ -6,12 +7,13 @@ import React from "react";
 
 import CommonLayout from "../components/CommonLayout";
 import PlaylistItem from "../components/PlaylistItem";
-import { addToPlaylist, syncPlaylistAmount, usePlaylistStorage } from "../storage/playlist";
+import { COMMON_TOUCH_COLOR } from "../constants/style";
+import { addToPlaylist, quickCreatePlaylist, syncPlaylistAmount, usePlaylistStorage } from "../storage/playlist";
 import useAddPlaylistStore from "../store/addPlaylist";
 
 export default function Page() {
     // 添加播放列表
-    const { playlistDetail } = useAddPlaylistStore(state => ({
+    const { playlistDetail, name } = useAddPlaylistStore(state => ({
         playlistDetail: state.playlistDetail,
         name: state.name,
     }));
@@ -49,6 +51,28 @@ export default function Page() {
                 )}
             </Box>
             <FlashList
+                ListHeaderComponent={
+                    <Pressable
+                        gap="$1"
+                        px="$5"
+                        py="$3"
+                        sx={COMMON_TOUCH_COLOR}
+                        onPress={() => {
+                            quickCreatePlaylist(name, playlistDetail ?? []);
+                            router.back();
+                        }}
+                    >
+                        <Box flexDirection="row" alignItems="center" gap="$3">
+                            <MaterialIcons name="add" size={24} color="red" />
+                            <Text fontSize="$md" lineHeight={24} numberOfLines={1} ellipsizeMode="tail">
+                                {name}
+                            </Text>
+                        </Box>
+                        <Text ml="$9" fontSize="$sm" opacity={0.6} lineHeight={21}>
+                            添加新的播放列表
+                        </Text>
+                    </Pressable>
+                }
                 renderItem={item => {
                     return (
                         <PlaylistItem

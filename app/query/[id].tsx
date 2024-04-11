@@ -105,7 +105,10 @@ const QueryIdScreen: React.FC = () => {
     const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
 
     // 添加播放列表
-    const { setPlaylistDetail } = useAddPlaylistStore(state => ({ setPlaylistDetail: state.setPlaylistDetail }));
+    const { setPlaylistDetail, setName } = useAddPlaylistStore(state => ({
+        setPlaylistDetail: state.setPlaylistDetail,
+        setName: state.setName,
+    }));
 
     // 数据请求
     const { data, error } = useQuery({
@@ -249,6 +252,7 @@ const QueryIdScreen: React.FC = () => {
                     switch (action) {
                         case "addPlaylist":
                             router.push(`/apply-playlist`);
+                            setName(data?.data.title ?? "");
                             setPlaylistDetail([
                                 {
                                     author: data?.data.owner.name ?? "",

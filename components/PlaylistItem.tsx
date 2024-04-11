@@ -1,4 +1,4 @@
-import { Box, Pressable, Text } from "@gluestack-ui/themed";
+import { Box, Center, Pressable, Text } from "@gluestack-ui/themed";
 import React from "react";
 
 import { COMMON_TOUCH_COLOR } from "../constants/style";
@@ -17,12 +17,14 @@ export default function PlaylistItem({ item, onPress, onLongPress }: PlaylistIte
     return (
         <Pressable gap="$1" px="$5" py="$3" sx={COMMON_TOUCH_COLOR} onPress={onPress} onLongPress={onLongPress}>
             <Box flexDirection="row" alignItems="center" gap="$3">
-                <Box w="$3" h="$3" bg={item.color} borderRadius="$full" />
-                <Text fontSize="$md" lineHeight={24}>
+                <Center w={24} h={24}>
+                    <Box w="$3" h="$3" bg={item.color} borderRadius="$full" />
+                </Center>
+                <Text fontSize="$md" lineHeight={24} numberOfLines={1} ellipsizeMode="tail">
                     {item.title}
                 </Text>
             </Box>
-            <Text ml="$6" fontSize="$sm" opacity={0.6} lineHeight={21}>
+            <Text ml="$9" fontSize="$sm" opacity={0.6} lineHeight={21}>
                 {`${item.amount} 首歌曲`}
             </Text>
         </Pressable>

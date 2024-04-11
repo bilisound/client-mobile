@@ -1,4 +1,5 @@
 import { MMKVLoader, useMMKVStorage } from "react-native-mmkv-storage";
+import { v4 } from "uuid";
 
 import log from "../utils/logger";
 
@@ -41,6 +42,23 @@ export function addToPlaylist(id: string, row: PlaylistDetailRow | PlaylistDetai
     const originalList = playlistStorage.getArray<PlaylistDetailRow>(PLAYLIST_ITEM_KEY_PREFIX + id) || [];
     originalList.push(...list);
     playlistStorage.setArray(PLAYLIST_ITEM_KEY_PREFIX + id, originalList);
+}
+
+export function quickCreatePlaylist(title: string, row: PlaylistDetailRow | PlaylistDetailRow[]) {
+    const list = Array.isArray(row) ? row : [row];
+    const item: PlaylistMeta = {
+        id: v4(),
+        color: `hsl(${Math.random() * 360}, 80%, 50%)`,
+        title,
+        amount: list.length,
+    };
+    log.info(`快速创建歌单 ${title} (${item.id})`);
+    const originalList = playlistStorage.getArray<PlaylistMeta>(PLAYLIST_INDEX_KEY);
+    originalList.push(item);
+    playlistStorage.setArray(PLAYLIST_INDEX_KEY, originalList);
+
+    log.info(`添加曲目到快速创建的歌单 ${item.id}`);
+    addToPlaylist(item.id, list);
 }
 
 export function syncPlaylistAmount(id: string) {

@@ -31,11 +31,11 @@ const HEADER_BASE_SIZE = 120;
 
 function ImagesGroup({ images }: { images: string[] }) {
     if (images.length === 0) {
-        return <Box bg="$trueGray500" w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" />;
+        return <Box flex={0} bg="$trueGray500" w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" />;
     }
     if (images.length >= 1 && images.length <= 3) {
         return (
-            <Box w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" overflow="hidden">
+            <Box flex={0} w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" overflow="hidden">
                 <Image
                     source={images[0]}
                     style={{
@@ -48,7 +48,7 @@ function ImagesGroup({ images }: { images: string[] }) {
         );
     }
     return (
-        <Box w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" overflow="hidden">
+        <Box flex={0} w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" overflow="hidden">
             <Box flexDirection="row">
                 <Image
                     source={images[0]}
@@ -103,25 +103,27 @@ function Header({
     return (
         <Box flexDirection="row" gap="$4" p="$4">
             <ImagesGroup images={images} />
-            <Box>
-                <Text fontSize="$xl" fontWeight="700" lineHeight="$xl">
+            <Box flex={1}>
+                <Text fontSize="$xl" fontWeight="700" lineHeight="$xl" wordBreak="break-all">
                     {meta.title}
                 </Text>
                 <Text opacity={0.6} mt="$2">{`${meta.amount} 首歌曲`}</Text>
                 {showPlayButton && (
-                    <Button
-                        mt="$5"
-                        rounded="$full"
-                        size="md"
-                        variant="solid"
-                        action="primary"
-                        isDisabled={false}
-                        isFocusVisible={false}
-                        onPress={onPlay}
-                    >
-                        <Ionicons name="play" size={20} color="white" />
-                        <ButtonText> 播放</ButtonText>
-                    </Button>
+                    <Box flexDirection="row">
+                        <Button
+                            mt="$5"
+                            rounded="$full"
+                            size="md"
+                            variant="solid"
+                            action="primary"
+                            isDisabled={false}
+                            isFocusVisible={false}
+                            onPress={onPlay}
+                        >
+                            <Ionicons name="play" size={20} color="white" />
+                            <ButtonText> 播放</ButtonText>
+                        </Button>
+                    </Box>
                 )}
             </Box>
         </Box>
