@@ -11,6 +11,7 @@ import {
     Fab,
     Pressable,
     Text,
+    useToast,
 } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery } from "@tanstack/react-query";
@@ -32,7 +33,7 @@ import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../../constants/style";
 import useCommonColors from "../../hooks/useCommonColors";
 import useAddPlaylistStore from "../../store/addPlaylist";
 import useHistoryStore from "../../store/history";
-import usePlayerStateStore from "../../store/playerState";
+import { addTrackToQueue } from "../../utils/download-service";
 import log from "../../utils/logger";
 import { formatSecond } from "../../utils/misc";
 import { convertToHTTPS } from "../../utils/string";
@@ -96,6 +97,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 
 const QueryIdScreen: React.FC = () => {
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
+    const toast = useToast();
     const edgeInsets = useSafeAreaInsets();
     const { textBasicColor } = useCommonColors();
 
@@ -137,12 +139,6 @@ const QueryIdScreen: React.FC = () => {
     // 播放列表
     const activeTrack = useActiveTrack();
 
-    // 播放状态
-    const { setPlayingRequest, playingRequest } = usePlayerStateStore(state => ({
-        setPlayingRequest: state.setPlayingRequest,
-        playingRequest: state.playingRequest,
-    }));
-
     // 播放列表渲染
     const renderItem = useCallback(
         ({ item }: { item: PageItem }) => {
@@ -151,14 +147,17 @@ const QueryIdScreen: React.FC = () => {
             return (
                 <SongItem
                     onRequestPlay={() => {
-                        setPlayingRequest({
-                            id: rootData.bvid,
-                            episode: item.page,
-                            artist: data!.data.owner.name,
-                            artwork: data!.data.pic,
-                            duration: item.duration,
-                            title: item.part,
-                        });
+                        addTrackToQueue(
+                            {
+                                id: rootData.bvid,
+                                episode: item.page,
+                                artist: data!.data.owner.name,
+                                artwork: data!.data.pic,
+                                duration: item.duration,
+                                title: item.part,
+                            },
+                            { toast },
+                        );
                     }}
                     onLongPress={() => {
                         setDisplayTrack(item);
@@ -175,14 +174,13 @@ const QueryIdScreen: React.FC = () => {
                 />
             );
         },
-        [data, setPlayingRequest],
+        [data],
     );
 
     const dataList = data?.data.pages ?? [];
     const dataLength = Math.max(dataList.length, 1);
     const activeTrackString = `${activeTrack?.bilisoundId}__${activeTrack?.bilisoundEpisode}`;
-    const requestTrackString = `${playingRequest?.id}__${playingRequest?.episode}`;
-    const updateTriggerString = `${activeTrackString}__${requestTrackString}__${!!activeTrack}`;
+    const updateTriggerString = `${activeTrackString}__${!!activeTrack}`;
 
     return (
         <CommonLayout

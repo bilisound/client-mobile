@@ -81,6 +81,5 @@ export async function playlistToTracks(input: PlaylistDetailRow[]) {
         );
     });
     await Promise.allSettled(promises);
-    // console.log(JSON.stringify(newTracks, null, 2));
     return newTracks;
 }
