@@ -63,8 +63,8 @@ export default function Page() {
                         }}
                     >
                         <Box flexDirection="row" alignItems="center" gap="$3">
-                            <MaterialIcons name="add" size={24} color="red" />
-                            <Text fontSize="$md" lineHeight={24} numberOfLines={1} ellipsizeMode="tail">
+                            <MaterialIcons name="add" size={24} color="red" flex={0} />
+                            <Text fontSize="$md" lineHeight={24} numberOfLines={1} ellipsizeMode="tail" flex={1}>
                                 {name}
                             </Text>
                         </Box>

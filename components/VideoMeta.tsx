@@ -216,13 +216,13 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                         rounded="$full"
                         size="md"
                         variant="solid"
-                        action="positive"
+                        action="primary"
                         isDisabled={false}
                         isFocusVisible={false}
                         onPress={handleCreatePlaylist}
                     >
                         <MaterialIcons name="add" size={22} color="white" />
-                        <ButtonText> 创建播放列表</ButtonText>
+                        <ButtonText fontSize="$sm"> 创建播放列表</ButtonText>
                     </Button>
                 </Box>
             </Box>

@@ -17,10 +17,10 @@ export default function PlaylistItem({ item, onPress, onLongPress }: PlaylistIte
     return (
         <Pressable gap="$1" px="$5" py="$3" sx={COMMON_TOUCH_COLOR} onPress={onPress} onLongPress={onLongPress}>
             <Box flexDirection="row" alignItems="center" gap="$3">
-                <Center w={24} h={24}>
+                <Center w={24} h={24} flex={0}>
                     <Box w="$3" h="$3" bg={item.color} borderRadius="$full" />
                 </Center>
-                <Text fontSize="$md" lineHeight={24} numberOfLines={1} ellipsizeMode="tail">
+                <Text fontSize="$md" lineHeight={24} numberOfLines={1} ellipsizeMode="tail" flex={1}>
                     {item.title}
                 </Text>
             </Box>
