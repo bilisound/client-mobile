@@ -1,5 +1,5 @@
-import { FontAwesome5 } from "@expo/vector-icons";
-import { Box, Pressable, Text } from "@gluestack-ui/themed";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { Box, Center, Pressable, Text } from "@gluestack-ui/themed";
 import React from "react";
 import { ActivityIndicator, useWindowDimensions } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
@@ -30,9 +30,18 @@ export interface SongItemProps {
     onLongPress?: () => void;
     data: PlaylistDetailRow;
     index?: number;
+    isChecking?: boolean;
+    isChecked?: boolean;
 }
 
-export default function SongItem({ onRequestPlay = () => {}, onLongPress = () => {}, data, index }: SongItemProps) {
+export default function SongItem({
+    onRequestPlay = () => {},
+    onLongPress = () => {},
+    data,
+    index,
+    isChecking,
+    isChecked,
+}: SongItemProps) {
     const activeTrack = useActiveTrack();
     const isActiveTrack = data.bvid === activeTrack?.bilisoundId && data.episode === activeTrack?.bilisoundEpisode;
     const { width } = useWindowDimensions();
@@ -55,7 +64,7 @@ export default function SongItem({ onRequestPlay = () => {}, onLongPress = () =>
                     paddingHorizontal: width >= SCREEN_BREAKPOINTS.md ? 24 : 16,
                     height: 64,
                     flexDirection: "row",
-                    gap: 10,
+                    gap: 12,
                     position: "relative",
                     alignItems: "center",
                 }}
@@ -64,7 +73,7 @@ export default function SongItem({ onRequestPlay = () => {}, onLongPress = () =>
                     sx={{
                         flexDirection: "row",
                         flex: 1,
-                        gap: 10,
+                        gap: 12,
                         justifyContent: "flex-start",
                     }}
                 >
@@ -122,6 +131,20 @@ export default function SongItem({ onRequestPlay = () => {}, onLongPress = () =>
                         </Box>
                     </Box>
                 </Box>
+                {isChecking && (
+                    <Box flex={0}>
+                        <Center
+                            w="$7"
+                            h="$7"
+                            rounded="$full"
+                            borderWidth={2}
+                            bg={isChecked ? "$primary500" : "transparent"}
+                            borderColor="$primary500"
+                        >
+                            <Entypo name="check" size={18} color="white" />
+                        </Center>
+                    </Box>
+                )}
                 {isActiveTrack ? (
                     <>
                         <Box
