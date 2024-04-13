@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { resolveVideo } from "../utils/format";
 import log from "../utils/logger";
+import { handleQrCode } from "../utils/qrcode";
 
 const ScannerPage: React.FC = () => {
     const [hasPermission, setHasPermission] = useState<PermissionStatus | null>(null);
@@ -21,10 +22,12 @@ const ScannerPage: React.FC = () => {
         setHasPermission(status);
     };
 
-    const showUnsupportedWarning = () => {
+    const showUnsupportedWarning = (
+        message = "Bilisound 不支持您扫描的这个二维码，请确保您扫描的是视频网站地址的二维码。",
+    ) => {
         Alert.alert(
             "坏耶！",
-            "Bilisound 不支持您扫描的这个二维码，请确保您扫描的是视频网站地址的二维码。",
+            message,
             [
                 {
                     text: "确定",
@@ -55,9 +58,13 @@ const ScannerPage: React.FC = () => {
         log.debug(`捕捉到了条形码。type: ${args.type}, data: ${args.data}`);
         // alert(`Bar code with type ${args.type} and data ${args.data} has been scanned!`);
         try {
-            const result = await resolveVideo(args.data);
-            log.debug("扫码操作成功");
-            router.replace(`/query/${result}`);
+            const errorMessage = await handleQrCode(args.data);
+            if (errorMessage) {
+                showUnsupportedWarning(errorMessage);
+                log.debug(`扫码操作失败，原因：${errorMessage}`);
+            } else {
+                log.debug("扫码操作成功");
+            }
         } catch (e) {
             log.error(`扫码操作失败，原因：${e}`);
             showUnsupportedWarning();

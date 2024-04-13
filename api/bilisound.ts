@@ -1,35 +1,37 @@
+import { getVideo } from "./bilibili-direct";
+import { defineWrap } from "./common";
 import {
     BILIBILI_GOOD_CDN_REGEX,
     BILIBILI_VIDEO_URL_PREFIX,
     USER_AGENT_BILIBILI,
+    USER_AGENT_BILISOUND,
 } from "../constants/network";
-import { defineWrap } from "./common";
-import { getVideo } from "./bilibili-direct";
+import { PlaylistDetailRow } from "../storage/playlist";
 import log from "../utils/logger";
 
 export type GetBilisoundMetadataResponse = {
-    bvid: string
-    aid: number
-    title: string
-    pic: string
-    pubDate: number
-    desc: string
+    bvid: string;
+    aid: number;
+    title: string;
+    pic: string;
+    pubDate: number;
+    desc: string;
     owner: {
-        mid: number
-        name: string
-        face: string
-    }
-    pages: Array<{
-        page: number
-        part: string
-        duration: number
-    }>
+        mid: number;
+        name: string;
+        face: string;
+    };
+    pages: {
+        page: number;
+        part: string;
+        duration: number;
+    }[];
 };
 
 const USE_TUU_API = false;
 
 function filterHostname(list: string[]) {
-    return list.map((e) => {
+    return list.map(e => {
         try {
             const { hostname } = new URL(e);
             return hostname;
@@ -40,6 +42,10 @@ function filterHostname(list: string[]) {
     });
 }
 
+/**
+ * 解析短链接
+ * @param data
+ */
 export async function getBilisoundResolveB23(data: { id: string }) {
     const { id } = data;
     const response = await fetch(`https://b23.tv/${id}`, {
@@ -56,6 +62,10 @@ export async function getBilisoundResolveB23(data: { id: string }) {
     });
 }
 
+/**
+ * 获取视频元数据
+ * @param data
+ */
 export async function getBilisoundMetadata(data: { id: string }) {
     const { id } = data;
     // 获取视频网页
@@ -84,7 +94,7 @@ export async function getBilisoundMetadata(data: { id: string }) {
             title: videoData.title,
             pic: videoData.pic,
             owner: videoData.owner,
-            desc: (videoData?.desc_v2 ?? []).map((e) => e.raw_text).join("\n"),
+            desc: (videoData?.desc_v2 ?? []).map(e => e.raw_text).join("\n"),
             pubDate: videoData.pubdate * 1000,
             pages: pages.map(({ page, part, duration }) => ({ page, part, duration })),
         },
@@ -92,7 +102,15 @@ export async function getBilisoundMetadata(data: { id: string }) {
     });
 }
 
-export async function getBilisoundResourceUrl(data: { id: string, episode: number | string, filterResourceURL?: boolean }) {
+/**
+ * 获取音频资源 URL
+ * @param data
+ */
+export async function getBilisoundResourceUrl(data: {
+    id: string;
+    episode: number | string;
+    filterResourceURL?: boolean;
+}) {
     const { id, episode } = data;
 
     if (USE_TUU_API) {
@@ -131,7 +149,7 @@ export async function getBilisoundResourceUrl(data: { id: string, episode: numbe
         return urlList[0];
     }
 
-    const newUrlList = urlList.filter((e) => {
+    const newUrlList = urlList.filter(e => {
         for (let i = 0; i < BILIBILI_GOOD_CDN_REGEX.length; i++) {
             const f = BILIBILI_GOOD_CDN_REGEX[i];
             if (f.test(new URL(e).hostname)) {
@@ -148,6 +166,24 @@ export async function getBilisoundResourceUrl(data: { id: string, episode: numbe
     return newUrlList[0];
 }
 
+/**
+ * 获取视频的 Web 页面地址
+ * @param id
+ * @param episode
+ */
 export function getVideoUrl(id: string, episode: string | number) {
     return `${BILIBILI_VIDEO_URL_PREFIX}${id}/?p=${episode}`;
+}
+
+/**
+ * 获取 PC 端播放列表转移数据
+ * @param id
+ */
+export async function getTransferList(id: string) {
+    const response = await fetch(`https://bilisound.tuu.run/api/internal/transfer-list/${id}`, {
+        headers: {
+            "user-agent": USER_AGENT_BILISOUND,
+        },
+    });
+    return defineWrap<PlaylistDetailRow[] | null>(await response.json());
 }
