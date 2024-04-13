@@ -44,10 +44,8 @@ function filterHostname(list: string[]) {
 
 /**
  * 解析短链接
- * @param data
  */
-export async function getBilisoundResolveB23(data: { id: string }) {
-    const { id } = data;
+export async function parseB23(id: string) {
     const response = await fetch(`https://b23.tv/${id}`, {
         headers: {
             "user-agent": USER_AGENT_BILIBILI,
@@ -55,11 +53,12 @@ export async function getBilisoundResolveB23(data: { id: string }) {
         redirect: "manual",
     });
 
-    return defineWrap({
-        code: 200,
-        data: response.headers.get("location"),
-        msg: "",
-    });
+    const target = response.headers.get("location");
+    if (!target) {
+        throw new Error("无法解析短链接重定向目标");
+    }
+
+    return target;
 }
 
 /**

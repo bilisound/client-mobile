@@ -1,24 +1,9 @@
 import sanitize from "sanitize-filename";
-import { USER_AGENT_BILIBILI } from "../constants/network";
+
 import { bv2av } from "./vendors/av-bv";
+import { parseB23 } from "../api/bilisound";
 
 export const B23_REGEX = /(https?:\/\/b23\.tv\/[a-zA-Z0-9]+)/;
-
-async function parseB23(id: string) {
-    const response = await fetch(`https://b23.tv/${id}`, {
-        headers: {
-            "user-agent": USER_AGENT_BILIBILI,
-        },
-        redirect: "manual",
-    });
-
-    const target = response.headers.get("location");
-    if (!target) {
-        throw new Error("无法解析短链接重定向目标");
-    }
-
-    return target;
-}
 
 /**
  * 解析用户输入的视频内容。传入的字符串需要先行 trim 处理
