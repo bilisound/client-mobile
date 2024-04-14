@@ -86,6 +86,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                         >
                             {leftAccessories === "backButton" ? (
                                 <Pressable
+                                    aria-label="返回"
                                     sx={
                                         titleBarTheme === "solid"
                                             ? COMMON_FRAME_SOLID_BUTTON_STYLE

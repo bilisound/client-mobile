@@ -28,6 +28,7 @@ function PlayingIcon() {
 export interface SongItemProps {
     onRequestPlay?: () => void;
     onLongPress?: () => void;
+    onToggle?: () => void;
     data: PlaylistDetailRow;
     index?: number;
     isChecking?: boolean;
@@ -37,6 +38,7 @@ export interface SongItemProps {
 export default function SongItem({
     onRequestPlay = () => {},
     onLongPress = () => {},
+    onToggle = () => {},
     data,
     index,
     isChecking,
@@ -51,6 +53,10 @@ export default function SongItem({
         <Pressable
             sx={COMMON_TOUCH_COLOR}
             onPress={async () => {
+                if (isChecking) {
+                    onToggle();
+                    return;
+                }
                 if (isActiveTrack) {
                     await handleTogglePlay();
                     return;
@@ -131,7 +137,7 @@ export default function SongItem({
                         </Box>
                     </Box>
                 </Box>
-                {isChecking && (
+                {isChecking ? (
                     <Box flex={0}>
                         <Center
                             w="$7"
@@ -141,11 +147,10 @@ export default function SongItem({
                             bg={isChecked ? "$primary500" : "transparent"}
                             borderColor="$primary500"
                         >
-                            <Entypo name="check" size={18} color="white" />
+                            <Entypo name="check" size={18} color={isChecked ? "white" : "transparent"} />
                         </Center>
                     </Box>
-                )}
-                {isActiveTrack ? (
+                ) : isActiveTrack ? (
                     <>
                         <Box
                             sx={{

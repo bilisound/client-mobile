@@ -1,18 +1,20 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Box, Button, ButtonText, Text } from "@gluestack-ui/themed";
+import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Box, Button, ButtonText, Pressable, Text } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { useColorScheme } from "react-native";
+import { Alert, useColorScheme } from "react-native";
 import { useMMKVStorage } from "react-native-mmkv-storage";
 import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "../../../../components/CommonLayout";
 import SongItem from "../../../../components/SongItem";
+import { COMMON_FRAME_BUTTON_STYLE } from "../../../../constants/style";
 import useCommonColors from "../../../../hooks/useCommonColors";
+import useMultiSelect from "../../../../hooks/useMultiSelect";
 import {
     PLAYLIST_ITEM_KEY_PREFIX,
     PlaylistDetailRow,
@@ -130,19 +132,73 @@ function Header({
     );
 }
 
-export default function Page() {
+interface EditActionProps {
+    onAll: () => void;
+    onReverse: () => void;
+    onDelete: () => void;
+    amount: number | string;
+}
+
+function EditAction({ onAll, onReverse, onDelete, amount }: EditActionProps) {
     const { bgColor } = useCommonColors();
+
+    return (
+        <Box
+            sx={{
+                borderWidth: 1,
+                borderColor: "$backgroundLight100",
+                _dark: {
+                    borderColor: "$backgroundDark900",
+                },
+                borderLeftWidth: 0,
+                borderRightWidth: 0,
+                borderBottomWidth: 0,
+                flex: 0,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                height: 52,
+                px: 12,
+                bg: bgColor,
+            }}
+        >
+            <Text>{`已选择 ${amount} 项`}</Text>
+            <Box flexDirection="row" gap="$2">
+                <Button size="sm" variant="outline" action="primary" onPress={onAll}>
+                    <ButtonText>全选</ButtonText>
+                </Button>
+                <Button size="sm" variant="outline" action="primary" onPress={onReverse}>
+                    <ButtonText>反选</ButtonText>
+                </Button>
+                <Button size="sm" action="negative" isDisabled={amount <= 0} onPress={onDelete}>
+                    <ButtonText>删除</ButtonText>
+                </Button>
+            </Box>
+        </Box>
+    );
+}
+
+export default function Page() {
+    const { bgColor, textBasicColor } = useCommonColors();
     const colorMode = useColorScheme();
     const { id } = useLocalSearchParams<{ id: string }>();
 
     const [playlistMeta] = usePlaylistStorage();
-    const [playlistDetail] = useMMKVStorage<PlaylistDetailRow[]>(PLAYLIST_ITEM_KEY_PREFIX + id, playlistStorage, []);
+    const [playlistDetail, setPlaylistDetail] = useMMKVStorage<PlaylistDetailRow[]>(
+        PLAYLIST_ITEM_KEY_PREFIX + id,
+        playlistStorage,
+        [],
+    );
 
     const [contentHeight, setContentHeight] = useState(0);
     const [viewHeight, setViewHeight] = useState(0);
     const enableUnderLayerColor = contentHeight > viewHeight;
 
     const meta = playlistMeta.find(e => e.id === id);
+
+    // 多选管理
+    const { clear, toggle, selected, setAll, reverse } = useMultiSelect<number>();
+    const [editing, setEditing] = useState(false);
 
     async function handleRequestPlay(index: number) {
         const tracks = await playlistToTracks(playlistDetail);
@@ -166,6 +222,28 @@ export default function Page() {
             solidScheme={colorMode as "light" | "dark"}
             bgColor={enableUnderLayerColor ? fromColor : bgColor}
             leftAccessories="backButton"
+            rightAccessories={
+                playlistDetail.length > 0 ? (
+                    <Pressable
+                        aria-label={editing ? "完成" : "编辑"}
+                        sx={COMMON_FRAME_BUTTON_STYLE}
+                        onPress={() =>
+                            setEditing(prevState => {
+                                if (prevState) {
+                                    clear();
+                                }
+                                return !prevState;
+                            })
+                        }
+                    >
+                        {editing ? (
+                            <Entypo name="check" size={24} color={textBasicColor} />
+                        ) : (
+                            <MaterialCommunityIcons name="format-list-checks" size={24} color={textBasicColor} />
+                        )}
+                    </Pressable>
+                ) : null
+            }
             extendToBottom
         >
             <FlashList
@@ -177,6 +255,11 @@ export default function Page() {
                             onRequestPlay={() => {
                                 handleRequestPlay(item.index);
                             }}
+                            onToggle={() => {
+                                toggle(item.index);
+                            }}
+                            isChecking={editing}
+                            isChecked={selected.has(item.index)}
                         />
                     );
                 }}
@@ -195,6 +278,7 @@ export default function Page() {
                 contentContainerStyle={{
                     backgroundColor: bgColor,
                 }}
+                extraData={[editing, selected.size]}
                 ListHeaderComponent={
                     <LinearGradient
                         colors={[fromColor, bgColor]}
@@ -217,6 +301,40 @@ export default function Page() {
                 }
                 ListEmptyComponent={<Text h="100%">暂无内容</Text>}
             />
+            {editing ? (
+                <EditAction
+                    onAll={() => {
+                        setAll(new Array(playlistDetail.length).fill(0).map((_, i) => i));
+                    }}
+                    onReverse={() => {
+                        reverse(new Array(playlistDetail.length).fill(0).map((_, i) => i));
+                    }}
+                    onDelete={() => {
+                        Alert.alert("删除曲目确认", `确定要从本歌单中删除 ${selected.size} 首曲目吗？`, [
+                            {
+                                text: "取消",
+                                style: "cancel",
+                            },
+                            {
+                                text: "确定",
+                                style: "default",
+                                onPress: () => {
+                                    setPlaylistDetail(prevValue => {
+                                        Array.from(selected)
+                                            .sort((a, b) => b - a)
+                                            .forEach(e => {
+                                                prevValue.splice(e, 1);
+                                            });
+                                        return prevValue.concat();
+                                    });
+                                    clear();
+                                },
+                            },
+                        ]);
+                    }}
+                    amount={selected.size}
+                />
+            ) : null}
         </CommonLayout>
     );
 }
