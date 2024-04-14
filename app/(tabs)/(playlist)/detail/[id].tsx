@@ -5,7 +5,7 @@ import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Alert, useColorScheme } from "react-native";
 import { useMMKVStorage } from "react-native-mmkv-storage";
 import TrackPlayer from "react-native-track-player";
@@ -20,8 +20,11 @@ import {
     PlaylistDetailRow,
     PlaylistMeta,
     playlistStorage,
+    syncPlaylistAmount,
+    usePlaylistOnQueue,
     usePlaylistStorage,
 } from "../../../../storage/playlist";
+import log from "../../../../utils/logger";
 import { playlistToTracks } from "../../../../utils/track-data";
 
 function extractAndProcessImgUrls(playlistDetails: PlaylistDetailRow[]) {
@@ -136,7 +139,7 @@ interface EditActionProps {
     onAll: () => void;
     onReverse: () => void;
     onDelete: () => void;
-    amount: number | string;
+    amount: number;
 }
 
 function EditAction({ onAll, onReverse, onDelete, amount }: EditActionProps) {
@@ -189,6 +192,7 @@ export default function Page() {
         playlistStorage,
         [],
     );
+    const [playlistOnQueue, setPlaylistOnQueue] = usePlaylistOnQueue();
 
     const [contentHeight, setContentHeight] = useState(0);
     const [viewHeight, setViewHeight] = useState(0);
@@ -201,10 +205,47 @@ export default function Page() {
     const [editing, setEditing] = useState(false);
 
     async function handleRequestPlay(index: number) {
+        if (playlistOnQueue?.id === id) {
+            log.debug("当前队列中的内容来自本播放列表，就地跳转");
+            await TrackPlayer.skip(index);
+            return;
+        }
+        log.debug("将队列中的内容设置为本播放列表");
         const tracks = await playlistToTracks(playlistDetail);
+        await TrackPlayer.pause();
         await TrackPlayer.setQueue(tracks);
         await TrackPlayer.skip(index);
+        await TrackPlayer.play();
+        setPlaylistOnQueue(meta);
     }
+
+    const handleDelete = useCallback(() => {
+        Alert.alert("删除曲目确认", `确定要从本歌单中删除 ${selected.size} 首曲目吗？`, [
+            {
+                text: "取消",
+                style: "cancel",
+            },
+            {
+                text: "确定",
+                style: "default",
+                onPress: () => {
+                    setPlaylistDetail(prevValue => {
+                        Array.from(selected)
+                            .sort((a, b) => b - a)
+                            .forEach(e => {
+                                prevValue.splice(e, 1);
+                            });
+                        return prevValue.concat();
+                    });
+                    clear();
+                    if (playlistOnQueue?.id === id) {
+                        setPlaylistOnQueue(undefined);
+                    }
+                    syncPlaylistAmount(id);
+                },
+            },
+        ]);
+    }, [clear, id, playlistOnQueue?.id, selected, setPlaylistDetail, setPlaylistOnQueue]);
 
     if (!meta) {
         return null;
@@ -310,27 +351,7 @@ export default function Page() {
                         reverse(new Array(playlistDetail.length).fill(0).map((_, i) => i));
                     }}
                     onDelete={() => {
-                        Alert.alert("删除曲目确认", `确定要从本歌单中删除 ${selected.size} 首曲目吗？`, [
-                            {
-                                text: "取消",
-                                style: "cancel",
-                            },
-                            {
-                                text: "确定",
-                                style: "default",
-                                onPress: () => {
-                                    setPlaylistDetail(prevValue => {
-                                        Array.from(selected)
-                                            .sort((a, b) => b - a)
-                                            .forEach(e => {
-                                                prevValue.splice(e, 1);
-                                            });
-                                        return prevValue.concat();
-                                    });
-                                    clear();
-                                },
-                            },
-                        ]);
+                        handleDelete();
                     }}
                     amount={selected.size}
                 />

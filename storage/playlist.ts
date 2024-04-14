@@ -9,6 +9,8 @@ export const PLAYLIST_ITEM_KEY_PREFIX = "playlist_item_";
 
 export const PLAYLIST_LAST_USED = "playlist_last_used";
 
+export const PLAYLIST_ON_QUEUE = "playlist_on_queue";
+
 export interface PlaylistMeta {
     id: string;
     title: string;
@@ -32,7 +34,11 @@ export function usePlaylistStorage() {
 }
 
 export function usePlaylistLastUsed() {
-    return useMMKVStorage<PlaylistMeta | undefined>(PLAYLIST_LAST_USED, playlistStorage, undefined);
+    return useMMKVStorage<Partial<PlaylistMeta>>(PLAYLIST_LAST_USED, playlistStorage, {});
+}
+
+export function usePlaylistOnQueue() {
+    return useMMKVStorage<Partial<PlaylistMeta>>(PLAYLIST_ON_QUEUE, playlistStorage, {});
 }
 
 export function addToPlaylist(id: string, row: PlaylistDetailRow | PlaylistDetailRow[]) {

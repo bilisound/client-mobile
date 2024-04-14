@@ -12,6 +12,7 @@ import { convertToHTTPS } from "./string";
 import { saveTrackData } from "./track-data";
 import { getBilisoundResourceUrl, getVideoUrl } from "../api/bilisound";
 import { USER_AGENT_BILIBILI } from "../constants/network";
+import { PLAYLIST_ON_QUEUE, playlistStorage } from "../storage/playlist";
 import useDownloadStore from "../store/download";
 import useSettingsStore from "../store/settings";
 
@@ -167,6 +168,7 @@ export async function addTrackToQueue(
         }
 
         log.debug("正在添加到播放列表");
+        playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
         const addResult = await TrackPlayer.add([
             {
                 url,

@@ -32,6 +32,7 @@ import CommonLayout from "../../components/CommonLayout";
 import { COMMON_FRAME_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "../../constants/style";
 import useCommonColors from "../../hooks/useCommonColors";
 import useTracks from "../../hooks/useTracks";
+import { PLAYLIST_ON_QUEUE, playlistStorage } from "../../storage/playlist";
 import useSettingsStore from "../../store/settings";
 import { getFileName } from "../../utils/format";
 import log from "../../utils/logger";
@@ -304,6 +305,7 @@ const TabPlaying: React.FC = () => {
         const indexList = [...selected.data.values()];
         setSelected({ data: new Set() });
         await TrackPlayer.remove(indexList);
+        playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
         await update();
         if ((await TrackPlayer.getQueue()).length <= 0) {
             setIsEditing(false);
