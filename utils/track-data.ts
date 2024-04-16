@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import log from "./logger";
 import { getCacheAudioPath } from "./misc";
+import { runTasksLimit } from "./promise";
 import { convertToHTTPS } from "./string";
 import { BILISOUND_OFFLINE_PATH, BILISOUND_PERSIST_QUEUE_PATH } from "../constants/file";
 import { PlaylistDetailRow } from "../storage/playlist";
@@ -62,24 +63,22 @@ export async function playlistToTracks(input: PlaylistDetailRow[]) {
         bilisoundUniqueId: uuidv4(),
         bilisoundIsLoaded: false,
     }));
-    const promises: any[] = [];
+    const tasks: any[] = [];
     newTracks.forEach((e, i) => {
-        promises.push(
-            (async () => {
-                const url = getCacheAudioPath(e.bilisoundId, e.bilisoundEpisode);
-                try {
-                    const found = await RNFS.exists(url);
-                    // log.debug("检测 " + url + " 是否存在。结果：" + found);
-                    if (found) {
-                        e.url = url;
-                        e.bilisoundIsLoaded = true;
-                    }
-                } catch (e) {
-                    log.error(`检测 ${url} 的存在时发生了预期外的错误`, e);
+        tasks.push(async () => {
+            const url = getCacheAudioPath(e.bilisoundId, e.bilisoundEpisode);
+            try {
+                const found = await RNFS.exists(url);
+                // log.debug("检测 " + url + " 是否存在。结果：" + found);
+                if (found) {
+                    e.url = url;
+                    e.bilisoundIsLoaded = true;
                 }
-            })(),
-        );
+            } catch (e) {
+                log.error(`检测 ${url} 的存在时发生了预期外的错误`, e);
+            }
+        });
     });
-    await Promise.allSettled(promises);
+    await runTasksLimit(tasks, 50);
     return newTracks;
 }

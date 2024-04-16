@@ -216,7 +216,7 @@ export default function Page() {
         await TrackPlayer.setQueue(tracks);
         await TrackPlayer.skip(index);
         await TrackPlayer.play();
-        setPlaylistOnQueue(meta);
+        setPlaylistOnQueue(meta ?? {});
     }
 
     const handleDelete = useCallback(() => {
@@ -239,7 +239,7 @@ export default function Page() {
                     });
                     clear();
                     if (playlistOnQueue?.id === id) {
-                        setPlaylistOnQueue(undefined);
+                        setPlaylistOnQueue({});
                     }
                     syncPlaylistAmount(id);
                 },
