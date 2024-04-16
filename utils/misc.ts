@@ -80,7 +80,8 @@ export function togglePlay() {
 export async function saveFile(location: string, replaceFileName?: string) {
     log.debug(`尝试保存文件到本地。location: ${location}, replaceFileName: ${replaceFileName}`);
     if (!location.startsWith("file://")) {
-        throw new Error("参数 location 必须是 file:// URI");
+        log.warn(`参数 location 必须是 file:// URI。传入的 location: ${location}`);
+        location = `file://${encodeURI(location)}`;
     }
     const parsed = path.parse(location);
     const fileName = replaceFileName ?? `${parsed.name}${parsed.ext}`;
