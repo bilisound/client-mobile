@@ -1,4 +1,4 @@
-import { Entypo, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import {
     Actionsheet,
     ActionsheetBackdrop,
@@ -9,166 +9,32 @@ import {
     ActionsheetItemText,
     Box,
     Button,
-    ButtonIcon,
     ButtonText,
-    Checkbox,
-    CheckboxIcon,
-    CheckboxIndicator,
-    CheckboxLabel,
-    CheckIcon,
     Pressable,
     Text,
 } from "@gluestack-ui/themed";
-import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import React, { memo, useCallback, useRef, useState } from "react";
+import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 import { useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import TrackPlayer, { State, Track, useActiveTrack, usePlaybackState } from "react-native-track-player";
+import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { remove } from "react-native-track-player/src/trackPlayer";
 
 import CommonLayout from "../../components/CommonLayout";
-import { COMMON_FRAME_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "../../constants/style";
+import EditAction from "../../components/EditAction";
+import SongItem from "../../components/SongItem";
+import { COMMON_FRAME_BUTTON_STYLE } from "../../constants/style";
 import useCommonColors from "../../hooks/useCommonColors";
+import useMultiSelect from "../../hooks/useMultiSelect";
 import useTracks from "../../hooks/useTracks";
-import { PLAYLIST_ON_QUEUE, playlistStorage } from "../../storage/playlist";
+import { PLAYLIST_ON_QUEUE, PlaylistDetailRow, playlistStorage } from "../../storage/playlist";
 import useSettingsStore from "../../store/settings";
 import { getFileName } from "../../utils/format";
 import log from "../../utils/logger";
-import { formatSecond, saveFile } from "../../utils/misc";
-import { handleTogglePlay } from "../../utils/player-control";
-
-// 播放状态图标
-function PlayingIndicator() {
-    const playbackState = usePlaybackState();
-    const { accentColor } = useCommonColors();
-
-    return (
-        <FontAwesome5 name={playbackState.state === State.Playing ? "pause" : "play"} size={16} color={accentColor} />
-    );
-}
-
-interface PlayListItemProps {
-    index: number;
-    item: Track;
-    isThisSong: boolean;
-    isEditing: boolean;
-    isSelected: boolean;
-    trackNumberWidth: number;
-    onPress: () => void;
-    onLongPress: () => void;
-    onSelectToggle: () => void;
-}
-
-// 播放列表项目
-function PlayListItemRaw({
-    index,
-    item,
-    isThisSong,
-    isEditing,
-    isSelected,
-    trackNumberWidth,
-    onPress,
-    onLongPress,
-    onSelectToggle,
-}: PlayListItemProps) {
-    const selectCheckbox = (
-        <Checkbox
-            value=""
-            size="md"
-            isInvalid={false}
-            isDisabled={false}
-            isChecked={isSelected}
-            onChange={() => onSelectToggle()}
-            aria-label={`选择播放项目 ${item.title}`}
-        >
-            <CheckboxIndicator>
-                <CheckboxIcon as={CheckIcon} />
-            </CheckboxIndicator>
-        </Checkbox>
-    );
-
-    const indexIndicator = isThisSong ? (
-        <PlayingIndicator />
-    ) : (
-        <Text
-            style={{
-                opacity: 0.45,
-                fontWeight: "bold",
-                fontSize: 15,
-            }}
-        >
-            {index + 1}
-        </Text>
-    );
-
-    return (
-        <Pressable
-            sx={{
-                ...COMMON_TOUCH_COLOR,
-            }}
-            onPress={onPress}
-            onLongPress={onLongPress}
-        >
-            <Box
-                sx={{
-                    height: 56,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    paddingHorizontal: "$5",
-                    gap: "$4",
-                }}
-            >
-                <Box
-                    sx={{
-                        alignItems: isEditing ? "flex-start" : "center",
-                        justifyContent: "center",
-                        width: trackNumberWidth,
-                    }}
-                >
-                    {isEditing ? selectCheckbox : indexIndicator}
-                </Box>
-                <Text
-                    sx={{
-                        flex: 1,
-                        fontSize: 15,
-                        fontWeight: isThisSong ? "700" : "400",
-                        color: isThisSong ? "$accent500" : "$textLight700",
-                        _dark: {
-                            color: isThisSong ? "$accent500" : "$textDark200",
-                        },
-                    }}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                >
-                    {`${item.title}`}
-                </Text>
-                <Text
-                    sx={{
-                        flex: 0,
-                        opacity: 0.45,
-                        fontSize: 15,
-                    }}
-                >
-                    {formatSecond(item.duration ?? 0)}
-                </Text>
-            </Box>
-        </Pressable>
-    );
-}
-
-const PlayListItem = memo(PlayListItemRaw, (a, b) => {
-    return (
-        a.index === b.index &&
-        a.item === b.item &&
-        a.isThisSong === b.isThisSong &&
-        a.isEditing === b.isEditing &&
-        a.isSelected === b.isSelected &&
-        a.trackNumberWidth === b.trackNumberWidth
-    );
-});
+import { saveFile } from "../../utils/misc";
+import { tracksToPlaylist } from "../../utils/track-data";
 
 const iconWrapperStyle = {
     w: 24,
@@ -179,7 +45,7 @@ const iconWrapperStyle = {
 
 interface LongPressActionsProps {
     showActionSheet: boolean;
-    displayTrack?: Track | null;
+    displayTrack?: PlaylistDetailRow | null;
     onClose: () => void;
     onAction: (action: "delete" | "export" | "close") => void;
 }
@@ -204,12 +70,12 @@ function LongPressActionsRaw({ showActionSheet, displayTrack, onAction, onClose 
                         flexDirection="row"
                         gap="$4"
                         onPress={() => {
-                            router.push(`/query/${displayTrack.bilisoundId}`);
+                            router.push(`/query/${displayTrack?.bvid}`);
                             onAction("close");
                         }}
                     >
                         <Image
-                            source={displayTrack.artwork}
+                            source={displayTrack.imgUrl}
                             style={{
                                 height: 48,
                                 aspectRatio: "16/9",
@@ -222,7 +88,7 @@ function LongPressActionsRaw({ showActionSheet, displayTrack, onAction, onClose 
                                 {displayTrack.title}
                             </Text>
                             <Text numberOfLines={1} ellipsizeMode="tail" fontSize={14} opacity={0.7}>
-                                {displayTrack.artist}
+                                {displayTrack.author}
                             </Text>
                         </Box>
                     </Pressable>
@@ -253,24 +119,27 @@ function LongPressActionsRaw({ showActionSheet, displayTrack, onAction, onClose 
 const LongPressActions = memo(LongPressActionsRaw);
 
 const TabPlaying: React.FC = () => {
-    const activeTrack = useActiveTrack();
-    const colorScheme = useColorScheme();
     const { primaryColor } = useCommonColors();
     const { tracks, update } = useTracks();
     const { useLegacyID } = useSettingsStore(state => ({
         useLegacyID: state.useLegacyID,
     }));
 
+    // 多选管理
+    const { clear, toggle, selected, setAll, reverse } = useMultiSelect<number>();
+    const [editing, setEditing] = useState(false);
+
     // 菜单操作
     const currentOperateIndex = useRef(-1);
     const [showActionSheet, setShowActionSheet] = React.useState(false);
-    const [displayTrack, setDisplayTrack] = useState<Track | null>(null);
+    const [displayTrack, setDisplayTrack] = useState<PlaylistDetailRow | null>(null);
 
     const handleClose = () => setShowActionSheet(prevState => !prevState);
 
-    const handleDelete = useCallback(async () => {
+    const handleDeleteSingle = useCallback(async () => {
         await remove(currentOperateIndex.current);
         await update();
+        playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
         handleClose();
     }, [update]);
 
@@ -296,73 +165,18 @@ const TabPlaying: React.FC = () => {
         }
     }, [useLegacyID]);
 
-    // 列表编辑
-    const [isEditing, setIsEditing] = useState(false);
-    // 已选中项目 index
-    const [selected, setSelected] = useState({ data: new Set<number>() });
     // 列表删除
-    const handleDeleteSelected = useCallback(async () => {
-        const indexList = [...selected.data.values()];
-        setSelected({ data: new Set() });
-        await TrackPlayer.remove(indexList);
-        playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
+    const handleDelete = useCallback(async () => {
+        await TrackPlayer.remove(Array.from(selected));
         await update();
         if ((await TrackPlayer.getQueue()).length <= 0) {
-            setIsEditing(false);
+            setEditing(false);
         }
-    }, [selected.data, update]);
+        playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
+    }, [selected, update]);
 
-    // 列表渲染
-    const renderItem: ListRenderItem<Track> = info => {
-        const index = info.index;
-        const item = info.item;
-        const isThisSong = activeTrack?.bilisoundUniqueId === item.bilisoundUniqueId;
-        const trackLength = tracks.length;
-
-        const onSelectToggle = () => {
-            setSelected(({ data }) => {
-                if (data.has(index)) {
-                    data.delete(index);
-                } else {
-                    data.add(index);
-                }
-                return { data };
-            });
-        };
-
-        const onPress = async () => {
-            if (isEditing) {
-                onSelectToggle();
-                return;
-            }
-            if (isThisSong) {
-                await handleTogglePlay();
-                return;
-            }
-            await TrackPlayer.skip(index);
-            await TrackPlayer.play();
-        };
-
-        const onLongPress = () => {
-            currentOperateIndex.current = index;
-            setDisplayTrack(item);
-            setShowActionSheet(true);
-        };
-
-        return (
-            <PlayListItem
-                index={index}
-                item={item}
-                isThisSong={isThisSong}
-                isEditing={isEditing}
-                isSelected={selected.data.has(index)}
-                trackNumberWidth={8 + `${trackLength}`.length * 8}
-                onPress={onPress}
-                onLongPress={onLongPress}
-                onSelectToggle={onSelectToggle}
-            />
-        );
-    };
+    // 转换后的列表
+    const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
 
     return (
         <CommonLayout
@@ -373,16 +187,16 @@ const TabPlaying: React.FC = () => {
                 tracks.length > 0 ? (
                     <Pressable
                         sx={COMMON_FRAME_BUTTON_STYLE}
-                        onPress={() =>
-                            setIsEditing(prevState => {
+                        onPress={() => {
+                            setEditing(prevState => {
                                 if (prevState) {
-                                    setSelected({ data: new Set() });
+                                    clear();
                                 }
                                 return !prevState;
-                            })
-                        }
+                            });
+                        }}
                     >
-                        {isEditing ? (
+                        {editing ? (
                             <Entypo name="check" size={24} color={primaryColor} />
                         ) : (
                             <MaterialCommunityIcons name="format-list-checks" size={24} color={primaryColor} />
@@ -391,93 +205,32 @@ const TabPlaying: React.FC = () => {
                 ) : null
             }
         >
-            {/* 编辑菜单 */}
-            {isEditing && tracks.length > 0 ? (
-                <Box
-                    sx={{
-                        borderWidth: 1,
-                        borderColor: "$backgroundLight100",
-                        _dark: {
-                            borderColor: "$backgroundDark900",
-                        },
-                        borderLeftWidth: 0,
-                        borderRightWidth: 0,
-                        borderTopWidth: 0,
-                        flexDirection: "row",
-                        gap: "$1",
-                        padding: "$2",
-                    }}
-                >
-                    <Box ml="$3" justifyContent="center">
-                        <Checkbox
-                            size="md"
-                            isInvalid={false}
-                            isDisabled={false}
-                            aria-label="全选"
-                            value=""
-                            isChecked={selected.data.size >= tracks.length}
-                            onChange={() => {
-                                if (selected.data.size >= tracks.length) {
-                                    setSelected({ data: new Set() });
-                                } else {
-                                    setSelected({ data: new Set([...tracks.map((e, i) => i)]) });
-                                }
-                            }}
-                        >
-                            <CheckboxIndicator mr="$2">
-                                <CheckboxIcon as={CheckIcon} />
-                            </CheckboxIndicator>
-                            <CheckboxLabel>全选</CheckboxLabel>
-                        </Checkbox>
-                    </Box>
-                    <Box flex={1} />
-                    <Button
-                        size="sm"
-                        variant="solid"
-                        action="negative"
-                        isDisabled={selected.data.size <= 0}
-                        isFocusVisible={false}
-                        paddingHorizontal="$3"
-                        onPress={handleDeleteSelected}
-                    >
-                        <ButtonText>删 除</ButtonText>
-                        <ButtonIcon
-                            as={MaterialIcons}
-                            // @ts-ignore 属于 MaterialIcons 组件的合法参数
-                            size={20}
-                            name="delete"
-                            ml="$1.5"
-                        />
-                    </Button>
-                </Box>
-            ) : (
-                <Box
-                    sx={{
-                        borderWidth: 1,
-                        borderColor: "$backgroundLight100",
-                        _dark: {
-                            borderColor: "$backgroundDark900",
-                        },
-                        borderLeftWidth: 0,
-                        borderRightWidth: 0,
-                        borderTopWidth: 0,
-                        height: 0,
-                    }}
-                />
-            )}
-
             {/* 菜单项目 */}
             {tracks.length > 0 ? (
                 <FlashList
-                    data={tracks}
-                    extraData={{
-                        isEditing,
-                        colorScheme,
-                        selected,
+                    renderItem={item => {
+                        return (
+                            <SongItem
+                                data={item.item}
+                                index={item.index + 1}
+                                onRequestPlay={async () => {
+                                    await TrackPlayer.skip(item.index);
+                                    await TrackPlayer.play();
+                                }}
+                                onToggle={() => {
+                                    toggle(item.index);
+                                }}
+                                onLongPress={() => {
+                                    setDisplayTrack(item.item);
+                                }}
+                                isChecking={editing}
+                                isChecked={selected.has(item.index)}
+                            />
+                        );
                     }}
-                    keyExtractor={item => `${item.bilisoundUniqueId}`}
-                    renderItem={renderItem}
-                    estimatedItemSize={(tracks.length ?? 0) * 56}
+                    data={convertedTrack}
+                    estimatedItemSize={68}
+                    extraData={[editing, selected.size]}
                 />
             ) : (
                 <Box
@@ -510,7 +263,7 @@ const TabPlaying: React.FC = () => {
                 onAction={action => {
                     switch (action) {
                         case "delete":
-                            handleDelete();
+                            handleDeleteSingle();
                             break;
                         case "export":
                             handleExport();
@@ -523,6 +276,21 @@ const TabPlaying: React.FC = () => {
                     }
                 }}
             />
+
+            {editing ? (
+                <EditAction
+                    onAll={() => {
+                        setAll(new Array(tracks.length).fill(0).map((_, i) => i));
+                    }}
+                    onReverse={() => {
+                        reverse(new Array(tracks.length).fill(0).map((_, i) => i));
+                    }}
+                    onDelete={() => {
+                        handleDelete();
+                    }}
+                    amount={selected.size}
+                />
+            ) : null}
         </CommonLayout>
     );
 };

@@ -82,3 +82,14 @@ export async function playlistToTracks(input: PlaylistDetailRow[]) {
     await runTasksLimit(tasks, 50);
     return newTracks;
 }
+
+export function tracksToPlaylist(input: Track[]): PlaylistDetailRow[] {
+    return input.map(e => ({
+        author: e.artist ?? "",
+        bvid: e.bilisoundId,
+        duration: e.duration ?? 0,
+        episode: e.bilisoundEpisode,
+        title: e.title ?? "",
+        imgUrl: e.artwork ?? "",
+    }));
+}
