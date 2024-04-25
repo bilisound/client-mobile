@@ -1,5 +1,5 @@
 import TrackPlayer, { Event, State } from "react-native-track-player";
-import {getPlaybackState, getProgress} from "react-native-track-player/src/trackPlayer";
+import { getPlaybackState, getProgress } from "react-native-track-player/src/trackPlayer";
 
 export async function handleTogglePlay() {
     if ((await TrackPlayer.getPlaybackState()).state === State.Playing) {
@@ -38,7 +38,7 @@ export function initPlaybackService() {
         TrackPlayer.addEventListener(Event.RemoteNext, () => {
             TrackPlayer.skipToNext();
         });
-        TrackPlayer.addEventListener(Event.RemoteSeek, (event) => {
+        TrackPlayer.addEventListener(Event.RemoteSeek, event => {
             TrackPlayer.seekTo(event.position);
         });
     });

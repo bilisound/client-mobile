@@ -1,11 +1,11 @@
+import { BILIBILI_VIDEO_URL_PREFIX, USER_AGENT_BILIBILI } from "../constants/network";
 import { InitialStateResponse, WebPlayInfo } from "../types";
 import { extractJSON } from "../utils/string";
-import { BILIBILI_VIDEO_URL_PREFIX, USER_AGENT_BILIBILI } from "../constants/network";
 import ExpiringMap from "../utils/timeout-map";
 
 export interface GetVideoResponse {
-    initialState: InitialStateResponse
-    playInfo: WebPlayInfo
+    initialState: InitialStateResponse;
+    playInfo: WebPlayInfo;
 }
 
 // const defaultExpirationTime = 1;
@@ -22,7 +22,7 @@ export async function getVideo(id: string, episode: string | number): Promise<Ge
         headers: {
             "user-agent": USER_AGENT_BILIBILI,
         },
-    }).then((e) => e.text());
+    }).then(e => e.text());
 
     // 提取视频播放信息
     const initialState: InitialStateResponse = extractJSON(/window\.__INITIAL_STATE__=(\{.+});/, response);

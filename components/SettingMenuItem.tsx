@@ -1,7 +1,8 @@
-import React from "react";
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
-import { GestureResponderEvent } from "react-native/Libraries/Types/CoreEventTypes";
 import { Text, Pressable, Box } from "@gluestack-ui/themed";
+import React from "react";
+import { GestureResponderEvent } from "react-native/Libraries/Types/CoreEventTypes";
+
 import { COMMON_TOUCH_COLOR } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
 

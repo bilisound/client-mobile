@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
 import { router } from "expo-router";
+import React, { useEffect } from "react";
 
 const NotificationClick: React.FC = () => {
     useEffect(() => {

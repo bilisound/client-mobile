@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import RNFS from "react-native-fs";
+import { create } from "zustand";
 
 export interface DownloadItem {
     id: string;
@@ -24,7 +24,7 @@ const useDownloadStore = create<DownloadProps & DownloadMethods>()((set, get) =>
         downloadList.set(key, downloadItem);
         set(() => ({ downloadList }));
     },
-    removeDownloadItem: (key) => {
+    removeDownloadItem: key => {
         const downloadList = new Map(get().downloadList);
         downloadList.delete(key);
         set(() => ({ downloadList }));

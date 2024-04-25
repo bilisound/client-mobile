@@ -1,17 +1,16 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Box, Pressable, Text, Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
 
+import { Box, Pressable, Text, Toast, ToastDescription, ToastTitle, useToast, VStack } from "./../components/ui";
 import CommonLayout from "../components/CommonLayout";
 import PlaylistItem from "../components/PlaylistItem";
 import { COMMON_TOUCH_COLOR } from "../constants/style";
 import useToastContainerStyle from "../hooks/useToastContainerStyle";
 import { addToPlaylist, quickCreatePlaylist, syncPlaylistAmount, usePlaylistStorage } from "../storage/playlist";
 import useAddPlaylistStore from "../store/addPlaylist";
-
 export default function Page() {
     const containerStyle = useToastContainerStyle();
     const toast = useToast();
@@ -21,9 +20,7 @@ export default function Page() {
         playlistDetail: state.playlistDetail,
         name: state.name,
     }));
-
     const [playlistStorage] = usePlaylistStorage();
-
     return (
         <CommonLayout title="添加到歌单" leftAccessories="backButton">
             <Box gap="$4" py="$4">

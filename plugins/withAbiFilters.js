@@ -1,5 +1,4 @@
 const { withAppBuildGradle } = require("@expo/config-plugins");
-
 module.exports = function withAbiFilters(config) {
     return withAppBuildGradle(config, config => {
         if (config.modResults.language === "groovy") {
@@ -10,13 +9,11 @@ module.exports = function withAbiFilters(config) {
         return config;
     });
 };
-
 function setAbiFilters(appBuildGradle) {
     const pattern = /abiFilters.*/;
     if (appBuildGradle.match(pattern)) {
         return appBuildGradle.replace(pattern, `abiFilters "arm64-v8a", "x86_64"`);
     }
-
     return appBuildGradle.replace(
         /defaultConfig\s*{/,
         `defaultConfig {
