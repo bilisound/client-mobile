@@ -1,5 +1,5 @@
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Box, Button, ButtonText, Center, Pressable, Text } from "@gluestack-ui/themed";
+import { Box, Button, ButtonText, Pressable, Text } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import Color from "color";
 import { Image } from "expo-image";
@@ -206,7 +206,7 @@ export default function Page() {
     const [editing, setEditing] = useState(false);
 
     async function handleRequestPlay(index: number) {
-        if (playlistOnQueue?.id === id) {
+        if (playlistOnQueue.value?.id === id) {
             log.debug("当前队列中的内容来自本播放列表，就地跳转");
             await TrackPlayer.skip(index);
             return;
@@ -217,7 +217,7 @@ export default function Page() {
         await TrackPlayer.setQueue(tracks);
         await TrackPlayer.skip(index);
         await TrackPlayer.play();
-        setPlaylistOnQueue(meta ?? {});
+        setPlaylistOnQueue({ value: meta });
     }
 
     const handleDelete = useCallback(() => {
@@ -239,14 +239,14 @@ export default function Page() {
                         return prevValue.concat();
                     });
                     clear();
-                    if (playlistOnQueue?.id === id) {
+                    if (playlistOnQueue.value?.id === id) {
                         setPlaylistOnQueue({});
                     }
                     syncPlaylistAmount(id);
                 },
             },
         ]);
-    }, [clear, id, playlistOnQueue?.id, selected, setPlaylistDetail, setPlaylistOnQueue]);
+    }, [clear, id, playlistOnQueue.value?.id, selected, setPlaylistDetail, setPlaylistOnQueue]);
 
     if (!meta) {
         return null;
@@ -270,7 +270,7 @@ export default function Page() {
                         aria-label="编辑歌单信息"
                         sx={COMMON_FRAME_BUTTON_STYLE}
                         onPress={() => {
-                            router.push("../meta/" + id);
+                            router.push(`../meta/${id}`);
                         }}
                     >
                         <Feather name="edit" size={20} color={textBasicColor} />
