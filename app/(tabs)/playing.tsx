@@ -17,9 +17,8 @@ import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { memo, useCallback, useMemo, useRef, useState } from "react";
-import { useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import TrackPlayer, { useActiveTrack } from "react-native-track-player";
+import TrackPlayer from "react-native-track-player";
 import { remove } from "react-native-track-player/src/trackPlayer";
 
 import CommonLayout from "../../components/CommonLayout";
