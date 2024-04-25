@@ -12,6 +12,7 @@ import { convertToHTTPS } from "./string";
 import { saveTrackData } from "./track-data";
 import { getBilisoundResourceUrl, getVideoUrl } from "../api/bilisound";
 import { USER_AGENT_BILIBILI } from "../constants/network";
+import useToastContainerStyle from "../hooks/useToastContainerStyle";
 import { PLAYLIST_ON_QUEUE, playlistStorage } from "../storage/playlist";
 import useDownloadStore from "../store/download";
 import useSettingsStore from "../store/settings";
@@ -131,8 +132,10 @@ export async function addTrackToQueue(
     playingRequest: PlayingInformation,
     {
         toast,
+        containerStyle,
     }: {
         toast: ReturnType<typeof useToast>;
+        containerStyle: ReturnType<typeof useToastContainerStyle>;
     },
 ) {
     try {
@@ -205,6 +208,7 @@ export async function addTrackToQueue(
         // 操作失败
         toast.show({
             placement: "top",
+            containerStyle,
             render: ({ id }) => (
                 <Toast nativeID={`toast-${id}`} action="error" variant="accent">
                     <VStack space="xs">

@@ -2,18 +2,21 @@ import { Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestac
 import React from "react";
 import { Event, useTrackPlayerEvents } from "react-native-track-player";
 
+import useToastContainerStyle from "../hooks/useToastContainerStyle";
 import { handleReDownload } from "../utils/download-service";
 import log from "../utils/logger";
 
 const events = [Event.PlaybackState, Event.PlaybackError, Event.PlaybackActiveTrackChanged];
 
 const AudioManager: React.FC = () => {
+    const containerStyle = useToastContainerStyle();
     const toast = useToast();
 
     useTrackPlayerEvents(events, async event => {
         if (event.type === Event.PlaybackError) {
             toast.show({
                 placement: "top",
+                containerStyle,
                 render: ({ id }) => (
                     <Toast nativeID={`toast-${id}`} action="error" variant="accent">
                         <VStack space="xs">

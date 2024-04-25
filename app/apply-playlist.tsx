@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Box, Pressable, Text } from "@gluestack-ui/themed";
+import { Box, Pressable, Text, Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
@@ -8,10 +8,14 @@ import React from "react";
 import CommonLayout from "../components/CommonLayout";
 import PlaylistItem from "../components/PlaylistItem";
 import { COMMON_TOUCH_COLOR } from "../constants/style";
+import useToastContainerStyle from "../hooks/useToastContainerStyle";
 import { addToPlaylist, quickCreatePlaylist, syncPlaylistAmount, usePlaylistStorage } from "../storage/playlist";
 import useAddPlaylistStore from "../store/addPlaylist";
 
 export default function Page() {
+    const containerStyle = useToastContainerStyle();
+    const toast = useToast();
+
     // 添加播放列表
     const { playlistDetail, name } = useAddPlaylistStore(state => ({
         playlistDetail: state.playlistDetail,
@@ -59,6 +63,18 @@ export default function Page() {
                         sx={COMMON_TOUCH_COLOR}
                         onPress={() => {
                             quickCreatePlaylist(name, playlistDetail ?? []);
+                            toast.show({
+                                placement: "top",
+                                containerStyle,
+                                render: ({ id }) => (
+                                    <Toast nativeID={`toast-${id}`} action="success" variant="accent">
+                                        <VStack space="xs">
+                                            <ToastTitle>歌单创建成功</ToastTitle>
+                                            <ToastDescription>{"新歌单的名称：" + name}</ToastDescription>
+                                        </VStack>
+                                    </Toast>
+                                ),
+                            });
                             router.back();
                         }}
                     >
@@ -80,6 +96,18 @@ export default function Page() {
                             onPress={() => {
                                 addToPlaylist(item.item.id, playlistDetail ?? []);
                                 syncPlaylistAmount(item.item.id);
+                                toast.show({
+                                    placement: "top",
+                                    containerStyle,
+                                    render: ({ id }) => (
+                                        <Toast nativeID={`toast-${id}`} action="success" variant="accent">
+                                            <VStack space="xs">
+                                                <ToastTitle>曲目添加成功</ToastTitle>
+                                                <ToastDescription>{`已添加 ${playlistDetail?.length ?? 0} 首曲目到歌单`}</ToastDescription>
+                                            </VStack>
+                                        </Toast>
+                                    ),
+                                });
                                 router.back();
                             }}
                         />

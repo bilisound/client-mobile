@@ -16,10 +16,12 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
+import { Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { v4 } from "uuid";
 
 import CommonLayout from "../../../../components/CommonLayout";
+import useToastContainerStyle from "../../../../hooks/useToastContainerStyle";
 import { PlaylistMeta, usePlaylistStorage } from "../../../../storage/playlist";
 import log from "../../../../utils/logger";
 
@@ -27,7 +29,7 @@ const MAGIC_ID_NEW_ENTRY = "new";
 
 export default function Page() {
     const toast = useToast();
-    const { top } = useSafeAreaInsets();
+    const containerStyle = useToastContainerStyle();
     const { id } = useLocalSearchParams<{ id: string }>();
     const [list, setList] = usePlaylistStorage();
     const initialValues = list.find(e => e.id === id) ?? { id: "", title: "", color: "", amount: 0 };
@@ -44,10 +46,7 @@ export default function Page() {
         });
         toast.show({
             placement: "top",
-            // https://github.com/gluestack/gluestack-ui/issues/1334 的 workaround
-            containerStyle: {
-                top,
-            },
+            containerStyle,
             render: ({ id }) => (
                 <Toast nativeID={`toast-${id}`} action="success" variant="accent">
                     <VStack space="xs">

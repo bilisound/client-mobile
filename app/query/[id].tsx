@@ -31,6 +31,7 @@ import VideoSkeleton from "../../components/VideoSkeleton";
 import { BILIBILI_VIDEO_URL_PREFIX } from "../../constants/network";
 import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../../constants/style";
 import useCommonColors from "../../hooks/useCommonColors";
+import useToastContainerStyle from "../../hooks/useToastContainerStyle";
 import useAddPlaylistStore from "../../store/addPlaylist";
 import useHistoryStore from "../../store/history";
 import { addTrackToQueue } from "../../utils/download-service";
@@ -100,6 +101,7 @@ const QueryIdScreen: React.FC = () => {
     const toast = useToast();
     const edgeInsets = useSafeAreaInsets();
     const { textBasicColor } = useCommonColors();
+    const containerStyle = useToastContainerStyle();
 
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
@@ -159,7 +161,7 @@ const QueryIdScreen: React.FC = () => {
                                 duration: item.duration,
                                 title: item.part,
                             },
-                            { toast },
+                            { toast, containerStyle },
                         );
                     }}
                     onLongPress={() => {
