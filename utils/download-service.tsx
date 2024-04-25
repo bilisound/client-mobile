@@ -171,6 +171,8 @@ export async function addTrackToQueue(
         }
 
         log.debug("正在添加到播放列表");
+
+        // 清除当前播放队列隶属的播放列表
         playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
         const addResult = await TrackPlayer.add([
             {

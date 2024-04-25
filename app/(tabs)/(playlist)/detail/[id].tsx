@@ -211,6 +211,32 @@ export default function Page() {
             await TrackPlayer.skip(index);
             return;
         }
+        if (playlistOnQueue.value) {
+            return handleRequestPlayConfirm(index);
+        }
+        Alert.alert(
+            "替换播放队列确认",
+            "播放本歌单中的歌曲，将会把当前播放队列替换为本歌单。确定要继续吗？",
+            [
+                {
+                    text: "取消",
+                    style: "cancel",
+                },
+                {
+                    text: "确定",
+                    isPreferred: true,
+                    onPress() {
+                        return handleRequestPlayConfirm(index);
+                    },
+                },
+            ],
+            {
+                onDismiss() {},
+            },
+        );
+    }
+
+    async function handleRequestPlayConfirm(index: number) {
         log.debug("将队列中的内容设置为本播放列表");
         const tracks = await playlistToTracks(playlistDetail);
         await TrackPlayer.pause();
