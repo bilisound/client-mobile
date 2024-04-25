@@ -59,7 +59,7 @@ export function quickCreatePlaylist(title: string, row: PlaylistDetailRow | Play
         amount: list.length,
     };
     log.info(`快速创建歌单 ${title} (${item.id})`);
-    const originalList = playlistStorage.getArray<PlaylistMeta>(PLAYLIST_INDEX_KEY);
+    const originalList = playlistStorage.getArray<PlaylistMeta>(PLAYLIST_INDEX_KEY) || [];
     originalList.push(item);
     playlistStorage.setArray(PLAYLIST_INDEX_KEY, originalList);
 

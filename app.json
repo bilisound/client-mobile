@@ -52,6 +52,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "./plugins/withAbiFilters",
       "expo-router",
       [
         "expo-camera",
