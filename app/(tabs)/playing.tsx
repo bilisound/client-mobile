@@ -221,6 +221,7 @@ const TabPlaying: React.FC = () => {
                                 }}
                                 onLongPress={() => {
                                     setDisplayTrack(item.item);
+                                    setShowActionSheet(true);
                                 }}
                                 isChecking={editing}
                                 isChecked={selected.has(item.index)}
