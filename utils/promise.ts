@@ -1,26 +1,10 @@
-export function runTasksLimit(tasks: (() => Promise<void>)[], limit = 10) {
-    return new Promise<void>((resolve, reject) => {
-        const waitingTasks = tasks.concat();
-        let stoppingSignal = false;
-        async function executor() {
-            if (stoppingSignal) {
-                return;
-            }
-            console.log(`剩余任务数量：${waitingTasks.length}`);
-            if (waitingTasks.length <= 0) {
-                stoppingSignal = true;
-                resolve();
-            }
-            try {
-                await waitingTasks.pop()?.();
-            } catch (e) {
-                reject(e);
-            }
-            return executor();
-        }
+import chunk from "lodash/chunk";
 
-        for (let i = 0; i < limit; i++) {
-            executor();
-        }
-    });
+export async function runTasksLimit(tasks: (() => Promise<void>)[], limit = 10) {
+    const grouped = chunk(tasks, limit);
+    for (let i = 0; i < grouped.length; i++) {
+        const e = grouped[i];
+        const promises = e.map(e => e());
+        await Promise.all(promises);
+    }
 }
