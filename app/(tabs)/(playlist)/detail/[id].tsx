@@ -1,5 +1,5 @@
 import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Box, Button, ButtonText, Pressable, Text } from "@gluestack-ui/themed";
+import { Box, Button, ButtonText, Center, Pressable, Text } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import Color from "color";
 import { Image } from "expo-image";
@@ -11,6 +11,7 @@ import { useMMKVStorage } from "react-native-mmkv-storage";
 import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "../../../../components/CommonLayout";
+import Empty from "../../../../components/Empty";
 import SongItem from "../../../../components/SongItem";
 import { COMMON_FRAME_BUTTON_STYLE } from "../../../../constants/style";
 import useCommonColors from "../../../../hooks/useCommonColors";
@@ -340,7 +341,11 @@ export default function Page() {
                         />
                     </LinearGradient>
                 }
-                ListEmptyComponent={<Text h="100%">暂无内容</Text>}
+                ListEmptyComponent={
+                    <Box flex={1}>
+                        <Empty title="暂无内容" action={null} />
+                    </Box>
+                }
             />
             {editing ? (
                 <EditAction

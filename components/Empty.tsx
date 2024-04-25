@@ -4,7 +4,7 @@ import React from "react";
 export interface EmptyProps {
     onPress?: () => void;
     title?: string;
-    action?: string;
+    action?: string | null;
 }
 
 export default function Empty({ onPress = () => {}, title = "这里空空如也", action = "去查询" }: EmptyProps) {
@@ -25,9 +25,11 @@ export default function Empty({ onPress = () => {}, title = "这里空空如也"
             >
                 {title}
             </Text>
-            <Button onPress={onPress}>
-                <ButtonText>{action}</ButtonText>
-            </Button>
+            {action && (
+                <Button onPress={onPress}>
+                    <ButtonText>{action}</ButtonText>
+                </Button>
+            )}
         </Box>
     );
 }
