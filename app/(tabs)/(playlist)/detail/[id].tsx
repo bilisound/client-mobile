@@ -1,10 +1,10 @@
-import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Box, Button, ButtonText, Center, Pressable, Text } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { Alert, useColorScheme } from "react-native";
 import { useMMKVStorage } from "react-native-mmkv-storage";
@@ -265,26 +265,37 @@ export default function Page() {
             bgColor={enableUnderLayerColor ? fromColor : bgColor}
             leftAccessories="backButton"
             rightAccessories={
-                playlistDetail.length > 0 ? (
+                <>
                     <Pressable
-                        aria-label={editing ? "完成" : "编辑"}
+                        aria-label="编辑歌单信息"
                         sx={COMMON_FRAME_BUTTON_STYLE}
-                        onPress={() =>
-                            setEditing(prevState => {
-                                if (prevState) {
-                                    clear();
-                                }
-                                return !prevState;
-                            })
-                        }
+                        onPress={() => {
+                            router.push("../meta/" + id);
+                        }}
                     >
-                        {editing ? (
-                            <Entypo name="check" size={24} color={textBasicColor} />
-                        ) : (
-                            <MaterialCommunityIcons name="format-list-checks" size={24} color={textBasicColor} />
-                        )}
+                        <Feather name="edit" size={20} color={textBasicColor} />
                     </Pressable>
-                ) : null
+                    {playlistDetail.length > 0 ? (
+                        <Pressable
+                            aria-label={editing ? "完成" : "编辑"}
+                            sx={COMMON_FRAME_BUTTON_STYLE}
+                            onPress={() =>
+                                setEditing(prevState => {
+                                    if (prevState) {
+                                        clear();
+                                    }
+                                    return !prevState;
+                                })
+                            }
+                        >
+                            {editing ? (
+                                <Entypo name="check" size={24} color={textBasicColor} />
+                            ) : (
+                                <MaterialCommunityIcons name="format-list-checks" size={24} color={textBasicColor} />
+                            )}
+                        </Pressable>
+                    ) : null}
+                </>
             }
             extendToBottom
         >

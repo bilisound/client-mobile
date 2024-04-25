@@ -35,27 +35,51 @@ export default function Page() {
     const initialValues = list.find(e => e.id === id) ?? { id: "", title: "", color: "", amount: 0 };
 
     function handleSubmit(value: PlaylistMeta) {
-        value.id = v4();
-        value.color = `hsl(${Math.random() * 360}, 80%, 50%)`;
-        log.info("用户创建新的歌单");
+        const isCreate = !value.id;
+        if (isCreate) {
+            value.id = v4();
+            value.color = `hsl(${Math.random() * 360}, 80%, 50%)`;
+            log.info("用户创建新的歌单");
+        } else {
+            log.info("用户编辑已有歌单");
+        }
         log.debug(`歌单详情：${JSON.stringify(value)}`);
         setList(prevValue => {
             const newList = prevValue.concat();
-            newList.push(value);
+            if (isCreate) {
+                newList.push(value);
+            } else {
+                const target = newList.findIndex(e => e.id === id);
+                newList[target] = value;
+            }
             return newList;
         });
-        toast.show({
-            placement: "top",
-            containerStyle,
-            render: ({ id }) => (
-                <Toast nativeID={`toast-${id}`} action="success" variant="accent">
-                    <VStack space="xs">
-                        <ToastTitle>歌单创建成功</ToastTitle>
-                        <ToastDescription>{"新歌单的名称：" + value.title}</ToastDescription>
-                    </VStack>
-                </Toast>
-            ),
-        });
+        if (isCreate) {
+            toast.show({
+                placement: "top",
+                containerStyle,
+                render: ({ id }) => (
+                    <Toast nativeID={`toast-${id}`} action="success" variant="accent">
+                        <VStack space="xs">
+                            <ToastTitle>歌单创建成功</ToastTitle>
+                            <ToastDescription>{"新歌单的名称：" + value.title}</ToastDescription>
+                        </VStack>
+                    </Toast>
+                ),
+            });
+        } else {
+            toast.show({
+                placement: "top",
+                containerStyle,
+                render: ({ id }) => (
+                    <Toast nativeID={`toast-${id}`} action="success" variant="accent">
+                        <VStack space="xs">
+                            <ToastTitle>歌单修改成功</ToastTitle>
+                        </VStack>
+                    </Toast>
+                ),
+            });
+        }
         router.back();
     }
 

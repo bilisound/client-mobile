@@ -85,12 +85,6 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         </Text>
                     </Box>
                 )}
-                <ActionsheetItem onPress={() => onAction("edit")}>
-                    <Box sx={iconWrapperStyle}>
-                        <MaterialCommunityIcons name="view-list" size={24} color={textBasicColor} />
-                    </Box>
-                    <ActionsheetItemText>查看</ActionsheetItemText>
-                </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("delete")}>
                     <Box sx={iconWrapperStyle}>
                         <MaterialIcons name="delete" size={24} color={textBasicColor} />
