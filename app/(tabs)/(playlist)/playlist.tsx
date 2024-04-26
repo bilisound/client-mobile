@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import {
     Actionsheet,
     ActionsheetBackdrop,
@@ -85,6 +85,12 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         </Text>
                     </Box>
                 )}
+                <ActionsheetItem onPress={() => onAction("edit")}>
+                    <Box sx={iconWrapperStyle}>
+                        <MaterialIcons name="edit" size={24} color={textBasicColor} />
+                    </Box>
+                    <ActionsheetItemText>重命名</ActionsheetItemText>
+                </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("delete")}>
                     <Box sx={iconWrapperStyle}>
                         <MaterialIcons name="delete" size={24} color={textBasicColor} />
@@ -188,6 +194,7 @@ export default function Page() {
                         case "close":
                             break;
                         case "edit":
+                            router.push(`./meta/${displayTrack?.id}`);
                             break;
                         default:
                             break;

@@ -168,6 +168,7 @@ const TabPlaying: React.FC = () => {
     const handleDelete = useCallback(async () => {
         await TrackPlayer.remove(Array.from(selected));
         await update();
+        clear();
         if ((await TrackPlayer.getQueue()).length <= 0) {
             setEditing(false);
         }
