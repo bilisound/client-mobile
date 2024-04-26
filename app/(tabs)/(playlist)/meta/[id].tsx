@@ -1,8 +1,17 @@
 import {
+    AlertCircleIcon,
     Box,
     Button,
     ButtonText,
+    Checkbox,
+    CheckboxIcon,
+    CheckboxIndicator,
+    CheckboxLabel,
+    CheckIcon,
     FormControl,
+    FormControlError,
+    FormControlErrorIcon,
+    FormControlErrorText,
     FormControlLabel,
     FormControlLabelText,
     Input,
@@ -14,16 +23,16 @@ import {
     VStack,
 } from "@gluestack-ui/themed";
 import { router, useLocalSearchParams } from "expo-router";
-import { Formik } from "formik";
 import React from "react";
-import { Platform } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Controller, useForm } from "react-hook-form";
+import TrackPlayer from "react-native-track-player";
 import { v4 } from "uuid";
 
 import CommonLayout from "../../../../components/CommonLayout";
 import useToastContainerStyle from "../../../../hooks/useToastContainerStyle";
-import { PlaylistMeta, usePlaylistStorage } from "../../../../storage/playlist";
+import { addToPlaylist, PlaylistMeta, syncPlaylistAmount, usePlaylistStorage } from "../../../../storage/playlist";
 import log from "../../../../utils/logger";
+import { tracksToPlaylist } from "../../../../utils/track-data";
 
 const MAGIC_ID_NEW_ENTRY = "new";
 
@@ -32,10 +41,20 @@ export default function Page() {
     const containerStyle = useToastContainerStyle();
     const { id } = useLocalSearchParams<{ id: string }>();
     const [list, setList] = usePlaylistStorage();
-    const initialValues = list.find(e => e.id === id) ?? { id: "", title: "", color: "", amount: 0 };
+    const defaultValues = list.find(e => e.id === id) ?? { id: "", title: "", color: "", amount: 0 };
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<PlaylistMeta>({
+        defaultValues,
+    });
 
-    function handleSubmit(value: PlaylistMeta) {
+    async function onSubmit(value: PlaylistMeta) {
         const isCreate = !value.id;
+        const createFromQueue = !!value.createFromQueue;
+        delete value.createFromQueue;
+
         if (isCreate) {
             value.id = v4();
             value.color = `hsl(${Math.random() * 360}, 80%, 50%)`;
@@ -44,6 +63,7 @@ export default function Page() {
             log.info("用户编辑已有歌单");
         }
         log.debug(`歌单详情：${JSON.stringify(value)}`);
+
         setList(prevValue => {
             const newList = prevValue.concat();
             if (isCreate) {
@@ -54,6 +74,13 @@ export default function Page() {
             }
             return newList;
         });
+
+        if (createFromQueue) {
+            const fromTracks = tracksToPlaylist(await TrackPlayer.getQueue());
+            addToPlaylist(value.id, fromTracks);
+            syncPlaylistAmount(value.id);
+        }
+
         if (isCreate) {
             toast.show({
                 placement: "top",
@@ -85,45 +112,67 @@ export default function Page() {
 
     return (
         <CommonLayout title={id === MAGIC_ID_NEW_ENTRY ? "创建歌单" : "修改歌单信息"} titleBarTheme="transparent">
-            <Formik<PlaylistMeta> enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
-                {({ handleChange, handleBlur, handleSubmit, values }) => (
-                    <Box gap="$4" px="$4" py="$2">
-                        <FormControl>
-                            <FormControlLabel>
-                                <FormControlLabelText fontSize="$sm">名称</FormControlLabelText>
-                            </FormControlLabel>
+            <Box p="$4" gap="$4">
+                <FormControl isRequired isInvalid={"name" in errors}>
+                    <FormControlLabel>
+                        <FormControlLabelText>名称</FormControlLabelText>
+                    </FormControlLabel>
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => (
                             <Input>
                                 <InputField
-                                    onChangeText={handleChange("title")}
-                                    onBlur={handleBlur("title")}
-                                    value={values.title}
-                                    fontSize="$sm"
-                                    placeholder="请输入播放列表的名称"
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    placeholder="请输入名称"
                                 />
                             </Input>
-                        </FormControl>
-                        {/*<FormControl>
-                            <FormControlLabel>
-                                <FormControlLabelText fontSize="$sm">标签色</FormControlLabelText>
-                            </FormControlLabel>
-                            <Text>Placeholder</Text>
-                        </FormControl>*/}
-                        <FormControl>
-                            <Button
-                                bg="$primary600"
-                                size="md"
-                                variant="solid"
-                                action="primary"
-                                onPress={() => handleSubmit()}
-                            >
-                                <ButtonText fontWeight="$medium" fontSize="$sm">
-                                    保存
-                                </ButtonText>
-                            </Button>
-                        </FormControl>
-                    </Box>
+                        )}
+                        name="title"
+                        rules={{ required: "名称不能为空" }}
+                    />
+                    <FormControlError>
+                        <FormControlErrorIcon as={AlertCircleIcon} />
+                        <FormControlErrorText>{errors.title?.message}</FormControlErrorText>
+                    </FormControlError>
+                </FormControl>
+
+                {id == MAGIC_ID_NEW_ENTRY && (
+                    <FormControl>
+                        <Controller
+                            control={control}
+                            render={({ field: { onChange, value } }) => (
+                                <Checkbox
+                                    onChange={onChange}
+                                    isChecked={value}
+                                    value={String(value)}
+                                    aria-label="从当前队列创建播放列表"
+                                >
+                                    <CheckboxIndicator mr="$2">
+                                        <CheckboxIcon as={CheckIcon} />
+                                    </CheckboxIndicator>
+                                    <CheckboxLabel>从当前队列创建播放列表</CheckboxLabel>
+                                </Checkbox>
+                            )}
+                            name="createFromQueue"
+                            defaultValue={false}
+                        />
+                    </FormControl>
                 )}
-            </Formik>
+                <Button
+                    bg="$primary600"
+                    size="md"
+                    variant="solid"
+                    action="primary"
+                    onPress={handleSubmit(onSubmit)}
+                    isDisabled={!!errors.title}
+                >
+                    <ButtonText fontWeight="$medium" fontSize="$sm">
+                        保存
+                    </ButtonText>
+                </Button>
+            </Box>
         </CommonLayout>
     );
 }

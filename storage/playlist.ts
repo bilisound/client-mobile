@@ -16,6 +16,7 @@ export interface PlaylistMeta {
     title: string;
     color: string;
     amount: number;
+    createFromQueue?: boolean;
 }
 
 export interface PlaylistDetailRow {
