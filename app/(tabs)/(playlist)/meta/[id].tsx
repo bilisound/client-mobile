@@ -138,7 +138,7 @@ export default function Page() {
                     </FormControlError>
                 </FormControl>
 
-                {id == MAGIC_ID_NEW_ENTRY && (
+                {id === MAGIC_ID_NEW_ENTRY && (
                     <FormControl>
                         <Controller
                             control={control}

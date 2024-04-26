@@ -42,6 +42,10 @@ export function usePlaylistOnQueue() {
     return useMMKVStorage<{ value?: PlaylistMeta | undefined }>(PLAYLIST_ON_QUEUE, playlistStorage, {});
 }
 
+export function invalidateOnQueueStatus() {
+    playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
+}
+
 export function addToPlaylist(id: string, row: PlaylistDetailRow | PlaylistDetailRow[]) {
     const list = Array.isArray(row) ? row : [row];
     log.debug(`添加 ${list.length} 首歌曲到歌单 ${id}`);
@@ -88,8 +92,4 @@ export function syncPlaylistAmount(id: string) {
     playlistMetas[foundIndex].amount = len;
 
     playlistStorage.setArray(PLAYLIST_INDEX_KEY, playlistMetas);
-}
-
-export function invalidateOnQueueStatus() {
-    playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
 }
