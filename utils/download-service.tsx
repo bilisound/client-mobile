@@ -13,7 +13,7 @@ import { saveTrackData } from "./track-data";
 import { getBilisoundResourceUrl, getVideoUrl } from "../api/bilisound";
 import { USER_AGENT_BILIBILI } from "../constants/network";
 import useToastContainerStyle from "../hooks/useToastContainerStyle";
-import { PLAYLIST_ON_QUEUE, playlistStorage } from "../storage/playlist";
+import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "../storage/playlist";
 import useDownloadStore from "../store/download";
 import useSettingsStore from "../store/settings";
 
@@ -173,7 +173,7 @@ export async function addTrackToQueue(
         log.debug("正在添加到播放列表");
 
         // 清除当前播放队列隶属的播放列表
-        playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
+        invalidateOnQueueStatus();
         const addResult = await TrackPlayer.add([
             {
                 url,

@@ -49,6 +49,12 @@ export function addToPlaylist(id: string, row: PlaylistDetailRow | PlaylistDetai
     const originalList = playlistStorage.getArray<PlaylistDetailRow>(PLAYLIST_ITEM_KEY_PREFIX + id) || [];
     originalList.push(...list);
     playlistStorage.setArray(PLAYLIST_ITEM_KEY_PREFIX + id, originalList);
+
+    // 清空当前播放队列隶属歌单的状态机
+    const got = playlistStorage.getMap<{ value?: PlaylistMeta }>(PLAYLIST_ON_QUEUE);
+    if (got?.value?.id === id) {
+        invalidateOnQueueStatus();
+    }
 }
 
 export function quickCreatePlaylist(title: string, row: PlaylistDetailRow | PlaylistDetailRow[]) {
@@ -82,4 +88,8 @@ export function syncPlaylistAmount(id: string) {
     playlistMetas[foundIndex].amount = len;
 
     playlistStorage.setArray(PLAYLIST_INDEX_KEY, playlistMetas);
+}
+
+export function invalidateOnQueueStatus() {
+    playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
 }

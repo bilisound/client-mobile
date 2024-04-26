@@ -28,7 +28,7 @@ import { COMMON_FRAME_BUTTON_STYLE } from "../../constants/style";
 import useCommonColors from "../../hooks/useCommonColors";
 import useMultiSelect from "../../hooks/useMultiSelect";
 import useTracks from "../../hooks/useTracks";
-import { PLAYLIST_ON_QUEUE, PlaylistDetailRow, playlistStorage } from "../../storage/playlist";
+import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, PlaylistDetailRow, playlistStorage } from "../../storage/playlist";
 import useSettingsStore from "../../store/settings";
 import { getFileName } from "../../utils/format";
 import log from "../../utils/logger";
@@ -138,7 +138,7 @@ const TabPlaying: React.FC = () => {
     const handleDeleteSingle = useCallback(async () => {
         await remove(currentOperateIndex.current);
         await update();
-        playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
+        invalidateOnQueueStatus();
         handleClose();
     }, [update]);
 
@@ -172,7 +172,7 @@ const TabPlaying: React.FC = () => {
         if ((await TrackPlayer.getQueue()).length <= 0) {
             setEditing(false);
         }
-        playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
+        invalidateOnQueueStatus();
     }, [clear, selected, update]);
 
     // 转换后的列表
