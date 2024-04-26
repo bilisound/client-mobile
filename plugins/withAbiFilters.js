@@ -12,13 +12,13 @@ module.exports = function withAbiFilters(config) {
 function setAbiFilters(appBuildGradle) {
     const pattern = /abiFilters.*/;
     if (appBuildGradle.match(pattern)) {
-        return appBuildGradle.replace(pattern, `abiFilters "arm64-v8a", "x86_64"`);
+        return appBuildGradle.replace(pattern, `abiFilters "arm64-v8a"`);
     }
     return appBuildGradle.replace(
         /defaultConfig\s*{/,
         `defaultConfig {
         ndk {
-            abiFilters "arm64-v8a", "x86_64"
+            abiFilters "arm64-v8a"
         }`,
     );
 }
