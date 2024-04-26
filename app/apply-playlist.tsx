@@ -1,10 +1,10 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { Box, Pressable, Text, Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
 
-import { Box, Pressable, Text, Toast, ToastDescription, ToastTitle, useToast, VStack } from "./../components/ui";
 import CommonLayout from "../components/CommonLayout";
 import PlaylistItem from "../components/PlaylistItem";
 import { COMMON_TOUCH_COLOR } from "../constants/style";
