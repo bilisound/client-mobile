@@ -22,7 +22,7 @@ import Empty from "../../../components/Empty";
 import PlaylistItem from "../../../components/PlaylistItem";
 import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../../../constants/style";
 import useCommonColors from "../../../hooks/useCommonColors";
-import { PlaylistMeta, usePlaylistStorage } from "../../../storage/playlist";
+import { PLAYLIST_ON_QUEUE, PlaylistMeta, playlistStorage, usePlaylistStorage } from "../../../storage/playlist";
 import log from "../../../utils/logger";
 
 interface PlaylistContextProps {
@@ -133,6 +133,13 @@ export default function Page() {
             }
             return prevValue.toSpliced(found, 1);
         });
+
+        // 清空当前播放队列隶属歌单的状态机
+        const got = playlistStorage.getMap<{ value?: PlaylistMeta }>(PLAYLIST_ON_QUEUE);
+        // console.log(got?.value?.id, displayTrack?.id);
+        if (got?.value?.id === displayTrack?.id) {
+            playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
+        }
     };
 
     return (

@@ -173,7 +173,7 @@ const TabPlaying: React.FC = () => {
             setEditing(false);
         }
         playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
-    }, [selected, update]);
+    }, [clear, selected, update]);
 
     // 转换后的列表
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
