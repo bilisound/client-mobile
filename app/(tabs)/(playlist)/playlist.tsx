@@ -1,4 +1,4 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import {
     Actionsheet,
     ActionsheetBackdrop,
@@ -20,7 +20,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CommonLayout from "../../../components/CommonLayout";
 import Empty from "../../../components/Empty";
 import PlaylistItem from "../../../components/PlaylistItem";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../../../constants/style";
+import { COMMON_FRAME_BUTTON_STYLE, COMMON_FRAME_SOLID_BUTTON_STYLE } from "../../../constants/style";
 import useCommonColors from "../../../hooks/useCommonColors";
 import { PLAYLIST_ON_QUEUE, PlaylistMeta, playlistStorage, usePlaylistStorage } from "../../../storage/playlist";
 import log from "../../../utils/logger";
@@ -149,14 +149,19 @@ export default function Page() {
                 titleBarTheme="transparent"
                 extendToBottom
                 rightAccessories={
-                    <Pressable
-                        sx={COMMON_FRAME_SOLID_BUTTON_STYLE}
-                        onPress={() => {
-                            router.push(`/(tabs)/(playlist)/meta/new`);
-                        }}
-                    >
-                        <MaterialIcons name="add" size={24} color={primaryColor} />
-                    </Pressable>
+                    <>
+                        <Pressable sx={COMMON_FRAME_BUTTON_STYLE} onPress={() => router.push("/barcode")}>
+                            <MaterialCommunityIcons name="qrcode-scan" size={20} color={primaryColor} />
+                        </Pressable>
+                        <Pressable
+                            sx={COMMON_FRAME_BUTTON_STYLE}
+                            onPress={() => {
+                                router.push(`/(tabs)/(playlist)/meta/new`);
+                            }}
+                        >
+                            <MaterialIcons name="add" size={24} color={primaryColor} />
+                        </Pressable>
+                    </>
                 }
             >
                 {list.length <= 0 ? (
