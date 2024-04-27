@@ -19,9 +19,9 @@ export interface GetVideoOptions {
 }
 
 export async function getVideo({ id, episode = 1, url }: GetVideoOptions): Promise<GetVideoResponse> {
-    const key = `${id}__${episode}`;
+    let key = `${id}__${episode}`;
     const got = videoMap.get(key);
-    if (got) {
+    if (got && id && episode) {
         return got;
     }
     const response = await fetch(url || `${BILIBILI_VIDEO_URL_PREFIX}${id}/?p=${episode}`, {
@@ -35,6 +35,9 @@ export async function getVideo({ id, episode = 1, url }: GetVideoOptions): Promi
     const playInfo: WebPlayInfo = extractJSON(/window\.__playinfo__=(\{.+})<\/script><script>/, response);
     const getVideoResponse: GetVideoResponse = { initialState, playInfo };
 
+    if (url) {
+        key = `${initialState.bvid}__1`;
+    }
     videoMap.set(key, getVideoResponse);
     return getVideoResponse;
 }
