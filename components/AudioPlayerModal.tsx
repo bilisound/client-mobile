@@ -1,17 +1,17 @@
-import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, Box } from "@gluestack-ui/themed";
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Platform, StatusBar, useColorScheme } from "react-native";
+import { Alert, Platform, StatusBar, useColorScheme } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
 
 import SongItem from "./SongItem";
-import { COMMON_TOUCH_COLOR } from "../constants/style";
+import { COMMON_FRAME_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
 import useTracks from "../hooks/useTracks";
 import useSettingsStore from "../store/settings";
@@ -210,6 +210,7 @@ function MusicPicture({ image }: { image?: string }) {
 
 function MusicList() {
     const { tracks } = useTracks();
+    const { primaryColor } = useCommonColors();
 
     // 转换后的列表
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
@@ -218,36 +219,51 @@ function MusicList() {
         <Box
             sx={{
                 flex: 1,
-                // alignItems: "center",
-                // justifyContent: "center",
-                // bg: "#345676",
-                mb: "$3",
-                borderWidth: 1,
-                borderColor: "$backgroundLight100",
-                _dark: {
-                    borderColor: "$backgroundDark900",
-                },
-                borderLeftWidth: 0,
-                borderRightWidth: 0,
+                mb: "$6",
             }}
         >
-            <FlashList
-                renderItem={item => {
-                    return (
-                        <SongItem
-                            data={item.item}
-                            index={item.index + 1}
-                            onRequestPlay={async () => {
-                                await TrackPlayer.skip(item.index);
-                                await TrackPlayer.play();
-                            }}
-                        />
-                    );
+            <Box flex={0} px="$3" py="$3" flexDirection="row" alignItems="center" justifyContent="space-between">
+                <Text fontWeight="700" fontSize="$lg">{`当前队列 (${tracks.length})`}</Text>
+                <Pressable
+                    sx={COMMON_FRAME_BUTTON_STYLE}
+                    onPress={() => {
+                        Alert.alert("警告！！", "本功能正在开发中。如果看到本消息，请暴打开发者！");
+                    }}
+                >
+                    <FontAwesome5 name="random" size={20} color={primaryColor} />
+                    {/*<MaterialCommunityIcons name="qrcode-scan" size={20} color={primaryColor} />*/}
+                </Pressable>
+            </Box>
+            <Box
+                sx={{
+                    flex: 1,
+                    borderWidth: 1,
+                    borderColor: "$backgroundLight100",
+                    _dark: {
+                        borderColor: "$backgroundDark900",
+                    },
+                    borderLeftWidth: 0,
+                    borderRightWidth: 0,
                 }}
-                data={convertedTrack}
-                estimatedItemSize={64}
-                extraData={[]}
-            />
+            >
+                <FlashList
+                    renderItem={item => {
+                        return (
+                            <SongItem
+                                data={item.item}
+                                index={item.index + 1}
+                                onRequestPlay={async () => {
+                                    await TrackPlayer.skip(item.index);
+                                    await TrackPlayer.play();
+                                }}
+                            />
+                        );
+                    }}
+                    data={convertedTrack}
+                    estimatedItemSize={64}
+                    extraData={[]}
+                />
+            </Box>
         </Box>
     );
 }
