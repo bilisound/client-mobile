@@ -12,13 +12,19 @@ export interface GetVideoResponse {
 const defaultExpirationTime = 60 * 60 * 1000;
 const videoMap = new ExpiringMap<string, GetVideoResponse>(defaultExpirationTime);
 
-export async function getVideo(id: string, episode: string | number): Promise<GetVideoResponse> {
+export interface GetVideoOptions {
+    id?: string;
+    episode?: string | number;
+    url?: string;
+}
+
+export async function getVideo({ id, episode = 1, url }: GetVideoOptions): Promise<GetVideoResponse> {
     const key = `${id}__${episode}`;
     const got = videoMap.get(key);
     if (got) {
         return got;
     }
-    const response = await fetch(`${BILIBILI_VIDEO_URL_PREFIX}${id}/?p=${episode}`, {
+    const response = await fetch(url || `${BILIBILI_VIDEO_URL_PREFIX}${id}/?p=${episode}`, {
         headers: {
             "user-agent": USER_AGENT_BILIBILI,
         },

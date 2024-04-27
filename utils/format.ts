@@ -3,7 +3,7 @@ import sanitize from "sanitize-filename";
 import { bv2av } from "./vendors/av-bv";
 import { parseB23 } from "../api/bilisound";
 
-export const B23_REGEX = /(https?:\/\/b23\.tv\/[a-zA-Z0-9]+)/;
+export const B23_REGEX = /https?:\/\/b23\.tv\/([a-zA-Z0-9]+)/;
 
 /**
  * 解析用户输入的视频内容。传入的字符串需要先行 trim 处理
@@ -48,12 +48,6 @@ export async function resolveVideo(input: string): Promise<string> {
             throw new Error("不是合法的视频 ID");
         }
         return id;
-    }
-
-    // b23.tv 短链接
-    if (url.hostname === "b23.tv") {
-        const response = await parseB23(url.pathname.split("/")[1]);
-        return resolveVideo(response);
     }
 
     throw new Error("不支持的视频地址");

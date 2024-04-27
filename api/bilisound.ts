@@ -46,6 +46,12 @@ function filterHostname(list: string[]) {
  * 解析短链接
  */
 export async function parseB23(id: string) {
+    // 这是临时措施，因为目前解析重定向结果方法不可用
+    // 详见 https://reactnative.dev/docs/network#known-issues-with-fetch-and-cookie-based-authentication
+    const res = await getVideo({ url: `https://b23.tv/${id}` });
+    return res.initialState.bvid;
+
+    /*log.debug("短链接解析目标：" + id);
     const response = await fetch(`https://b23.tv/${id}`, {
         headers: {
             "user-agent": USER_AGENT_BILIBILI,
@@ -53,12 +59,14 @@ export async function parseB23(id: string) {
         redirect: "manual",
     });
 
+    log.debug("短链接解析响应头部信息：" + JSON.stringify([...response.headers.entries()]));
+    log.debug(await response.text());
     const target = response.headers.get("location");
     if (!target) {
         throw new Error("无法解析短链接重定向目标");
     }
 
-    return target;
+    return target;*/
 }
 
 /**
@@ -68,7 +76,7 @@ export async function parseB23(id: string) {
 export async function getBilisoundMetadata(data: { id: string }) {
     const { id } = data;
     // 获取视频网页
-    const { initialState } = await getVideo(id, 1);
+    const { initialState } = await getVideo({ id, episode: 1 });
 
     // 提取视频信息
     const videoData = initialState?.videoData;
@@ -117,7 +125,7 @@ export async function getBilisoundResourceUrl(data: {
     }
 
     // 获取视频
-    const { playInfo } = await getVideo(id, episode);
+    const { playInfo } = await getVideo({ id, episode });
     const dashAudio = playInfo?.data?.dash?.audio;
 
     if (!Array.isArray(dashAudio) || dashAudio.length <= 0) {
