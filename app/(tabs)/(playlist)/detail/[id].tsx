@@ -162,7 +162,7 @@ export default function Page() {
 
     async function handleRequestPlay(index: number) {
         if (playlistOnQueue.value?.id === id) {
-            log.debug("当前队列中的内容来自本播放列表，就地跳转");
+            log.debug("当前队列中的内容来自本歌单，就地跳转");
             await TrackPlayer.skip(index);
             return;
         }
@@ -192,7 +192,7 @@ export default function Page() {
     }
 
     async function handleRequestPlayConfirm(index: number) {
-        log.debug("将队列中的内容设置为本播放列表");
+        log.debug("将队列中的内容设置为本歌单");
         const tracks = await playlistToTracks(playlistDetail);
         await TrackPlayer.pause();
         await TrackPlayer.setQueue(tracks);

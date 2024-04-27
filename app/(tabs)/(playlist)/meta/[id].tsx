@@ -153,12 +153,12 @@ export default function Page() {
                                     onChange={onChange}
                                     isChecked={value}
                                     value={String(value)}
-                                    aria-label="从当前队列创建播放列表"
+                                    aria-label="从当前队列创建歌单"
                                 >
                                     <CheckboxIndicator mr="$2">
                                         <CheckboxIcon as={CheckIcon} />
                                     </CheckboxIndicator>
-                                    <CheckboxLabel>从当前队列创建播放列表</CheckboxLabel>
+                                    <CheckboxLabel>从当前队列创建歌单</CheckboxLabel>
                                 </Checkbox>
                             )}
                             name="createFromQueue"

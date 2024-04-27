@@ -96,7 +96,7 @@ function LongPressActionsRaw({ showActionSheet, displayTrack, onAction, onClose 
                     <Box sx={iconWrapperStyle}>
                         <MaterialIcons name="delete" size={24} color={textBasicColor} />
                     </Box>
-                    <ActionsheetItemText>从播放列表删除</ActionsheetItemText>
+                    <ActionsheetItemText>从歌单删除</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("export")}>
                     <Box sx={iconWrapperStyle}>

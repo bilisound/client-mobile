@@ -106,7 +106,7 @@ const QueryIdScreen: React.FC = () => {
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
 
-    // 添加播放列表
+    // 添加歌单
     const { setPlaylistDetail, setName } = useAddPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
@@ -141,10 +141,10 @@ const QueryIdScreen: React.FC = () => {
         }
     }, [appendHistoryList, data, noHistory]);
 
-    // 播放列表
+    // 歌单
     const activeTrack = useActiveTrack();
 
-    // 播放列表渲染
+    // 歌单渲染
     const renderItem = useCallback(
         ({ item }: { item: PageItem }) => {
             const rootData = data!.data;

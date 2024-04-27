@@ -50,11 +50,11 @@ export default async function init() {
             compactCapabilities: [Capability.Play, Capability.Pause],
         });
 
-        // 还原播放列表
+        // 还原歌单
         try {
             await loadTrackData();
         } catch (e) {
-            log.error(`播放列表初始化失败。原因：${e}`);
+            log.error(`歌单初始化失败。原因：${e}`);
         }
     } catch (e) {
         log.warn(`播放器初始化失败（通常是播放器已经初始化过了）。错误信息：${e}`);

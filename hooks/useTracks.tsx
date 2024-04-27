@@ -14,9 +14,9 @@ const useTracks = () => {
         await refetch();
         try {
             await saveTrackData();
-            log.debug("播放列表保存成功");
+            log.debug("歌单保存成功");
         } catch (e) {
-            log.error(`播放列表保存失败。错误信息：${e}`);
+            log.error(`歌单保存失败。错误信息：${e}`);
         }
     }, [refetch]);
     useEffect(() => {

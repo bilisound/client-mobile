@@ -142,19 +142,19 @@ export async function addTrackToQueue(
         log.info("收到用户播放请求");
         log.debug(`playingRequest 对象内容：${JSON.stringify(playingRequest)}`);
 
-        // 播放列表中有，直接跳转
+        // 歌单中有，直接跳转
         const list = await TrackPlayer.getQueue();
         const found = list.findIndex(
             e => e.bilisoundId === playingRequest.id && e.bilisoundEpisode === playingRequest.episode,
         );
         if (found >= 0) {
-            log.debug("播放列表中已有相同内容，直接跳转");
+            log.debug("歌单中已有相同内容，直接跳转");
             await TrackPlayer.skip(found);
             return;
         }
 
-        // 播放列表中还没有，执行常规查询操作
-        log.debug("播放列表中无相同内容，执行常规查询操作");
+        // 歌单中还没有，执行常规查询操作
+        log.debug("歌单中无相同内容，执行常规查询操作");
         await TrackPlayer.pause();
 
         let url = "";
@@ -170,9 +170,9 @@ export async function addTrackToQueue(
             url = require("../assets/placeholder.mp3");
         }
 
-        log.debug("正在添加到播放列表");
+        log.debug("正在添加到歌单");
 
-        // 清除当前播放队列隶属的播放列表
+        // 清除当前播放队列隶属的歌单
         invalidateOnQueueStatus();
         const addResult = await TrackPlayer.add([
             {
@@ -200,11 +200,11 @@ export async function addTrackToQueue(
             }
         });*/
 
-        log.debug("正在保存播放列表");
+        log.debug("正在保存歌单");
         try {
             await saveTrackData();
         } catch (e) {
-            log.error(`播放列表保存失败。错误信息：${e}`);
+            log.error(`歌单保存失败。错误信息：${e}`);
         }
     } catch (e) {
         // 操作失败

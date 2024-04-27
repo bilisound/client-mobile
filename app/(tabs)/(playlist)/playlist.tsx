@@ -150,7 +150,7 @@ export default function Page() {
     return (
         <PlaylistContext.Provider value={{ onLongPress: handleLongPress }}>
             <CommonLayout
-                title="播放列表"
+                title="歌单"
                 titleBarTheme="transparent"
                 extendToBottom
                 rightAccessories={

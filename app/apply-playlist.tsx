@@ -15,7 +15,7 @@ export default function Page() {
     const containerStyle = useToastContainerStyle();
     const toast = useToast();
 
-    // 添加播放列表
+    // 添加歌单
     const { playlistDetail, name } = useAddPlaylistStore(state => ({
         playlistDetail: state.playlistDetail,
         name: state.name,
@@ -82,7 +82,7 @@ export default function Page() {
                             </Text>
                         </Box>
                         <Text ml="$9" fontSize="$sm" opacity={0.6} lineHeight={21}>
-                            添加新的播放列表
+                            添加新的歌单
                         </Text>
                     </Pressable>
                 }

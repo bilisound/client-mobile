@@ -317,7 +317,7 @@ const AudioPlayerModal: React.FC = () => {
                         paddingHorizontal: 20,
                     }}
                 >
-                    {/* 播放列表 */}
+                    {/* 歌单 */}
                     <Pressable
                         sx={{
                             ...COMMON_TOUCH_COLOR,

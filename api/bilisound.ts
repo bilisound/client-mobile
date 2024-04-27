@@ -183,7 +183,7 @@ export function getVideoUrl(id: string, episode: string | number) {
 }
 
 /**
- * 获取 PC 端播放列表转移数据
+ * 获取 PC 端歌单转移数据
  * @param id
  */
 export async function getTransferList(id: string) {

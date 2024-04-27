@@ -27,7 +27,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
     // 展示更多
     const [showMore, setShowMore] = useState(false);
 
-    // 添加播放列表
+    // 添加歌单
     const { setPlaylistDetail, setName } = useAddPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
@@ -222,7 +222,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                         onPress={handleCreatePlaylist}
                     >
                         <MaterialIcons name="add" size={22} color="white" />
-                        <ButtonText fontSize="$sm"> 创建播放列表</ButtonText>
+                        <ButtonText fontSize="$sm"> 创建歌单</ButtonText>
                     </Button>
                 </Box>
             </Box>
