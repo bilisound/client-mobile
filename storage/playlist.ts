@@ -46,6 +46,37 @@ export function invalidateOnQueueStatus() {
     playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
 }
 
+const hslRegex = /hsl\((\d+\.?\d*)/;
+
+/**
+ * 获取伪随机颜色。从列表中找出出现次数最少的色相，然后返回属于该色相的颜色。
+ */
+export function getNewColor() {
+    const originalList = playlistStorage.getArray<PlaylistMeta>(PLAYLIST_INDEX_KEY) || [];
+    const colors = originalList.map(e => Math.floor(Number(hslRegex.exec(e.color)?.[1] ?? "0") / 60));
+    const occurrences = colors.reduce<Record<string, number>>(
+        function (acc, curr) {
+            if (acc[curr]) {
+                ++acc[curr];
+            } else {
+                acc[curr] = 1;
+            }
+            return acc;
+        },
+        { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+    );
+    let leastKey = "0";
+    let leastValue = Infinity;
+    for (const [key, value] of Object.entries(occurrences)) {
+        if (value < leastValue) {
+            leastValue = value;
+            leastKey = key;
+        }
+    }
+    console.log(occurrences);
+    return `hsl(${Math.random() * 60 + Number(leastKey) * 60}, 80%, 50%)`;
+}
+
 export function addToPlaylist(id: string, row: PlaylistDetailRow | PlaylistDetailRow[]) {
     const list = Array.isArray(row) ? row : [row];
     log.debug(`添加 ${list.length} 首歌曲到歌单 ${id}`);
@@ -65,7 +96,7 @@ export function quickCreatePlaylist(title: string, row: PlaylistDetailRow | Play
     const list = Array.isArray(row) ? row : [row];
     const item: PlaylistMeta = {
         id: v4(),
-        color: `hsl(${Math.random() * 360}, 80%, 50%)`,
+        color: getNewColor(),
         title,
         amount: list.length,
     };

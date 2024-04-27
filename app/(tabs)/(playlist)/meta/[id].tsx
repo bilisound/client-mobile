@@ -30,7 +30,13 @@ import { v4 } from "uuid";
 
 import CommonLayout from "../../../../components/CommonLayout";
 import useToastContainerStyle from "../../../../hooks/useToastContainerStyle";
-import { addToPlaylist, PlaylistMeta, syncPlaylistAmount, usePlaylistStorage } from "../../../../storage/playlist";
+import {
+    addToPlaylist,
+    getNewColor,
+    PlaylistMeta,
+    syncPlaylistAmount,
+    usePlaylistStorage,
+} from "../../../../storage/playlist";
 import log from "../../../../utils/logger";
 import { tracksToPlaylist } from "../../../../utils/track-data";
 
@@ -57,7 +63,7 @@ export default function Page() {
 
         if (isCreate) {
             value.id = v4();
-            value.color = `hsl(${Math.random() * 360}, 80%, 50%)`;
+            value.color = getNewColor();
             log.info("用户创建新的歌单");
         } else {
             log.info("用户编辑已有歌单");
