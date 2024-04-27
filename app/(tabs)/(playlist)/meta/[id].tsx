@@ -119,9 +119,9 @@ export default function Page() {
     return (
         <CommonLayout title={id === MAGIC_ID_NEW_ENTRY ? "创建歌单" : "修改歌单信息"} titleBarTheme="transparent">
             <Box p="$4" gap="$4">
-                <FormControl isRequired isInvalid={"name" in errors}>
+                <FormControl isRequired isInvalid={"title" in errors}>
                     <FormControlLabel>
-                        <FormControlLabelText>名称</FormControlLabelText>
+                        <FormControlLabelText fontSize="$sm">名称</FormControlLabelText>
                     </FormControlLabel>
                     <Controller
                         control={control}
@@ -132,11 +132,12 @@ export default function Page() {
                                     onChangeText={onChange}
                                     value={value}
                                     placeholder="请输入名称"
+                                    fontSize="$sm"
                                 />
                             </Input>
                         )}
                         name="title"
-                        rules={{ required: "名称不能为空" }}
+                        rules={{ required: "请输入名称" }}
                     />
                     <FormControlError>
                         <FormControlErrorIcon as={AlertCircleIcon} />
@@ -158,7 +159,7 @@ export default function Page() {
                                     <CheckboxIndicator mr="$2">
                                         <CheckboxIcon as={CheckIcon} />
                                     </CheckboxIndicator>
-                                    <CheckboxLabel>从当前队列创建歌单</CheckboxLabel>
+                                    <CheckboxLabel fontSize="$sm">从当前队列创建歌单</CheckboxLabel>
                                 </Checkbox>
                             )}
                             name="createFromQueue"
