@@ -102,6 +102,7 @@ const TabIndexScreen: React.FC = () => {
                                 try {
                                     const parseResult = await resolveVideo(value);
                                     log.debug(`关键词解析结果: ${parseResult}`);
+                                    setInputError(false);
                                     router.push(`/query/${parseResult}`);
                                 } catch (error) {
                                     setInputError(true);

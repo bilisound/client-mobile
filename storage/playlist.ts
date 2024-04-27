@@ -73,7 +73,6 @@ export function getNewColor() {
             leastKey = key;
         }
     }
-    console.log(occurrences);
     return `hsl(${Math.random() * 60 + Number(leastKey) * 60}, 80%, 50%)`;
 }
 
