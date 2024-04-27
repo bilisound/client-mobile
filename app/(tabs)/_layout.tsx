@@ -55,14 +55,6 @@ const TabLayout = () => {
                 }}
             >
                 <Tabs.Screen
-                    name="playing"
-                    options={{
-                        title: "正在播放",
-                        tabBarIcon: HistoryIcon,
-                        headerShown: false,
-                    }}
-                />
-                <Tabs.Screen
                     name="(playlist)"
                     options={{
                         title: "歌单",

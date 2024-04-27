@@ -1,22 +1,26 @@
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, Box } from "@gluestack-ui/themed";
 import { Slider } from "@miblanchard/react-native-slider";
+import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Platform, StatusBar, useColorScheme } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
 
+import SongItem from "./SongItem";
 import { COMMON_TOUCH_COLOR } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
+import useTracks from "../hooks/useTracks";
 import useSettingsStore from "../store/settings";
 import { getFileName } from "../utils/format";
 import { formatSecond, saveFile } from "../utils/misc";
 import { handlePrev, handleTogglePlay } from "../utils/player-control";
+import { tracksToPlaylist } from "../utils/track-data";
 
-const AudioProgressBar: React.FC = () => {
+function AudioProgressBar() {
     const { primaryColor } = useCommonColors();
 
     const [value, setValue] = useState(0);
@@ -108,9 +112,9 @@ const AudioProgressBar: React.FC = () => {
             </Box>
         </Box>
     );
-};
+}
 
-const AudioProgressTimer: React.FC = () => {
+function AudioProgressTimer() {
     const { position, duration } = useProgress();
     return (
         <Box
@@ -140,9 +144,9 @@ const AudioProgressTimer: React.FC = () => {
             </Text>
         </Box>
     );
-};
+}
 
-const AudioPlayButtonIcon: React.FC = () => {
+function AudioPlayButtonIcon() {
     const playbackState = usePlaybackState();
 
     return playbackState.state === State.Playing ? (
@@ -150,14 +154,110 @@ const AudioPlayButtonIcon: React.FC = () => {
     ) : (
         <FontAwesome5 name="play" size={28} color="#fff" />
     );
-};
+}
 
-const AudioPlayerModal: React.FC = () => {
+function MusicPicture({ image }: { image?: string }) {
+    const colorScheme = useColorScheme();
+    const [smallestSize, setSmallestSize] = useState(0);
+
+    return (
+        <Box
+            sx={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+            onLayout={e => {
+                const layout = e.nativeEvent.layout;
+                setSmallestSize(Math.min(layout.width, layout.height) - 64);
+            }}
+        >
+            {colorScheme === "dark" ? (
+                <Image
+                    source={image}
+                    style={{
+                        aspectRatio: "1/1",
+                        borderRadius: 16,
+                        width: smallestSize,
+                    }}
+                    contentFit="cover"
+                />
+            ) : (
+                <ShadowedView
+                    style={{
+                        shadowOpacity: 0.2,
+                        shadowRadius: 24,
+                        shadowOffset: {
+                            width: 4,
+                            height: 4,
+                        },
+                    }}
+                >
+                    <Image
+                        source={image}
+                        style={{
+                            aspectRatio: "1/1",
+                            borderRadius: 16,
+                            width: smallestSize,
+                        }}
+                        contentFit="cover"
+                    />
+                </ShadowedView>
+            )}
+        </Box>
+    );
+}
+
+function MusicList() {
+    const { tracks } = useTracks();
+
+    // 转换后的列表
+    const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
+
+    return (
+        <Box
+            sx={{
+                flex: 1,
+                // alignItems: "center",
+                // justifyContent: "center",
+                // bg: "#345676",
+                mb: "$3",
+                borderWidth: 1,
+                borderColor: "$backgroundLight100",
+                _dark: {
+                    borderColor: "$backgroundDark900",
+                },
+                borderLeftWidth: 0,
+                borderRightWidth: 0,
+            }}
+        >
+            <FlashList
+                renderItem={item => {
+                    return (
+                        <SongItem
+                            data={item.item}
+                            index={item.index + 1}
+                            onRequestPlay={async () => {
+                                await TrackPlayer.skip(item.index);
+                                await TrackPlayer.play();
+                            }}
+                        />
+                    );
+                }}
+                data={convertedTrack}
+                estimatedItemSize={64}
+                extraData={[]}
+            />
+        </Box>
+    );
+}
+
+export default function AudioPlayerModal() {
     const colorScheme = useColorScheme();
     const { textBasicColor } = useCommonColors();
     const activeTrack = useActiveTrack();
     const safeAreaInsets = useSafeAreaInsets();
-    const [smallestSize, setSmallestSize] = useState(0);
+    const [showList, setShowList] = useState(false);
     const { useLegacyID } = useSettingsStore(state => ({
         useLegacyID: state.useLegacyID,
     }));
@@ -204,51 +304,7 @@ const AudioPlayerModal: React.FC = () => {
                     }}
                 />
             </Box>
-            {/* todo 实现下方 Box 元素播放队列/封面图片的互相切换 */}
-            <Box
-                sx={{
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-                onLayout={e => {
-                    const layout = e.nativeEvent.layout;
-                    setSmallestSize(Math.min(layout.width, layout.height) - 64);
-                }}
-            >
-                {colorScheme === "dark" ? (
-                    <Image
-                        source={activeTrack?.artwork}
-                        style={{
-                            aspectRatio: "1/1",
-                            borderRadius: 16,
-                            width: smallestSize,
-                        }}
-                        contentFit="cover"
-                    />
-                ) : (
-                    <ShadowedView
-                        style={{
-                            shadowOpacity: 0.2,
-                            shadowRadius: 24,
-                            shadowOffset: {
-                                width: 4,
-                                height: 4,
-                            },
-                        }}
-                    >
-                        <Image
-                            source={activeTrack?.artwork}
-                            style={{
-                                aspectRatio: "1/1",
-                                borderRadius: 16,
-                                width: smallestSize,
-                            }}
-                            contentFit="cover"
-                        />
-                    </ShadowedView>
-                )}
-            </Box>
+            {showList ? <MusicList /> : <MusicPicture image={activeTrack?.artwork} />}
             <Box
                 sx={{
                     flex: 0,
@@ -327,7 +383,9 @@ const AudioPlayerModal: React.FC = () => {
                             alignItems: "center",
                             justifyContent: "center",
                         }}
-                        onPress={async () => {}}
+                        onPress={() => {
+                            setShowList(prevState => !prevState);
+                        }}
                     >
                         <MaterialIcons
                             name="playlist-play"
@@ -444,6 +502,4 @@ const AudioPlayerModal: React.FC = () => {
             </Box>
         </Box>
     );
-};
-
-export default AudioPlayerModal;
+}
