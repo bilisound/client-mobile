@@ -67,7 +67,7 @@ export default function SongItem({
         >
             <Box
                 sx={{
-                    paddingHorizontal: width >= SCREEN_BREAKPOINTS.md ? 24 : 16,
+                    px: width >= SCREEN_BREAKPOINTS.md ? 24 : 16,
                     height: 64,
                     flexDirection: "row",
                     gap: 12,

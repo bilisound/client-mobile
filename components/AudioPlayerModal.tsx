@@ -1,4 +1,4 @@
-import { FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, Box } from "@gluestack-ui/themed";
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
@@ -222,17 +222,24 @@ function MusicList() {
                 mb: "$6",
             }}
         >
-            <Box flex={0} px="$3" py="$3" flexDirection="row" alignItems="center" justifyContent="space-between">
+            <Box
+                flex={0}
+                pl="$4"
+                pr="$3"
+                py="$3"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+            >
                 <Text fontWeight="700" fontSize="$lg">{`当前队列 (${tracks.length})`}</Text>
-                <Pressable
+                {/*<Pressable
                     sx={COMMON_FRAME_BUTTON_STYLE}
                     onPress={() => {
                         Alert.alert("警告！！", "本功能正在开发中。如果看到本消息，请暴打开发者！");
                     }}
                 >
                     <FontAwesome5 name="random" size={20} color={primaryColor} />
-                    {/*<MaterialCommunityIcons name="qrcode-scan" size={20} color={primaryColor} />*/}
-                </Pressable>
+                </Pressable>*/}
             </Box>
             <Box
                 sx={{
