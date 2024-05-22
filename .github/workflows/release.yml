@@ -10,11 +10,16 @@ jobs:
         uses: actions/checkout@v3
       - name: Decode Keystore
         env:
-          KEYSTORE_FILE_BASE64: ${{ secrets.BILISOUND_KEYSTORE_RELEASE }}
-          CREDENTIALS: ${{ secrets.BILISOUND_CREDENTIALS }}
+          BILISOUND_CREDENTIALS: ${{ secrets.BILISOUND_CREDENTIALS }}
+          BILISOUND_KEYSTORE_RELEASE: ${{ secrets.BILISOUND_KEYSTORE_RELEASE }}
         run: |
-          echo "$CREDENTIALS" | base64 --decode > credentials.json
-          echo "$KEYSTORE_FILE_BASE64" | base64 --decode > credentials/bilisound-release.keystore
+          echo "$BILISOUND_CREDENTIALS" | base64 --decode > credentials.json
+          echo "$BILISOUND_KEYSTORE_RELEASE" | base64 --decode > credentials/bilisound-release.keystore
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
