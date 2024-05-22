@@ -76,7 +76,8 @@
             "deploymentTarget": "15.0"
           }
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

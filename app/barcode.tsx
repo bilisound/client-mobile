@@ -1,13 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Box, ButtonText, Pressable, Text, Button } from "@gluestack-ui/themed";
-import { BarcodeScanningResult } from "expo-camera/build/next/Camera.types";
-import { CameraView, Camera, PermissionStatus } from "expo-camera/next";
+import { BarcodeScanningResult } from "expo-camera/build/Camera.types";
+import { CameraView, Camera, PermissionStatus } from "expo-camera";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { resolveVideo } from "../utils/format";
 import log from "../utils/logger";
 import { handleQrCode } from "../utils/qrcode";
 
