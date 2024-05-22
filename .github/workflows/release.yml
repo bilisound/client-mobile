@@ -12,19 +12,19 @@ jobs:
     steps:
       - name: 🏗 Setup repo
         uses: actions/checkout@v4
-      - name: Decode Keystore
+      - name: 🏗 Decode Keystore
         env:
           BILISOUND_CREDENTIALS: ${{ secrets.BILISOUND_CREDENTIALS }}
           BILISOUND_KEYSTORE_RELEASE: ${{ secrets.BILISOUND_KEYSTORE_RELEASE }}
         run: |
           echo "$BILISOUND_CREDENTIALS" | base64 --decode > credentials.json
           echo "$BILISOUND_KEYSTORE_RELEASE" | base64 --decode > credentials/bilisound-release.keystore
-      - name: Set up JDK 17
+      - name: 🏗 Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Setup pnpm
+      - name: 🏗 Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9.1.2
@@ -46,7 +46,7 @@ jobs:
       - name: 🚀 Build app
         run: eas build --platform android --local --output=dist/bilisound-app-release.apk --non-interactive
 
-      - name: Create Release
+      - name: 🚀 Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -57,7 +57,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: 🚀 Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
@@ -65,5 +65,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./dist/bilisound-app-release.apk
-          asset_name: bilisound-${{ github.ref }}.apk
+          asset_name: bilisound-${{ github.ref_name }}".apk
           asset_content_type: application/vnd.android.package-archive
