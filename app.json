@@ -33,7 +33,8 @@
       },
       "permissions": [
         "android.permission.MODIFY_AUDIO_SETTINGS",
-        "android.permission.CAMERA"
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
       ],
       "package": "moe.bilisound.app",
       "splash": {
@@ -87,6 +88,7 @@
       "eas": {
         "projectId": "e35f5bd0-80cc-4e24-a130-b66b7145ff7a"
       }
-    }
+    },
+    "owner": "tcdw"
   }
 }
