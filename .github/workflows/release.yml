@@ -8,7 +8,10 @@ jobs:
     steps:
       - name: 🏗 Setup repo
         uses: actions/checkout@v3
-
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.1.2
       - name: 🏗 Setup Node
         uses: actions/setup-node@v3
         with:
