@@ -8,6 +8,13 @@ jobs:
     steps:
       - name: 🏗 Setup repo
         uses: actions/checkout@v3
+      - name: Decode Keystore
+        env:
+          KEYSTORE_FILE_BASE64: ${{ secrets.BILISOUND_KEYSTORE_RELEASE }}
+          CREDENTIALS: ${{ secrets.BILISOUND_CREDENTIALS }}
+        run: |
+          echo "$CREDENTIALS" | base64 --decode > credentials.json
+          echo "$KEYSTORE_FILE_BASE64" | base64 --decode > credentials/bilisound-release.keystore
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -28,4 +35,4 @@ jobs:
         run: pnpm install
 
       - name: 🚀 Build app
-        run: eas build --non-interactive
+        run: eas build --platform android --local --output=dist/bilisound-app-release.apk --non-interactive
