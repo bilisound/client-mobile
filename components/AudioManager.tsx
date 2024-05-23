@@ -31,7 +31,7 @@ const AudioManager: React.FC = () => {
             log.error(`无法播放所请求的曲目。原因：${JSON.stringify(event)}`);
         }
         if (event.type === Event.PlaybackActiveTrackChanged) {
-            await handleReDownload(await getActiveTrack());
+            await handleReDownload({ activeTrack: await getActiveTrack() });
             if (!useSettingsStore.getState().downloadNextTrack) {
                 return;
             }
@@ -39,7 +39,7 @@ const AudioManager: React.FC = () => {
             const index = ((await getActiveTrackIndex()) ?? -1) + 1;
             const nextTrack = await getTrack(index);
             if (nextTrack) {
-                await handleReDownload(nextTrack, index);
+                await handleReDownload({ activeTrack: nextTrack, activeTrackIndex: index });
             }
         }
     });

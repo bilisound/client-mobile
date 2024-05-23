@@ -29,9 +29,10 @@ export interface PlayingInformation {
 
 const reDownloadLock = new Set<string>();
 
-export async function handleReDownload(activeTrack?: Track, activeTrackIndex?: number) {
+export async function handleReDownload(param: { activeTrack?: Track; activeTrackIndex?: number } = {}) {
     const { updateDownloadItem, removeDownloadItem, downloadList } = useDownloadStore.getState();
     const { filterResourceURL } = useSettingsStore.getState();
+    const { activeTrackIndex, activeTrack } = param;
 
     // 上锁处理
     if (activeTrack) {
@@ -42,7 +43,7 @@ export async function handleReDownload(activeTrack?: Track, activeTrackIndex?: n
         reDownloadLock.add(id);
     }
 
-    log.debug(`开始处理下载请求。activeTrack: ${JSON.stringify(activeTrack)}, activeTrackIndex: ${activeTrackIndex}`);
+    log.debug(`开始处理下载请求。param: ${JSON.stringify(param)}`);
     if (activeTrack && !activeTrack.bilisoundIsLoaded) {
         log.debug("没有 isLoaded，开始进行处理");
         const playingRequest = {
