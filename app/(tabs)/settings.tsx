@@ -14,6 +14,7 @@ import log from "~/utils/logger";
 import { checkDirectorySize, cleanAudioCache } from "~/utils/misc";
 
 const LinkIcon: SettingMenuItemIcon = iconProps => <Entypo name="link" {...iconProps} />;
+const DownloadNextIcon: SettingMenuItemIcon = iconProps => <MaterialIcons name="downloading" {...iconProps} />;
 const CDNIcon: SettingMenuItemIcon = iconProps => <Entypo name="cloud" {...iconProps} />;
 const DeleteIcon: SettingMenuItemIcon = iconProps => <MaterialIcons name="delete" {...iconProps} />;
 const InfoIcon: SettingMenuItemIcon = iconProps => <FontAwesome5 name="info-circle" {...iconProps} />;
@@ -22,8 +23,9 @@ const DeveloperIcon: SettingMenuItemIcon = iconProps => <Entypo name="code" {...
 const BugIcon: SettingMenuItemIcon = iconProps => <FontAwesome5 name="bug" {...iconProps} />;
 
 const Settings: React.FC = () => {
-    const { useLegacyID, filterResourceURL, debugMode, toggle } = useSettingsStore(state => ({
+    const { useLegacyID, downloadNextTrack, filterResourceURL, debugMode, toggle } = useSettingsStore(state => ({
         useLegacyID: state.useLegacyID,
+        downloadNextTrack: state.downloadNextTrack,
         filterResourceURL: state.filterResourceURL,
         debugMode: state.debugMode,
         // update: state.update,
@@ -100,6 +102,20 @@ const Settings: React.FC = () => {
                         />
                     }
                     onPress={() => toggle("useLegacyID")}
+                />
+                <SettingMenuItem
+                    icon={DownloadNextIcon}
+                    title="自动下载队列中即将播放的曲目"
+                    subTitle="可以显著改善持续听歌的体验"
+                    rightAccessories={
+                        <Switch
+                            value={downloadNextTrack}
+                            onChange={() => {
+                                toggle("downloadNextTrack");
+                            }}
+                        />
+                    }
+                    onPress={() => toggle("downloadNextTrack")}
                 />
                 <SettingMenuItem
                     icon={DeleteIcon}

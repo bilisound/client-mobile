@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { createStorage } from "../storage/zustand";
+import { createStorage } from "~/storage/zustand";
 
 export interface SettingsProps {
     useLegacyID: boolean;
+    downloadNextTrack: boolean;
     filterResourceURL: boolean;
     debugMode: boolean;
 }
@@ -16,6 +17,7 @@ export interface SettingsMethods {
 
 const initialState: SettingsProps = {
     useLegacyID: false,
+    downloadNextTrack: true,
     filterResourceURL: true,
     debugMode: false,
 };

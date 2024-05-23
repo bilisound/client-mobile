@@ -2,7 +2,7 @@ import { Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestac
 import { filesize } from "filesize";
 import React from "react";
 import RNFS from "react-native-fs";
-import TrackPlayer from "react-native-track-player";
+import TrackPlayer, { Track } from "react-native-track-player";
 import { getActiveTrack } from "react-native-track-player/src/trackPlayer";
 import { v4 as uuidv4 } from "uuid";
 
@@ -10,12 +10,13 @@ import log from "./logger";
 import { getCacheAudioPath } from "./misc";
 import { convertToHTTPS } from "./string";
 import { saveTrackData } from "./track-data";
-import { getBilisoundResourceUrl, getVideoUrl } from "../api/bilisound";
-import { USER_AGENT_BILIBILI } from "../constants/network";
-import useToastContainerStyle from "../hooks/useToastContainerStyle";
-import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "../storage/playlist";
-import useDownloadStore from "../store/download";
-import useSettingsStore from "../store/settings";
+
+import { getBilisoundResourceUrl, getVideoUrl } from "~/api/bilisound";
+import { USER_AGENT_BILIBILI } from "~/constants/network";
+import useToastContainerStyle from "~/hooks/useToastContainerStyle";
+import { invalidateOnQueueStatus } from "~/storage/playlist";
+import useDownloadStore from "~/store/download";
+import useSettingsStore from "~/store/settings";
 
 export interface PlayingInformation {
     id: string;
@@ -28,11 +29,9 @@ export interface PlayingInformation {
 
 const reDownloadLock = new Set<string>();
 
-export async function handleReDownload() {
+export async function handleReDownload(activeTrack?: Track, activeTrackIndex?: number) {
     const { updateDownloadItem, removeDownloadItem, downloadList } = useDownloadStore.getState();
     const { filterResourceURL } = useSettingsStore.getState();
-
-    const activeTrack = await getActiveTrack();
 
     // 上锁处理
     if (activeTrack) {
@@ -120,6 +119,10 @@ export async function handleReDownload() {
         if ((await getActiveTrack())?.bilisoundUniqueId === activeTrack.bilisoundUniqueId) {
             log.debug("现在「播放」的曲目还是正在加载的曲目，因此替换当前的曲目");
             await TrackPlayer.load({ ...activeTrack, url: checkUrl, bilisoundIsLoaded: true });
+        } else if (typeof activeTrackIndex === "number") {
+            log.debug("现在「播放」的曲目是即将播放的曲目，替换处理");
+            await TrackPlayer.remove([activeTrackIndex]);
+            await TrackPlayer.add({ ...activeTrack, url: checkUrl, bilisoundIsLoaded: true }, activeTrackIndex);
         } else {
             log.debug("现在「播放」的曲目不是正在加载的曲目，放置处理");
         }
@@ -167,7 +170,7 @@ export async function addTrackToQueue(
             isLoaded = true;
         } else {
             log.debug("本地缓存无对应内容，添加占位资源");
-            url = require("../assets/placeholder.mp3");
+            url = require("~/assets/placeholder.mp3");
         }
 
         log.debug("正在添加到歌单");
