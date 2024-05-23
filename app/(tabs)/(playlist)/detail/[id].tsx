@@ -10,13 +10,13 @@ import { Alert, useColorScheme } from "react-native";
 import { useMMKVStorage } from "react-native-mmkv-storage";
 import TrackPlayer from "react-native-track-player";
 
-import CommonLayout from "../../../../components/CommonLayout";
-import EditAction from "../../../../components/EditAction";
-import Empty from "../../../../components/Empty";
-import SongItem from "../../../../components/SongItem";
-import { COMMON_FRAME_BUTTON_STYLE } from "../../../../constants/style";
-import useCommonColors from "../../../../hooks/useCommonColors";
-import useMultiSelect from "../../../../hooks/useMultiSelect";
+import CommonLayout from "~/components/CommonLayout";
+import EditAction from "~/components/EditAction";
+import Empty from "~/components/Empty";
+import SongItem from "~/components/SongItem";
+import { COMMON_FRAME_BUTTON_STYLE } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
+import useMultiSelect from "~/hooks/useMultiSelect";
 import {
     PLAYLIST_ITEM_KEY_PREFIX,
     PlaylistDetailRow,
@@ -25,9 +25,9 @@ import {
     syncPlaylistAmount,
     usePlaylistOnQueue,
     usePlaylistStorage,
-} from "../../../../storage/playlist";
-import log from "../../../../utils/logger";
-import { playlistToTracks } from "../../../../utils/track-data";
+} from "~/storage/playlist";
+import log from "~/utils/logger";
+import { playlistToTracks } from "~/utils/track-data";
 
 function extractAndProcessImgUrls(playlistDetails: PlaylistDetailRow[]) {
     const imgUrls = playlistDetails.map(detail => detail.imgUrl);
@@ -223,7 +223,7 @@ export default function Page() {
                     if (playlistOnQueue.value?.id === id) {
                         setPlaylistOnQueue({});
                     }
-                    syncPlaylistAmount(id);
+                    syncPlaylistAmount(id!);
                 },
             },
         ]);

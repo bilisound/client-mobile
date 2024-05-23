@@ -6,12 +6,12 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, Switch } from "react-native";
 import TrackPlayer from "react-native-track-player";
 
-import CommonLayout from "../../components/CommonLayout";
-import SettingMenuItem, { SettingMenuItemIcon } from "../../components/SettingMenuItem";
-import { BILISOUND_OFFLINE_PATH } from "../../constants/file";
-import useSettingsStore from "../../store/settings";
-import log from "../../utils/logger";
-import { checkDirectorySize, cleanAudioCache } from "../../utils/misc";
+import CommonLayout from "~/components/CommonLayout";
+import SettingMenuItem, { SettingMenuItemIcon } from "~/components/SettingMenuItem";
+import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
+import useSettingsStore from "~/store/settings";
+import log from "~/utils/logger";
+import { checkDirectorySize, cleanAudioCache } from "~/utils/misc";
 
 const LinkIcon: SettingMenuItemIcon = iconProps => <Entypo name="link" {...iconProps} />;
 const CDNIcon: SettingMenuItemIcon = iconProps => <Entypo name="cloud" {...iconProps} />;
@@ -118,7 +118,7 @@ const Settings: React.FC = () => {
                 <SettingMenuItem
                     icon={InfoIcon}
                     title="关于 Bilisound"
-                    subTitle={`版本 ${require("../../app.json").expo.version}`}
+                    subTitle={`版本 ${require("~/app.json").expo.version}`}
                     onPress={async () => {
                         router.push("/about");
                     }}

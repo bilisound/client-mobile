@@ -16,9 +16,9 @@ import * as SystemUI from "expo-system-ui";
 import React, { useEffect, useRef } from "react";
 import { Platform, useColorScheme } from "react-native";
 
-import AudioManager from "../components/AudioManager";
-import { config } from "../config/gluestack-ui.config";
-import init from "../utils/init";
+import AudioManager from "~/components/AudioManager";
+import { config } from "~/config/gluestack-ui.config";
+import init from "~/utils/init";
 
 export {
     // Catch any errors thrown by the Layout component.

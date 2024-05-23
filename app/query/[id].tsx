@@ -23,21 +23,21 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
 import { v4 } from "uuid";
 
-import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "../../api/bilisound";
-import CommonLayout from "../../components/CommonLayout";
-import SongItem from "../../components/SongItem";
-import VideoMeta from "../../components/VideoMeta";
-import VideoSkeleton from "../../components/VideoSkeleton";
-import { BILIBILI_VIDEO_URL_PREFIX } from "../../constants/network";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../../constants/style";
-import useCommonColors from "../../hooks/useCommonColors";
-import useToastContainerStyle from "../../hooks/useToastContainerStyle";
-import useAddPlaylistStore from "../../store/addPlaylist";
-import useHistoryStore from "../../store/history";
-import { addTrackToQueue } from "../../utils/download-service";
-import log from "../../utils/logger";
-import { formatSecond } from "../../utils/misc";
-import { convertToHTTPS } from "../../utils/string";
+import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "~/api/bilisound";
+import CommonLayout from "~/components/CommonLayout";
+import SongItem from "~/components/SongItem";
+import VideoMeta from "~/components/VideoMeta";
+import VideoSkeleton from "~/components/VideoSkeleton";
+import { BILIBILI_VIDEO_URL_PREFIX } from "~/constants/network";
+import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
+import useToastContainerStyle from "~/hooks/useToastContainerStyle";
+import useAddPlaylistStore from "~/store/addPlaylist";
+import useHistoryStore from "~/store/history";
+import { addTrackToQueue } from "~/utils/download-service";
+import log from "~/utils/logger";
+import { formatSecond } from "~/utils/misc";
+import { convertToHTTPS } from "~/utils/string";
 
 type PageItem = GetBilisoundMetadataResponse["pages"][number];
 
@@ -115,7 +115,12 @@ const QueryIdScreen: React.FC = () => {
     // 数据请求
     const { data, error } = useQuery({
         queryKey: [id],
-        queryFn: () => getBilisoundMetadata({ id }),
+        queryFn: () => {
+            if (!id) {
+                return undefined;
+            }
+            return getBilisoundMetadata({ id });
+        },
     });
 
     // 增加历史记录条目
@@ -151,7 +156,7 @@ const QueryIdScreen: React.FC = () => {
 
             return (
                 <SongItem
-                    onRequestPlay={() => {
+                    onRequestPlay={() =>
                         addTrackToQueue(
                             {
                                 id: rootData.bvid,
@@ -162,8 +167,8 @@ const QueryIdScreen: React.FC = () => {
                                 title: item.part,
                             },
                             { toast, containerStyle },
-                        );
-                    }}
+                        )
+                    }
                     onLongPress={() => {
                         setDisplayTrack(item);
                         setShowActionSheet(true);
@@ -179,7 +184,7 @@ const QueryIdScreen: React.FC = () => {
                 />
             );
         },
-        [data],
+        [containerStyle, data, toast],
     );
 
     const dataList = data?.data.pages ?? [];

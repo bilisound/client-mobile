@@ -28,17 +28,11 @@ import { Controller, useForm } from "react-hook-form";
 import TrackPlayer from "react-native-track-player";
 import { v4 } from "uuid";
 
-import CommonLayout from "../../../../components/CommonLayout";
-import useToastContainerStyle from "../../../../hooks/useToastContainerStyle";
-import {
-    addToPlaylist,
-    getNewColor,
-    PlaylistMeta,
-    syncPlaylistAmount,
-    usePlaylistStorage,
-} from "../../../../storage/playlist";
-import log from "../../../../utils/logger";
-import { tracksToPlaylist } from "../../../../utils/track-data";
+import CommonLayout from "~/components/CommonLayout";
+import useToastContainerStyle from "~/hooks/useToastContainerStyle";
+import { addToPlaylist, getNewColor, PlaylistMeta, syncPlaylistAmount, usePlaylistStorage } from "~/storage/playlist";
+import log from "~/utils/logger";
+import { tracksToPlaylist } from "~/utils/track-data";
 
 const MAGIC_ID_NEW_ENTRY = "new";
 

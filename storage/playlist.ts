@@ -109,6 +109,10 @@ export function quickCreatePlaylist(title: string, row: PlaylistDetailRow | Play
 }
 
 export function syncPlaylistAmount(id: string) {
+    if (!id) {
+        log.debug(`非法操作，id 的值为空`);
+        return;
+    }
     log.debug(`对歌单 ${id} 进行同步曲目数量操作`);
     const playlistMetas = playlistStorage.getArray<PlaylistMeta>(PLAYLIST_INDEX_KEY) || [];
     const playlistData = playlistStorage.getArray<PlaylistDetailRow>(PLAYLIST_ITEM_KEY_PREFIX + id) || [];

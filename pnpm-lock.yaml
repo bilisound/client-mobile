@@ -28,7 +28,7 @@ importers:
         version: 1.0.4(@gluestack-style/react@1.0.56)
       '@gluestack-style/legend-motion-animation-driver':
         specifier: 1.0.3
-        version: 1.0.3(@gluestack-style/react@1.0.56)(@legendapp/motion@2.3.0(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))
+        version: 1.0.3(@gluestack-style/react@1.0.56)(@legendapp/motion@2.2.1(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))
       '@gluestack-style/react':
         specifier: 1.0.56
         version: 1.0.56
@@ -132,8 +132,8 @@ importers:
         specifier: ^4.5.1
         version: 4.6.1(@types/react-native@0.73.0(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(@types/react@18.2.79)(react-native-gesture-handler@2.16.2(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-reanimated@3.10.1(@babel/core@7.24.3)(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@legendapp/motion':
-        specifier: latest
-        version: 2.3.0(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+        specifier: ~2.2.1
+        version: 2.2.1(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@miblanchard/react-native-slider':
         specifier: ^2.3.1
         version: 2.6.0(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -1838,6 +1838,13 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@legendapp/motion@2.2.1':
+    resolution: {integrity: sha512-kh9+05qHvBLPT+qR2XE+KzP5KgqLqaqE0aZ19xu5yxKp8X+JH7d9SHPj6W5yo5ttSzaPx0IqApYMtHDVk73FvQ==}
+    peerDependencies:
+      nativewind: ^2.0.0
+      react: '>=16'
+      react-native: '*'
 
   '@legendapp/motion@2.3.0':
     resolution: {integrity: sha512-LtTD06eyz/Ge23FAR6BY+i9Gsgr/ZgxE12FneML8LrZGcZOSPN2Ojz3N2eJaTiA50kqoeqrGCaYJja8KgKpL6Q==}
@@ -8154,6 +8161,11 @@ snapshots:
     dependencies:
       '@gluestack-style/react': 1.0.56
 
+  '@gluestack-style/legend-motion-animation-driver@1.0.3(@gluestack-style/react@1.0.56)(@legendapp/motion@2.2.1(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))':
+    dependencies:
+      '@gluestack-style/react': 1.0.56
+      '@legendapp/motion': 2.2.1(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+
   '@gluestack-style/legend-motion-animation-driver@1.0.3(@gluestack-style/react@1.0.56)(@legendapp/motion@2.3.0(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))':
     dependencies:
       '@gluestack-style/react': 1.0.56
@@ -9148,6 +9160,13 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  '@legendapp/motion@2.2.1(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@legendapp/tools': 2.0.1(react@18.2.0)
+      nativewind: 2.0.11(react@18.2.0)(tailwindcss@3.4.3)
+      react: 18.2.0
+      react-native: 0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0)
 
   '@legendapp/motion@2.3.0(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-native@0.74.1(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:

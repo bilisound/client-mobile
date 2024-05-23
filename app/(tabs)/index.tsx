@@ -18,10 +18,10 @@ import React, { useState } from "react";
 import { useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { COMMON_FRAME_BUTTON_STYLE } from "../../constants/style";
-import useCommonColors from "../../hooks/useCommonColors";
-import { resolveVideo } from "../../utils/format";
-import log from "../../utils/logger";
+import { COMMON_FRAME_BUTTON_STYLE } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
+import { resolveVideo } from "~/utils/format";
+import log from "~/utils/logger";
 
 const TabIndexScreen: React.FC = () => {
     const [value, setValue] = useState("");

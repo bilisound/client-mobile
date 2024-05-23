@@ -17,19 +17,19 @@ import React, { createContext, useContext, useState } from "react";
 import { Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import CommonLayout from "../../../components/CommonLayout";
-import Empty from "../../../components/Empty";
-import PlaylistItem from "../../../components/PlaylistItem";
-import { COMMON_FRAME_BUTTON_STYLE } from "../../../constants/style";
-import useCommonColors from "../../../hooks/useCommonColors";
+import CommonLayout from "~/components/CommonLayout";
+import Empty from "~/components/Empty";
+import PlaylistItem from "~/components/PlaylistItem";
+import { COMMON_FRAME_BUTTON_STYLE } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
 import {
     invalidateOnQueueStatus,
     PLAYLIST_ON_QUEUE,
     PlaylistMeta,
     playlistStorage,
     usePlaylistStorage,
-} from "../../../storage/playlist";
-import log from "../../../utils/logger";
+} from "~/storage/playlist";
+import log from "~/utils/logger";
 
 interface PlaylistContextProps {
     onLongPress: (id: string) => void;
