@@ -42,6 +42,7 @@ export async function handleReDownload(activeTrack?: Track, activeTrackIndex?: n
         reDownloadLock.add(id);
     }
 
+    log.debug(`开始处理下载请求。activeTrack: ${JSON.stringify(activeTrack)}, activeTrackIndex: ${activeTrackIndex}`);
     if (activeTrack && !activeTrack.bilisoundIsLoaded) {
         log.debug("没有 isLoaded，开始进行处理");
         const playingRequest = {
