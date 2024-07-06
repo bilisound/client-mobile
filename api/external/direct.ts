@@ -1,8 +1,7 @@
-import ExpiringMap from "../utils/timeout-map";
-
+import { InitialStateResponse, WebPlayInfo } from "~/api/external/types";
 import { BILIBILI_VIDEO_URL_PREFIX, USER_AGENT_BILIBILI } from "~/constants/network";
-import { InitialStateResponse, WebPlayInfo } from "~/types";
 import { extractJSON } from "~/utils/string";
+import ExpiringMap from "~/utils/timeout-map";
 
 export interface GetVideoResponse {
     initialState: InitialStateResponse;

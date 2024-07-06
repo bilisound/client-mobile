@@ -1,13 +1,9 @@
-import { getVideo } from "./bilibili-direct";
 import { defineWrap } from "./common";
-import {
-    BILIBILI_GOOD_CDN_REGEX,
-    BILIBILI_VIDEO_URL_PREFIX,
-    USER_AGENT_BILIBILI,
-    USER_AGENT_BILISOUND,
-} from "../constants/network";
-import { PlaylistDetailRow } from "../storage/playlist";
+import { getVideo } from "./external/direct";
 import log from "../utils/logger";
+
+import { BILIBILI_GOOD_CDN_REGEX, BILIBILI_VIDEO_URL_PREFIX, USER_AGENT_BILISOUND } from "~/constants/network";
+import { PlaylistDetailRow } from "~/storage/playlist";
 
 export type GetBilisoundMetadataResponse = {
     bvid: string;
