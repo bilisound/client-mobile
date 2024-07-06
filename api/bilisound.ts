@@ -42,27 +42,10 @@ function filterHostname(list: string[]) {
  * 解析短链接
  */
 export async function parseB23(id: string) {
-    // 这是临时措施，因为目前解析重定向结果方法不可用
+    // 注意：解析重定向结果的方案在 React Native 不可用
     // 详见 https://reactnative.dev/docs/network#known-issues-with-fetch-and-cookie-based-authentication
     const res = await getVideo({ url: `https://b23.tv/${id}` });
-    return res.initialState.bvid;
-
-    /*log.debug("短链接解析目标：" + id);
-    const response = await fetch(`https://b23.tv/${id}`, {
-        headers: {
-            "user-agent": USER_AGENT_BILIBILI,
-        },
-        redirect: "manual",
-    });
-
-    log.debug("短链接解析响应头部信息：" + JSON.stringify([...response.headers.entries()]));
-    log.debug(await response.text());
-    const target = response.headers.get("location");
-    if (!target) {
-        throw new Error("无法解析短链接重定向目标");
-    }
-
-    return target;*/
+    return res.type === "regular" ? res.initialState.bvid : res.initialState.videoInfo.bvid;
 }
 
 /**
@@ -72,37 +55,72 @@ export async function parseB23(id: string) {
 export async function getBilisoundMetadata(data: { id: string }) {
     const { id } = data;
     // 获取视频网页
-    const { initialState } = await getVideo({ id, episode: 1 });
+    const { initialState, type } = await getVideo({ id, episode: 1 });
 
     // 提取视频信息
-    const videoData = initialState?.videoData;
-    const pages = videoData?.pages ?? [];
-    if (!videoData || pages.length <= 0) {
-        throw new Error("找不到视频信息");
-    }
-    if (videoData.is_upower_exclusive) {
-        throw new Error("不支持的视频类型");
-    }
+    switch (type) {
+        case "regular": {
+            const videoData = initialState?.videoData;
+            const pages = videoData?.pages ?? [];
+            if (!videoData || pages.length <= 0) {
+                throw new Error("找不到视频信息");
+            }
+            if (videoData.is_upower_exclusive) {
+                throw new Error("不支持的视频类型");
+            }
 
-    // 没有分 P 的视频，将第一个视频的标题替换成投稿标题
-    if (pages.length === 1) {
-        pages[0].part = videoData.title;
-    }
+            // 没有分 P 的视频，将第一个视频的标题替换成投稿标题
+            if (pages.length === 1) {
+                pages[0].part = videoData.title;
+            }
 
-    return defineWrap<GetBilisoundMetadataResponse>({
-        code: 200,
-        data: {
-            bvid: videoData.bvid,
-            aid: videoData.aid,
-            title: videoData.title,
-            pic: videoData.pic,
-            owner: videoData.owner,
-            desc: (videoData?.desc_v2 ?? []).map(e => e.raw_text).join("\n"),
-            pubDate: videoData.pubdate * 1000,
-            pages: pages.map(({ page, part, duration }) => ({ page, part, duration })),
-        },
-        msg: "",
-    });
+            return defineWrap<GetBilisoundMetadataResponse>({
+                code: 200,
+                data: {
+                    bvid: videoData.bvid,
+                    aid: videoData.aid,
+                    title: videoData.title,
+                    pic: videoData.pic,
+                    owner: videoData.owner,
+                    desc: (videoData?.desc_v2 ?? []).map(e => e.raw_text).join("\n"),
+                    pubDate: videoData.pubdate * 1000,
+                    pages: pages.map(({ page, part, duration }) => ({ page, part, duration })),
+                },
+                msg: "",
+            });
+        }
+        case "festival": {
+            const videoInfo = initialState?.videoInfo;
+            const pages = videoInfo?.pages ?? [];
+            if (!videoInfo || pages.length <= 0) {
+                throw new Error("找不到视频信息");
+            }
+            // 没有分 P 的视频，将第一个视频的标题替换成投稿标题
+            if (pages.length === 1) {
+                pages[0].part = videoInfo.title;
+            }
+            const found = initialState.sectionEpisodes.find(e => e.bvid === videoInfo.bvid);
+            if (!found) {
+                throw new Error("找不到视频信息");
+            }
+            return defineWrap<GetBilisoundMetadataResponse>({
+                code: 200,
+                data: {
+                    bvid: videoInfo.bvid,
+                    aid: videoInfo.aid,
+                    title: videoInfo.title,
+                    pic: found.cover,
+                    owner: found.author,
+                    desc: videoInfo.desc,
+                    pubDate: videoInfo.pubdate * 1000,
+                    pages: pages.map(({ page, part, duration }) => ({ page, part, duration })),
+                },
+                msg: "",
+            });
+        }
+        default:
+            throw new Error("未实现的视频类型！！");
+    }
 }
 
 /**

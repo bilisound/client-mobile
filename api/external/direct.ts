@@ -3,9 +3,17 @@ import { BILIBILI_VIDEO_URL_PREFIX, USER_AGENT_BILIBILI } from "~/constants/netw
 import log from "~/utils/logger";
 import { extractJSON } from "~/utils/string";
 import ExpiringMap from "~/utils/timeout-map";
+import { encWbi, getWbiKeys } from "~/utils/wbi";
 
 export interface GetVideoResponse {
+    type: "regular";
     initialState: InitialStateResponse;
+    playInfo: WebPlayInfo;
+}
+
+export interface GetVideoFestivalResponse {
+    type: "festival";
+    initialState: InitialStateFestivalResponse;
     playInfo: WebPlayInfo;
 }
 
@@ -19,7 +27,11 @@ export interface GetVideoOptions {
     url?: string;
 }
 
-export async function getVideo({ id, episode = 1, url }: GetVideoOptions) {
+export async function getVideo({
+    id,
+    episode = 1,
+    url,
+}: GetVideoOptions): Promise<GetVideoResponse | GetVideoFestivalResponse> {
     let key = `${id}__${episode}`;
     const got = videoMap.get(key);
     if (got && id && episode) {
@@ -34,19 +46,28 @@ export async function getVideo({ id, episode = 1, url }: GetVideoOptions) {
 
     log.debug(`最终跳转结果：${raw.url}`);
     if (raw.url.startsWith("https://www.bilibili.com/festival/")) {
-        // todo festival video 处理
+        log.debug(`按照活动视频处理该查询`);
         // 提取视频播放信息
         const initialState: InitialStateFestivalResponse = extractJSON(
             /window\.__INITIAL_STATE__=(\{.+});\(function\(\)\{/,
             response,
         );
-        log.debug(`initialState.videoInfo: ${JSON.stringify(initialState.videoInfo)}`);
-        throw new Error(process.env.NODE_ENV === "development" ? "工事中" : "不支持的视频类型");
+        // 提取视频流信息
+        const playInfo = await getVideoUrlFestival(
+            raw.url,
+            initialState.videoInfo.aid,
+            initialState.videoInfo.bvid,
+            initialState.videoInfo.pages[0].cid,
+        );
+
+        // todo 处理没有音频流的情况
+        return { type: "festival", initialState, playInfo };
     } else {
         // 提取视频播放信息
+        log.debug(`按照常规视频处理该查询`);
         const initialState: InitialStateResponse = extractJSON(/window\.__INITIAL_STATE__=(\{.+});/, response);
         const playInfo: WebPlayInfo = extractJSON(/window\.__playinfo__=(\{.+})<\/script><script>/, response);
-        const getVideoResponse: GetVideoResponse = { initialState, playInfo };
+        const getVideoResponse: GetVideoResponse = { type: "regular", initialState, playInfo };
 
         if (url) {
             key = `${initialState.bvid}__1`;
@@ -56,6 +77,25 @@ export async function getVideo({ id, episode = 1, url }: GetVideoOptions) {
     }
 }
 
-export async function getVideoUrlFestival() {
-    await fetch("https://api.bilibili.com/x/player/wbi/playurl");
+export async function getVideoUrlFestival(referer: string, avid: string | number, bvid: string, cid: string | number) {
+    const { img_key, sub_key } = await getWbiKeys();
+    const encodedParams = encWbi(
+        {
+            avid,
+            bvid,
+            cid,
+            from_client: "BROWSER",
+        },
+        img_key,
+        sub_key,
+    );
+    const raw = await fetch(`https://api.bilibili.com/x/player/wbi/playurl?${encodedParams}`, {
+        headers: {
+            referer,
+            "user-agent": USER_AGENT_BILIBILI,
+        },
+    });
+    const response: WebPlayInfo = await raw.json();
+    console.log(JSON.stringify(response, null, 4));
+    return response;
 }
