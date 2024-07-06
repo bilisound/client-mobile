@@ -213,6 +213,326 @@ export type InitialStateResponse = {
     };
 };
 
+export type InitialStateFestivalResponse = {
+    disableShowUpInfo: boolean;
+    title: string;
+    activityKey: string;
+    toBvid: string;
+    showBackToTop: boolean;
+    reloadVideoInfo: {
+        aid: any;
+        cid: any;
+        bvid: any;
+        episodeId: any;
+        origin: string;
+    };
+    pageStatus: number;
+    userInfo: object;
+    liveLineCount: number;
+    isVideoWide: boolean;
+    isVideo: boolean;
+    isLive: boolean;
+    liveInfo: any;
+    hasThemeConfig: boolean;
+    themeConfig: {
+        arrow_btn_img: string;
+        base_color: string;
+        base_color_1: string;
+        base_font_color: string;
+        center_logo_img: string;
+        combo_coin_img: string;
+        combo_fav_img: string;
+        combo_like_img: string;
+        decorations_2233_img: string;
+        default_element_color: string;
+        default_element_color_1: string;
+        default_element_color_2: string;
+        default_element_color_3: string;
+        hover_element_color: string;
+        hover_element_color_1: string;
+        info_font_color: string;
+        info_font_color_1: string;
+        info_font_color_2: string;
+        like_animation_img: string;
+        live_list_location_img: string;
+        live_list_location_img_active: string;
+        loading_bg_color: string;
+        main_banner_bg_img: string;
+        main_banner_title_img: string;
+        mask_bg_color: string;
+        operated_bg_color: string;
+        page_bg_color: string;
+        page_bg_img: string;
+        player_loading_img: string;
+        selected_element_color: string;
+        share_icon_bg_img: string;
+        share_img: string;
+    };
+    videoStaffs: {
+        mid: number;
+        title: string;
+        name: string;
+        face: string;
+        vip: {
+            type: number;
+            status: number;
+            vip_pay_type: number;
+            theme_type: number;
+        };
+        official: {
+            role: number;
+            title: string;
+            desc: string;
+        };
+        follower: number;
+        label_style: number;
+        relation: any;
+        attention: boolean;
+    }[];
+    videoSections: {
+        id: number;
+        title: string;
+        type: number;
+        episodes: {
+            id: number;
+            aid: number;
+            bvid: string;
+            cid: number;
+            title: string;
+            cover: string;
+            author: {
+                mid: number;
+                name: string;
+                face: string;
+            };
+            rights: {
+                bp: number;
+                elec: number;
+                download: number;
+                movie: number;
+                pay: number;
+                hd5: number;
+                no_reprint: number;
+                autoplay: number;
+                ugc_pay: number;
+                is_cooperation: number;
+                ugc_pay_preview: number;
+                arc_pay: number;
+                free_watch: number;
+            };
+            disable_show_up_info: boolean;
+        }[];
+        isActive: boolean;
+        height: number;
+    }[];
+    sectionEpisodes: {
+        id: number;
+        aid: number;
+        bvid: string;
+        cid: number;
+        title: string;
+        cover: string;
+        author: {
+            mid: number;
+            name: string;
+            face: string;
+        };
+        rights: {
+            bp: number;
+            elec: number;
+            download: number;
+            movie: number;
+            pay: number;
+            hd5: number;
+            no_reprint: number;
+            autoplay: number;
+            ugc_pay: number;
+            is_cooperation: number;
+            ugc_pay_preview: number;
+            arc_pay: number;
+            free_watch: number;
+        };
+        disable_show_up_info: boolean;
+        episodeId: number;
+    }[];
+    videoPage: any[];
+    gameIframeUrls: any[];
+    disclaimer: {
+        text: string;
+        url: string;
+    };
+    bottomRelate: {
+        url: string;
+        cover: string;
+    }[];
+    activitySubscribe: {
+        status: boolean;
+        title: string;
+        season_stat_view: number;
+        season_stat_vt: number;
+        enable_vt: number;
+        season_stat_danmaku: number;
+        button_title: string;
+        button_selected_title: string;
+        order_type: number;
+        Param: {
+            FavParam: {
+                season_id: number;
+            };
+        };
+        spmid: string;
+    };
+    videoStatus: {
+        coin: number;
+        fav: number;
+        like: number;
+        share: number;
+    };
+    videoInfo: {
+        aid: number;
+        cid: number;
+        title: string;
+        bvid: string;
+        desc: string;
+        noReprint: number;
+        copyright: number;
+        upMid: number;
+        upName: string;
+        pages: {
+            cid: number;
+            page: number;
+            from: string;
+            part: string;
+            duration: number;
+            vid: string;
+            weblink: string;
+            dimension: {
+                width: number;
+                height: number;
+                rotate: number;
+            };
+        }[];
+        viewCount: number;
+        enableVt: boolean;
+        vt: number;
+        vtDisplay: string;
+        danmakuCount: number;
+        pubdate: number;
+        his_rank: number;
+    };
+    player: string;
+    userAction: {
+        like: boolean;
+        multiply: number;
+        favorite: boolean;
+        coin: boolean;
+    };
+    recommendList: {
+        title: string;
+        relate_item: any[];
+        relate_video: {
+            arc: {
+                aid: number;
+                videos: number;
+                type_id: number;
+                type_name: string;
+                copyright: number;
+                pic: string;
+                title: string;
+                pubdate: number;
+                ctime: number;
+                desc: string;
+                state: number;
+                duration: number;
+                mission_id?: number;
+                rights: {
+                    bp: number;
+                    elec: number;
+                    download: number;
+                    movie: number;
+                    pay: number;
+                    hd5: number;
+                    no_reprint: number;
+                    autoplay: number;
+                    ugc_pay: number;
+                    is_cooperation: number;
+                    ugc_pay_preview: number;
+                    arc_pay: number;
+                    free_watch: number;
+                };
+                author: {
+                    mid: number;
+                    name: string;
+                    face: string;
+                };
+                stat: {
+                    aid: number;
+                    view: number;
+                    danmaku: number;
+                    reply: number;
+                    fav: number;
+                    coin: number;
+                    share: number;
+                    now_rank: number;
+                    his_rank: number;
+                    like: number;
+                    dislike: number;
+                    evaluation: string;
+                    argue_msg: string;
+                    vt: number;
+                    vv: number;
+                };
+                dynamic: string;
+                first_cid: number;
+                dimension: {
+                    width: number;
+                    height: number;
+                    rotate: number;
+                };
+                desc_v2: any;
+                is_chargeable_season: boolean;
+                is_blooper: boolean;
+                enable_vt: number;
+                vt_display: string;
+                season_id?: number;
+            };
+            bvid: string;
+            season_type: number;
+            aid: number;
+            cid: number;
+            title: string;
+            pic: string;
+            duration: number;
+            owner: {
+                mid: number;
+                name: string;
+                face: string;
+            };
+            view: number;
+            danmaku: number;
+            season_id?: number;
+        }[];
+    };
+    liveTimeLine: any[];
+    isGrpcData: boolean;
+    isForbidNote: boolean;
+    Q1080pParams: {
+        subtitle: string;
+        appId: number;
+        appSubId: string;
+        quality: string;
+    };
+    activityPageList: any;
+    activityEnterAnime: {
+        loading_img: string;
+        anime_video: string;
+        max_times: number;
+    };
+    enableEnterAnime: boolean;
+    isEnterAnimeVisible: boolean;
+    enterAnimeCnt: number;
+};
+
 export type WebPlayInfo = {
     code: number;
     message: string;
