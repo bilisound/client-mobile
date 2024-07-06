@@ -63,9 +63,11 @@ export async function getBilisoundMetadata(data: { id: string }) {
             const videoData = initialState?.videoData;
             const pages = videoData?.pages ?? [];
             if (!videoData || pages.length <= 0) {
+                log.error("找不到视频信息（在常规页面没有视频信息）");
                 throw new Error("找不到视频信息");
             }
             if (videoData.is_upower_exclusive) {
+                log.error("不支持的视频类型：充电视频");
                 throw new Error("不支持的视频类型");
             }
 
@@ -93,6 +95,7 @@ export async function getBilisoundMetadata(data: { id: string }) {
             const videoInfo = initialState?.videoInfo;
             const pages = videoInfo?.pages ?? [];
             if (!videoInfo || pages.length <= 0) {
+                log.error("找不到视频信息（在活动页面没有视频信息）");
                 throw new Error("找不到视频信息");
             }
             // 没有分 P 的视频，将第一个视频的标题替换成投稿标题
@@ -101,6 +104,7 @@ export async function getBilisoundMetadata(data: { id: string }) {
             }
             const found = initialState.sectionEpisodes.find(e => e.bvid === videoInfo.bvid);
             if (!found) {
+                log.error("找不到视频信息（在活动页面的合集列表找不到当前播放的视频）");
                 throw new Error("找不到视频信息");
             }
             return defineWrap<GetBilisoundMetadataResponse>({

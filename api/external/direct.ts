@@ -89,7 +89,10 @@ export async function getVideoUrlFestival(referer: string, avid: string | number
         img_key,
         sub_key,
     );
-    const raw = await fetch(`https://api.bilibili.com/x/player/wbi/playurl?${encodedParams}`, {
+    const url = `https://api.bilibili.com/x/player/wbi/playurl?${encodedParams}`;
+
+    log.debug(`请求外部 JSON API: ${url}`);
+    const raw = await fetch(url, {
         headers: {
             referer,
             "user-agent": USER_AGENT_BILIBILI,
