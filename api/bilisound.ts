@@ -24,8 +24,6 @@ export type GetBilisoundMetadataResponse = {
     }[];
 };
 
-const USE_TUU_API = false;
-
 function filterHostname(list: string[]) {
     return list.map(e => {
         try {
@@ -135,60 +133,82 @@ export async function getBilisoundResourceUrl(data: {
     id: string;
     episode: number | string;
     filterResourceURL?: boolean;
-}) {
+}): Promise<{ url: string; isAudio: boolean }> {
     const { id, episode } = data;
-
-    if (USE_TUU_API) {
-        return `https://bilisound.tuu.run/api/internal/resource?id=${id}&episode=${episode}`;
-    }
 
     // 获取视频
     const { playInfo } = await getVideo({ id, episode });
     const dashAudio = playInfo?.data?.dash?.audio;
+    const legacyVideo = playInfo?.data?.durl;
 
-    if (!Array.isArray(dashAudio) || dashAudio.length <= 0) {
-        throw new Error("找不到视频流资源");
-    }
-
-    // 遍历获取最佳音质视频
-    let maxQualityIndex = 0;
-    dashAudio.forEach((value, index, array) => {
-        if (array[maxQualityIndex].codecid < maxQualityIndex) {
-            maxQualityIndex = index;
-        }
-    });
-
-    const { baseUrl, backupUrl } = dashAudio[maxQualityIndex];
-    const urlList = [baseUrl];
-    if (Array.isArray(backupUrl)) {
-        urlList.push(...backupUrl);
-    }
-
-    // 理论可行性：无视 B 站推荐的 CDN 节点
-    /* const url = new URL(urlList[0]);
-    url.hostname = "cn-gdfs-ct-01-13.bilivideo.com";
-
-    return url.toString(); */
-    if (!data.filterResourceURL) {
-        log.debug(`没有进行过滤。来源域名列表: ${filterHostname(urlList).join(", ")}`);
-        return urlList[0];
-    }
-
-    const newUrlList = urlList.filter(e => {
-        for (let i = 0; i < BILIBILI_GOOD_CDN_REGEX.length; i++) {
-            const f = BILIBILI_GOOD_CDN_REGEX[i];
-            if (f.test(new URL(e).hostname)) {
-                return true;
+    // [dash] 遍历获取最佳音质视频
+    if (Array.isArray(dashAudio) && dashAudio.length > 0) {
+        let maxQualityIndex = 0;
+        dashAudio.forEach((value, index, array) => {
+            if (array[maxQualityIndex].codecid < maxQualityIndex) {
+                maxQualityIndex = index;
             }
+        });
+
+        const { baseUrl, backupUrl } = dashAudio[maxQualityIndex];
+        const urlList = [baseUrl];
+        if (Array.isArray(backupUrl)) {
+            urlList.push(...backupUrl);
         }
-        return false;
-    });
-    if (newUrlList.length <= 0) {
-        log.warn(`过滤失败，因此使用原始地址列表中的第一项。来源域名列表: ${filterHostname(newUrlList).join(", ")}`);
-        return urlList[0];
+
+        if (!data.filterResourceURL) {
+            log.debug(`没有进行过滤。来源域名列表: ${filterHostname(urlList).join(", ")}`);
+            return { url: urlList[0], isAudio: true };
+        }
+
+        const newUrlList = urlList.filter(e => {
+            for (let i = 0; i < BILIBILI_GOOD_CDN_REGEX.length; i++) {
+                const f = BILIBILI_GOOD_CDN_REGEX[i];
+                if (f.test(new URL(e).hostname)) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        if (newUrlList.length <= 0) {
+            log.warn(
+                `过滤失败，因此使用原始地址列表中的第一项。来源域名列表: ${filterHostname(newUrlList).join(", ")}`,
+            );
+            return { url: newUrlList[0], isAudio: true };
+        }
+        log.debug(`过滤成功！来源域名列表: ${filterHostname(newUrlList).join(", ")}`);
+        return { url: newUrlList[0], isAudio: true };
     }
-    log.debug(`过滤成功！来源域名列表: ${filterHostname(newUrlList).join(", ")}`);
-    return newUrlList[0];
+
+    // [legacy/durl] 遍历获取最佳音质视频
+    if (Array.isArray(legacyVideo) && legacyVideo.length > 0) {
+        const videoItem = legacyVideo[0];
+        const urlList = [videoItem.url, ...videoItem.backup_url];
+        if (!data.filterResourceURL) {
+            log.debug(`没有进行过滤。来源域名列表: ${filterHostname(urlList).join(", ")}`);
+            return { url: urlList[0], isAudio: false };
+        }
+        const newUrlList = urlList.filter(e => {
+            for (let i = 0; i < BILIBILI_GOOD_CDN_REGEX.length; i++) {
+                const f = BILIBILI_GOOD_CDN_REGEX[i];
+                if (f.test(new URL(e).hostname)) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        if (newUrlList.length <= 0) {
+            log.warn(
+                `过滤失败，因此使用原始地址列表中的第一项。来源域名列表: ${filterHostname(newUrlList).join(", ")}`,
+            );
+            return { url: newUrlList[0], isAudio: false };
+        }
+        log.debug(`过滤成功！来源域名列表: ${filterHostname(newUrlList).join(", ")}`);
+        return { url: newUrlList[0], isAudio: false };
+    }
+
+    throw new Error("找不到视频流资源");
 }
 
 /**

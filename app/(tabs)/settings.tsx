@@ -9,6 +9,7 @@ import TrackPlayer from "react-native-track-player";
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem, { SettingMenuItemIcon } from "~/components/SettingMenuItem";
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
+import useDownloadStore from "~/store/download";
 import useSettingsStore from "~/store/settings";
 import log from "~/utils/logger";
 import { checkDirectorySize, cleanAudioCache } from "~/utils/misc";
@@ -81,6 +82,14 @@ const Settings: React.FC = () => {
                 subTitle="对开发者真的太有用了"
                 onPress={async () => {
                     router.push("/log-show");
+                }}
+            />
+            <SettingMenuItem
+                icon={BugIcon}
+                title="强制清空下载队列"
+                subTitle="开发过程用"
+                onPress={async () => {
+                    useDownloadStore.getState().clearDownloadItem();
                 }}
             />
         </>

@@ -1,4 +1,5 @@
 import { Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
+import { FFmpegKit, FFprobeKit } from "ffmpeg-kit-react-native";
 import { filesize } from "filesize";
 import React from "react";
 import RNFS from "react-native-fs";
@@ -77,16 +78,17 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
             });
 
             // 获取源地址
-            const url = await getBilisoundResourceUrl({
+            const { url, isAudio } = await getBilisoundResourceUrl({
                 id: playingRequest.id,
                 episode: playingRequest.episode,
                 filterResourceURL,
             });
+            const downloadUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, isAudio);
 
             const beginTime = global.performance.now();
             const downloadTask = RNFS.downloadFile({
                 fromUrl: url,
-                toFile: checkUrl,
+                toFile: downloadUrl,
                 headers: {
                     referer: getVideoUrl(playingRequest.id, playingRequest.episode),
                     "user-agent": USER_AGENT_BILIBILI,
@@ -98,7 +100,7 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
                     updateDownloadItem(id, {
                         id: playingRequest.id,
                         episode: playingRequest.episode,
-                        path: checkUrl,
+                        path: downloadUrl,
                         progress: res,
                     });
                 },
@@ -107,7 +109,7 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
 
             await downloadTask.promise;
             const endTime = global.performance.now();
-            const fileSize = (await RNFS.stat(checkUrl)).size;
+            const fileSize = (await RNFS.stat(downloadUrl)).size;
             const runTime = (endTime - beginTime) / 1000;
             log.debug(
                 `下载任务 ${downloadTask.jobId} 结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(
@@ -115,6 +117,50 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
                 )}/s`,
             );
             removeDownloadItem(id);
+
+            if (!isAudio) {
+                // 如果不是音频流，进行音视频分离操作
+                log.info("非音频流，进行音视频分离操作");
+
+                // 格式判断
+                const probeSession = await FFprobeKit.execute(
+                    `-v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 ${JSON.stringify(downloadUrl)}`,
+                );
+                let returnCode = await probeSession.getReturnCode();
+                let result = await probeSession.getOutput();
+                if (!returnCode.isValueSuccess()) {
+                    log.error("视频编码识别失败！");
+                    log.error(`returnCode: ${returnCode}`);
+                    log.error(`result：${result}`);
+                    throw new Error("视频处理失败");
+                }
+
+                // 进行转码或直接提取操作
+                let mpegSession;
+                if (result.trim() === "aac") {
+                    log.debug("进行提取音频流操作");
+                    mpegSession = await FFmpegKit.execute(
+                        `-i ${JSON.stringify(downloadUrl)} -vn -acodec copy ${JSON.stringify(checkUrl)}`,
+                    );
+                } else {
+                    log.debug(`进行转码音频流操作。原因：音频编码是 ${result}`);
+                    mpegSession = await FFmpegKit.execute(
+                        `-i ${JSON.stringify(downloadUrl)} -vn -acodec aac -b:a 320k ${JSON.stringify(checkUrl)}`,
+                    );
+                }
+                returnCode = await mpegSession.getReturnCode();
+                result = await mpegSession.getOutput();
+                if (!returnCode.isValueSuccess()) {
+                    log.error("视频转码失败！");
+                    log.error(`returnCode: ${returnCode}`);
+                    log.error(`result：${result}`);
+                    throw new Error("视频处理失败");
+                }
+
+                // 收尾
+                log.debug("删除不再需要的视频文件");
+                await RNFS.unlink(downloadUrl);
+            }
         }
 
         // 如果现在「播放」的曲目还是正在加载的曲目

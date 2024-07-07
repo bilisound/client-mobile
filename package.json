@@ -16,6 +16,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@config-plugins/ffmpeg-kit-react-native": "^8.0.0",
     "@expo-google-fonts/poppins": "^0.2.3",
     "@expo/config-plugins": "^8.0.4",
     "@expo/html-elements": "^0.5.1",
@@ -83,6 +84,7 @@
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
     "expo-web-browser": "~13.0.3",
+    "ffmpeg-kit-react-native": "^6.0.2",
     "filesize": "^10.1.2",
     "ky": "^1.0.1",
     "lodash": "^4.17.21",

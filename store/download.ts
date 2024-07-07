@@ -15,6 +15,7 @@ export interface DownloadProps {
 export interface DownloadMethods {
     updateDownloadItem: (key: string, downloadItem: DownloadItem) => void;
     removeDownloadItem: (key: string) => void;
+    clearDownloadItem: () => void;
 }
 
 const useDownloadStore = create<DownloadProps & DownloadMethods>()((set, get) => ({
@@ -28,6 +29,9 @@ const useDownloadStore = create<DownloadProps & DownloadMethods>()((set, get) =>
         const downloadList = new Map(get().downloadList);
         downloadList.delete(key);
         set(() => ({ downloadList }));
+    },
+    clearDownloadItem: () => {
+        set(() => ({ downloadList: new Map() }));
     },
 }));
 

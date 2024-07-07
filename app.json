@@ -54,6 +54,12 @@
     },
     "plugins": [
       "./plugins/withAbiFilters",
+      [
+        "@config-plugins/ffmpeg-kit-react-native",
+        {
+          "package": "full-gpl"
+        }
+      ],
       "expo-router",
       [
         "expo-camera",

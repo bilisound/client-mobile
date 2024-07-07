@@ -11,6 +11,9 @@ importers:
 
   .:
     dependencies:
+      '@config-plugins/ffmpeg-kit-react-native':
+        specifier: ^8.0.0
+        version: 8.0.0(expo@51.0.18(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3)))
       '@expo-google-fonts/poppins':
         specifier: ^0.2.3
         version: 0.2.3
@@ -212,6 +215,9 @@ importers:
       expo-web-browser:
         specifier: ~13.0.3
         version: 13.0.3(expo@51.0.18(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3)))
+      ffmpeg-kit-react-native:
+        specifier: ^6.0.2
+        version: 6.0.2(react-native@0.74.3(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       filesize:
         specifier: ^10.1.2
         version: 10.1.2
@@ -1157,6 +1163,11 @@ packages:
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  '@config-plugins/ffmpeg-kit-react-native@8.0.0':
+    resolution: {integrity: sha512-PUQHUBfRaGMBwPM8KnfHNVcWH0WvWO9QgIJYkb55/WGSmIdezsgJo/zlcXFexe7kkSTBqG/Pxnp5DGTYFBYBuQ==}
+    peerDependencies:
+      expo: ^51
 
   '@egjs/hammerjs@2.0.17':
     resolution: {integrity: sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==}
@@ -3968,6 +3979,12 @@ packages:
 
   fetch-retry@4.1.1:
     resolution: {integrity: sha512-e6eB7zN6UBSwGVwrbWVH+gdLnkW9WwHhmq2YDK1Sh30pzx1onRVGBvogTlUeWxwTa+L86NYdo4hFkh7O8ZjSnA==}
+
+  ffmpeg-kit-react-native@6.0.2:
+    resolution: {integrity: sha512-r9uSmahq8TeyIb7fXf3ft+uUXyoeWRFa99+khjo0TAzWO9y0z9wU7eGnab9JLw1MmCB9v64o4yojNluJhVm9nQ==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
 
   file-entry-cache@6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
@@ -7853,6 +7870,11 @@ snapshots:
       to-fast-properties: 2.0.0
 
   '@bcoe/v8-coverage@0.2.3': {}
+
+  '@config-plugins/ffmpeg-kit-react-native@8.0.0(expo@51.0.18(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3)))':
+    dependencies:
+      expo: 51.0.18(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))
+      semver: 7.6.0
 
   '@egjs/hammerjs@2.0.17':
     dependencies:
@@ -12116,6 +12138,11 @@ snapshots:
       - encoding
 
   fetch-retry@4.1.1: {}
+
+  ffmpeg-kit-react-native@6.0.2(react-native@0.74.3(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+      react-native: 0.74.3(@babel/core@7.24.3)(@babel/preset-env@7.24.4(@babel/core@7.24.3))(@types/react@18.2.79)(react@18.2.0)
 
   file-entry-cache@6.0.1:
     dependencies:

@@ -99,6 +99,6 @@ export async function getVideoUrlFestival(referer: string, avid: string | number
         },
     });
     const response: WebPlayInfo = await raw.json();
-    console.log(JSON.stringify(response, null, 4));
+    // console.log(JSON.stringify(response, null, 4));
     return response;
 }

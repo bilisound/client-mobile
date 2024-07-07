@@ -550,7 +550,7 @@ export type WebPlayInfo = {
         video_codecid: number;
         seek_param: string;
         seek_type: string;
-        dash: {
+        dash?: {
             duration: number;
             minBufferTime: number;
             min_buffer_time: number;
@@ -614,6 +614,15 @@ export type WebPlayInfo = {
             };
             flac: any;
         };
+        durl?: {
+            order: number;
+            length: number;
+            size: number;
+            ahead: string;
+            vhead: string;
+            url: string;
+            backup_url: string[];
+        }[];
         support_formats: {
             quality: number;
             format: string;

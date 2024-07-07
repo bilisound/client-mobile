@@ -156,6 +156,9 @@ export function commonPressableColor(hoverColor: string) {
     } as Partial<PressableProps>;
 }
 
-export function getCacheAudioPath(id: string, episode: number) {
-    return `${BILISOUND_OFFLINE_PATH}/${id}_${episode}.m4a`;
+export function getCacheAudioPath(id: string, episode: number, isAudio = true) {
+    if (isAudio) {
+        return `${BILISOUND_OFFLINE_PATH}/${id}_${episode}.m4a`;
+    }
+    return `${BILISOUND_OFFLINE_PATH}/${id}_${episode}.tmp`;
 }
