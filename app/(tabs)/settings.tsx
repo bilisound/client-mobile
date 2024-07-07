@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, Switch } from "react-native";
 import TrackPlayer from "react-native-track-player";
 
+import { getUserSeason } from "~/api/external/json";
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem, { SettingMenuItemIcon } from "~/components/SettingMenuItem";
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
@@ -84,14 +85,26 @@ const Settings: React.FC = () => {
                     router.push("/log-show");
                 }}
             />
-            <SettingMenuItem
-                icon={BugIcon}
-                title="强制清空下载队列"
-                subTitle="开发过程用"
-                onPress={async () => {
-                    useDownloadStore.getState().clearDownloadItem();
-                }}
-            />
+            {process.env.NODE_ENV === "development" ? (
+                <>
+                    <SettingMenuItem
+                        icon={BugIcon}
+                        title="[useDownloadStore] clearDownloadItem"
+                        subTitle="……"
+                        onPress={async () => {
+                            useDownloadStore.getState().clearDownloadItem();
+                        }}
+                    />
+                    <SettingMenuItem
+                        icon={BugIcon}
+                        title="getUserSeason"
+                        subTitle="……"
+                        onPress={async () => {
+                            console.log(JSON.stringify(await getUserSeason(1741301, 905374), null, 4));
+                        }}
+                    />
+                </>
+            ) : null}
         </>
     );
 

@@ -23,16 +23,16 @@ export async function getVideoUrlFestival(referer: string, avid: string | number
     return response;
 }
 
-export async function getUserSeason(userId: string | number, seasonId: string | number) {
+export async function getUserSeason(userId: string | number, seasonId: string | number, pageNum = 1) {
     const encodedParams = await signParam({
         mid: userId,
         season_id: seasonId,
         sort_reverse: false,
-        page_num: 1,
+        page_num: pageNum,
         page_size: 30,
         web_location: 333.999,
     });
-    const url = `https://api.bilibili.com/x/player/wbi/playurl?${encodedParams}`;
+    const url = `https://api.bilibili.com/x/polymer/web-space/seasons_archives_list?${encodedParams}`;
 
     log.debug(`请求外部 JSON API: ${url}`);
     const raw = await fetch(url, {
