@@ -1,3 +1,4 @@
+import { getVideoUrlFestival } from "~/api/external/json";
 import { InitialStateFestivalResponse, InitialStateResponse, WebPlayInfo } from "~/api/external/types";
 import { BILIBILI_VIDEO_URL_PREFIX, USER_AGENT_BILIBILI } from "~/constants/network";
 import log from "~/utils/logger";
@@ -75,30 +76,4 @@ export async function getVideo({
         videoMap.set(key, getVideoResponse);
         return getVideoResponse;
     }
-}
-
-export async function getVideoUrlFestival(referer: string, avid: string | number, bvid: string, cid: string | number) {
-    const { img_key, sub_key } = await getWbiKeys();
-    const encodedParams = encWbi(
-        {
-            avid,
-            bvid,
-            cid,
-            from_client: "BROWSER",
-        },
-        img_key,
-        sub_key,
-    );
-    const url = `https://api.bilibili.com/x/player/wbi/playurl?${encodedParams}`;
-
-    log.debug(`请求外部 JSON API: ${url}`);
-    const raw = await fetch(url, {
-        headers: {
-            referer,
-            "user-agent": USER_AGENT_BILIBILI,
-        },
-    });
-    const response: WebPlayInfo = await raw.json();
-    // console.log(JSON.stringify(response, null, 4));
-    return response;
 }

@@ -145,7 +145,9 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
                 } else {
                     log.debug(`进行转码音频流操作。原因：音频编码是 ${result}`);
                     mpegSession = await FFmpegKit.execute(
-                        `-i ${JSON.stringify(downloadUrl)} -vn -acodec aac -b:a 320k ${JSON.stringify(checkUrl)}`,
+                        // 别的编码（比如 mp3）通常音质不会特别好，所以先设置 256kbps 的动态码率了
+                        // （叔叔会有上 opus 的一天吗？）
+                        `-i ${JSON.stringify(downloadUrl)} -vn -acodec aac -b:a 256k ${JSON.stringify(checkUrl)}`,
                     );
                 }
                 returnCode = await mpegSession.getReturnCode();

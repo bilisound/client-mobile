@@ -4,6 +4,12 @@
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)，并且该项目遵循 [语义版本控制](https://semver.org/spec/v2.0.0.html)。
 
+## [未发布]
+
+### 新增内容
+
+- 活动视频解析支持
+
 ## [1.1.0] - 2024-05-22
 
 ### 新增内容
