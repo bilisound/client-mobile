@@ -2,7 +2,7 @@ import { defineWrap } from "./common";
 import { getVideo } from "./external/direct";
 import log from "../utils/logger";
 
-import { getUserSeason } from "~/api/external/json";
+import { getUserInfo, getUserSeason } from "~/api/external/json";
 import { UserSeasonInfo } from "~/api/external/types";
 import { BILIBILI_GOOD_CDN_REGEX, BILIBILI_VIDEO_URL_PREFIX, USER_AGENT_BILISOUND } from "~/constants/network";
 import { PlaylistDetailRow } from "~/storage/playlist";
@@ -213,16 +213,18 @@ export async function getBilisoundResourceUrl(data: {
     throw new Error("找不到视频流资源");
 }
 
+export interface EpisodeItem {
+    bvid: string;
+    title: string;
+    cover: string;
+    duration: number;
+}
+
 export interface GetEpisodeUserResponse {
     pageSize: number;
     pageNum: number;
     total: number;
-    rows: {
-        bvid: string;
-        title: string;
-        cover: string;
-        duration: number;
-    }[];
+    rows: EpisodeItem[];
     meta: UserSeasonInfo["data"]["meta"];
 }
 
@@ -240,6 +242,37 @@ export async function getEpisodeUser(userId: string | number, seasonId: string |
         total: response.data.page.total,
         rows,
         meta: response.data.meta,
+    };
+}
+
+export async function getEpisodeUserFull(userId: string | number, seasonId: string | number): Promise<EpisodeItem[]> {
+    const firstResponse = (await getUserSeason(userId, seasonId, 1)).data;
+    let results: EpisodeItem[] = firstResponse.archives.map(e => ({
+        bvid: e.bvid,
+        title: e.title,
+        cover: e.pic,
+        duration: e.duration,
+    }));
+    if (firstResponse.page.total <= firstResponse.page.page_size) {
+        return results;
+    }
+    for (let i = 1; i < Math.ceil(firstResponse.page.total / firstResponse.page.page_size); i++) {
+        const newResults = (await getUserSeason(userId, seasonId, i + 1)).data.archives.map(e => ({
+            bvid: e.bvid,
+            title: e.title,
+            cover: e.pic,
+            duration: e.duration,
+        }));
+        results = results.concat(newResults);
+    }
+    return results;
+}
+
+export async function getUser(userId: string | number) {
+    const response = await getUserInfo(userId);
+    return {
+        name: response.data.name,
+        avatar: response.data.face,
     };
 }
 

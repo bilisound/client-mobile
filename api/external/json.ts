@@ -1,4 +1,4 @@
-import { UserSeasonInfo, WebPlayInfo } from "~/api/external/types";
+import { UserInfo, UserSeasonInfo, WebPlayInfo } from "~/api/external/types";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import log from "~/utils/logger";
 import { signParam } from "~/utils/wbi";
@@ -42,5 +42,23 @@ export async function getUserSeason(userId: string | number, seasonId: string | 
         },
     });
     const response: UserSeasonInfo = await raw.json();
+    return response;
+}
+
+export async function getUserInfo(userId: string | number) {
+    const encodedParams = await signParam({
+        mid: userId,
+    });
+    const url = `https://api.bilibili.com/x/space/wbi/acc/info?${encodedParams}`;
+
+    log.debug(`请求外部 JSON API: ${url}`);
+    const raw = await fetch(url, {
+        headers: {
+            referer: `https://space.bilibili.com/${userId}`,
+            "user-agent": USER_AGENT_BILIBILI,
+        },
+    });
+
+    const response: UserInfo = await raw.json();
     return response;
 }
