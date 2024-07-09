@@ -1,9 +1,24 @@
+import ExpiryMap from "expiry-map";
+
 import { UserInfo, UserSeasonInfo, WebPlayInfo } from "~/api/external/types";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import log from "~/utils/logger";
 import { signParam } from "~/utils/wbi";
 
-export async function getVideoUrlFestival(referer: string, avid: string | number, bvid: string, cid: string | number) {
+const map = new ExpiryMap(1200 * 1000, []);
+
+// todo 将 fetch 进行封装以解决重复代码问题
+
+export async function getVideoUrlFestival(
+    referer: string,
+    avid: string | number,
+    bvid: string,
+    cid: string | number,
+): Promise<WebPlayInfo> {
+    const key = `getVideoUrlFestival_${referer}_${avid}_${bvid}_${cid}`;
+    if (map.has(key)) {
+        return map.get(key);
+    }
     const encodedParams = await signParam({
         avid,
         bvid,
@@ -20,10 +35,15 @@ export async function getVideoUrlFestival(referer: string, avid: string | number
         },
     });
     const response: WebPlayInfo = await raw.json();
+    map.set(key, response);
     return response;
 }
 
 export async function getUserSeason(userId: string | number, seasonId: string | number, pageNum = 1) {
+    const key = `getUserSeason_${userId}_${seasonId}_${pageNum}`;
+    if (map.has(key)) {
+        return map.get(key);
+    }
     const encodedParams = await signParam({
         mid: userId,
         season_id: seasonId,
@@ -42,10 +62,15 @@ export async function getUserSeason(userId: string | number, seasonId: string | 
         },
     });
     const response: UserSeasonInfo = await raw.json();
+    map.set(key, response);
     return response;
 }
 
 export async function getUserInfo(userId: string | number) {
+    const key = `getUserInfo_${arguments}`;
+    if (map.has(key)) {
+        return map.get(key);
+    }
     const encodedParams = await signParam({
         mid: userId,
     });
@@ -60,5 +85,6 @@ export async function getUserInfo(userId: string | number) {
     });
 
     const response: UserInfo = await raw.json();
+    map.set(key, response);
     return response;
 }

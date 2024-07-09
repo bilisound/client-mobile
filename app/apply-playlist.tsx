@@ -20,6 +20,9 @@ export default function Page() {
         playlistDetail: state.playlistDetail,
         name: state.name,
     }));
+
+    console.log(JSON.stringify(playlistDetail, null, 2));
+
     const [playlistStorage] = usePlaylistStorage();
     return (
         <CommonLayout title="添加到歌单" leftAccessories="backButton">

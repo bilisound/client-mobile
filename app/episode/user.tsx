@@ -30,6 +30,7 @@ function Header({ data }: HeaderProps) {
         setLoading(true);
         const list = await getEpisodeUserFull(data.meta.mid, data.meta.season_id);
         const user = await getUser(data.meta.mid);
+        console.log(JSON.stringify({ list, user }, null, 2));
         setLoading(false);
         setPlaylistDetail(
             list.map(e => ({
