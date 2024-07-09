@@ -2,6 +2,8 @@ import { defineWrap } from "./common";
 import { getVideo } from "./external/direct";
 import log from "../utils/logger";
 
+import { getUserSeason } from "~/api/external/json";
+import { UserSeasonInfo } from "~/api/external/types";
 import { BILIBILI_GOOD_CDN_REGEX, BILIBILI_VIDEO_URL_PREFIX, USER_AGENT_BILISOUND } from "~/constants/network";
 import { PlaylistDetailRow } from "~/storage/playlist";
 
@@ -209,6 +211,36 @@ export async function getBilisoundResourceUrl(data: {
     }
 
     throw new Error("找不到视频流资源");
+}
+
+export interface GetEpisodeUserResponse {
+    pageSize: number;
+    pageNum: number;
+    total: number;
+    rows: {
+        bvid: string;
+        title: string;
+        cover: string;
+        duration: number;
+    }[];
+    meta: UserSeasonInfo["data"]["meta"];
+}
+
+export async function getEpisodeUser(userId: string | number, seasonId: string | number, pageNum = 1) {
+    const response = await getUserSeason(userId, seasonId, pageNum);
+    const rows = response.data.archives.map(e => ({
+        bvid: e.bvid,
+        title: e.title,
+        cover: e.pic,
+        duration: e.duration,
+    }));
+    return {
+        pageSize: response.data.page.page_size,
+        pageNum: response.data.page.page_num,
+        total: response.data.page.total,
+        rows,
+        meta: response.data.meta,
+    };
 }
 
 /**

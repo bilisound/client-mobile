@@ -97,6 +97,7 @@ const RootLayoutNav = () => {
             <Stack.Screen name="modal" options={modalSettings} />
             <Stack.Screen name="log-show" options={{ headerShown: false }} />
             <Stack.Screen name="apply-playlist" options={{ headerShown: false }} />
+            <Stack.Screen name="episode/user" options={{ headerShown: false }} />
         </Stack>
     );
 

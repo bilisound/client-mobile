@@ -100,7 +100,8 @@ const Settings: React.FC = () => {
                         title="getUserSeason"
                         subTitle="……"
                         onPress={async () => {
-                            console.log(JSON.stringify(await getUserSeason(1741301, 905374), null, 4));
+                            // console.log(JSON.stringify(await getUserSeason(1741301, 905374), null, 4));
+                            router.push("/episode/user?userId=1741301&episodeId=905374");
                         }}
                     />
                 </>
