@@ -1,12 +1,13 @@
 import promiseMemoize from "promise-memoize";
 
 import { biliRequest } from "~/api/external/request";
-import { UserInfo, UserSeasonInfo, WebPlayInfo } from "~/api/external/types";
+import { UserInfo, UserSeasonInfo, UserSeriesInfo, UserSeriesMetadata, WebPlayInfo } from "~/api/external/types";
+import { Numberish } from "~/typings/common";
 
 const maxAge = 600_000;
 
 export const getVideoUrlFestival = promiseMemoize(
-    async (referer: string, avid: string | number, bvid: string, cid: string | number) => {
+    (referer: string, avid: Numberish, bvid: string, cid: Numberish) => {
         return biliRequest<WebPlayInfo>({
             url: "/x/player/wbi/playurl",
             params: {
@@ -23,7 +24,7 @@ export const getVideoUrlFestival = promiseMemoize(
 );
 
 export const getUserSeason = promiseMemoize(
-    (userId: string | number, seasonId: string | number, pageNum = 1) => {
+    (userId: Numberish, seasonId: Numberish, pageNum = 1) => {
         return biliRequest<UserSeasonInfo>({
             url: "/x/polymer/web-space/seasons_archives_list",
             params: {
@@ -41,8 +42,38 @@ export const getUserSeason = promiseMemoize(
     { maxAge },
 );
 
+export const getUserSeries = promiseMemoize(
+    (userId: Numberish, seriesId: Numberish, pageNum = 1) => {
+        return biliRequest<UserSeriesInfo>({
+            url: "/x/series/archives",
+            params: {
+                mid: userId,
+                series_id: seriesId,
+                only_normal: true,
+                sort: "desc",
+                pn: pageNum,
+                ps: 30,
+            },
+            headers: {
+                referer: `https://space.bilibili.com/${userId}/channel/seriesdetail?sid=${seriesId}&ctype=0`,
+            },
+        });
+    },
+    { maxAge },
+);
+
+export const getUserSeriesMeta = promiseMemoize((seriesId: Numberish) => {
+    return biliRequest<UserSeriesMetadata>({
+        url: "/x/series/series",
+        params: {
+            series_id: seriesId,
+        },
+        disableWbi: true,
+    });
+});
+
 export const getUserInfo = promiseMemoize(
-    async (userId: string | number) => {
+    (userId: Numberish) => {
         return biliRequest<UserInfo>({
             url: "/x/space/wbi/acc/info",
             params: {

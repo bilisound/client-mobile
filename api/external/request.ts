@@ -1,9 +1,17 @@
-import type { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import axiosClient from "axios";
 
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import log from "~/utils/logger";
 import { signParam } from "~/utils/wbi";
+
+export interface BiliRequestConfig extends AxiosRequestConfig {
+    disableWbi?: boolean;
+}
+
+export interface InternalBiliRequestConfig extends InternalAxiosRequestConfig {
+    disableWbi?: boolean;
+}
 
 /**
  * Creates an initial 'axios' instance with custom settings.
@@ -18,11 +26,13 @@ const instance = axiosClient.create({
 });
 
 instance.interceptors.request.use(
-    async req => {
-        const params = req.params || {};
-        const encodedParams = await signParam(params);
-        req.url = `${req.url}?${encodedParams}`;
-        delete req.params;
+    async (req: InternalBiliRequestConfig) => {
+        if (!req.disableWbi) {
+            const params = req.params || {};
+            const encodedParams = await signParam(params);
+            req.url = `${req.url}?${encodedParams}`;
+            delete req.params;
+        }
         log.debug(`发起请求：${req.url}`);
         return req;
     },
@@ -58,4 +68,4 @@ instance.interceptors.response.use(
  * @returns A promise object of a response of the HTTP request with the 'data' object already
  * destructured.
  */
-export const biliRequest = <T>(cfg: AxiosRequestConfig) => instance.request<any, T>(cfg);
+export const biliRequest = <T>(cfg: BiliRequestConfig) => instance.request<any, T>(cfg);

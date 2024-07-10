@@ -21,7 +21,7 @@ export default function Page() {
         name: state.name,
     }));
 
-    console.log(JSON.stringify(playlistDetail, null, 2));
+    // console.log(JSON.stringify(playlistDetail, null, 2));
 
     const [playlistStorage] = usePlaylistStorage();
     return (

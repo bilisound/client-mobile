@@ -2,10 +2,11 @@ import { defineWrap } from "./common";
 import { getVideo } from "./external/direct";
 import log from "../utils/logger";
 
-import { getUserInfo, getUserSeason } from "~/api/external/json";
+import { getUserInfo, getUserSeason, getUserSeries, getUserSeriesMeta } from "~/api/external/json";
 import { UserSeasonInfo } from "~/api/external/types";
 import { BILIBILI_GOOD_CDN_REGEX, BILIBILI_VIDEO_URL_PREFIX, USER_AGENT_BILISOUND } from "~/constants/network";
 import { PlaylistDetailRow } from "~/storage/playlist";
+import { Numberish } from "~/typings/common";
 
 export type GetBilisoundMetadataResponse = {
     bvid: string;
@@ -225,11 +226,44 @@ export interface GetEpisodeUserResponse {
     pageNum: number;
     total: number;
     rows: EpisodeItem[];
-    meta: UserSeasonInfo["data"]["meta"];
+    meta: {
+        name: string;
+        description: string;
+        cover: string;
+        userId: Numberish;
+        seasonId: Numberish;
+    };
 }
 
-export async function getEpisodeUser(userId: string | number, seasonId: string | number, pageNum = 1) {
-    const response = await getUserSeason(userId, seasonId, pageNum);
+export type UserListMode = "episode" | "series";
+
+export async function getUserList(mode: UserListMode, userId: Numberish, listId: Numberish, page = 1) {
+    let response;
+    let pageSize;
+    let pageNum;
+    let total;
+    let name = "";
+    let description = "";
+    let cover = "";
+    if (mode === "episode") {
+        response = await getUserSeason(userId, listId, page);
+        const data = response.data;
+        pageSize = data.page.page_size;
+        pageNum = data.page.page_num;
+        total = data.page.total;
+        name = data.meta.name;
+        description = data.meta.description;
+        cover = data.meta.cover;
+    } else {
+        response = await getUserSeries(userId, listId, page);
+        const meta = await getUserSeriesMeta(listId);
+        pageSize = response.data.page.size;
+        pageNum = response.data.page.num;
+        total = response.data.page.total;
+        name = meta.data.meta.name;
+        description = meta.data.meta.description;
+        cover = response.data.archives[0].pic;
+    }
     const rows = response.data.archives.map(e => ({
         bvid: e.bvid,
         title: e.title,
@@ -237,38 +271,38 @@ export async function getEpisodeUser(userId: string | number, seasonId: string |
         duration: e.duration,
     }));
     return {
-        pageSize: response.data.page.page_size,
-        pageNum: response.data.page.page_num,
-        total: response.data.page.total,
+        pageSize,
+        pageNum,
+        total,
         rows,
-        meta: response.data.meta,
+        meta: {
+            name,
+            description,
+            cover,
+            userId,
+            seasonId: listId,
+        },
     };
 }
 
-export async function getEpisodeUserFull(userId: string | number, seasonId: string | number): Promise<EpisodeItem[]> {
-    const firstResponse = (await getUserSeason(userId, seasonId, 1)).data;
-    let results: EpisodeItem[] = firstResponse.archives.map(e => ({
-        bvid: e.bvid,
-        title: e.title,
-        cover: e.pic,
-        duration: e.duration,
-    }));
-    if (firstResponse.page.total <= firstResponse.page.page_size) {
+export async function getUserListFull(
+    mode: UserListMode,
+    userId: Numberish,
+    listId: Numberish,
+): Promise<EpisodeItem[]> {
+    const firstResponse = await getUserList(mode, userId, listId, 1);
+    let results: EpisodeItem[] = firstResponse.rows;
+    if (firstResponse.total <= firstResponse.pageSize) {
         return results;
     }
-    for (let i = 1; i < Math.ceil(firstResponse.page.total / firstResponse.page.page_size); i++) {
-        const newResults = (await getUserSeason(userId, seasonId, i + 1)).data.archives.map(e => ({
-            bvid: e.bvid,
-            title: e.title,
-            cover: e.pic,
-            duration: e.duration,
-        }));
+    for (let i = 1; i < Math.ceil(firstResponse.total / firstResponse.pageSize); i++) {
+        const newResults = (await getUserList(mode, userId, listId, i + 1)).rows;
         results = results.concat(newResults);
     }
     return results;
 }
 
-export async function getUser(userId: string | number) {
+export async function getUser(userId: Numberish) {
     const response = await getUserInfo(userId);
     return {
         name: response.data.name,
@@ -281,7 +315,7 @@ export async function getUser(userId: string | number) {
  * @param id
  * @param episode
  */
-export function getVideoUrl(id: string, episode: string | number) {
+export function getVideoUrl(id: string, episode: Numberish) {
     return `${BILIBILI_VIDEO_URL_PREFIX}${id}/?p=${episode}`;
 }
 

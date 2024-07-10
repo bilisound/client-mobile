@@ -18,7 +18,13 @@ import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
-import { getBilisoundMetadata, getEpisodeUser, getEpisodeUserFull, GetEpisodeUserResponse } from "~/api/bilisound";
+import {
+    getBilisoundMetadata,
+    getUserList,
+    getUserListFull,
+    GetEpisodeUserResponse,
+    UserListMode,
+} from "~/api/bilisound";
 import CommonLayout from "~/components/CommonLayout";
 import { COMMON_TOUCH_COLOR } from "~/constants/style";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
@@ -27,9 +33,10 @@ import { formatSecond } from "~/utils/misc";
 
 interface HeaderProps {
     data: GetEpisodeUserResponse;
+    mode: UserListMode;
 }
 
-function Header({ data }: HeaderProps) {
+function Header({ data, mode }: HeaderProps) {
     const containerStyle = useToastContainerStyle();
     const toast = useToast();
     const [loading, setLoading] = useState(false);
@@ -43,7 +50,7 @@ function Header({ data }: HeaderProps) {
     async function handleCreatePlaylist() {
         setLoading(true);
         try {
-            const list = await getEpisodeUserFull(data.meta.mid, data.meta.season_id);
+            const list = await getUserListFull(mode, data.meta.userId, data.meta.seasonId);
             const firstEpisode = await getBilisoundMetadata({ id: list[0].bvid });
             setPlaylistDetail(
                 list.map(e => ({
@@ -127,12 +134,12 @@ function Header({ data }: HeaderProps) {
 }
 
 export default function Page() {
-    const { userId, episodeId } = useLocalSearchParams<{ userId?: string; episodeId?: string }>();
+    const { userId, listId, mode } = useLocalSearchParams<{ userId: string; listId: string; mode: UserListMode }>();
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
         initialPageParam: 1,
-        queryKey: [`getEpisodeUser_${userId}_${episodeId}`],
-        queryFn: ({ pageParam = 1 }) => getEpisodeUser(userId!, episodeId!, pageParam),
+        queryKey: [`getEpisodeUser_${mode}_${userId}_${listId}`],
+        queryFn: ({ pageParam = 1 }) => getUserList(mode!, userId!, listId!, pageParam),
         getNextPageParam: lastPage => {
             if (lastPage.pageNum < Math.ceil(lastPage.total / lastPage.pageSize)) {
                 return lastPage.pageNum + 1;
@@ -212,7 +219,7 @@ export default function Page() {
                     keyExtractor={item => item.bvid}
                     onEndReached={loadMore}
                     onEndReachedThreshold={0.5}
-                    ListHeaderComponent={data?.pages[0] ? <Header data={data.pages[0]} /> : null}
+                    ListHeaderComponent={data?.pages[0] ? <Header data={data.pages[0]} mode={mode!} /> : null}
                     ListFooterComponent={isFetchingNextPage ? <ActivityIndicator /> : null}
                     estimatedItemSize={100}
                 />

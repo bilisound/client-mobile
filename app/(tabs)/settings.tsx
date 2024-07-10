@@ -89,7 +89,7 @@ const Settings: React.FC = () => {
                 <>
                     <SettingMenuItem
                         icon={BugIcon}
-                        title="[useDownloadStore] clearDownloadItem"
+                        title="清空下载队列"
                         subTitle="……"
                         onPress={async () => {
                             useDownloadStore.getState().clearDownloadItem();
@@ -97,11 +97,18 @@ const Settings: React.FC = () => {
                     />
                     <SettingMenuItem
                         icon={BugIcon}
-                        title="getUserSeason"
+                        title="测试用户 season"
                         subTitle="……"
                         onPress={async () => {
-                            // console.log(JSON.stringify(await getUserSeason(1741301, 905374), null, 4));
-                            router.push("/episode/user?userId=1741301&episodeId=905374");
+                            router.push("/episode/user?mode=episode&userId=1741301&listId=905374");
+                        }}
+                    />
+                    <SettingMenuItem
+                        icon={BugIcon}
+                        title="测试用户 series"
+                        subTitle="……"
+                        onPress={async () => {
+                            router.push("/episode/user?mode=series&userId=701522855&listId=747414");
                         }}
                     />
                 </>

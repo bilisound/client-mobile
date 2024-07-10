@@ -20,6 +20,7 @@ export interface GetVideoFestivalResponse {
 
 // const defaultExpirationTime = 1;
 const defaultExpirationTime = 60 * 60 * 1000;
+// todo 铲掉这玩意，统一使用 promise-memoize
 const videoMap = new ExpiringMap<string, GetVideoResponse>(defaultExpirationTime);
 
 export interface GetVideoOptions {

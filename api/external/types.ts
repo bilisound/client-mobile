@@ -690,6 +690,62 @@ export type UserSeasonInfo = {
     };
 };
 
+export type UserSeriesInfo = {
+    code: number;
+    message: string;
+    ttl: number;
+    data: {
+        aids: number[];
+        page: {
+            num: number;
+            size: number;
+            total: number;
+        };
+        archives: {
+            aid: number;
+            title: string;
+            pubdate: number;
+            ctime: number;
+            state: number;
+            pic: string;
+            duration: number;
+            stat: {
+                view: number;
+            };
+            bvid: string;
+            ugc_pay: number;
+            interactive_video: boolean;
+            enable_vt: number;
+            vt_display: string;
+            playback_position: number;
+        }[];
+    };
+};
+
+export type UserSeriesMetadata = {
+    code: number;
+    message: string;
+    ttl: number;
+    data: {
+        meta: {
+            series_id: number;
+            mid: number;
+            name: string;
+            description: string;
+            keywords: string[];
+            creator: string;
+            state: number;
+            last_update_ts: number;
+            total: number;
+            ctime: number;
+            mtime: number;
+            raw_keywords: string;
+            category: number;
+        };
+        recent_aids: number[];
+    };
+};
+
 export type UserInfo = {
     code: number;
     message: string;
