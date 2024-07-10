@@ -1,5 +1,16 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Box, Button, ButtonText, Pressable, Text } from "@gluestack-ui/themed";
+import {
+    Box,
+    Button,
+    ButtonText,
+    Pressable,
+    Text,
+    Toast,
+    ToastDescription,
+    ToastTitle,
+    useToast,
+    VStack,
+} from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
@@ -7,9 +18,10 @@ import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
-import { getEpisodeUser, getEpisodeUserFull, GetEpisodeUserResponse, getUser } from "~/api/bilisound";
+import { getBilisoundMetadata, getEpisodeUser, getEpisodeUserFull, GetEpisodeUserResponse } from "~/api/bilisound";
 import CommonLayout from "~/components/CommonLayout";
 import { COMMON_TOUCH_COLOR } from "~/constants/style";
+import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import useAddPlaylistStore from "~/store/addPlaylist";
 import { formatSecond } from "~/utils/misc";
 
@@ -18,6 +30,8 @@ interface HeaderProps {
 }
 
 function Header({ data }: HeaderProps) {
+    const containerStyle = useToastContainerStyle();
+    const toast = useToast();
     const [loading, setLoading] = useState(false);
 
     // 添加歌单
@@ -28,22 +42,37 @@ function Header({ data }: HeaderProps) {
 
     async function handleCreatePlaylist() {
         setLoading(true);
-        const list = await getEpisodeUserFull(data.meta.mid, data.meta.season_id);
-        const user = await getUser(data.meta.mid);
-        console.log(JSON.stringify({ list, user }, null, 2));
-        setLoading(false);
-        setPlaylistDetail(
-            list.map(e => ({
-                author: user.name,
-                bvid: e.bvid ?? "",
-                duration: e.duration,
-                episode: 1,
-                title: e.title,
-                imgUrl: e.cover ?? "",
-            })),
-        );
-        setName(data.meta.name);
-        router.push(`/apply-playlist`);
+        try {
+            const list = await getEpisodeUserFull(data.meta.mid, data.meta.season_id);
+            const firstEpisode = await getBilisoundMetadata({ id: list[0].bvid });
+            setPlaylistDetail(
+                list.map(e => ({
+                    author: firstEpisode.data.owner.name,
+                    bvid: e.bvid ?? "",
+                    duration: e.duration,
+                    episode: 1,
+                    title: e.title,
+                    imgUrl: e.cover ?? "",
+                })),
+            );
+            setName(data.meta.name);
+            router.push(`/apply-playlist`);
+        } catch (e) {
+            toast.show({
+                placement: "top",
+                containerStyle,
+                render: ({ id }) => (
+                    <Toast nativeID={`toast-${id}`} action="success" variant="accent">
+                        <VStack space="xs">
+                            <ToastTitle>歌单创建操作失败</ToastTitle>
+                            <ToastDescription>{(e as Error)?.message || `${e}`}</ToastDescription>
+                        </VStack>
+                    </Toast>
+                ),
+            });
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
