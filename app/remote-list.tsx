@@ -98,7 +98,6 @@ function Header({ data, mode }: HeaderProps) {
                     fontSize: 18,
                     fontWeight: "bold",
                     marginTop: 16,
-                    marginBottom: 16,
                     lineHeight: 24,
                 }}
                 selectable
@@ -106,9 +105,11 @@ function Header({ data, mode }: HeaderProps) {
                 {data.meta.name}
             </Text>
             {/* 简介 */}
-            <Text fontSize={15} lineHeight={15 * 1.5}>
-                {data.meta.description}
-            </Text>
+            {data.meta.description && (
+                <Text fontSize={15} lineHeight={15 * 1.5} marginTop={16}>
+                    {data.meta.description}
+                </Text>
+            )}
             {/* 操作 */}
             <Box flexDirection="row">
                 <Button

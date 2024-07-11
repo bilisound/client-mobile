@@ -34,6 +34,29 @@ const TabIndexScreen: React.FC = () => {
         Poppins_700Bold,
     });
 
+    async function handleSubmitEditing() {
+        log.info("用户执行查询操作");
+        log.debug(`查询关键词: ${value}`);
+        try {
+            const parseResult = await resolveVideo(value);
+            log.debug(`关键词解析结果: ${parseResult}`);
+            setInputError(false);
+            if (typeof parseResult === "string") {
+                router.push(`/query/${parseResult}`);
+            } else if (parseResult.type === "userList") {
+                router.push(
+                    `/remote-list?mode=${parseResult.mode}&userId=${parseResult.userId}&listId=${parseResult.listId}`,
+                );
+            } else {
+                setInputError(true);
+                log.info(`不是有效的输入，因此不响应用户提交。`);
+            }
+        } catch (error) {
+            setInputError(true);
+            log.info(`无法执行搜索操作，因此不响应用户提交。原因：${error}`);
+        }
+    }
+
     return (
         <Box
             sx={{
@@ -96,19 +119,7 @@ const TabIndexScreen: React.FC = () => {
                                 setInputError(false);
                                 setValue(nextValue);
                             }}
-                            onSubmitEditing={async e => {
-                                log.info("用户执行查询操作");
-                                log.debug(`查询关键词: ${value}`);
-                                try {
-                                    const parseResult = await resolveVideo(value);
-                                    log.debug(`关键词解析结果: ${parseResult}`);
-                                    setInputError(false);
-                                    router.push(`/query/${parseResult}`);
-                                } catch (error) {
-                                    setInputError(true);
-                                    log.info(`无法执行搜索操作，因此不响应用户提交。原因：${error}`);
-                                }
-                            }}
+                            onSubmitEditing={handleSubmitEditing}
                         />
                     </Input>
                     <FormControlError>

@@ -1,5 +1,5 @@
-import { Entypo, MaterialIcons } from "@expo/vector-icons";
-import { Pressable, Text, Box, ButtonText, Button } from "@gluestack-ui/themed";
+import { Entypo, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Pressable, Text, Box, ButtonText, Button, ButtonIcon } from "@gluestack-ui/themed";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -7,12 +7,13 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { useWindowDimensions } from "react-native";
 
-import { GetBilisoundMetadataResponse } from "../api/bilisound";
-import { SCREEN_BREAKPOINTS } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
 import useAddPlaylistStore from "../store/addPlaylist";
-import { formatDate } from "../utils/misc";
-import { convertToHTTPS } from "../utils/string";
+
+import { GetBilisoundMetadataResponse } from "~/api/bilisound";
+import { SCREEN_BREAKPOINTS } from "~/constants/style";
+import { formatDate } from "~/utils/misc";
+import { convertToHTTPS } from "~/utils/string";
 
 const detailMaxHeight = 192;
 
@@ -210,7 +211,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                 {showMore ? showMoreEl : showMoreElHidden}
 
                 {/* 操作 */}
-                <Box flexDirection="row">
+                <Box flexDirection="row" gap={8}>
                     <Button
                         mt="$5"
                         rounded="$full"
@@ -224,6 +225,25 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                         <MaterialIcons name="add" size={22} color="white" />
                         <ButtonText fontSize="$sm"> 创建歌单</ButtonText>
                     </Button>
+                    {meta.seasonId ? (
+                        <Button
+                            mt="$5"
+                            rounded="$full"
+                            size="md"
+                            variant="outline"
+                            action="primary"
+                            isDisabled={false}
+                            isFocusVisible={false}
+                            onPress={() => {
+                                router.push(
+                                    `/remote-list?mode=episode&userId=${meta.owner.mid}&listId=${meta.seasonId}`,
+                                );
+                            }}
+                        >
+                            <ButtonIcon as={MaterialCommunityIcons} name="playlist-music" />
+                            <ButtonText fontSize="$sm"> 查看所属合集</ButtonText>
+                        </Button>
+                    ) : null}
                 </Box>
             </Box>
         </Box>

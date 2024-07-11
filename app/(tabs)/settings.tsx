@@ -100,7 +100,7 @@ const Settings: React.FC = () => {
                         title="测试用户 season"
                         subTitle="……"
                         onPress={async () => {
-                            router.push("/episode/user?mode=episode&userId=1741301&listId=905374");
+                            router.push("/remote-list?mode=episode&userId=1741301&listId=905374");
                         }}
                     />
                     <SettingMenuItem
@@ -108,7 +108,7 @@ const Settings: React.FC = () => {
                         title="测试用户 series"
                         subTitle="……"
                         onPress={async () => {
-                            router.push("/episode/user?mode=series&userId=701522855&listId=747414");
+                            router.push("/remote-list?mode=series&userId=701522855&listId=747414");
                         }}
                     />
                 </>

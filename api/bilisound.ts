@@ -3,8 +3,12 @@ import { getVideo } from "./external/direct";
 import log from "../utils/logger";
 
 import { getUserInfo, getUserSeason, getUserSeries, getUserSeriesMeta } from "~/api/external/json";
-import { UserSeasonInfo } from "~/api/external/types";
-import { BILIBILI_GOOD_CDN_REGEX, BILIBILI_VIDEO_URL_PREFIX, USER_AGENT_BILISOUND } from "~/constants/network";
+import {
+    BILIBILI_GOOD_CDN_REGEX,
+    BILIBILI_VIDEO_URL_PREFIX,
+    USER_AGENT_BILIBILI,
+    USER_AGENT_BILISOUND,
+} from "~/constants/network";
 import { PlaylistDetailRow } from "~/storage/playlist";
 import { Numberish } from "~/typings/common";
 
@@ -25,6 +29,7 @@ export type GetBilisoundMetadataResponse = {
         part: string;
         duration: number;
     }[];
+    seasonId?: number;
 };
 
 function filterHostname(list: string[]) {
@@ -43,10 +48,14 @@ function filterHostname(list: string[]) {
  * 解析短链接
  */
 export async function parseB23(id: string) {
-    // 注意：解析重定向结果的方案在 React Native 不可用
+    // 注意：直接指定 fetch 的重定向模式为 manual 的方案在 React Native 不可用
     // 详见 https://reactnative.dev/docs/network#known-issues-with-fetch-and-cookie-based-authentication
-    const res = await getVideo({ url: `https://b23.tv/${id}` });
-    return res.type === "regular" ? res.initialState.bvid : res.initialState.videoInfo.bvid;
+    const res = await fetch(`https://b23.tv/${id}`, {
+        headers: {
+            "User-Agent": USER_AGENT_BILIBILI,
+        },
+    });
+    return res.url;
 }
 
 /**
@@ -88,6 +97,7 @@ export async function getBilisoundMetadata(data: { id: string }) {
                     desc: (videoData?.desc_v2 ?? []).map(e => e.raw_text).join("\n"),
                     pubDate: videoData.pubdate * 1000,
                     pages: pages.map(({ page, part, duration }) => ({ page, part, duration })),
+                    seasonId: videoData.season_id,
                 },
                 msg: "",
             });
