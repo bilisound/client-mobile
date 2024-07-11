@@ -222,7 +222,11 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                         isFocusVisible={false}
                         onPress={handleCreatePlaylist}
                     >
-                        <MaterialIcons name="add" size={22} color="white" />
+                        <ButtonIcon
+                            as={MaterialIcons}
+                            // @ts-ignore
+                            name="add"
+                        />
                         <ButtonText fontSize="$sm"> 创建歌单</ButtonText>
                     </Button>
                     {meta.seasonId ? (
@@ -240,7 +244,11 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                                 );
                             }}
                         >
-                            <ButtonIcon as={MaterialCommunityIcons} name="playlist-music" />
+                            <ButtonIcon
+                                as={MaterialCommunityIcons}
+                                // @ts-ignore
+                                name="playlist-music"
+                            />
                             <ButtonText fontSize="$sm"> 查看所属合集</ButtonText>
                         </Button>
                     ) : null}
