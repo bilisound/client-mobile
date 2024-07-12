@@ -254,9 +254,6 @@ importers:
       react-native:
         specifier: 0.74.3
         version: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0)
-      react-native-drop-shadow:
-        specifier: ^1.0.0
-        version: 1.0.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react-native-fast-shadow:
         specifier: ^0.1.0
         version: 0.1.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -5814,12 +5811,6 @@ packages:
 
   react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
-
-  react-native-drop-shadow@1.0.0:
-    resolution: {integrity: sha512-om6oMDDn90ClFa+tEGMsFcACKlea5TO4jYur8PJKRpzfz+SnDIJlddhzp2kbOLpRTe7lleq6Md5QqC3u7RfOow==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
 
   react-native-fast-shadow@0.1.0:
     resolution: {integrity: sha512-Hh4BVHleioNMppnHNiwyZplEJLfOtEr7PcbUAla9x9gjaIsX26PkDRRBjQ4S8mdpRMmrHeGmmseL9wj+obA5uw==}
@@ -14411,11 +14402,6 @@ snapshots:
   react-is@17.0.2: {}
 
   react-is@18.2.0: {}
-
-  react-native-drop-shadow@1.0.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0):
-    dependencies:
-      react: 18.2.0
-      react-native: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0)
 
   react-native-fast-shadow@0.1.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0):
     dependencies:
