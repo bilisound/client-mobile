@@ -1,8 +1,9 @@
 import { router } from "expo-router";
 
-import { resolveVideo } from "./format";
-import { getTransferList } from "../api/bilisound";
-import useAddPlaylistStore from "../store/addPlaylist";
+import { resolveVideoAndJump } from "./format";
+
+import { getTransferList } from "~/api/bilisound";
+import useAddPlaylistStore from "~/store/addPlaylist";
 
 export async function handleQrCode(input: string) {
     switch (true) {
@@ -19,8 +20,7 @@ export async function handleQrCode(input: string) {
             return "";
         }
         default: {
-            const result = await resolveVideo(input);
-            router.replace(`/query/${result}`);
+            await resolveVideoAndJump(input);
             return "";
         }
     }

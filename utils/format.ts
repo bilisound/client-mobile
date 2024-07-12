@@ -1,7 +1,10 @@
+import { router } from "expo-router";
 import sanitize from "sanitize-filename";
 
 import { bv2av } from "./vendors/av-bv";
 import { parseB23 } from "../api/bilisound";
+
+import log from "~/utils/logger";
 
 export const B23_REGEX = /https?:\/\/b23\.tv\/([a-zA-Z0-9]+)/;
 export const USER_LIST_URL_REGEX = /^\/(\d+)\/channel\/(seriesdetail|collectiondetail)$/;
@@ -99,4 +102,16 @@ export function getFileName(options: GetFileNameOptions) {
     const ext = options.ext ?? "m4a";
     const fileName = `[${av ? bv2av(id) : id}] [P${episode}] ${title.replaceAll("/", "∕")}.${ext}`;
     return sanitize(fileName);
+}
+
+export async function resolveVideoAndJump(value: string) {
+    const parseResult = await resolveVideo(value);
+    log.debug(`关键词解析结果: ${parseResult}`);
+    if (typeof parseResult === "string") {
+        router.push(`/query/${parseResult}`);
+    } else if (parseResult.type === "userList") {
+        router.push(`/remote-list?mode=${parseResult.mode}&userId=${parseResult.userId}&listId=${parseResult.listId}`);
+    } else {
+        throw new Error("不是有效的输入，无法进行下一步操作");
+    }
 }

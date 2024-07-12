@@ -20,7 +20,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { COMMON_FRAME_BUTTON_STYLE } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
-import { resolveVideo } from "~/utils/format";
+import { resolveVideo, resolveVideoAndJump } from "~/utils/format";
 import log from "~/utils/logger";
 
 const TabIndexScreen: React.FC = () => {
@@ -38,19 +38,8 @@ const TabIndexScreen: React.FC = () => {
         log.info("用户执行查询操作");
         log.debug(`查询关键词: ${value}`);
         try {
-            const parseResult = await resolveVideo(value);
-            log.debug(`关键词解析结果: ${parseResult}`);
             setInputError(false);
-            if (typeof parseResult === "string") {
-                router.push(`/query/${parseResult}`);
-            } else if (parseResult.type === "userList") {
-                router.push(
-                    `/remote-list?mode=${parseResult.mode}&userId=${parseResult.userId}&listId=${parseResult.listId}`,
-                );
-            } else {
-                setInputError(true);
-                log.info(`不是有效的输入，因此不响应用户提交。`);
-            }
+            await resolveVideoAndJump(value);
         } catch (error) {
             setInputError(true);
             log.info(`无法执行搜索操作，因此不响应用户提交。原因：${error}`);
