@@ -35,102 +35,12 @@ importers:
       '@gluestack-style/react':
         specifier: 1.0.57
         version: 1.0.57
-      '@gluestack-ui/accordion':
-        specifier: 1.0.1
-        version: 1.0.1(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/actionsheet':
-        specifier: 0.2.37
-        version: 0.2.37(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/alert':
-        specifier: 0.1.12
-        version: 0.1.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/alert-dialog':
-        specifier: 0.1.25
-        version: 0.1.25(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/avatar':
-        specifier: 0.1.15
-        version: 0.1.15(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/button':
-        specifier: 1.0.1
-        version: 1.0.1(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/checkbox':
-        specifier: 0.1.24
-        version: 0.1.24(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@gluestack-ui/config':
         specifier: ^1.1.19
         version: 1.1.19(@gluestack-style/react@1.0.57)(@gluestack-ui/themed@1.1.34(@gluestack-style/react@1.0.57)(@types/react-native@0.73.0(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-dom@18.2.0(react@18.2.0))(react-native-svg@15.2.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-web@0.19.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))
-      '@gluestack-ui/divider':
-        specifier: 0.1.8
-        version: 0.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/fab':
-        specifier: 0.1.18
-        version: 0.1.18(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/form-control':
-        specifier: 0.1.16
-        version: 0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/icon':
-        specifier: 0.1.20
-        version: 0.1.20(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/image':
-        specifier: 0.1.7
-        version: 0.1.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/input':
-        specifier: 0.1.24
-        version: 0.1.24(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/link':
-        specifier: 0.1.17
-        version: 0.1.17(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/menu':
-        specifier: 0.2.30
-        version: 0.2.30(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/modal':
-        specifier: 0.1.29
-        version: 0.1.29(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/overlay':
-        specifier: 0.1.12
-        version: 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/popover':
-        specifier: 0.1.32
-        version: 0.1.32(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/pressable':
-        specifier: 0.1.14
-        version: 0.1.14(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/progress':
-        specifier: 0.1.13
-        version: 0.1.13(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/provider':
-        specifier: 0.1.10
-        version: 0.1.10(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/radio':
-        specifier: 0.1.25
-        version: 0.1.25(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/select':
-        specifier: 0.1.24
-        version: 0.1.24(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/slider':
-        specifier: 0.1.21
-        version: 0.1.21(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/spinner':
-        specifier: 0.1.14
-        version: 0.1.14(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/switch':
-        specifier: 0.1.19
-        version: 0.1.19(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/tabs':
-        specifier: 0.1.14
-        version: 0.1.14(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/textarea':
-        specifier: 0.1.20
-        version: 0.1.20(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@gluestack-ui/themed':
         specifier: ^1.1.34
         version: 1.1.34(@gluestack-style/react@1.0.57)(@types/react-native@0.73.0(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-dom@18.2.0(react@18.2.0))(react-native-svg@15.2.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-web@0.19.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/toast':
-        specifier: 1.0.4
-        version: 1.0.4(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/tooltip':
-        specifier: 0.1.26
-        version: 0.1.26(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@gorhom/bottom-sheet':
         specifier: ^4.6.3
         version: 4.6.3(@types/react-native@0.73.0(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(@types/react@18.2.79)(react-native-gesture-handler@2.16.2(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -202,7 +112,7 @@ importers:
         version: 3.0.7(expo@51.0.18(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
       expo-router:
         specifier: ~3.5.17
-        version: 3.5.17(expo-constants@16.0.2(expo@51.0.18(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))))(expo-linking@6.3.1(expo@51.0.18(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))))(expo-modules-autolinking@1.11.1)(expo-status-bar@1.12.1)(expo@51.0.18(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.3.3)
+        version: 3.5.17(zqseqlgh4uaswseim7ruksyyly)
       expo-sharing:
         specifier: ~12.0.1
         version: 12.0.1(expo@51.0.18(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
@@ -1386,20 +1296,8 @@ packages:
   '@gluestack-style/react@1.0.57':
     resolution: {integrity: sha512-jaG78zurLNiZyJleZnCbgugTpL6OWtBkE7XKur9C9FYUicekMh11RY++2gyN4T7GJx80v5S/NHIwm/GxAAxtRw==}
 
-  '@gluestack-ui/accordion@1.0.1':
-    resolution: {integrity: sha512-CLrsR4jbC3nUJifwtpiWnngi1KIeiaXCQ+D9Pm5F0wSyDTQA8e3EFSAdqAEcz/CVE8OItIiFaIDt288Un/ZQJw==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/accordion@1.0.5':
     resolution: {integrity: sha512-27AhHZnIsJLKhriG2US10QSlpcld00NGpNA1UGM6YwUE8RTevgw6uk0hIOObA4wYgO9x2fp4jo6crr83sEzrkg==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/actionsheet@0.2.37':
-    resolution: {integrity: sha512-3X7KaIMyGCImQmz7MNQyOY7Or87NRYDjos7KF76Gla8jqapTfheB+5UNtLm6PbexjV/8B3Y8lFZhyk4+qmxvzA==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -1410,20 +1308,8 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/alert-dialog@0.1.25':
-    resolution: {integrity: sha512-q7bQmxCnQK4OvHqrVizNOhWh6Pdw63PVmnZ6DeUA6EQn4Jmzqw3WcWEAOWgKRXjilU2frWZIGPebFx5AeNzOSw==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/alert-dialog@0.1.30':
     resolution: {integrity: sha512-fTcoKlZnSGiobh18xJ0RdCaX3WgybeSu5A3X62yqTtUEVodxLMC5S/ZZmZ9SZhzAnRqi4Hpu5hQxiEK40Au86Q==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/alert@0.1.12':
-    resolution: {integrity: sha512-oiJfxryKh7+WKKx9PjIX088wgIQTXD9llC52h5HiK1dPUJiswjgGKbFHZbX7uoh9VMiXthBoUvzOIVMv0i5feA==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -1434,32 +1320,14 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/avatar@0.1.15':
-    resolution: {integrity: sha512-ohbgt4FVQ3yzdZrUsEx39LSxyLUqVoj1FIapENNqmCkXqk+wwDwcyEhALInu7JOsuzPAXpUuv4b478XNsYUCTg==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/avatar@0.1.17':
     resolution: {integrity: sha512-L7R3GVjYK6o+tdCiCDZXvHjPi1FKwt9XAFHGlEsQ4dX6Qe7yWEi3K+e5UBpS1ugvja7SmNS+YZwvr+nnVcmohQ==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/button@1.0.1':
-    resolution: {integrity: sha512-49jqhA2GIK55OGQOIFVD4P4cz+UJ/IzeBfQTmYUrbEvgJMoa8UOdWiA7FPSOJVs6b6cF6HqziLsZTycvpnlnNg==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/button@1.0.6':
     resolution: {integrity: sha512-e94C25nvYX1YKiwnM8mKjAXWJf9wsptuzaE14s8azDPqwV8L/ro9Fr/mcJQ7kiQmFPlIViT3cg3zKmMowuX4cw==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/checkbox@0.1.24':
-    resolution: {integrity: sha512-r1W3M6IO86YkrwTUv0bWxquM+Rpmjw0BDWehH7YMDPnyuoU5UBjGRAg8VfE3RdjIsPfLVoeUztWCLqqu6TMlmg==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -1476,32 +1344,14 @@ packages:
       '@gluestack-style/react': '>=1.0.56'
       '@gluestack-ui/themed': '>=1.1.33'
 
-  '@gluestack-ui/divider@0.1.8':
-    resolution: {integrity: sha512-l+OQ1XD5qI20ghxKbpi+pqntRtd0mtkmhfXYLODbjt2eec3U9kpV1xawXpfN/TFd45WWZTpEQ616sOQqFLo3RA==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/divider@0.1.9':
     resolution: {integrity: sha512-wuQDEfgZwBoxxd9AKTNKxUK5W7EZ1SiuYpEljm77yekV3vw86t6X1AIJ+zIjDaOFzlNcvWx9ZD8NRXtRkDFiHw==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/fab@0.1.18':
-    resolution: {integrity: sha512-uOBTRk7C/N27WyprLtmADPL+8XF31TDEF9S/z/HM2OE2SujuoMG477MNrgrm40SAvad7jePDNv4QRcqVuGxnkA==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/fab@0.1.21':
     resolution: {integrity: sha512-hQ7YZEoGOcujLHTx08dAGmcNMFn6tOBqScdaJpPc6NW+VIPOLD0sVS2zjZBUcqB2a63vIOm1wCzs9yw+IxBilQ==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/form-control@0.1.16':
-    resolution: {integrity: sha512-Yc1PaF8BElKcDUA580pdC8++4spGc36yykJblieFlkA5Hvwp5VbAB8LOI6y0KEFLChQHMXKXueUdcTvYqENDJw==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -1518,12 +1368,6 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/icon@0.1.20':
-    resolution: {integrity: sha512-f/+DGR3139LU9NbMMvoumZWIwqy4B4e+xc02kAAubiv7p7aqGDV5KPm2JN5vVmCwiDRxX5u0F3SxodSQhEoQZA==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/icon@0.1.22':
     resolution: {integrity: sha512-6E8N0OEEike0p6ITRJoEYpRlHqjRAabekEVSOk/HM/v+MJONT613TlQari5ozBHcaNLn/JhJqRxNHxNrzxd+ZQ==}
     peerDependencies:
@@ -1536,26 +1380,8 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/image@0.1.7':
-    resolution: {integrity: sha512-ITfDX7gyxab+w0EMmJdITgG7EB2oF/3MfYgsFBV//VmIlu3OJg2xvnwvYzq3kNdGqr5Nt/5ZEG2ime7Kx2Wmxw==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/input@0.1.24':
-    resolution: {integrity: sha512-5G/XzLzWX7d2XFqLGqN9VHUO/65JoX8kghXBrQA1V0W10NM0abAqiuz4D6mZJjWAJc57me1ob04pG1WsmELbvA==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/input@0.1.31':
     resolution: {integrity: sha512-qunHYjHbuzafJhFaUHzDT28pjC7AgTUJ0jH//w53MLXmTCBDh7kEgqLt1Fxfh3/F7AAN2rLquiOOqdX14H6TOQ==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/link@0.1.17':
-    resolution: {integrity: sha512-Lzolq6LNz401qOpetMpoK2Rc/enpHucwgZtMRX4SnP9DV6vOsCAAIyBrLsCkCxN5JicdteVpPyZpoljExkACLQ==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -1566,20 +1392,8 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/menu@0.2.30':
-    resolution: {integrity: sha512-DxKnVPLinzfCLUftG3ek0yx+8FP5oF1QPDtd62YhmrL/4ybUTMQtDDsg8GIjrjL+kgUHvt0bofsQfwD897lmLg==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/menu@0.2.34':
     resolution: {integrity: sha512-qF9txkd0KCkuiIyk4KheqjIm77l7AJbSpb0NBZYrAAV406XC9Uj8z4x8xiKCMxgL+kFBs+ZDkJjMTMCc4UKJLQ==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/modal@0.1.29':
-    resolution: {integrity: sha512-zPkdvUyuvWmolVtmCpgCCzLOcBuR7Xur6ugQflv4JQVN6l/NSfcBfh9mXBAUAuK2h6leo02abrURFjneXfBP+Q==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -1602,32 +1416,14 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/popover@0.1.32':
-    resolution: {integrity: sha512-oXQMQfoARmVRjiqA2wbskfpv8FXRVBWw0MbApXcYHZGQoN1QkxM/ufqqCQdAhAM1xrI4SfrK4p9gr/hWQEVwoA==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/popover@0.1.36':
     resolution: {integrity: sha512-t+xk+NkrrnOC4yqTUXXdP8a7xsoT28xgYxRWZ0tjakRkZEVx70bP7wQt4hoSqSRpnNZNNa6SLfkhnuUHuB305Q==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/pressable@0.1.14':
-    resolution: {integrity: sha512-SaGpalVO//RLpFFGibYBr+54tzcB8nUby4qBNvL2KGx+9HyMrMJFf75ov2aTqpXDrhEmtc8W4oRHd3fldvJIgw==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/pressable@0.1.16':
     resolution: {integrity: sha512-SGUqCCZyMgRtlDN5mO7CN0NM+NMG9S2M3BdhdjI48Jnaks1DdWxzZeaD5xlEhg+Ww/KtmGzVrlSKqPDvVyROiA==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/progress@0.1.13':
-    resolution: {integrity: sha512-M05p5UfMaBpY2pqAw5AY/rItF3Qh5mSXoJkxUQRNYbJ2UwFpvFLDXgIBpy2p6eDgOGeo7aWmsktifLztm+4uFQ==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -1650,12 +1446,6 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/radio@0.1.25':
-    resolution: {integrity: sha512-Rl/5SW6bpT0n8P38G9IWp4/T5E1Ss8+Xct9jbXOsQyowJcH5Vh4P5pZ5eLh7qC9oLMJKwQMXKc921jUNCpcPXw==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/radio@0.1.31':
     resolution: {integrity: sha512-0sX51NL5NQ3COPXiUZjq9BW5FVWiZnSGPpGH3Ix1oEBOiQkohd9z6lj1y75kQBjRyMK+Eg9Eub9jpfkojDsPYA==}
     peerDependencies:
@@ -1668,20 +1458,8 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/select@0.1.24':
-    resolution: {integrity: sha512-iCDH0aoGYz2ymVbn0nnjynyQ1L+mV0YFOUc16gS+DTgfjSrXdjTSYwC0vI3fAoG+Sq30il08A+Y2vuYQHTflZg==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/select@0.1.27':
     resolution: {integrity: sha512-1NSG4FSTtqfn51Dvdn8QezxPD797XcnRjX0ZfF1KEjDXIoEBvB4H3EQBxtJX6SN1Sj5mTeHpaEEXI/TMFG6yCw==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/slider@0.1.21':
-    resolution: {integrity: sha512-OZlMgzLnQllXylwpAzz99Bm4XLp9IQH3R+jE3nANIPLNV9DnJUGckCIbXnoarTqUk+F+8Q0xFVb9bSLF9ujAUQ==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -1698,32 +1476,14 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/switch@0.1.19':
-    resolution: {integrity: sha512-abfFqpvQOF+ZYS516FGtiabxbxYE8edMRL1uFJ3LTCCU6cQ0xikAxajAZmc9mp8AWHmNHsAmuKPxjNLY3dTSsQ==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/switch@0.1.22':
     resolution: {integrity: sha512-R5gVyKh7O5vGUvao8VWI1ZAnVhlt2TFYpoiSILydbWLnYydqNa8EQujnXAH4RvjTS6/CVu/sH7sK03uKMmPdvA==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
 
-  '@gluestack-ui/tabs@0.1.14':
-    resolution: {integrity: sha512-QIAf+ACVFIBm5khxMPNwo4hGtr+uOdc18ygeyHmCOQaCBAhQN9zyscDg5PjBDNasHk7I9WJf5sVr2A4ZzRXybg==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/tabs@0.1.16':
     resolution: {integrity: sha512-voSV4J+Ec5u9oq0cCDvgrISrVf4ObYZpbyRDJvS3L/StJYk5lM5sEfLuI3w7stlyvit9pkwi4aQKKX0BN5wBuw==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/textarea@0.1.20':
-    resolution: {integrity: sha512-BkpOwyGT2I12elofVzEs4YbFAxPc41CqUpNc6wNEyovLjPs6BuVzZ7b0U/0xf8C72kj3h5s02GWrkHHVd+Lztw==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -1745,20 +1505,8 @@ packages:
       react-native-svg: '>=13.4.0'
       react-native-web: '>=0.19'
 
-  '@gluestack-ui/toast@1.0.4':
-    resolution: {integrity: sha512-GVEESsSl567OR/0JlVTuivK6G1EgfEC7N+CAuH6lx+s87qXcOMXeFAgltp6Mxl8g0g5hTPLWrDts2qQLzqwFOA==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
   '@gluestack-ui/toast@1.0.5':
     resolution: {integrity: sha512-jsYgKQkAJFlf9I/9St9XXhhvSCpX2ZvbLfvSzTQpw1hplt1iHeNGSxHkCuxB+0bBJc16wpzoC0mRUfK3t/cqdw==}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-
-  '@gluestack-ui/tooltip@0.1.26':
-    resolution: {integrity: sha512-3QHLV4T3Thfo7pkjmZzS051jf4pVguiR28kpCoj7/vsBxnFo3jT6VNv7cVUy9rVvB2lh1EKZyb33THB0DmEeeg==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -2116,12 +1864,6 @@ packages:
       react: '*'
       react-native: '*'
 
-  '@react-native-aria/dialog@0.0.3':
-    resolution: {integrity: sha512-EXDS2IfB6n8LlelfMZjMntuHC7e6iRTWLxrYIyHm5d2gdmRVD37dris03Zsw/iMBhb/Z8ZYKQ/O5APioN6Uovg==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
-
   '@react-native-aria/dialog@0.0.4':
     resolution: {integrity: sha512-l974yT9Z8KTSfY0rjaDNx5PsuGw50jRsdrkez+eP0P8ENx2uKHDzPPZDLo5XS5aiChFWbLaZFXp8rU0TRVOMmg==}
     peerDependencies:
@@ -2136,12 +1878,6 @@ packages:
 
   '@react-native-aria/interactions@0.2.13':
     resolution: {integrity: sha512-Uzru5Pqq5pG46lg/pzXoku9Y9k1UvuwJB/HRLSwahdC6eyNJOOm4kmadR/iziL/BeTAi5rOZsPEd0IKcMdH3nA==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
-
-  '@react-native-aria/menu@0.2.10':
-    resolution: {integrity: sha512-oQeArGeN91zpmA4aXX2eNLQLOJBb1fm5YiFtcmZAVp1rC7yZp1ys/RWX4AHEHhOsd148+sZnQ8B0fxcxV/bOoQ==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -8486,35 +8222,10 @@ snapshots:
       inline-style-prefixer: 6.0.4
       normalize-css-color: 1.0.2
 
-  '@gluestack-ui/accordion@1.0.1(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/accordion': 0.0.2(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/accordion@1.0.5(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/accordion': 0.0.2(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/actionsheet@0.2.37(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/overlay': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/transitions': 0.1.10(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/dialog': 0.0.3(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react: 18.2.0
@@ -8536,19 +8247,6 @@ snapshots:
     transitivePeerDependencies:
       - react-native
 
-  '@gluestack-ui/alert-dialog@0.1.25(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/overlay': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/dialog': 0.0.3(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/alert-dialog@0.1.30(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -8562,37 +8260,14 @@ snapshots:
     transitivePeerDependencies:
       - react-native
 
-  '@gluestack-ui/alert@0.1.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
   '@gluestack-ui/alert@0.1.15(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@gluestack-ui/avatar@0.1.15(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/avatar@0.1.17(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/button@1.0.1(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
@@ -8603,21 +8278,6 @@ snapshots:
       '@gluestack-ui/utils': 0.1.13(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/checkbox@0.1.24(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/form-control': 0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-aria/visually-hidden': 3.8.10(react@18.2.0)
-      '@react-native-aria/checkbox': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/utils': 0.2.11(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-stately/checkbox': 3.6.3(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
@@ -8643,40 +8303,16 @@ snapshots:
       '@gluestack-style/react': 1.0.57
       '@gluestack-ui/themed': 1.1.34(@gluestack-style/react@1.0.57)(@types/react-native@0.73.0(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(nativewind@2.0.11(react@18.2.0)(tailwindcss@3.4.3))(react-dom@18.2.0(react@18.2.0))(react-native-svg@15.2.0(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-web@0.19.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
 
-  '@gluestack-ui/divider@0.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
   '@gluestack-ui/divider@0.1.9(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-
-  '@gluestack-ui/fab@0.1.18(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
 
   '@gluestack-ui/fab@0.1.21(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/form-control@0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
@@ -8695,16 +8331,6 @@ snapshots:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-
-  '@gluestack-ui/icon@0.1.20(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/provider': 0.1.10(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
 
   '@gluestack-ui/icon@0.1.22(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -8726,41 +8352,10 @@ snapshots:
     transitivePeerDependencies:
       - react-native
 
-  '@gluestack-ui/image@0.1.7(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/input@0.1.24(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/form-control': 0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/input@0.1.31(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/form-control': 0.1.18(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@gluestack-ui/utils': 0.1.13(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/link@0.1.17(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react: 18.2.0
@@ -8778,23 +8373,6 @@ snapshots:
     transitivePeerDependencies:
       - react-native
 
-  '@gluestack-ui/menu@0.2.30(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/overlay': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-aria/overlays': 3.21.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/menu': 0.2.10(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/overlays': 0.3.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-stately/utils': 3.9.1(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-stately: 3.30.1(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/menu@0.2.34(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -8809,20 +8387,6 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-stately: 3.30.1(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/modal@0.1.29(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/overlay': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/dialog': 0.0.3(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/overlays': 0.3.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
       - react-native
 
@@ -8860,20 +8424,6 @@ snapshots:
     transitivePeerDependencies:
       - react-native
 
-  '@gluestack-ui/popover@0.1.32(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/overlay': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/dialog': 0.0.3(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/overlays': 0.3.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/popover@0.1.36(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -8888,29 +8438,11 @@ snapshots:
     transitivePeerDependencies:
       - react-native
 
-  '@gluestack-ui/pressable@0.1.14(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/pressable@0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/progress@0.1.13(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
@@ -8944,20 +8476,6 @@ snapshots:
     transitivePeerDependencies:
       - react-native
 
-  '@gluestack-ui/radio@0.1.25(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/form-control': 0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-aria/visually-hidden': 3.8.10(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/radio': 0.2.10(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-stately/radio': 3.10.2(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/radio@0.1.31(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/form-control': 0.1.18(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -8980,37 +8498,12 @@ snapshots:
     transitivePeerDependencies:
       - react-native
 
-  '@gluestack-ui/select@0.1.24(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/form-control': 0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/select@0.1.27(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/form-control': 0.1.18(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/slider@0.1.21(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/form-control': 0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-aria/visually-hidden': 3.8.10(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/slider': 0.2.11(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-stately/slider': 3.5.2(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
@@ -9035,18 +8528,6 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@gluestack-ui/switch@0.1.19(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/form-control': 0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-stately/toggle': 3.7.2(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/switch@0.1.22(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/form-control': 0.1.18(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -9059,31 +8540,11 @@ snapshots:
     transitivePeerDependencies:
       - react-native
 
-  '@gluestack-ui/tabs@0.1.14(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/tabs@0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/textarea@0.1.20(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/form-control': 0.1.16(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
@@ -9145,18 +8606,6 @@ snapshots:
     transitivePeerDependencies:
       - nativewind
 
-  '@gluestack-ui/toast@1.0.4(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/overlay': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/transitions': 0.1.10(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
   '@gluestack-ui/toast@1.0.5(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -9164,19 +8613,6 @@ snapshots:
       '@gluestack-ui/transitions': 0.1.10(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - react-native
-
-  '@gluestack-ui/tooltip@0.1.26(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@gluestack-ui/hooks': 0.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/overlay': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@gluestack-ui/utils': 0.1.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/focus': 0.2.9(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/overlays': 0.3.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
@@ -9744,17 +9180,6 @@ snapshots:
       react: 18.2.0
       react-native: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0)
 
-  '@react-native-aria/dialog@0.0.3(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@react-aria/dialog': 3.5.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/utils': 0.2.11(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-types/dialog': 3.5.8(react@18.2.0)
-      '@react-types/shared': 3.22.1(react@18.2.0)
-      react: 18.2.0
-      react-native: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0)
-    transitivePeerDependencies:
-      - react-dom
-
   '@react-native-aria/dialog@0.0.4(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@react-aria/dialog': 3.5.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -9779,24 +9204,6 @@ snapshots:
       '@react-native-aria/utils': 0.2.11(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-native: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0)
-
-  '@react-native-aria/menu@0.2.10(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@react-aria/interactions': 3.21.1(react@18.2.0)
-      '@react-aria/menu': 3.13.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@react-aria/selection': 3.17.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@react-aria/utils': 3.23.2(react@18.2.0)
-      '@react-native-aria/interactions': 0.2.13(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/overlays': 0.3.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-native-aria/utils': 0.2.11(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      '@react-stately/collections': 3.10.5(react@18.2.0)
-      '@react-stately/menu': 3.6.1(react@18.2.0)
-      '@react-stately/tree': 3.7.6(react@18.2.0)
-      '@react-types/menu': 3.9.7(react@18.2.0)
-      react: 18.2.0
-      react-native: 0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0)
-    transitivePeerDependencies:
-      - react-dom
 
   '@react-native-aria/menu@0.2.12(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -12234,8 +11641,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ? expo-router@3.5.17(expo-constants@16.0.2(expo@51.0.18(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))))(expo-linking@6.3.1(expo@51.0.18(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))))(expo-modules-autolinking@1.11.1)(expo-status-bar@1.12.1)(expo@51.0.18(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-safe-area-context@4.10.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native-screens@3.31.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(typescript@5.3.3)
-  : dependencies:
+  expo-router@3.5.17(zqseqlgh4uaswseim7ruksyyly):
+    dependencies:
       '@expo/metro-runtime': 3.2.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))
       '@expo/server': 0.4.2(typescript@5.3.3)
       '@radix-ui/react-slot': 1.0.1(react@18.2.0)
