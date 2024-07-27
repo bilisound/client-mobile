@@ -7,9 +7,9 @@ import React, { useEffect, useRef } from "react";
 import { Alert, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import CommonLayout from "../components/CommonLayout";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "../constants/style";
-import useHistoryStore, { HistoryItem } from "../store/history";
+import CommonLayout from "~/components/CommonLayout";
+import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "~/constants/style";
+import useHistoryStore, { HistoryItem } from "~/store/history";
 
 const History: React.FC = () => {
     const edgeInsets = useSafeAreaInsets();

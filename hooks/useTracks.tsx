@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect } from "react";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 
-import log from "../utils/logger";
-import { saveTrackData } from "../utils/track-data";
+import log from "~/utils/logger";
+import { saveTrackData } from "~/utils/track-data";
+
 const useTracks = () => {
     const { data, refetch } = useQuery({
         queryKey: ["tracks"],

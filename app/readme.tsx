@@ -7,8 +7,7 @@ import { Linking, Platform, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 
-import CommonLayout from "../components/CommonLayout";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../constants/style";
+import CommonLayout from "~/components/CommonLayout";
 
 const indexHtml = require("../assets/web/index.html");
 

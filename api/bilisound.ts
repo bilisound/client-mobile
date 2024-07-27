@@ -1,6 +1,5 @@
 import { defineWrap } from "./common";
 import { getVideo } from "./external/direct";
-import log from "../utils/logger";
 
 import { getUserInfo, getUserSeason, getUserSeries, getUserSeriesMeta } from "~/api/external/json";
 import {
@@ -11,6 +10,7 @@ import {
 } from "~/constants/network";
 import { PlaylistDetailRow } from "~/storage/playlist";
 import { Numberish } from "~/typings/common";
+import log from "~/utils/logger";
 
 export type GetBilisoundMetadataResponse = {
     bvid: string;

@@ -3,8 +3,8 @@ import { Image } from "expo-image";
 import React from "react";
 import { Linking, ScrollView } from "react-native";
 
-import CommonLayout from "../components/CommonLayout";
-import { BILISOUND_OFFICIAL_WEBSITE } from "../constants/branding";
+import CommonLayout from "~/components/CommonLayout";
+import { BILISOUND_OFFICIAL_WEBSITE } from "~/constants/branding";
 
 const History: React.FC = () => (
     <CommonLayout title="关于" extendToBottom leftAccessories="backButton">

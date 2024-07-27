@@ -10,10 +10,10 @@ import RNFS from "react-native-fs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 
-import CommonLayout from "../components/CommonLayout";
-import { BILISOUND_LOG_PATH } from "../constants/file";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "../constants/style";
-import useCommonColors from "../hooks/useCommonColors";
+import CommonLayout from "~/components/CommonLayout";
+import { BILISOUND_LOG_PATH } from "~/constants/file";
+import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
 
 const webTemplate = (content: string) => `
 <!doctype html>
