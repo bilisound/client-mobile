@@ -5,12 +5,13 @@ import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
 
-import CommonLayout from "../components/CommonLayout";
-import PlaylistItem from "../components/PlaylistItem";
-import { COMMON_TOUCH_COLOR } from "../constants/style";
-import useToastContainerStyle from "../hooks/useToastContainerStyle";
-import { addToPlaylist, quickCreatePlaylist, syncPlaylistAmount, usePlaylistStorage } from "../storage/playlist";
-import useAddPlaylistStore from "../store/addPlaylist";
+import CommonLayout from "~/components/CommonLayout";
+import PlaylistItem from "~/components/PlaylistItem";
+import { COMMON_TOUCH_COLOR } from "~/constants/style";
+import useToastContainerStyle from "~/hooks/useToastContainerStyle";
+import { addToPlaylist, quickCreatePlaylist, syncPlaylistAmount, usePlaylistStorage } from "~/storage/playlist";
+import useAddPlaylistStore from "~/store/apply-playlist";
+
 export default function Page() {
     const containerStyle = useToastContainerStyle();
     const toast = useToast();

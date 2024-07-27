@@ -7,11 +7,10 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { useWindowDimensions } from "react-native";
 
-import useCommonColors from "../hooks/useCommonColors";
-import useAddPlaylistStore from "../store/addPlaylist";
-
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
+import useAddPlaylistStore from "~/store/apply-playlist";
 import { formatDate } from "~/utils/misc";
 import { convertToHTTPS } from "~/utils/string";
 

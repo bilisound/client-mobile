@@ -28,7 +28,7 @@ import {
 import CommonLayout from "~/components/CommonLayout";
 import { COMMON_TOUCH_COLOR } from "~/constants/style";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
-import useAddPlaylistStore from "~/store/addPlaylist";
+import useAddPlaylistStore from "~/store/apply-playlist";
 import { formatSecond } from "~/utils/misc";
 
 interface HeaderProps {

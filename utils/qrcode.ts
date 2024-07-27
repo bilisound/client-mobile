@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { resolveVideoAndJump } from "./format";
 
 import { getTransferList } from "~/api/bilisound";
-import useAddPlaylistStore from "~/store/addPlaylist";
+import useAddPlaylistStore from "~/store/apply-playlist";
 
 export async function handleQrCode(input: string) {
     switch (true) {
