@@ -2,8 +2,8 @@ import { router } from "expo-router";
 import sanitize from "sanitize-filename";
 
 import { bv2av } from "./vendors/av-bv";
-import { parseB23 } from "../api/bilisound";
 
+import { parseB23 } from "~/api/bilisound";
 import log from "~/utils/logger";
 
 export const B23_REGEX = /https?:\/\/b23\.tv\/([a-zA-Z0-9]+)/;

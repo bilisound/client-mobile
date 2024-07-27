@@ -5,8 +5,9 @@ import TrackPlayer, { Capability } from "react-native-track-player";
 import log from "./logger";
 import { initPlaybackService } from "./player-control";
 import { loadTrackData } from "./track-data";
-import { BILISOUND_LOG_PATH, BILISOUND_OFFLINE_PATH } from "../constants/file";
 import useSettingsStore from "../store/settings";
+
+import { BILISOUND_LOG_PATH, BILISOUND_OFFLINE_PATH } from "~/constants/file";
 
 export default async function init() {
     // 日志系统初始化

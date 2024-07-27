@@ -6,8 +6,8 @@ import { createDocument } from "react-native-saf-x";
 import TrackPlayer from "react-native-track-player";
 
 import log from "./logger";
-import { handleTogglePlay } from "./player-control";
-import { BILISOUND_OFFLINE_PATH } from "../constants/file";
+
+import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
 
 export function formatDate(date: number | string | Date, fmt = "yyyy-MM-dd hh:mm:ss") {
     date = new Date(date);
@@ -48,28 +48,6 @@ export function formatSecond(secNum: number) {
         )}`;
     }
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-}
-
-export interface RequestWrapperOptions {
-    beforeThrow?: (error: any) => void;
-}
-
-export async function requestWrapper(func: () => Promise<void>, options: RequestWrapperOptions = {}) {
-    try {
-        await func();
-    } catch (e) {
-        if (options.beforeThrow) {
-            options.beforeThrow(e);
-        }
-        throw e;
-    }
-}
-
-/**
- * @deprecated
- */
-export function togglePlay() {
-    return handleTogglePlay();
 }
 
 /**
@@ -143,17 +121,6 @@ export async function cleanAudioCache() {
     for (let i = 0; i < items.length; i++) {
         await RNFS.unlink(items[i]);
     }
-}
-
-export function commonPressableColor(hoverColor: string) {
-    return {
-        style: ({ pressed }) => ({
-            backgroundColor: pressed && Platform.OS !== "android" ? hoverColor : "transparent",
-        }),
-        android_ripple: {
-            color: hoverColor,
-        },
-    } as Partial<PressableProps>;
 }
 
 export function getCacheAudioPath(id: string, episode: number, isAudio = true) {

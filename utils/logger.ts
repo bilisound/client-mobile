@@ -1,7 +1,7 @@
 import RNFS from "react-native-fs";
 import { logger, fileAsyncTransport, consoleTransport, configLoggerType } from "react-native-logs";
 
-import { BILISOUND_LOG_PATH } from "../constants/file";
+import { BILISOUND_LOG_PATH } from "~/constants/file";
 
 let transport: Partial<configLoggerType> = {
     transport: fileAsyncTransport,

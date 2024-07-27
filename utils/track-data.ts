@@ -7,8 +7,9 @@ import log from "./logger";
 import { getCacheAudioPath } from "./misc";
 import { runTasksLimit } from "./promise";
 import { convertToHTTPS } from "./string";
-import { BILISOUND_OFFLINE_PATH, BILISOUND_PERSIST_QUEUE_PATH } from "../constants/file";
-import { PlaylistDetailRow } from "../storage/playlist";
+
+import { BILISOUND_OFFLINE_PATH, BILISOUND_PERSIST_QUEUE_PATH } from "~/constants/file";
+import { PlaylistDetailRow } from "~/storage/playlist";
 
 export async function saveTrackData() {
     const tracks = await TrackPlayer.getQueue();
