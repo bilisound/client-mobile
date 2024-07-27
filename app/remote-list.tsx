@@ -28,7 +28,7 @@ import {
 import CommonLayout from "~/components/CommonLayout";
 import { COMMON_TOUCH_COLOR } from "~/constants/style";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
-import useAddPlaylistStore from "~/store/apply-playlist";
+import useApplyPlaylistStore from "~/store/apply-playlist";
 import { formatSecond } from "~/utils/misc";
 
 interface HeaderProps {
@@ -42,7 +42,7 @@ function Header({ data, mode }: HeaderProps) {
     const [loading, setLoading] = useState(false);
 
     // 添加歌单
-    const { setPlaylistDetail, setName } = useAddPlaylistStore(state => ({
+    const { setPlaylistDetail, setName } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
     }));

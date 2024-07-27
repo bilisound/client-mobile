@@ -10,14 +10,14 @@ import PlaylistItem from "~/components/PlaylistItem";
 import { COMMON_TOUCH_COLOR } from "~/constants/style";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import { addToPlaylist, quickCreatePlaylist, syncPlaylistAmount, usePlaylistStorage } from "~/storage/playlist";
-import useAddPlaylistStore from "~/store/apply-playlist";
+import useApplyPlaylistStore from "~/store/apply-playlist";
 
 export default function Page() {
     const containerStyle = useToastContainerStyle();
     const toast = useToast();
 
     // 添加歌单
-    const { playlistDetail, name } = useAddPlaylistStore(state => ({
+    const { playlistDetail, name } = useApplyPlaylistStore(state => ({
         playlistDetail: state.playlistDetail,
         name: state.name,
     }));

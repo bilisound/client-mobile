@@ -32,7 +32,7 @@ import { BILIBILI_VIDEO_URL_PREFIX } from "~/constants/network";
 import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
-import useAddPlaylistStore from "~/store/apply-playlist";
+import useApplyPlaylistStore from "~/store/apply-playlist";
 import useHistoryStore from "~/store/history";
 import { addTrackToQueue } from "~/utils/download-service";
 import log from "~/utils/logger";
@@ -107,7 +107,7 @@ const QueryIdScreen: React.FC = () => {
     const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
 
     // 添加歌单
-    const { setPlaylistDetail, setName } = useAddPlaylistStore(state => ({
+    const { setPlaylistDetail, setName } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
     }));

@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { resolveVideoAndJump } from "./format";
 
 import { getTransferList } from "~/api/bilisound";
-import useAddPlaylistStore from "~/store/apply-playlist";
+import useApplyPlaylistStore from "~/store/apply-playlist";
 
 export async function handleQrCode(input: string) {
     switch (true) {
@@ -12,8 +12,8 @@ export async function handleQrCode(input: string) {
             if (!transferList.data) {
                 return "这个二维码已经过期了，重新获取一下吧。";
             }
-            useAddPlaylistStore.getState().setPlaylistDetail(transferList.data);
-            useAddPlaylistStore
+            useApplyPlaylistStore.getState().setPlaylistDetail(transferList.data);
+            useApplyPlaylistStore
                 .getState()
                 .setName(`从 PC 端导入的播放队列 (${new Date().toLocaleString("zh-Hans-CN")})`);
             router.replace(`/apply-playlist`);

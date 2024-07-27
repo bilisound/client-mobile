@@ -10,7 +10,7 @@ import { useWindowDimensions } from "react-native";
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
-import useAddPlaylistStore from "~/store/apply-playlist";
+import useApplyPlaylistStore from "~/store/apply-playlist";
 import { formatDate } from "~/utils/misc";
 import { convertToHTTPS } from "~/utils/string";
 
@@ -28,7 +28,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
     const [showMore, setShowMore] = useState(false);
 
     // 添加歌单
-    const { setPlaylistDetail, setName } = useAddPlaylistStore(state => ({
+    const { setPlaylistDetail, setName } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
     }));
