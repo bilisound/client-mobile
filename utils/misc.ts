@@ -1,6 +1,6 @@
 import * as Sharing from "expo-sharing";
 import path from "path-browserify";
-import { Platform, PressableProps, ToastAndroid } from "react-native";
+import { Platform, ToastAndroid } from "react-native";
 import RNFS from "react-native-fs";
 import { createDocument } from "react-native-saf-x";
 import TrackPlayer from "react-native-track-player";

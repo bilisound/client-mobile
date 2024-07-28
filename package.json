@@ -83,6 +83,7 @@
     "react-native-web": "~0.19.12",
     "react-native-webview": "13.8.6",
     "sanitize-filename": "^1.6.3",
+    "shaka-player": "^4.10.9",
     "sleep-promise": "^9.1.0",
     "superjson": "^2.2.1",
     "uuid": "^9.0.1",

@@ -4,7 +4,7 @@ import { filesize } from "filesize";
 import React from "react";
 import RNFS from "react-native-fs";
 import TrackPlayer, { Track } from "react-native-track-player";
-import { getActiveTrack } from "react-native-track-player/src/trackPlayer";
+import { getActiveTrack } from "react-native-track-player/lib/src/trackPlayer";
 import { v4 as uuidv4 } from "uuid";
 
 import log from "./logger";

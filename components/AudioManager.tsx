@@ -1,7 +1,7 @@
 import { Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
 import React from "react";
 import { Event, useTrackPlayerEvents } from "react-native-track-player";
-import { getActiveTrack, getActiveTrackIndex, getTrack } from "react-native-track-player/src/trackPlayer";
+import { getActiveTrack, getActiveTrackIndex, getTrack } from "react-native-track-player/lib/src/trackPlayer";
 
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import useSettingsStore from "~/store/settings";
