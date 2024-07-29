@@ -1,6 +1,8 @@
 import { Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
 import React from "react";
+import { Platform } from "react-native";
 import TrackPlayer, { Track } from "react-native-track-player";
+import { getActiveTrack } from "react-native-track-player/lib/src/trackPlayer";
 import { v4 as uuidv4 } from "uuid";
 
 import log from "./logger";
@@ -60,7 +62,7 @@ export async function addTrackToQueue(
 
         // 清除当前播放队列隶属的歌单
         invalidateOnQueueStatus();
-        const addResult = await TrackPlayer.add([
+        let addResult = await TrackPlayer.add([
             {
                 url: getOnlineUrl(playingRequest.id, playingRequest.episode),
                 title: playingRequest.title,
@@ -73,8 +75,15 @@ export async function addTrackToQueue(
                 bilisoundIsLoaded: true,
             },
         ]);
-        log.debug("正在尝试播放刚添加的音频");
-        await TrackPlayer.skip(addResult || 0);
+        if (Platform.OS === "web") {
+            // todo 解决插入曲目的位置在当前播放的曲目前面的问题
+            addResult = Math.max((await TrackPlayer.getQueue()).length - 2, 0);
+            log.debug(`正在尝试播放刚添加的音频。addResult (web): ${addResult}`);
+            await TrackPlayer.skip(addResult);
+        } else {
+            log.debug(`正在尝试播放刚添加的音频。addResult: ${addResult}`);
+            await TrackPlayer.skip(addResult || 0);
+        }
         await TrackPlayer.play();
 
         log.debug("正在保存歌单");

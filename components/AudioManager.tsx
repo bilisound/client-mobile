@@ -1,5 +1,6 @@
 import { Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
 import React from "react";
+import { Platform } from "react-native";
 import { Event, useTrackPlayerEvents } from "react-native-track-player";
 import { getActiveTrack, getActiveTrackIndex, getTrack } from "react-native-track-player/lib/src/trackPlayer";
 
@@ -32,7 +33,7 @@ const AudioManager: React.FC = () => {
         }
         if (event.type === Event.PlaybackActiveTrackChanged) {
             await handleReDownload({ activeTrack: await getActiveTrack() });
-            if (!useSettingsStore.getState().downloadNextTrack) {
+            if (Platform.OS === "web" || !useSettingsStore.getState().downloadNextTrack) {
                 return;
             }
             log.debug("尝试下载队列中下一首歌曲");

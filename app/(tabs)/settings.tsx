@@ -3,14 +3,12 @@ import { router } from "expo-router";
 import { filesize } from "filesize";
 import path from "path-browserify";
 import React, { useEffect, useState } from "react";
-import { ScrollView, Switch } from "react-native";
+import { Platform, ScrollView, Switch } from "react-native";
 import TrackPlayer from "react-native-track-player";
 
-import { getUserSeason } from "~/api/external/json";
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem, { SettingMenuItemIcon } from "~/components/SettingMenuItem";
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
-import useDownloadStore from "~/store/download";
 import useSettingsStore from "~/store/settings";
 import log from "~/utils/logger";
 import { checkDirectorySize, cleanAudioCache } from "~/utils/misc";
@@ -63,56 +61,32 @@ const Settings: React.FC = () => {
 
     const developerOptions = (
         <>
-            <SettingMenuItem
-                icon={CDNIcon}
-                title="只从云服务商 CDN 节点获取音频"
-                subTitle="开启后可能会显著改善连接速度"
-                rightAccessories={
-                    <Switch
-                        value={filterResourceURL}
-                        onChange={() => {
-                            toggle("filterResourceURL");
-                        }}
-                    />
-                }
-                onPress={() => toggle("filterResourceURL")}
-            />
-            <SettingMenuItem
-                icon={BugIcon}
-                title="导出日志"
-                subTitle="对开发者真的太有用了"
-                onPress={async () => {
-                    router.push("/log-show");
-                }}
-            />
-            {process.env.NODE_ENV === "development" ? (
+            {Platform.OS === "web" ? null : (
                 <>
                     <SettingMenuItem
-                        icon={BugIcon}
-                        title="清空下载队列"
-                        subTitle="……"
-                        onPress={async () => {
-                            useDownloadStore.getState().clearDownloadItem();
-                        }}
+                        icon={CDNIcon}
+                        title="只从云服务商 CDN 节点获取音频"
+                        subTitle="开启后可能会显著改善连接速度"
+                        rightAccessories={
+                            <Switch
+                                value={filterResourceURL}
+                                onChange={() => {
+                                    toggle("filterResourceURL");
+                                }}
+                            />
+                        }
+                        onPress={() => toggle("filterResourceURL")}
                     />
                     <SettingMenuItem
                         icon={BugIcon}
-                        title="测试用户 season"
-                        subTitle="……"
+                        title="导出日志"
+                        subTitle="对开发者真的太有用了"
                         onPress={async () => {
-                            router.push("/remote-list?mode=episode&userId=1741301&listId=905374");
-                        }}
-                    />
-                    <SettingMenuItem
-                        icon={BugIcon}
-                        title="测试用户 series"
-                        subTitle="……"
-                        onPress={async () => {
-                            router.push("/remote-list?mode=series&userId=701522855&listId=747414");
+                            router.push("/log-show");
                         }}
                     />
                 </>
-            ) : null}
+            )}
         </>
     );
 
@@ -133,34 +107,38 @@ const Settings: React.FC = () => {
                     }
                     onPress={() => toggle("useLegacyID")}
                 />
-                <SettingMenuItem
-                    icon={DownloadNextIcon}
-                    title="自动下载队列中即将播放的曲目"
-                    subTitle="可以显著改善持续听歌的体验"
-                    rightAccessories={
-                        <Switch
-                            value={downloadNextTrack}
-                            onChange={() => {
-                                toggle("downloadNextTrack");
-                            }}
+                {Platform.OS === "web" ? null : (
+                    <>
+                        <SettingMenuItem
+                            icon={DownloadNextIcon}
+                            title="自动下载队列中即将播放的曲目"
+                            subTitle="可以显著改善持续听歌的体验"
+                            rightAccessories={
+                                <Switch
+                                    value={downloadNextTrack}
+                                    onChange={() => {
+                                        toggle("downloadNextTrack");
+                                    }}
+                                />
+                            }
+                            onPress={() => toggle("downloadNextTrack")}
                         />
-                    }
-                    onPress={() => toggle("downloadNextTrack")}
-                />
-                <SettingMenuItem
-                    icon={DeleteIcon}
-                    title="清除离线缓存"
-                    subTitle={
-                        cacheSize < 0 || cacheSizeFree < 0
-                            ? "占用空间统计中……"
-                            : `共占用 ${filesize(cacheSize)} (${filesize(cacheSizeFree)} 可清除)`
-                    }
-                    onPress={async () => {
-                        await cleanAudioCache();
-                        setCacheRefreshFlag(prevState => !prevState);
-                    }}
-                    disabled={cacheSizeFree <= 0}
-                />
+                        <SettingMenuItem
+                            icon={DeleteIcon}
+                            title="清除离线缓存"
+                            subTitle={
+                                cacheSize < 0 || cacheSizeFree < 0
+                                    ? "占用空间统计中……"
+                                    : `共占用 ${filesize(cacheSize)} (${filesize(cacheSizeFree)} 可清除)`
+                            }
+                            onPress={async () => {
+                                await cleanAudioCache();
+                                setCacheRefreshFlag(prevState => !prevState);
+                            }}
+                            disabled={cacheSizeFree <= 0}
+                        />
+                    </>
+                )}
                 <SettingMenuItem
                     icon={InfoIcon}
                     title="关于 Bilisound"
