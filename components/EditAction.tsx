@@ -25,6 +25,7 @@ export default function EditAction({ onAll, onReverse, onDelete, amount }: EditA
                 borderRightWidth: 0,
                 borderBottomWidth: 0,
                 flex: 0,
+                flexBasis: "auto",
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",

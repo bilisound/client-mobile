@@ -38,11 +38,27 @@ const HEADER_BASE_SIZE = 120;
 
 function ImagesGroup({ images }: { images: string[] }) {
     if (images.length === 0) {
-        return <Box flex={0} bg="$trueGray500" w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" />;
+        return (
+            <Box
+                flex={0}
+                flexBasis="auto"
+                bg="$trueGray500"
+                w={HEADER_BASE_SIZE}
+                h={HEADER_BASE_SIZE}
+                borderRadius="$xl"
+            />
+        );
     }
     if (images.length >= 1 && images.length <= 3) {
         return (
-            <Box flex={0} w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" overflow="hidden">
+            <Box
+                flex={0}
+                flexBasis="auto"
+                w={HEADER_BASE_SIZE}
+                h={HEADER_BASE_SIZE}
+                borderRadius="$xl"
+                overflow="hidden"
+            >
                 <Image
                     source={images[0]}
                     style={{
@@ -55,7 +71,7 @@ function ImagesGroup({ images }: { images: string[] }) {
         );
     }
     return (
-        <Box flex={0} w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" overflow="hidden">
+        <Box flex={0} flexBasis="auto" w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" overflow="hidden">
             <Box flexDirection="row">
                 <Image
                     source={images[0]}

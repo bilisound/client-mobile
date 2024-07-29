@@ -61,6 +61,7 @@ const History: React.FC = () => {
                                 height: 48,
                                 aspectRatio: "3/2",
                                 flex: 0,
+                                flexBasis: "auto",
                                 borderRadius: 8,
                             }}
                         />

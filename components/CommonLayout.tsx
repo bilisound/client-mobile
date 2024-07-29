@@ -53,6 +53,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                 sx={{
                     paddingTop: edgeInsets.top,
                     flex: 0,
+                    flexBasis: "auto",
                     backgroundColor: titleBarTheme === "solid" ? computedSolidColor : "transparent",
                 }}
             >

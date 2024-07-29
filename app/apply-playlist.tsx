@@ -41,6 +41,7 @@ export default function Page() {
                                 height: 48,
                                 aspectRatio: "16/9",
                                 flex: 0,
+                                flexBasis: "auto",
                                 borderRadius: 8,
                             }}
                         />
@@ -80,7 +81,7 @@ export default function Page() {
                         }}
                     >
                         <Box flexDirection="row" alignItems="center" gap="$3">
-                            <MaterialIcons name="add" size={24} color="red" flex={0} />
+                            <MaterialIcons name="add" size={24} color="red" flex={0} flexBasis="auto" />
                             <Text fontSize="$md" lineHeight={24} numberOfLines={1} ellipsizeMode="tail" flex={1}>
                                 {name}
                             </Text>

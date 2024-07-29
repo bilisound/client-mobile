@@ -74,7 +74,11 @@ const SettingMenuItem: React.FC<SettingMenuItemProps> = ({
                     </Text>
                 ) : null}
             </Box>
-            {rightAccessories ? <Box flex={0}>{rightAccessories}</Box> : null}
+            {rightAccessories ? (
+                <Box flex={0} flexBasis="auto">
+                    {rightAccessories}
+                </Box>
+            ) : null}
         </Box>
     );
 

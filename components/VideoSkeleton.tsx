@@ -75,6 +75,7 @@ const VideoSkeleton: React.FC = () => {
                                 borderRadius: 9999,
                                 backgroundColor: textBasicColor,
                                 flex: 0,
+                                flexBasis: "auto",
                             }}
                         />
                         <Box
@@ -83,6 +84,7 @@ const VideoSkeleton: React.FC = () => {
                                 width: "40%",
                                 height: 19,
                                 flex: 0,
+                                flexBasis: "auto",
                             }}
                         />
                         <Box flex={1} />
@@ -92,6 +94,7 @@ const VideoSkeleton: React.FC = () => {
                                 width: 72,
                                 height: 19,
                                 flex: 0,
+                                flexBasis: "auto",
                             }}
                         />
                     </Box>
@@ -131,6 +134,7 @@ const VideoSkeleton: React.FC = () => {
                                 width: 20,
                                 height: 22,
                                 flex: 0,
+                                flexBasis: "auto",
                             }}
                         />
                         <Box sx={{ flex: 1 }}>

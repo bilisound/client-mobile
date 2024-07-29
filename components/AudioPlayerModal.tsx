@@ -224,6 +224,7 @@ function MusicList() {
         >
             <Box
                 flex={0}
+                flexBasis="auto"
                 pl="$4"
                 pr="$3"
                 py="$3"
@@ -331,6 +332,7 @@ export default function AudioPlayerModal() {
             <Box
                 sx={{
                     flex: 0,
+                    flexBasis: "auto",
                     height: 240,
                 }}
             >

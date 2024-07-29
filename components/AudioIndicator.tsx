@@ -53,6 +53,7 @@ const AudioIndicator: React.FC = () => {
                         aspectRatio: "16/9",
                         borderRadius: 6,
                         flex: 0,
+                        flexBasis: "auto",
                     }}
                 />
                 <View
@@ -75,6 +76,7 @@ const AudioIndicator: React.FC = () => {
                     justifyContent: "center",
                     borderRadius: 6,
                     flex: 0,
+                    flexBasis: "auto",
                     ...COMMON_TOUCH_COLOR,
                 }}
                 onPressOut={async () => {

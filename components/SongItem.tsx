@@ -93,6 +93,8 @@ export default function SongItem({
                             height: 22,
                             borderRadius: 6,
                             flex: 0,
+                            flexBasis: "auto",
+                            flexBasis: "auto",
                         }}
                     >
                         <Text
@@ -138,7 +140,7 @@ export default function SongItem({
                     </Box>
                 </Box>
                 {isChecking ? (
-                    <Box flex={0}>
+                    <Box flex={0} flexBasis="auto">
                         <Center
                             w="$7"
                             h="$7"
@@ -155,6 +157,7 @@ export default function SongItem({
                         <Box
                             sx={{
                                 flex: 0,
+                                flexBasis: "auto",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 width: 32,

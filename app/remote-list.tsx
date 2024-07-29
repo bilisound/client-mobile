@@ -83,7 +83,7 @@ function Header({ data, mode }: HeaderProps) {
     }
 
     return (
-        <Box flex={0} padding="$4">
+        <Box flex={0} flexBasis="auto" padding="$4">
             <Image
                 source={data.meta.cover}
                 style={{
@@ -171,6 +171,7 @@ export default function Page() {
                     height: 48,
                     aspectRatio: "3/2",
                     flex: 0,
+                    flexBasis: "auto",
                     borderRadius: 8,
                 }}
             />
