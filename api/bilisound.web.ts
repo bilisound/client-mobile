@@ -1,6 +1,5 @@
 import { defineWrap } from "./common";
 
-import { getUserInfo, getUserSeason, getUserSeries, getUserSeriesMeta } from "~/api/external/json";
 import { BILIBILI_VIDEO_URL_PREFIX, BILISOUND_API_PREFIX, USER_AGENT_BILISOUND } from "~/constants/network";
 import { PlaylistDetailRow } from "~/storage/playlist";
 import { Numberish } from "~/typings/common";
@@ -53,51 +52,10 @@ export interface GetEpisodeUserResponse {
 export type UserListMode = "episode" | "series";
 
 export async function getUserList(mode: UserListMode, userId: Numberish, listId: Numberish, page = 1) {
-    let response;
-    let pageSize;
-    let pageNum;
-    let total;
-    let name = "";
-    let description = "";
-    let cover = "";
-    if (mode === "episode") {
-        response = await getUserSeason(userId, listId, page);
-        const data = response.data;
-        pageSize = data.page.page_size;
-        pageNum = data.page.page_num;
-        total = data.page.total;
-        name = data.meta.name;
-        description = data.meta.description;
-        cover = data.meta.cover;
-    } else {
-        response = await getUserSeries(userId, listId, page);
-        const meta = await getUserSeriesMeta(listId);
-        pageSize = response.data.page.size;
-        pageNum = response.data.page.num;
-        total = response.data.page.total;
-        name = meta.data.meta.name;
-        description = meta.data.meta.description;
-        cover = response.data.archives[0].pic;
-    }
-    const rows = response.data.archives.map(e => ({
-        bvid: e.bvid,
-        title: e.title,
-        cover: e.pic,
-        duration: e.duration,
-    }));
-    return {
-        pageSize,
-        pageNum,
-        total,
-        rows,
-        meta: {
-            name,
-            description,
-            cover,
-            userId,
-            seasonId: listId,
-        },
-    };
+    const res = await fetch(
+        `${BILISOUND_API_PREFIX}/internal/user-list?mode=${mode}&userId=${userId}&listId=${listId}&page=${page}`,
+    );
+    return (await res.json()).data;
 }
 
 export async function getUserListFull(
@@ -115,14 +73,6 @@ export async function getUserListFull(
         results = results.concat(newResults);
     }
     return results;
-}
-
-export async function getUser(userId: Numberish) {
-    const response = await getUserInfo(userId);
-    return {
-        name: response.data.name,
-        avatar: response.data.face,
-    };
 }
 
 /**

@@ -5,11 +5,12 @@ import { ActivityIndicator, useWindowDimensions } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 
 import ProgressBar from "./ProgressBar";
-import { COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "../constants/style";
-import useCommonColors from "../hooks/useCommonColors";
-import { PlaylistDetailRow } from "../storage/playlist";
-import { formatSecond } from "../utils/misc";
-import { handleTogglePlay } from "../utils/player-control";
+
+import { COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
+import { PlaylistDetailRow } from "~/storage/playlist";
+import { formatSecond } from "~/utils/misc";
+import { handleTogglePlay } from "~/utils/player-control";
 
 // 播放状态图标
 function PlayingIcon() {
@@ -93,7 +94,6 @@ export default function SongItem({
                             height: 22,
                             borderRadius: 6,
                             flex: 0,
-                            flexBasis: "auto",
                             flexBasis: "auto",
                         }}
                     >

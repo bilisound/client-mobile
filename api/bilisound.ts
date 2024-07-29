@@ -316,14 +316,6 @@ export async function getUserListFull(
     return results;
 }
 
-export async function getUser(userId: Numberish) {
-    const response = await getUserInfo(userId);
-    return {
-        name: response.data.name,
-        avatar: response.data.face,
-    };
-}
-
 /**
  * 获取视频的 Web 页面地址
  * @param id
