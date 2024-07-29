@@ -138,15 +138,19 @@ export async function getBilisoundMetadata(data: { id: string }) {
     }
 }
 
+export interface GetBilisoundResourceUrlOptions {
+    id: string;
+    episode: number | string;
+    filterResourceURL?: boolean;
+}
+
 /**
  * 获取音频资源 URL
  * @param data
  */
-export async function getBilisoundResourceUrl(data: {
-    id: string;
-    episode: number | string;
-    filterResourceURL?: boolean;
-}): Promise<{ url: string; isAudio: boolean }> {
+export async function getBilisoundResourceUrl(
+    data: GetBilisoundResourceUrlOptions,
+): Promise<{ url: string; isAudio: boolean }> {
     const { id, episode } = data;
 
     // 获取视频

@@ -41,9 +41,8 @@ const fetchRaw = promiseMemoize(
 export const getVideo = async ({
     id,
     episode = 1,
-    url,
 }: GetVideoOptions): Promise<GetVideoResponse | GetVideoFestivalResponse> => {
-    const { finalUrl, response } = await fetchRaw(url || `${BILIBILI_VIDEO_URL_PREFIX}${id}/?p=${episode}`);
+    const { finalUrl, response } = await fetchRaw(`${BILIBILI_VIDEO_URL_PREFIX}${id}/?p=${episode}`);
 
     log.debug(`最终跳转结果：${finalUrl}`);
     if (finalUrl.startsWith("https://www.bilibili.com/festival/")) {

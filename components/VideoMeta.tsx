@@ -11,6 +11,7 @@ import { GetBilisoundMetadataResponse } from "~/api/bilisound";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
 import useApplyPlaylistStore from "~/store/apply-playlist";
+import { getImageProxyUrl } from "~/utils/constant-helper";
 import { formatDate } from "~/utils/misc";
 import { convertToHTTPS } from "~/utils/string";
 
@@ -143,7 +144,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
         >
             {/* 封面图 */}
             <Image
-                source={convertToHTTPS(meta.pic)}
+                source={getImageProxyUrl(convertToHTTPS(meta.pic), meta.bvid)}
                 style={{
                     aspectRatio: "16/9",
                     borderRadius: 8,
@@ -175,7 +176,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                     }}
                 >
                     <Image
-                        source={convertToHTTPS(meta.owner.face)}
+                        source={getImageProxyUrl(convertToHTTPS(meta.owner.face), meta.bvid)}
                         style={{
                             width: 36,
                             height: 36,
