@@ -101,7 +101,6 @@ const TabIndexScreen: React.FC = () => {
                         }}
                     >
                         <InputField
-                            defaultValue=""
                             placeholder="粘贴完整链接或带前缀 ID 至此"
                             sx={{
                                 fontSize: 16,
