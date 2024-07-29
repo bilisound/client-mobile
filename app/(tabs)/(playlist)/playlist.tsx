@@ -14,7 +14,7 @@ import {
 import { FlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
 import React, { createContext, useContext, useState } from "react";
-import { Alert } from "react-native";
+import { Alert, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CommonLayout from "~/components/CommonLayout";
@@ -155,9 +155,11 @@ export default function Page() {
                 extendToBottom
                 rightAccessories={
                     <>
-                        <Pressable sx={COMMON_FRAME_BUTTON_STYLE} onPress={() => router.push("/barcode")}>
-                            <MaterialCommunityIcons name="qrcode-scan" size={20} color={primaryColor} />
-                        </Pressable>
+                        {Platform.OS === "web" ? null : (
+                            <Pressable sx={COMMON_FRAME_BUTTON_STYLE} onPress={() => router.push("/barcode")}>
+                                <MaterialCommunityIcons name="qrcode-scan" size={20} color={primaryColor} />
+                            </Pressable>
+                        )}
                         <Pressable
                             sx={COMMON_FRAME_BUTTON_STYLE}
                             onPress={() => {

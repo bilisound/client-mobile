@@ -193,6 +193,7 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
                             width: 4,
                             height: 4,
                         },
+                        borderRadius: 16,
                     }}
                 >
                     <Image

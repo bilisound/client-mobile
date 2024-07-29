@@ -5,7 +5,7 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { useWindowDimensions } from "react-native";
+import { Platform, useWindowDimensions } from "react-native";
 
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
@@ -22,7 +22,7 @@ export interface VideoMetaProps {
 }
 
 const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
-    const { textBasicColor, accentColor } = useCommonColors();
+    const { textBasicColor, accentColor, bgColor } = useCommonColors();
     const { width } = useWindowDimensions();
 
     // 展示更多
@@ -63,14 +63,11 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
             }}
             onPress={() => setShowMore(true)}
         >
-            <MaskedView
-                style={{
-                    height: detailMaxHeight,
-                }}
-                maskElement={
+            {Platform.OS === "web" ? (
+                <>
                     <Box
                         sx={{
-                            overflow: "scroll",
+                            overflow: "hidden",
                             maxHeight: detailMaxHeight,
                         }}
                     >
@@ -86,43 +83,91 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                             {meta.desc}
                         </Text>
                     </Box>
-                }
-            >
-                <LinearGradient
-                    colors={[`${textBasicColor}ff`, `${textBasicColor}00`]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 0.9 }}
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                    }}
-                    aria-hidden
-                />
-            </MaskedView>
-            <Box
-                sx={{
-                    position: "absolute",
-                    width: "100%",
-                    left: 0,
-                    bottom: 0,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "row",
-                    gap: 2,
-                    padding: 16,
-                }}
-            >
-                <Text
-                    sx={{
-                        color: "$accent500",
-                        fontWeight: "700",
-                        fontSize: 14,
-                    }}
-                >
-                    查看更多
-                </Text>
-                <Entypo name="chevron-down" size={20} color={accentColor} />
-            </Box>
+                    <LinearGradient
+                        colors={[`${bgColor}00`, `${bgColor}ff`]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 0.9 }}
+                        style={{
+                            position: "absolute",
+                            width: "100%",
+                            left: 0,
+                            bottom: 0,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "row",
+                            gap: 2,
+                            padding: 16,
+                            paddingTop: 40,
+                        }}
+                    >
+                        <Text sx={{ color: "$accent500", fontWeight: "700", fontSize: 14 }}>查看更多</Text>
+                        <Entypo name="chevron-down" size={20} color={accentColor} />
+                    </LinearGradient>
+                </>
+            ) : (
+                <>
+                    <MaskedView
+                        style={{
+                            height: detailMaxHeight,
+                        }}
+                        maskElement={
+                            <Box
+                                sx={{
+                                    overflow: "scroll",
+                                    maxHeight: detailMaxHeight,
+                                }}
+                            >
+                                <Text
+                                    onLayout={e => {
+                                        if (e.nativeEvent.layout.height < detailMaxHeight) {
+                                            setShowMore(true);
+                                        }
+                                    }}
+                                    fontSize={15}
+                                    lineHeight={15 * 1.5}
+                                >
+                                    {meta.desc}
+                                </Text>
+                            </Box>
+                        }
+                    >
+                        <LinearGradient
+                            colors={[`${textBasicColor}ff`, `${textBasicColor}00`]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 0, y: 0.9 }}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                            }}
+                            aria-hidden
+                        />
+                    </MaskedView>
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            width: "100%",
+                            left: 0,
+                            bottom: 0,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "row",
+                            gap: 2,
+                            padding: 16,
+                        }}
+                    >
+                        <Text
+                            sx={{
+                                color: "$accent500",
+                                fontWeight: "700",
+                                fontSize: 14,
+                            }}
+                        >
+                            查看更多
+                        </Text>
+                        <Entypo name="chevron-down" size={20} color={accentColor} />
+                    </Box>
+                </>
+            )}
         </Pressable>
     );
 
@@ -148,7 +193,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                 style={{
                     aspectRatio: "16/9",
                     borderRadius: 8,
-                    flex: 1,
+                    flex: width >= SCREEN_BREAKPOINTS.md ? 1 : undefined,
                 }}
             />
 

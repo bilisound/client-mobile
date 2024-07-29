@@ -15,12 +15,12 @@ import {
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { useWindowDimensions, View } from "react-native";
+import { Platform, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { COMMON_FRAME_BUTTON_STYLE } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
-import { resolveVideo, resolveVideoAndJump } from "~/utils/format";
+import { resolveVideoAndJump } from "~/utils/format";
 import log from "~/utils/logger";
 
 const TabIndexScreen: React.FC = () => {
@@ -46,10 +46,12 @@ const TabIndexScreen: React.FC = () => {
         }
     }
 
+    console.log({ width });
+
     return (
         <Box
             sx={{
-                alignItems: "center",
+                alignItems: "stretch",
                 height: "100%",
                 paddingLeft: insets.left,
                 paddingRight: insets.right,
@@ -60,6 +62,7 @@ const TabIndexScreen: React.FC = () => {
                 sx={{
                     paddingTop: 96,
                     paddingBottom: 48,
+                    alignItems: "center",
                 }}
             >
                 {fontsLoaded ? (
@@ -76,7 +79,7 @@ const TabIndexScreen: React.FC = () => {
                     </Text>
                 ) : null}
             </Box>
-            <Box px={16}>
+            <Box px={16} alignItems="center">
                 <FormControl
                     isDisabled={false}
                     isInvalid={inputError}
@@ -128,9 +131,11 @@ const TabIndexScreen: React.FC = () => {
                     top: insets.top,
                 }}
             >
-                <Pressable sx={COMMON_FRAME_BUTTON_STYLE} onPress={() => router.push("/barcode")}>
-                    <MaterialCommunityIcons name="qrcode-scan" size={20} color={primaryColor} />
-                </Pressable>
+                {Platform.OS === "web" ? null : (
+                    <Pressable sx={COMMON_FRAME_BUTTON_STYLE} onPress={() => router.push("/barcode")}>
+                        <MaterialCommunityIcons name="qrcode-scan" size={20} color={primaryColor} />
+                    </Pressable>
+                )}
                 <Pressable sx={COMMON_FRAME_BUTTON_STYLE} onPress={() => router.push("/history")}>
                     <FontAwesome5 name="history" size={20} color={primaryColor} />
                 </Pressable>

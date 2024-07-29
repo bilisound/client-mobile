@@ -1,49 +1,9 @@
 import { defineWrap } from "./common";
-import { getVideo } from "./external/direct";
 
 import { getUserInfo, getUserSeason, getUserSeries, getUserSeriesMeta } from "~/api/external/json";
-import {
-    BILIBILI_GOOD_CDN_REGEX,
-    BILIBILI_VIDEO_URL_PREFIX,
-    BILISOUND_API_PREFIX,
-    USER_AGENT_BILIBILI,
-    USER_AGENT_BILISOUND,
-} from "~/constants/network";
+import { BILIBILI_VIDEO_URL_PREFIX, BILISOUND_API_PREFIX, USER_AGENT_BILISOUND } from "~/constants/network";
 import { PlaylistDetailRow } from "~/storage/playlist";
 import { Numberish } from "~/typings/common";
-import log from "~/utils/logger";
-
-export type GetBilisoundMetadataResponse = {
-    bvid: string;
-    aid: number;
-    title: string;
-    pic: string;
-    pubDate: number;
-    desc: string;
-    owner: {
-        mid: number;
-        name: string;
-        face: string;
-    };
-    pages: {
-        page: number;
-        part: string;
-        duration: number;
-    }[];
-    seasonId?: number;
-};
-
-function filterHostname(list: string[]) {
-    return list.map(e => {
-        try {
-            const { hostname } = new URL(e);
-            return hostname;
-        } catch (er) {
-            // 日志用的工具函数，错误在这里不重要
-            return e;
-        }
-    });
-}
 
 /**
  * 解析短链接
@@ -61,12 +21,6 @@ export async function parseB23(id: string) {
 export async function getBilisoundMetadata(data: { id: string }) {
     const response = await fetch(BILISOUND_API_PREFIX + `/internal/metadata?id=${data.id}`);
     return response.json();
-}
-
-export interface GetBilisoundResourceUrlOptions {
-    id: string;
-    episode: number | string;
-    filterResourceURL?: boolean;
 }
 
 /**
