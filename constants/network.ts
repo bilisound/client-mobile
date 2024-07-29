@@ -6,3 +6,5 @@ export const USER_AGENT_BILISOUND = `Bilisound/${require("../package.json").vers
 export const BILIBILI_VIDEO_URL_PREFIX = "https://www.bilibili.com/video/";
 
 export const BILIBILI_GOOD_CDN_REGEX: readonly RegExp[] = [/^upos-[hs]z-[a-z|0-9]+\..+\.[a-z]+$/];
+
+export const BILISOUND_API_PREFIX = "https://bilisound.tuu.run/api";

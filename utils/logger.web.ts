@@ -29,3 +29,9 @@ const config = {
 const log = logger.createLogger<"debug" | "info" | "warn" | "error">(config);
 
 export default log;
+
+export async function getLogContentForDisplay() {
+    return "";
+}
+
+export async function shareLogContent(content: string) {}
