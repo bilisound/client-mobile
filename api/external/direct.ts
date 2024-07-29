@@ -26,39 +26,47 @@ export interface GetVideoOptions {
     url?: string;
 }
 
-export const getVideo = promiseMemoize(
-    async ({ id, episode = 1, url }: GetVideoOptions): Promise<GetVideoResponse | GetVideoFestivalResponse> => {
-        const raw = await fetch(url || `${BILIBILI_VIDEO_URL_PREFIX}${id}/?p=${episode}`, {
+const fetchRaw = promiseMemoize(
+    async (url: string) => {
+        const res = await fetch(url, {
             headers: {
                 "user-agent": USER_AGENT_BILIBILI,
             },
         });
-        const response = await raw.text();
-
-        log.debug(`最终跳转结果：${raw.url}`);
-        if (raw.url.startsWith("https://www.bilibili.com/festival/")) {
-            log.debug(`按照活动视频处理该查询`);
-            // 提取视频播放信息
-            const initialState: InitialStateFestivalResponse = extractJSON(
-                /window\.__INITIAL_STATE__=(\{.+});\(function\(\)\{/,
-                response,
-            );
-            // 提取视频流信息
-            const playInfo = await getVideoUrlFestival(
-                raw.url,
-                initialState.videoInfo.aid,
-                initialState.videoInfo.bvid,
-                initialState.videoInfo.pages[0].cid,
-            );
-
-            return { type: "festival", initialState, playInfo };
-        } else {
-            // 提取视频播放信息
-            log.debug(`按照常规视频处理该查询`);
-            const initialState: InitialStateResponse = extractJSON(/window\.__INITIAL_STATE__=(\{.+});/, response);
-            const playInfo: WebPlayInfo = extractJSON(/window\.__playinfo__=(\{.+})<\/script><script>/, response);
-            return { type: "regular", initialState, playInfo };
-        }
+        return { finalUrl: res.url, response: await res.text() };
     },
     { maxAge },
 );
+
+export const getVideo = async ({
+    id,
+    episode = 1,
+    url,
+}: GetVideoOptions): Promise<GetVideoResponse | GetVideoFestivalResponse> => {
+    const { finalUrl, response } = await fetchRaw(url || `${BILIBILI_VIDEO_URL_PREFIX}${id}/?p=${episode}`);
+
+    log.debug(`最终跳转结果：${finalUrl}`);
+    if (finalUrl.startsWith("https://www.bilibili.com/festival/")) {
+        log.debug(`按照活动视频处理该查询`);
+        // 提取视频播放信息
+        const initialState: InitialStateFestivalResponse = extractJSON(
+            /window\.__INITIAL_STATE__=(\{.+});\(function\(\)\{/,
+            response,
+        );
+        // 提取视频流信息
+        const playInfo = await getVideoUrlFestival(
+            finalUrl,
+            initialState.videoInfo.aid,
+            initialState.videoInfo.bvid,
+            initialState.videoInfo.pages[0].cid,
+        );
+
+        return { type: "festival", initialState, playInfo };
+    } else {
+        // 提取视频播放信息
+        log.debug(`按照常规视频处理该查询`);
+        const initialState: InitialStateResponse = extractJSON(/window\.__INITIAL_STATE__=(\{.+});/, response);
+        const playInfo: WebPlayInfo = extractJSON(/window\.__playinfo__=(\{.+})<\/script><script>/, response);
+        return { type: "regular", initialState, playInfo };
+    }
+};

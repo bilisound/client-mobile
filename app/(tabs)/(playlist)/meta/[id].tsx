@@ -40,7 +40,7 @@ export default function Page() {
     const toast = useToast();
     const containerStyle = useToastContainerStyle();
     const { id } = useLocalSearchParams<{ id: string }>();
-    const [list, setList] = usePlaylistStorage();
+    const [list = [], setList] = usePlaylistStorage();
     const defaultValues = list.find(e => e.id === id) ?? { id: "", title: "", color: "", amount: 0 };
     const {
         control,
@@ -64,7 +64,7 @@ export default function Page() {
         }
         log.debug(`歌单详情：${JSON.stringify(value)}`);
 
-        setList(prevValue => {
+        setList((prevValue = []) => {
             const newList = prevValue.concat();
             if (isCreate) {
                 newList.push(value);

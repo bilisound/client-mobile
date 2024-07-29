@@ -117,7 +117,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 export default function Page() {
     const { primaryColor } = useCommonColors();
 
-    const [list, setList] = usePlaylistStorage();
+    const [list = [], setList] = usePlaylistStorage();
 
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PlaylistMeta | undefined>();
@@ -130,7 +130,7 @@ export default function Page() {
     };
 
     const handleDelete = () => {
-        setList(prevValue => {
+        setList((prevValue = []) => {
             log.info("用户删除歌单");
             const found = prevValue.findIndex(e => e.id === displayTrack?.id);
             if (found < 0) {
@@ -141,7 +141,7 @@ export default function Page() {
         });
 
         // 清空当前播放队列隶属歌单的状态机
-        const got = playlistStorage.getMap<{ value?: PlaylistMeta }>(PLAYLIST_ON_QUEUE);
+        const got: { value?: PlaylistMeta } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");
         if (got?.value?.id === displayTrack?.id) {
             invalidateOnQueueStatus();
         }

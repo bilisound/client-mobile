@@ -1,8 +1,8 @@
-import { MMKVLoader } from "react-native-mmkv-storage";
+import { MMKV } from "react-native-mmkv";
 import superJson from "superjson";
 import { PersistStorage } from "zustand/middleware";
 
-export const zustandStorage = new MMKVLoader().withInstanceID("storage-zustand").initialize();
+export const zustandStorage = new MMKV({ id: "storage-zustand" });
 
 export function createStorage<T>() {
     const storage: PersistStorage<T> = {
@@ -12,10 +12,10 @@ export function createStorage<T>() {
             return superJson.parse(str);
         },
         setItem: (name, value) => {
-            zustandStorage.setString(name, superJson.stringify(value));
+            zustandStorage.set(name, superJson.stringify(value));
         },
         removeItem: name => {
-            zustandStorage.removeItem(name);
+            zustandStorage.delete(name);
         },
     };
     return storage;

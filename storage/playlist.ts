@@ -1,4 +1,4 @@
-import { MMKVLoader, useMMKVStorage } from "react-native-mmkv-storage";
+import { MMKV, useMMKVObject } from "react-native-mmkv";
 import { v4 } from "uuid";
 
 import log from "../utils/logger";
@@ -28,10 +28,10 @@ export interface PlaylistDetailRow {
     imgUrl: string;
 }
 
-export const playlistStorage = new MMKVLoader().withInstanceID("storage-playlist").initialize();
+export const playlistStorage = new MMKV({ id: "storage-playlist" });
 
 export function usePlaylistStorage() {
-    return useMMKVStorage<PlaylistMeta[]>(PLAYLIST_INDEX_KEY, playlistStorage, []);
+    return useMMKVObject<PlaylistMeta[]>(PLAYLIST_INDEX_KEY, playlistStorage);
 }
 
 /*export function usePlaylistLastUsed() {
@@ -39,11 +39,11 @@ export function usePlaylistStorage() {
 }*/
 
 export function usePlaylistOnQueue() {
-    return useMMKVStorage<{ value?: PlaylistMeta | undefined }>(PLAYLIST_ON_QUEUE, playlistStorage, {});
+    return useMMKVObject<{ value?: PlaylistMeta | undefined }>(PLAYLIST_ON_QUEUE, playlistStorage);
 }
 
 export function invalidateOnQueueStatus() {
-    playlistStorage.setMap(PLAYLIST_ON_QUEUE, {});
+    playlistStorage.set(PLAYLIST_ON_QUEUE, "{}");
 }
 
 const hslRegex = /hsl\((\d+\.?\d*)/;
@@ -52,7 +52,7 @@ const hslRegex = /hsl\((\d+\.?\d*)/;
  * 获取伪随机颜色。从列表中找出出现次数最少的色相，然后返回属于该色相的颜色。
  */
 export function getNewColor() {
-    const originalList = playlistStorage.getArray<PlaylistMeta>(PLAYLIST_INDEX_KEY) || [];
+    const originalList: PlaylistMeta[] = JSON.parse(playlistStorage.getString(PLAYLIST_INDEX_KEY) || "[]");
     const colors = originalList.map(e => Math.floor(Number(hslRegex.exec(e.color)?.[1] ?? "0") / 60));
     const occurrences = colors.reduce<Record<string, number>>(
         function (acc, curr) {
@@ -80,12 +80,14 @@ export function addToPlaylist(id: string, row: PlaylistDetailRow | PlaylistDetai
     const list = Array.isArray(row) ? row : [row];
     log.debug(`添加 ${list.length} 首歌曲到歌单 ${id}`);
 
-    const originalList = playlistStorage.getArray<PlaylistDetailRow>(PLAYLIST_ITEM_KEY_PREFIX + id) || [];
+    const originalList: PlaylistDetailRow[] = JSON.parse(
+        playlistStorage.getString(PLAYLIST_ITEM_KEY_PREFIX + id) || "[]",
+    );
     originalList.push(...list);
-    playlistStorage.setArray(PLAYLIST_ITEM_KEY_PREFIX + id, originalList);
+    playlistStorage.set(PLAYLIST_ITEM_KEY_PREFIX + id, JSON.stringify(originalList));
 
     // 清空当前播放队列隶属歌单的状态机
-    const got = playlistStorage.getMap<{ value?: PlaylistMeta }>(PLAYLIST_ON_QUEUE);
+    const got: { value?: PlaylistMeta } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");
     if (got?.value?.id === id) {
         invalidateOnQueueStatus();
     }
@@ -100,9 +102,9 @@ export function quickCreatePlaylist(title: string, row: PlaylistDetailRow | Play
         amount: list.length,
     };
     log.info(`快速创建歌单 ${title} (${item.id})`);
-    const originalList = playlistStorage.getArray<PlaylistMeta>(PLAYLIST_INDEX_KEY) || [];
+    const originalList: PlaylistMeta[] = JSON.parse(playlistStorage.getString(PLAYLIST_INDEX_KEY) || "[]");
     originalList.push(item);
-    playlistStorage.setArray(PLAYLIST_INDEX_KEY, originalList);
+    playlistStorage.set(PLAYLIST_INDEX_KEY, JSON.stringify(originalList));
 
     log.info(`添加曲目到快速创建的歌单 ${item.id}`);
     addToPlaylist(item.id, list);
@@ -114,8 +116,10 @@ export function syncPlaylistAmount(id: string) {
         return;
     }
     log.debug(`对歌单 ${id} 进行同步曲目数量操作`);
-    const playlistMetas = playlistStorage.getArray<PlaylistMeta>(PLAYLIST_INDEX_KEY) || [];
-    const playlistData = playlistStorage.getArray<PlaylistDetailRow>(PLAYLIST_ITEM_KEY_PREFIX + id) || [];
+    const playlistMetas: PlaylistMeta[] = JSON.parse(playlistStorage.getString(PLAYLIST_INDEX_KEY) || "[]");
+    const playlistData: PlaylistDetailRow[] = JSON.parse(
+        playlistStorage.getString(PLAYLIST_ITEM_KEY_PREFIX + id) || "[]",
+    );
 
     const len = playlistData.length;
     const foundIndex = playlistMetas.findIndex(e => e.id === id);
@@ -125,5 +129,5 @@ export function syncPlaylistAmount(id: string) {
     }
     playlistMetas[foundIndex].amount = len;
 
-    playlistStorage.setArray(PLAYLIST_INDEX_KEY, playlistMetas);
+    playlistStorage.set(PLAYLIST_INDEX_KEY, JSON.stringify(playlistMetas));
 }

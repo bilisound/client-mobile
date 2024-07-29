@@ -7,7 +7,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { Alert, useColorScheme } from "react-native";
-import { useMMKVStorage } from "react-native-mmkv-storage";
+import { useMMKVObject } from "react-native-mmkv";
 import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "~/components/CommonLayout";
@@ -142,13 +142,12 @@ export default function Page() {
     const colorMode = useColorScheme();
     const { id } = useLocalSearchParams<{ id: string }>();
 
-    const [playlistMeta] = usePlaylistStorage();
-    const [playlistDetail, setPlaylistDetail] = useMMKVStorage<PlaylistDetailRow[]>(
+    const [playlistMeta = []] = usePlaylistStorage();
+    const [playlistDetail = [], setPlaylistDetail] = useMMKVObject<PlaylistDetailRow[]>(
         PLAYLIST_ITEM_KEY_PREFIX + id,
         playlistStorage,
-        [],
     );
-    const [playlistOnQueue, setPlaylistOnQueue] = usePlaylistOnQueue();
+    const [playlistOnQueue = {}, setPlaylistOnQueue] = usePlaylistOnQueue();
 
     const [contentHeight, setContentHeight] = useState(0);
     const [viewHeight, setViewHeight] = useState(0);
@@ -211,7 +210,7 @@ export default function Page() {
                 text: "确定",
                 style: "default",
                 onPress: () => {
-                    setPlaylistDetail(prevValue => {
+                    setPlaylistDetail((prevValue = []) => {
                         Array.from(selected)
                             .sort((a, b) => b - a)
                             .forEach(e => {
