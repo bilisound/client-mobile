@@ -26,6 +26,7 @@ import {
     usePlaylistOnQueue,
     usePlaylistStorage,
 } from "~/storage/playlist";
+import { getImageProxyUrl } from "~/utils/constant-helper";
 import log from "~/utils/logger";
 import { playlistToTracks } from "~/utils/track-data";
 
@@ -36,7 +37,8 @@ function extractAndProcessImgUrls(playlistDetails: PlaylistDetailRow[]) {
 
 const HEADER_BASE_SIZE = 120;
 
-function ImagesGroup({ images }: { images: string[] }) {
+function ImagesGroup({ images: origImages }: { images: string[] }) {
+    const images = origImages.map(image => getImageProxyUrl(image));
     if (images.length === 0) {
         return (
             <Box

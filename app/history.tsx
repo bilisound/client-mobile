@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CommonLayout from "~/components/CommonLayout";
 import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "~/constants/style";
 import useHistoryStore, { HistoryItem } from "~/store/history";
+import { getImageProxyUrl } from "~/utils/constant-helper";
 
 const History: React.FC = () => {
     const edgeInsets = useSafeAreaInsets();
@@ -56,7 +57,7 @@ const History: React.FC = () => {
                         }}
                     >
                         <Image
-                            source={data.thumbnailUrl}
+                            source={getImageProxyUrl(data.thumbnailUrl, data.id)}
                             style={{
                                 height: 48,
                                 aspectRatio: "3/2",

@@ -5,20 +5,22 @@ import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, Platform, StatusBar, useColorScheme } from "react-native";
+import { Platform, StatusBar, useColorScheme } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
 
 import SongItem from "./SongItem";
-import { COMMON_FRAME_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "../constants/style";
-import useCommonColors from "../hooks/useCommonColors";
-import useTracks from "../hooks/useTracks";
-import useSettingsStore from "../store/settings";
-import { getFileName } from "../utils/format";
-import { formatSecond, saveFile } from "../utils/misc";
-import { handlePrev, handleTogglePlay } from "../utils/player-control";
-import { tracksToPlaylist } from "../utils/track-data";
+
+import { COMMON_TOUCH_COLOR } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
+import useTracks from "~/hooks/useTracks";
+import useSettingsStore from "~/store/settings";
+import { getImageProxyUrl } from "~/utils/constant-helper";
+import { getFileName } from "~/utils/format";
+import { formatSecond, saveFile } from "~/utils/misc";
+import { handlePrev, handleTogglePlay } from "~/utils/player-control";
+import { tracksToPlaylist } from "~/utils/track-data";
 
 function AudioProgressBar() {
     const { primaryColor } = useCommonColors();
@@ -156,7 +158,7 @@ function AudioPlayButtonIcon() {
     );
 }
 
-function MusicPicture({ image }: { image?: string }) {
+function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: string }) {
     const colorScheme = useColorScheme();
     const [smallestSize, setSmallestSize] = useState(0);
 
@@ -174,7 +176,7 @@ function MusicPicture({ image }: { image?: string }) {
         >
             {colorScheme === "dark" ? (
                 <Image
-                    source={image}
+                    source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
                     style={{
                         aspectRatio: "1/1",
                         borderRadius: 16,
@@ -194,7 +196,7 @@ function MusicPicture({ image }: { image?: string }) {
                     }}
                 >
                     <Image
-                        source={image}
+                        source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
                         style={{
                             aspectRatio: "1/1",
                             borderRadius: 16,
@@ -210,7 +212,7 @@ function MusicPicture({ image }: { image?: string }) {
 
 function MusicList() {
     const { tracks } = useTracks();
-    const { primaryColor } = useCommonColors();
+    // const { primaryColor } = useCommonColors();
 
     // 转换后的列表
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
@@ -328,7 +330,11 @@ export default function AudioPlayerModal() {
                     }}
                 />
             </Box>
-            {showList ? <MusicList /> : <MusicPicture image={activeTrack?.artwork} />}
+            {showList ? (
+                <MusicList />
+            ) : (
+                <MusicPicture image={activeTrack?.artwork} bilisoundId={activeTrack?.bilisoundId} />
+            )}
             <Box
                 sx={{
                     flex: 0,

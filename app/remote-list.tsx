@@ -29,6 +29,7 @@ import CommonLayout from "~/components/CommonLayout";
 import { COMMON_TOUCH_COLOR } from "~/constants/style";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import useApplyPlaylistStore from "~/store/apply-playlist";
+import { getImageProxyUrl } from "~/utils/constant-helper";
 import { formatSecond } from "~/utils/misc";
 
 interface HeaderProps {
@@ -85,7 +86,7 @@ function Header({ data, mode }: HeaderProps) {
     return (
         <Box flex={0} flexBasis="auto" padding="$4">
             <Image
-                source={data.meta.cover}
+                source={getImageProxyUrl(data.meta.cover, data.rows[0].bvid)}
                 style={{
                     aspectRatio: "16/9",
                     borderRadius: 8,
@@ -166,7 +167,7 @@ export default function Page() {
         >
             {/* 图片 */}
             <Image
-                source={item.cover}
+                source={getImageProxyUrl(item.cover, item.bvid)}
                 style={{
                     height: 48,
                     aspectRatio: "3/2",

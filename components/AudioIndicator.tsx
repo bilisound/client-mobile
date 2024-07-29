@@ -10,6 +10,8 @@ import { COMMON_TOUCH_COLOR } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
 import { handleTogglePlay } from "../utils/player-control";
 
+import { getImageProxyUrl } from "~/utils/constant-helper";
+
 const AudioIndicator: React.FC = () => {
     const activeTrack = useActiveTrack();
     const playbackState = usePlaybackState();
@@ -47,7 +49,7 @@ const AudioIndicator: React.FC = () => {
                 }}
             >
                 <Image
-                    source={activeTrack?.artwork}
+                    source={getImageProxyUrl(activeTrack?.artwork ?? "", activeTrack?.bilisoundId ?? "")}
                     style={{
                         height: 40,
                         aspectRatio: "16/9",

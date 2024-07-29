@@ -11,6 +11,7 @@ import { COMMON_TOUCH_COLOR } from "~/constants/style";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import { addToPlaylist, quickCreatePlaylist, syncPlaylistAmount, usePlaylistStorage } from "~/storage/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
+import { getImageProxyUrl } from "~/utils/constant-helper";
 
 export default function Page() {
     const containerStyle = useToastContainerStyle();
@@ -36,7 +37,7 @@ export default function Page() {
                 {playlistDetail && playlistDetail.length === 1 && (
                     <Box w="100%" px="$5" flexDirection="row" gap="$4">
                         <Image
-                            source={playlistDetail[0].imgUrl}
+                            source={getImageProxyUrl(playlistDetail[0].imgUrl, playlistDetail[0].bvid)}
                             style={{
                                 height: 48,
                                 aspectRatio: "16/9",
