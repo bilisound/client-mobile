@@ -5,7 +5,7 @@ import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Platform, StatusBar, useColorScheme } from "react-native";
+import { Linking, Platform, StatusBar, useColorScheme } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
@@ -517,6 +517,12 @@ export default function AudioPlayerModal() {
                             justifyContent: "center",
                         }}
                         onPress={async () => {
+                            if (Platform.OS === "web") {
+                                await Linking.openURL(
+                                    `${activeTrack?.url}&dl=${useSettingsStore.getState().useLegacyID ? "av" : "bv"}`,
+                                );
+                                return;
+                            }
                             await saveFile(
                                 activeTrack?.url ?? "",
                                 getFileName({
