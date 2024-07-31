@@ -18,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
-import { View } from "react-native";
+import { ScrollView, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
 import { v4 } from "uuid";
@@ -29,7 +29,7 @@ import SongItem from "~/components/SongItem";
 import VideoMeta from "~/components/VideoMeta";
 import VideoSkeleton from "~/components/VideoSkeleton";
 import { BILIBILI_VIDEO_URL_PREFIX } from "~/constants/network";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "~/constants/style";
+import { COMMON_FRAME_SOLID_BUTTON_STYLE, SCREEN_BREAKPOINTS } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import useApplyPlaylistStore from "~/store/apply-playlist";
@@ -106,6 +106,8 @@ const QueryIdScreen: React.FC = () => {
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
 
+    const { width } = useWindowDimensions();
+
     // 添加歌单
     const { setPlaylistDetail, setName } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
@@ -113,7 +115,7 @@ const QueryIdScreen: React.FC = () => {
     }));
 
     // 数据请求
-    const { data, error } = useQuery({
+    const { data, error, isLoading } = useQuery({
         queryKey: [id],
         queryFn: () => {
             if (!id) {
@@ -208,6 +210,7 @@ const QueryIdScreen: React.FC = () => {
                 </Pressable>
             }
         >
+            {isLoading ? <VideoSkeleton /> : null}
             {error ? (
                 <Box
                     sx={{
@@ -222,18 +225,30 @@ const QueryIdScreen: React.FC = () => {
                     <Text sx={{ fontSize: 20, fontWeight: "700" }}>查询失败了</Text>
                     <Text sx={{ fontSize: 14 }}>{`${error?.message || error}`}</Text>
                 </Box>
-            ) : (
-                <FlashList
-                    data={dataList}
-                    extraData={updateTriggerString}
-                    keyExtractor={item => `${item.page}`}
-                    ListHeaderComponent={data ? <VideoMeta meta={data.data} /> : <View />}
-                    ListFooterComponent={<View style={{ height: edgeInsets.bottom + (activeTrack ? 58 + 36 : 0) }} />}
-                    renderItem={renderItem}
-                    estimatedItemSize={dataLength * 64}
-                    ListEmptyComponent={<VideoSkeleton />}
-                />
-            )}
+            ) : null}
+            {data ? (
+                <Box sx={{ flex: 1, flexDirection: "row" }}>
+                    {width >= SCREEN_BREAKPOINTS.md ? (
+                        <ScrollView style={{ flex: 0, flexBasis: "auto", width: 384 }}>
+                            <VideoMeta meta={data.data} />
+                        </ScrollView>
+                    ) : null}
+                    <FlashList
+                        style={{ flex: 1 }}
+                        data={dataList}
+                        extraData={updateTriggerString}
+                        keyExtractor={item => `${item.page}`}
+                        ListHeaderComponent={
+                            width < SCREEN_BREAKPOINTS.md ? <VideoMeta meta={data.data} /> : <Box h={12} />
+                        }
+                        ListFooterComponent={
+                            <View style={{ height: edgeInsets.bottom + (activeTrack ? 58 + 36 : 12) }} />
+                        }
+                        renderItem={renderItem}
+                        estimatedItemSize={dataLength * 64}
+                    />
+                </Box>
+            ) : null}
             {activeTrack ? (
                 <Fab
                     size="lg"

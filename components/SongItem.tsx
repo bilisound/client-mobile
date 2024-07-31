@@ -1,12 +1,12 @@
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { Box, Center, Pressable, Text } from "@gluestack-ui/themed";
 import React from "react";
-import { ActivityIndicator, useWindowDimensions } from "react-native";
+import { ActivityIndicator } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 
 import ProgressBar from "./ProgressBar";
 
-import { COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "~/constants/style";
+import { COMMON_TOUCH_COLOR } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
 import { PlaylistDetailRow } from "~/storage/playlist";
 import { formatSecond } from "~/utils/misc";
@@ -47,7 +47,6 @@ export default function SongItem({
 }: SongItemProps) {
     const activeTrack = useActiveTrack();
     const isActiveTrack = data.bvid === activeTrack?.bilisoundId && data.episode === activeTrack?.bilisoundEpisode;
-    const { width } = useWindowDimensions();
     const { textBasicColor } = useCommonColors();
 
     return (
@@ -68,7 +67,7 @@ export default function SongItem({
         >
             <Box
                 sx={{
-                    px: width >= SCREEN_BREAKPOINTS.md ? 24 : 16,
+                    px: 16,
                     height: 64,
                     flexDirection: "row",
                     gap: 12,

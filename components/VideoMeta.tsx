@@ -5,10 +5,10 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Platform, useWindowDimensions } from "react-native";
+import { Platform } from "react-native";
 
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
-import { SCREEN_BREAKPOINTS } from "~/constants/style";
+// import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -23,7 +23,7 @@ export interface VideoMetaProps {
 
 const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
     const { textBasicColor, accentColor, bgColor } = useCommonColors();
-    const { width } = useWindowDimensions();
+    // const { width } = useWindowDimensions();
 
     // 展示更多
     const [showMore, setShowMore] = useState(false);
@@ -173,19 +173,11 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
 
     return (
         <Box
-            sx={
-                width >= SCREEN_BREAKPOINTS.md
-                    ? {
-                          padding: 24,
-                          flexDirection: "row",
-                          gap: 24,
-                      }
-                    : {
-                          padding: 16,
-                          flexDirection: "column",
-                          gap: 16,
-                      }
-            }
+            sx={{
+                padding: 16,
+                flexDirection: "column",
+                gap: 16,
+            }}
         >
             {/* 封面图 */}
             <Image
@@ -193,7 +185,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                 style={{
                     aspectRatio: "16/9",
                     borderRadius: 8,
-                    flex: width >= SCREEN_BREAKPOINTS.md ? 1 : undefined,
+                    // flex: width >= SCREEN_BREAKPOINTS.md ? 1 : undefined,
                 }}
             />
 

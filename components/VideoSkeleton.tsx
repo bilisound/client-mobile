@@ -2,8 +2,10 @@ import { Box } from "@gluestack-ui/themed";
 import React from "react";
 import { useWindowDimensions } from "react-native";
 
-import { SCREEN_BREAKPOINTS } from "../constants/style";
+// import { SCREEN_BREAKPOINTS } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
+
+import { SCREEN_BREAKPOINTS } from "~/constants/style";
 
 function generateRandomNumbers(amount: number, max = 1, min = 0) {
     const arr: number[] = [];
@@ -26,30 +28,29 @@ const VideoSkeleton: React.FC = () => {
     };
 
     return (
-        <>
+        <Box
+            sx={{
+                flexDirection: width >= SCREEN_BREAKPOINTS.md ? "row" : "column",
+            }}
+        >
+            {/* Left */}
             <Box
-                sx={
-                    width >= SCREEN_BREAKPOINTS.md
-                        ? {
-                              padding: 24,
-                              gap: 24,
-                              flexDirection: "row",
-                          }
-                        : {
-                              padding: 16,
-                              gap: 16,
-                          }
-                }
+                sx={{
+                    flex: 0,
+                    flexBasis: "auto",
+                    width: width >= SCREEN_BREAKPOINTS.md ? 384 : undefined,
+                    gap: 16,
+                    padding: 16,
+                }}
             >
                 <Box
-                    flex={width >= SCREEN_BREAKPOINTS.md ? 1 : undefined}
                     sx={{
                         ...skeletonBlock,
                         width: "100%",
                         aspectRatio: "16/9",
                     }}
                 />
-                <Box flex={width >= SCREEN_BREAKPOINTS.md ? 1 : undefined}>
+                <Box>
                     <Box
                         sx={{
                             ...skeletonBlock,
@@ -110,12 +111,13 @@ const VideoSkeleton: React.FC = () => {
                     </Box>
                 </Box>
             </Box>
-            <Box>
+            {/* Right */}
+            <Box sx={{ flex: 1, paddingTop: width >= SCREEN_BREAKPOINTS.md ? 12 : 0 }}>
                 {/* list item */}
                 <Box
                     sx={{
-                        paddingHorizontal: width >= SCREEN_BREAKPOINTS.md ? 24 : 16,
-                        gap: 10,
+                        paddingHorizontal: 16,
+                        gap: 12,
                         height: 64,
                         flexDirection: "row",
                         alignItems: "center",
@@ -125,7 +127,7 @@ const VideoSkeleton: React.FC = () => {
                         sx={{
                             flex: 1,
                             flexDirection: "row",
-                            gap: 10,
+                            gap: 12,
                         }}
                     >
                         <Box
@@ -158,7 +160,7 @@ const VideoSkeleton: React.FC = () => {
                     </Box>
                 </Box>
             </Box>
-        </>
+        </Box>
     );
 };
 
