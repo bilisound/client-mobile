@@ -16,7 +16,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, ScrollView, useWindowDimensions, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import {
     getBilisoundMetadata,
@@ -26,7 +27,7 @@ import {
     UserListMode,
 } from "~/api/bilisound";
 import CommonLayout from "~/components/CommonLayout";
-import { COMMON_TOUCH_COLOR } from "~/constants/style";
+import { COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "~/constants/style";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -138,6 +139,9 @@ function Header({ data, mode }: HeaderProps) {
 export default function Page() {
     const { userId, listId, mode } = useLocalSearchParams<{ userId: string; listId: string; mode: UserListMode }>();
 
+    const { width } = useWindowDimensions();
+    const edgeInsets = useSafeAreaInsets();
+
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
         initialPageParam: 1,
         queryKey: [`getEpisodeUser_${mode}_${userId}_${listId}`],
@@ -214,19 +218,42 @@ export default function Page() {
     };
 
     return (
-        <CommonLayout title="合集详情" leftAccessories="backButton">
-            <View style={{ flex: 1 }}>
-                <FlashList
-                    data={data?.pages.flatMap(page => page.rows) || []}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.bvid}
-                    onEndReached={loadMore}
-                    onEndReachedThreshold={0.5}
-                    ListHeaderComponent={data?.pages[0] ? <Header data={data.pages[0]} mode={mode!} /> : null}
-                    ListFooterComponent={isFetchingNextPage ? <ActivityIndicator /> : null}
-                    estimatedItemSize={100}
-                />
-            </View>
+        <CommonLayout title="合集详情" leftAccessories="backButton" extendToBottom>
+            {data ? (
+                <Box sx={{ flex: 1, flexDirection: "row" }}>
+                    {width >= SCREEN_BREAKPOINTS.md ? (
+                        <Box flex={0} flexBasis="auto" width={384}>
+                            <ScrollView>
+                                <Header data={data.pages[0]} mode={mode!} />
+                                <Box height={edgeInsets.bottom} aria-hidden />
+                            </ScrollView>
+                        </Box>
+                    ) : null}
+                    <Box sx={{ flex: 1 }}>
+                        <FlashList
+                            data={data.pages.flatMap(page => page.rows) || []}
+                            renderItem={renderItem}
+                            keyExtractor={item => item.bvid}
+                            onEndReached={loadMore}
+                            onEndReachedThreshold={0.5}
+                            ListHeaderComponent={
+                                width < SCREEN_BREAKPOINTS.md && data.pages[0] ? (
+                                    <Header data={data.pages[0]} mode={mode!} />
+                                ) : (
+                                    <Box height={4} aria-hidden />
+                                )
+                            }
+                            ListFooterComponent={
+                                <>
+                                    {isFetchingNextPage ? <ActivityIndicator /> : null}
+                                    <Box height={edgeInsets.bottom} aria-hidden />
+                                </>
+                            }
+                            estimatedItemSize={100}
+                        />
+                    </Box>
+                </Box>
+            ) : null}
         </CommonLayout>
     );
 }
