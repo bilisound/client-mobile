@@ -1,6 +1,7 @@
 import { Platform } from "react-native";
 
 import { BILISOUND_API_PREFIX } from "~/constants/network";
+import { convertToHTTPS } from "~/utils/string";
 
 export function getOnlineUrl(bvid: any, episode: any) {
     return BILISOUND_API_PREFIX + `/internal/resource?id=${bvid}&episode=${episode}`;
@@ -13,5 +14,5 @@ export function getImageProxyUrl(url: string, referer = "https://www.bilibili.co
             `/internal/img-proxy?url=${encodeURIComponent(url)}&referrer=${encodeURIComponent(referer)}`
         );
     }
-    return url;
+    return convertToHTTPS(url);
 }

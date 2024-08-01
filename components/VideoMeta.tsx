@@ -181,7 +181,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
         >
             {/* 封面图 */}
             <Image
-                source={getImageProxyUrl(convertToHTTPS(meta.pic), meta.bvid)}
+                source={getImageProxyUrl(meta.pic, meta.bvid)}
                 style={{
                     aspectRatio: "16/9",
                     borderRadius: 8,
@@ -213,7 +213,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                     }}
                 >
                     <Image
-                        source={getImageProxyUrl(convertToHTTPS(meta.owner.face), meta.bvid)}
+                        source={getImageProxyUrl(meta.owner.face, meta.bvid)}
                         style={{
                             width: 36,
                             height: 36,
