@@ -229,24 +229,28 @@ const QueryIdScreen: React.FC = () => {
             {data ? (
                 <Box sx={{ flex: 1, flexDirection: "row" }}>
                     {width >= SCREEN_BREAKPOINTS.md ? (
-                        <ScrollView style={{ flex: 0, flexBasis: "auto", width: 384 }}>
-                            <VideoMeta meta={data.data} />
-                        </ScrollView>
+                        <Box flex={0} flexBasis="auto" width={384}>
+                            <ScrollView>
+                                <VideoMeta meta={data.data} />
+                                <Box height={edgeInsets.bottom} />
+                            </ScrollView>
+                        </Box>
                     ) : null}
-                    <FlashList
-                        style={{ flex: 1 }}
-                        data={dataList}
-                        extraData={updateTriggerString}
-                        keyExtractor={item => `${item.page}`}
-                        ListHeaderComponent={
-                            width < SCREEN_BREAKPOINTS.md ? <VideoMeta meta={data.data} /> : <Box h={12} />
-                        }
-                        ListFooterComponent={
-                            <View style={{ height: edgeInsets.bottom + (activeTrack ? 58 + 36 : 12) }} />
-                        }
-                        renderItem={renderItem}
-                        estimatedItemSize={dataLength * 64}
-                    />
+                    <Box flex={1}>
+                        <FlashList
+                            data={dataList}
+                            extraData={updateTriggerString}
+                            keyExtractor={item => `${item.page}`}
+                            ListHeaderComponent={
+                                width < SCREEN_BREAKPOINTS.md ? <VideoMeta meta={data.data} /> : <Box h={12} />
+                            }
+                            ListFooterComponent={
+                                <View style={{ height: edgeInsets.bottom + (activeTrack ? 58 + 36 : 12) }} />
+                            }
+                            renderItem={renderItem}
+                            estimatedItemSize={dataLength * 64}
+                        />
+                    </Box>
                 </Box>
             ) : null}
             {activeTrack ? (
