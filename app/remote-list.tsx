@@ -28,6 +28,7 @@ import {
 } from "~/api/bilisound";
 import CommonLayout from "~/components/CommonLayout";
 import { COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -91,7 +92,8 @@ function Header({ data, mode }: HeaderProps) {
                 style={{
                     aspectRatio: "16/9",
                     borderRadius: 8,
-                    flex: 1,
+                    flex: 0,
+                    flexBasis: "auto",
                 }}
             />
             {/* 标题 */}
@@ -131,6 +133,46 @@ function Header({ data, mode }: HeaderProps) {
                     )}
                     <ButtonText fontSize="$sm"> 创建歌单</ButtonText>
                 </Button>
+            </Box>
+        </Box>
+    );
+}
+
+function HeaderSkeleton() {
+    const { textBasicColor } = useCommonColors();
+
+    const skeletonBlock = {
+        backgroundColor: textBasicColor,
+        borderRadius: 8,
+        opacity: 0.1,
+    };
+
+    return (
+        <Box flex={0} flexBasis="auto" padding="$4">
+            <Box
+                sx={{
+                    ...skeletonBlock,
+                    aspectRatio: "16/9",
+                    flex: 0,
+                    flexBasis: "auto",
+                }}
+            />
+            {/* 标题 */}
+            <Box
+                sx={{
+                    marginTop: 16,
+                    height: 24,
+                }}
+            >
+                <Box sx={{ ...skeletonBlock, height: 16 }} />
+            </Box>
+            {/* 简介 */}
+            <Box sx={{ height: 15 * 1.5, marginTop: 16 }}>
+                <Box sx={{ ...skeletonBlock, height: 15 }} />
+            </Box>
+            {/* 操作 */}
+            <Box flexDirection="row">
+                <Box sx={{ ...skeletonBlock, height: 40, width: 120, marginTop: 20, borderRadius: 9999 }} />
             </Box>
         </Box>
     );
@@ -253,7 +295,16 @@ export default function Page() {
                         />
                     </Box>
                 </Box>
-            ) : null}
+            ) : (
+                <Box sx={{ flex: 1, flexDirection: "row" }}>
+                    {width >= SCREEN_BREAKPOINTS.md ? (
+                        <Box flex={0} flexBasis="auto" width={384}>
+                            <HeaderSkeleton />
+                        </Box>
+                    ) : null}
+                    <Box sx={{ flex: 1 }}>{width < SCREEN_BREAKPOINTS.md ? <HeaderSkeleton /> : null}</Box>
+                </Box>
+            )}
         </CommonLayout>
     );
 }
