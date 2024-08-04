@@ -1,22 +1,12 @@
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Poppins_700Bold } from "@expo-google-fonts/poppins";
-import {
-    AlertCircleIcon,
-    Box,
-    FormControl,
-    FormControlError,
-    FormControlErrorIcon,
-    FormControlErrorText,
-    Pressable,
-    InputField,
-    Text,
-    Input,
-} from "@gluestack-ui/themed";
+import { Pressable } from "@gluestack-ui/themed";
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Platform, useWindowDimensions, View } from "react-native";
+import { Platform, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View, Input, Text } from "tamagui";
 
 import { COMMON_FRAME_BUTTON_STYLE } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
@@ -49,17 +39,17 @@ const TabIndexScreen: React.FC = () => {
     console.log({ width });
 
     return (
-        <Box
-            sx={{
-                alignItems: "stretch",
-                height: "100%",
+        <View
+            alignItems="stretch"
+            height="100%"
+            style={{
                 paddingLeft: insets.left,
                 paddingRight: insets.right,
                 paddingTop: insets.top,
             }}
         >
-            <Box
-                sx={{
+            <View
+                style={{
                     paddingTop: 96,
                     paddingBottom: 48,
                     alignItems: "center",
@@ -78,55 +68,32 @@ const TabIndexScreen: React.FC = () => {
                         BILISOUND
                     </Text>
                 ) : null}
-            </Box>
-            <Box px={16} alignItems="center">
-                <FormControl
-                    isDisabled={false}
-                    isInvalid={inputError}
-                    isReadOnly={false}
-                    isRequired={false}
-                    size="md"
-                    sx={{
-                        width: width >= 592 ? 560 : "100%",
-                        backgroundColor: "transparent",
+            </View>
+            <View px={16} alignItems="stretch" w="100%">
+                <Input
+                    flex={0}
+                    size="$5"
+                    w="100%"
+                    placeholder="粘贴完整链接或带前缀 ID 至此"
+                    value={value}
+                    onChangeText={nextValue => {
+                        setInputError(false);
+                        setValue(nextValue);
                     }}
-                >
-                    <Input
-                        variant="outline"
-                        size="md"
-                        w="100%"
-                        h="$12"
-                        sx={{
-                            borderRadius: 8,
-                        }}
-                    >
-                        <InputField
-                            placeholder="粘贴完整链接或带前缀 ID 至此"
-                            sx={{
-                                fontSize: 16,
-                            }}
-                            value={value}
-                            onChangeText={nextValue => {
-                                setInputError(false);
-                                setValue(nextValue);
-                            }}
-                            onSubmitEditing={handleSubmitEditing}
-                        />
-                    </Input>
-                    <FormControlError>
-                        <FormControlErrorIcon as={AlertCircleIcon} />
-                        <FormControlErrorText>请输入合法的地址或 ID</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
-            </Box>
-            <Box
-                sx={{
-                    position: "absolute",
-                    padding: 8,
-                    right: 0,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 4,
+                    onSubmitEditing={handleSubmitEditing}
+                />
+                <Text lineHeight={14 * 2} fontSize={14}>
+                    请输入合法的地址或 ID
+                </Text>
+            </View>
+            <View
+                position="absolute"
+                padding={8}
+                right={0}
+                flexDirection="row"
+                alignItems="center"
+                gap={4}
+                style={{
                     top: insets.top,
                 }}
             >
@@ -138,9 +105,9 @@ const TabIndexScreen: React.FC = () => {
                 <Pressable sx={COMMON_FRAME_BUTTON_STYLE} onPress={() => router.push("/history")}>
                     <FontAwesome5 name="history" size={20} color={primaryColor} />
                 </Pressable>
-            </Box>
-            <View style={{ flex: 1 }} />
-        </Box>
+            </View>
+            <View flex={1} />
+        </View>
     );
 };
 

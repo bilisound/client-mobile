@@ -15,9 +15,11 @@ import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import React, { useEffect, useRef } from "react";
 import { Platform, useColorScheme } from "react-native";
+import { TamaguiProvider } from "tamagui";
 
 import AudioManager from "~/components/AudioManager";
 import { config } from "~/config/gluestack-ui.config";
+import tamaguiConfig from "~/tamagui.config";
 import init from "~/utils/init";
 
 export {
@@ -104,10 +106,12 @@ const RootLayoutNav = () => {
     return (
         <GluestackUIProvider config={config} colorMode={(colorScheme ?? "light") as COLORMODES}>
             <QueryClientProvider client={queryClient}>
-                <ThemeProvider value={theme}>
-                    {routes}
-                    <AudioManager />
-                </ThemeProvider>
+                <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
+                    <ThemeProvider value={theme}>
+                        {routes}
+                        <AudioManager />
+                    </ThemeProvider>
+                </TamaguiProvider>
             </QueryClientProvider>
         </GluestackUIProvider>
     );

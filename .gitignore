@@ -52,3 +52,5 @@ expo-env.d.ts
 
 /ios
 /android
+
+.tamagui

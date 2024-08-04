@@ -11,7 +11,8 @@
     "build:android": "eas build --platform android --local --output=dist/bilisound-app-release.apk",
     "build:ios": "eas build --platform ios --local",
     "build:web": "expo export --platform web",
-    "lint": "eslint --fix ."
+    "lint": "eslint --fix .",
+    "generate:theme": "pnpm --package=@tamagui/cli dlx tamagui generate-themes theme-builder.ts themes.ts"
   },
   "jest": {
     "preset": "jest-expo"
@@ -34,6 +35,8 @@
     "@react-navigation/bottom-tabs": "~6.5.20",
     "@react-navigation/native": "~6.1.17",
     "@shopify/flash-list": "1.6.4",
+    "@tamagui/babel-plugin": "^1.108.0",
+    "@tamagui/config": "^1.108.0",
     "@tanstack/react-query": "^5.50.1",
     "@types/md5": "^2.3.5",
     "axios": "^1.7.2",
@@ -87,6 +90,7 @@
     "shaka-player": "^4.10.9",
     "sleep-promise": "^9.1.0",
     "superjson": "^2.2.1",
+    "tamagui": "^1.108.0",
     "uuid": "^9.0.1",
     "zustand": "^4.5.4"
   },
