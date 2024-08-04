@@ -8,6 +8,7 @@ import { Alert, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CommonLayout from "~/components/CommonLayout";
+import Empty from "~/components/Empty";
 import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "~/constants/style";
 import useHistoryStore, { HistoryItem } from "~/store/history";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -127,30 +128,7 @@ const History: React.FC = () => {
                 </Pressable>
             }
         >
-            {historyList.length > 0 ? (
-                historyListElement
-            ) : (
-                <Box
-                    sx={{
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexGrow: 1,
-                        gap: 16,
-                    }}
-                >
-                    <Text
-                        sx={{
-                            fontSize: 14,
-                            opacity: 0.5,
-                        }}
-                    >
-                        这里空空如也
-                    </Text>
-                    <Button onPress={() => router.push("/(tabs)")}>
-                        <ButtonText>去查询</ButtonText>
-                    </Button>
-                </Box>
-            )}
+            {historyList.length > 0 ? historyListElement : <Empty onPress={() => router.push("/(tabs)")} />}
         </CommonLayout>
     );
 };

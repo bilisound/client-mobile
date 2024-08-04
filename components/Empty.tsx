@@ -1,5 +1,5 @@
-import { Box, Button, ButtonText, Text } from "@gluestack-ui/themed";
 import React from "react";
+import { View, Button, Text } from "tamagui";
 
 export interface EmptyProps {
     onPress?: () => void;
@@ -9,8 +9,8 @@ export interface EmptyProps {
 
 export default function Empty({ onPress = () => {}, title = "这里空空如也", action = "去查询" }: EmptyProps) {
     return (
-        <Box
-            sx={{
+        <View
+            style={{
                 alignItems: "center",
                 justifyContent: "center",
                 flexGrow: 1,
@@ -18,7 +18,7 @@ export default function Empty({ onPress = () => {}, title = "这里空空如也"
             }}
         >
             <Text
-                sx={{
+                style={{
                     fontSize: 14,
                     opacity: 0.5,
                 }}
@@ -26,10 +26,10 @@ export default function Empty({ onPress = () => {}, title = "这里空空如也"
                 {title}
             </Text>
             {action && (
-                <Button onPress={onPress}>
-                    <ButtonText>{action}</ButtonText>
+                <Button onPress={onPress} theme="red" size="$4">
+                    {action}
                 </Button>
             )}
-        </Box>
+        </View>
     );
 }
