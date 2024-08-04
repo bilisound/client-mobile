@@ -4,10 +4,11 @@ import { Pressable } from "@gluestack-ui/themed";
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Platform, useWindowDimensions } from "react-native";
+import { Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, Input, Text } from "tamagui";
+import { View, Input, Text, useTheme } from "tamagui";
 
+import FormErrorMessage from "~/components/FormErrorMessage";
 import { COMMON_FRAME_BUTTON_STYLE } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
 import { resolveVideoAndJump } from "~/utils/format";
@@ -17,7 +18,6 @@ const TabIndexScreen: React.FC = () => {
     const [value, setValue] = useState("");
     const [inputError, setInputError] = useState(false);
 
-    const { width } = useWindowDimensions();
     const { primaryColor } = useCommonColors();
     const insets = useSafeAreaInsets();
     const [fontsLoaded] = useFonts({
@@ -36,7 +36,7 @@ const TabIndexScreen: React.FC = () => {
         }
     }
 
-    console.log({ width });
+    const theme = useTheme();
 
     return (
         <View
@@ -56,15 +56,7 @@ const TabIndexScreen: React.FC = () => {
                 }}
             >
                 {fontsLoaded ? (
-                    <Text
-                        sx={{
-                            fontSize: 32,
-                            fontFamily: "Poppins_700Bold",
-                            color: "$primary500",
-                            height: 48,
-                            lineHeight: 48,
-                        }}
-                    >
+                    <Text color={theme["brand"]} fontSize={32} height={48} lineHeight={48} fontFamily="Poppins_700Bold">
                         BILISOUND
                     </Text>
                 ) : null}
@@ -82,9 +74,7 @@ const TabIndexScreen: React.FC = () => {
                     }}
                     onSubmitEditing={handleSubmitEditing}
                 />
-                <Text lineHeight={14 * 2} fontSize={14}>
-                    请输入合法的地址或 ID
-                </Text>
+                <FormErrorMessage isError={inputError}>请输入合法的地址或 ID</FormErrorMessage>
             </View>
             <View
                 position="absolute"
