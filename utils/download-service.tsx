@@ -58,6 +58,7 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
             log.debug("已经有相同任务在处理");
             return;
         }
+        // 待检查的本地音频路径（包括从视频提取的音频）
         const checkUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode);
 
         if (await RNFS.exists(checkUrl)) {
@@ -83,8 +84,11 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
                 episode: playingRequest.episode,
                 filterResourceURL,
             });
+
+            // 待下载资源地址（可能是音频或视频）
             const downloadUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, isAudio);
 
+            // 下载处理
             const beginTime = global.performance.now();
             const downloadTask = RNFS.downloadFile({
                 fromUrl: url,
