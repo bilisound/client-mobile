@@ -1,12 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Box, Pressable, Text, useColorMode, useToken } from "@gluestack-ui/themed";
 import { router } from "expo-router";
 import React, { PropsWithChildren } from "react";
-import { StatusBar, useColorScheme } from "react-native";
+import { Pressable, StatusBar, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View, Text } from "tamagui";
 
-import { COMMON_FRAME_BUTTON_STYLE, COMMON_FRAME_SOLID_BUTTON_STYLE } from "../constants/style";
-import useCommonColors from "../hooks/useCommonColors";
+import { COMMON_FRAME_BUTTON_STYLE, COMMON_FRAME_SOLID_BUTTON_STYLE } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
 
 export interface CommonFrameNewProps {
     title?: string;
@@ -34,61 +34,36 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     const { textBasicColor } = useCommonColors();
     const colorMode = useColorScheme();
 
-    const computedSolidColor = solidColor || (colorMode === "dark" ? "$primary900" : "$primary500");
-    const textSolidColorDark = useToken("colors", "white");
-    const textSolidColorLight = useToken("colors", "textLight700");
+    const computedSolidColor = solidColor || (colorMode === "dark" ? "#0c554d" : "#00ba9d");
+    const textSolidColorDark = "#fff";
+    const textSolidColorLight = "#525252";
     const textSolidColor = solidScheme === "dark" ? textSolidColorDark : textSolidColorLight;
 
     return (
-        <Box
-            sx={{
-                height: "100%",
-                backgroundColor: bgColor,
-            }}
-        >
+        <View height="100%" backgroundColor={bgColor}>
             {titleBarTheme === "solid" && solidScheme === "dark" ? (
                 <StatusBar barStyle="light-content" showHideTransition="none" />
             ) : null}
-            <Box
-                sx={{
-                    paddingTop: edgeInsets.top,
-                    flex: 0,
-                    flexBasis: "auto",
-                    backgroundColor: titleBarTheme === "solid" ? computedSolidColor : "transparent",
-                }}
+            <View
+                paddingTop={edgeInsets.top}
+                flex={0}
+                flexBasis="auto"
+                backgroundColor={titleBarTheme === "solid" ? computedSolidColor : "transparent"}
             >
-                <Box
-                    sx={{
-                        height: 56,
-                        padding: 8,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
+                <View height={56} padding={8} alignItems="center" justifyContent="center">
                     <Text
-                        sx={{
-                            fontSize: 16,
-                            fontWeight: "700",
-                            color: titleBarTheme === "solid" ? textSolidColor : textBasicColor,
-                        }}
+                        fontSize={16}
+                        fontWeight="700"
+                        color={titleBarTheme === "solid" ? textSolidColor : textBasicColor}
                     >
                         {title}
                     </Text>
                     {leftAccessories ? (
-                        <Box
-                            sx={{
-                                position: "absolute",
-                                padding: 8,
-                                left: 0,
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: 4,
-                            }}
-                        >
+                        <View position="absolute" padding={8} left={0} flexDirection="row" alignItems="center" gap={4}>
                             {leftAccessories === "backButton" ? (
                                 <Pressable
                                     aria-label="返回"
-                                    sx={
+                                    style={
                                         titleBarTheme === "solid"
                                             ? COMMON_FRAME_SOLID_BUTTON_STYLE
                                             : COMMON_FRAME_BUTTON_STYLE
@@ -104,35 +79,24 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                             ) : (
                                 leftAccessories
                             )}
-                        </Box>
+                        </View>
                     ) : null}
                     {rightAccessories ? (
-                        <Box
-                            sx={{
-                                position: "absolute",
-                                padding: 8,
-                                right: 0,
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: 4,
-                            }}
-                        >
+                        <View position="absolute" padding={8} right={0} flexDirection="row" alignItems="center" gap={4}>
                             {rightAccessories}
-                        </Box>
+                        </View>
                     ) : null}
-                </Box>
-            </Box>
-            <Box
-                sx={{
-                    paddingLeft: edgeInsets.left,
-                    paddingRight: edgeInsets.right,
-                    paddingBottom: extendToBottom ? 0 : edgeInsets.bottom,
-                    flex: 1,
-                }}
+                </View>
+            </View>
+            <View
+                paddingLeft={edgeInsets.left}
+                paddingRight={edgeInsets.right}
+                paddingBottom={extendToBottom ? 0 : edgeInsets.bottom}
+                flex={1}
             >
                 {children}
-            </Box>
-        </Box>
+            </View>
+        </View>
     );
 };
 

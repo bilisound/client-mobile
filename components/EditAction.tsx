@@ -39,7 +39,7 @@ export default function EditAction({ onAll, onReverse, onDelete, amount }: EditA
                     反选
                 </Button>
                 <Theme name="red">
-                    <Button size="$4" themeInverse disabled={amount <= 0} onPress={onDelete}>
+                    <Button size="$4" disabled={amount <= 0} onPress={onDelete}>
                         删除
                     </Button>
                 </Theme>
