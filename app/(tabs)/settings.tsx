@@ -1,4 +1,5 @@
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { Icon, IconProps } from "@expo/vector-icons/build/createIconSet";
 import { router } from "expo-router";
 import { filesize } from "filesize";
 import path from "path-browserify";
@@ -7,20 +8,26 @@ import { Platform, ScrollView, Switch } from "react-native";
 import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "~/components/CommonLayout";
-import SettingMenuItem, { SettingMenuItemIcon } from "~/components/SettingMenuItem";
+import SettingMenuItem from "~/components/SettingMenuItem";
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
 import useSettingsStore from "~/store/settings";
 import log from "~/utils/logger";
 import { checkDirectorySize, cleanAudioCache } from "~/utils/misc";
 
-const LinkIcon: SettingMenuItemIcon = iconProps => <Entypo name="link" {...iconProps} />;
-const DownloadNextIcon: SettingMenuItemIcon = iconProps => <MaterialIcons name="downloading" {...iconProps} />;
-const CDNIcon: SettingMenuItemIcon = iconProps => <Entypo name="cloud" {...iconProps} />;
-const DeleteIcon: SettingMenuItemIcon = iconProps => <MaterialIcons name="delete" {...iconProps} />;
-const InfoIcon: SettingMenuItemIcon = iconProps => <FontAwesome5 name="info-circle" {...iconProps} />;
-// const ReadmeIcon: SettingMenuItemIcon = iconProps => <Entypo name="help-with-circle" {...iconProps} />;
-const DeveloperIcon: SettingMenuItemIcon = iconProps => <Entypo name="code" {...iconProps} />;
-const BugIcon: SettingMenuItemIcon = iconProps => <FontAwesome5 name="bug" {...iconProps} />;
+function createIcon<G extends string, FN extends string>(IconComponent: Icon<G, FN>, name: G) {
+    return (iconProps: Partial<IconProps<any>>) => {
+        return <IconComponent name={name} {...iconProps} />;
+    };
+}
+
+const LinkIcon = createIcon(Entypo, "link");
+const DownloadNextIcon = createIcon(MaterialIcons, "downloading");
+const CDNIcon = createIcon(Entypo, "cloud");
+const DeleteIcon = createIcon(MaterialIcons, "delete");
+const InfoIcon = createIcon(FontAwesome5, "info-circle");
+// const ReadmeIcon = createIcon(Entypo, "help-with-circle");
+const DeveloperIcon = createIcon(Entypo, "code");
+const BugIcon = createIcon(FontAwesome5, "bug");
 
 const Settings: React.FC = () => {
     const { useLegacyID, downloadNextTrack, filterResourceURL, debugMode, toggle } = useSettingsStore(state => ({

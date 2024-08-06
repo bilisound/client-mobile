@@ -3,8 +3,8 @@ import { Text, Pressable, Box } from "@gluestack-ui/themed";
 import React from "react";
 import { GestureResponderEvent } from "react-native/Libraries/Types/CoreEventTypes";
 
-import { COMMON_TOUCH_COLOR } from "../constants/style";
-import useCommonColors from "../hooks/useCommonColors";
+import { COMMON_TOUCH_COLOR } from "~/constants/style";
+import useCommonColors from "~/hooks/useCommonColors";
 
 export interface SettingMenuItemProps {
     title: string;
