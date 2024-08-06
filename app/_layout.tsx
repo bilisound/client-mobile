@@ -20,6 +20,9 @@ import AudioManager from "~/components/AudioManager";
 import { config } from "~/config/gluestack-ui.config";
 import init from "~/utils/init";
 
+// Initialize styles
+import "~/unistyles";
+
 export {
     // Catch any errors thrown by the Layout component.
     ErrorBoundary,
