@@ -178,7 +178,6 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
             log.debug("现在「播放」的曲目是即将播放的曲目，替换处理");
             await TrackPlayer.remove([activeTrackIndex]);
             await TrackPlayer.add({ ...activeTrack, url: checkUrl, bilisoundIsLoaded: true }, activeTrackIndex);
-            await TrackPlayer.play();
         } else {
             log.debug("现在「播放」的曲目不是正在加载的曲目，放置处理");
         }
