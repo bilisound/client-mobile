@@ -40,10 +40,9 @@ const stylesheet = createStyleSheet(theme => ({
     logoTitle: {
         fontSize: 24,
         lineHeight: 24 * 1.5,
-        fontFamily: "Poppins_700Bold",
-        marginTop: 16,
+        fontWeight: "700",
+        marginTop: 8,
         marginBottom: 4,
-        color: theme.colors.primary[600],
     },
     version: {
         fontSize: 14,
@@ -55,7 +54,7 @@ const stylesheet = createStyleSheet(theme => ({
     },
     link: {
         marginTop: 24,
-        color: theme.colors.accent[600],
+        color: theme.colors.accent[700],
         textDecorationLine: "underline",
     },
 }));
