@@ -41,7 +41,7 @@ const History: React.FC = () => (
                         opacity: 0.7,
                     }}
                 >
-                    {`版本 ${require("../package.json").version}`}
+                    {`版本 ${require("~/app.json").expo.version}`}
                 </Text>
                 <Box
                     sx={{
