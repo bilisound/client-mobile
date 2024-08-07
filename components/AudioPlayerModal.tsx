@@ -3,10 +3,18 @@ import { Pressable, Text, Box } from "@gluestack-ui/themed";
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Linking, Platform, StatusBar, useColorScheme } from "react-native";
+import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
+import Animated, {
+    ReduceMotion,
+    useAnimatedStyle,
+    useSharedValue,
+    withRepeat,
+    withTiming,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
 
@@ -24,11 +32,28 @@ import { tracksToPlaylist } from "~/utils/track-data";
 
 function AudioProgressBar() {
     const { primaryColor } = useCommonColors();
+    const colorScheme = useColorScheme();
 
     const [value, setValue] = useState(0);
     const [holding, setHolding] = useState(false);
 
+    // 进度提示
+    const [glowTotalWidth, setGlowTotalWidth] = useState(0);
+    const glowWidth = glowTotalWidth * 0.618;
+    const glowPosition = useSharedValue<number>(0);
+
+    useEffect(() => {
+        glowPosition.value = withRepeat(
+            withTiming(glowTotalWidth + glowWidth, { duration: 1000 }),
+            -1,
+            false,
+            () => {},
+            ReduceMotion.System,
+        );
+    }, [glowPosition, glowTotalWidth, glowWidth]);
+
     // 播放状态
+    const activeTrack = useActiveTrack();
     const { position, buffered, duration } = useProgress();
 
     useEffect(() => {
@@ -36,6 +61,51 @@ function AudioProgressBar() {
             setValue(position);
         }
     }, [holding, position]);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ translateX: glowPosition.value - glowWidth }],
+    }));
+
+    if (!activeTrack?.bilisoundIsLoaded) {
+        return (
+            <View
+                onLayout={e => setGlowTotalWidth(e.nativeEvent.layout.width - 20)}
+                style={{
+                    height: 16,
+                    justifyContent: "center",
+                    flex: 1,
+                    position: "relative",
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                }}
+            >
+                <Box
+                    sx={{
+                        height: 3,
+                        borderRadius: 9999,
+                        backgroundColor: "$trueGray200",
+                        _dark: {
+                            backgroundColor: "$primary900",
+                        },
+                        overflow: "hidden",
+                    }}
+                >
+                    <Animated.View style={[{ width: glowWidth, height: 3 }, animatedStyle]}>
+                        <LinearGradient
+                            colors={
+                                colorScheme === "dark"
+                                    ? ["#0c554d", "#028373", "#0c554d"]
+                                    : ["#e5e5e5", "#a3a3a3", "#e5e5e5"]
+                            }
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                            style={{ width: "100%", height: "100%" }}
+                        />
+                    </Animated.View>
+                </Box>
+            </View>
+        );
+    }
 
     return (
         <Box
@@ -118,6 +188,8 @@ function AudioProgressBar() {
 
 function AudioProgressTimer() {
     const { position, duration } = useProgress();
+    const activeTrack = useActiveTrack();
+
     return (
         <Box
             sx={{
@@ -134,7 +206,7 @@ function AudioProgressTimer() {
                     opacity: 0.65,
                 }}
             >
-                {formatSecond(position)}
+                {activeTrack?.bilisoundIsLoaded ? formatSecond(position) : "00:00"}
             </Text>
             <Text
                 sx={{
@@ -142,7 +214,7 @@ function AudioProgressTimer() {
                     opacity: 0.65,
                 }}
             >
-                {formatSecond(duration)}
+                {activeTrack?.bilisoundIsLoaded ? formatSecond(duration) : "00:00"}
             </Text>
         </Box>
     );
