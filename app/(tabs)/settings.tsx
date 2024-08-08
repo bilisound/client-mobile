@@ -1,5 +1,4 @@
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import { Icon, IconProps } from "@expo/vector-icons/build/createIconSet";
 import { router } from "expo-router";
 import { filesize } from "filesize";
 import path from "path-browserify";
@@ -9,16 +8,11 @@ import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
+import { createIcon } from "~/components/ui/utils/icon";
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
 import useSettingsStore from "~/store/settings";
 import log from "~/utils/logger";
 import { checkDirectorySize, cleanAudioCache } from "~/utils/misc";
-
-function createIcon<G extends string, FN extends string>(IconComponent: Icon<G, FN>, name: G) {
-    return (iconProps: Partial<IconProps<any>>) => {
-        return <IconComponent name={name} {...iconProps} />;
-    };
-}
 
 const LinkIcon = createIcon(Entypo, "link");
 const DownloadNextIcon = createIcon(MaterialIcons, "downloading");

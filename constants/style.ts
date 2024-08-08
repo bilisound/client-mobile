@@ -46,7 +46,6 @@ export const COMMON_FRAME_BUTTON_STYLE = {
     justifyContent: "center",
     width: 40,
     height: 40,
-    borderRadius: 4,
 } as const;
 
 export const COMMON_FRAME_SOLID_BUTTON_STYLE = {
@@ -55,5 +54,4 @@ export const COMMON_FRAME_SOLID_BUTTON_STYLE = {
     justifyContent: "center",
     width: 40,
     height: 40,
-    borderRadius: 4,
 } as const;

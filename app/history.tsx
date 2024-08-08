@@ -9,10 +9,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
+import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
 import Pressable from "~/components/ui/Pressable";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "~/constants/style";
+import { createIcon } from "~/components/ui/utils/icon";
 import useHistoryStore, { HistoryItem } from "~/store/history";
 import { getImageProxyUrl } from "~/utils/constant-helper";
+
+const IconDelete = createIcon(MaterialIcons, "delete");
 
 const History: React.FC = () => {
     const edgeInsets = useSafeAreaInsets();
@@ -74,8 +77,10 @@ const History: React.FC = () => {
             extendToBottom
             leftAccessories="backButton"
             rightAccessories={
-                <Pressable
-                    style={COMMON_FRAME_SOLID_BUTTON_STYLE}
+                <ButtonTitleBar
+                    solid
+                    Icon={IconDelete}
+                    label="清除历史记录"
                     onPress={() => {
                         Alert.alert("清除历史记录", "确定要清除历史记录吗？", [
                             {
@@ -91,9 +96,7 @@ const History: React.FC = () => {
                             },
                         ]);
                     }}
-                >
-                    <MaterialIcons name="delete" size={24} color="#fff" />
-                </Pressable>
+                />
             }
         >
             {historyList.length > 0 ? (

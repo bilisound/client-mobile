@@ -10,6 +10,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 
 interface PressableProps extends NativePressableProps {
     style?: StyleProp<ViewStyle>;
+    outerStyle?: StyleProp<ViewStyle>;
     pressedBackgroundColor?: string;
 }
 
@@ -31,7 +32,7 @@ export default function Pressable(props: PressableProps) {
     });
 
     return (
-        <Animated.View style={[animatedStyle]}>
+        <Animated.View style={[props.outerStyle, animatedStyle]}>
             <NativePressable
                 onPressIn={event => {
                     pressed.value = true;
@@ -41,7 +42,7 @@ export default function Pressable(props: PressableProps) {
                     pressed.value = false;
                     props.onPressOut?.(event);
                 }}
-                {...omit(props, ["onPressIn", "onPressOut"])}
+                {...omit(props, ["onPressIn", "onPressOut", "outerStyle"])}
             >
                 {props.children}
             </NativePressable>
