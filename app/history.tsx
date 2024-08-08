@@ -1,10 +1,10 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Box, Button, Text, Pressable, ButtonText } from "@gluestack-ui/themed";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Button, Pressable, ButtonText } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { useEffect, useRef } from "react";
-import { Alert, View } from "react-native";
+import { Alert, View, Text, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CommonLayout from "~/components/CommonLayout";
@@ -37,7 +37,7 @@ const History: React.FC = () => {
             estimatedItemSize={historyList.length}
             renderItem={item => {
                 const data = item.item;
-                const i = item.index;
+                // const i = item.index;
                 if (!item.item) {
                     return null;
                 }
@@ -47,52 +47,17 @@ const History: React.FC = () => {
                             router.push(`/query/${data.id}?noHistory=1`);
                         }}
                         onLongPress={() => null}
-                        sx={{
-                            ...COMMON_TOUCH_COLOR,
-                            flexDirection: "row",
-                            alignItems: "center",
-                            height: 72,
-                            paddingHorizontal: 16,
-                            gap: 16,
-                        }}
+                        style={[styles.historyItem, COMMON_TOUCH_COLOR]}
                     >
-                        <Image
-                            source={getImageProxyUrl(data.thumbnailUrl, data.id)}
-                            style={{
-                                height: 48,
-                                aspectRatio: "3/2",
-                                flex: 0,
-                                flexBasis: "auto",
-                                borderRadius: 8,
-                            }}
-                        />
-                        <Box
-                            sx={{
-                                flex: 1,
-                                gap: "$1",
-                            }}
-                        >
-                            <Text
-                                sx={{
-                                    fontWeight: "bold",
-                                    fontSize: 14,
-                                }}
-                                ellipsizeMode="tail"
-                                numberOfLines={1}
-                            >
+                        <Image source={getImageProxyUrl(data.thumbnailUrl, data.id)} style={styles.thumbnail} />
+                        <View style={styles.textContainer}>
+                            <Text style={styles.titleText} ellipsizeMode="tail" numberOfLines={1}>
                                 {data.name}
                             </Text>
-                            <Text
-                                sx={{
-                                    opacity: 0.5,
-                                    fontSize: 12,
-                                }}
-                                ellipsizeMode="tail"
-                                numberOfLines={1}
-                            >
+                            <Text style={styles.authorText} ellipsizeMode="tail" numberOfLines={1}>
                                 {data.authorName}
                             </Text>
-                        </Box>
+                        </View>
                     </Pressable>
                 );
             }}
@@ -130,29 +95,54 @@ const History: React.FC = () => {
             {historyList.length > 0 ? (
                 historyListElement
             ) : (
-                <Box
-                    sx={{
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexGrow: 1,
-                        gap: 16,
-                    }}
-                >
-                    <Text
-                        sx={{
-                            fontSize: 14,
-                            opacity: 0.5,
-                        }}
-                    >
-                        这里空空如也
-                    </Text>
+                <View style={styles.emptyContainer}>
+                    <Text style={styles.emptyText}>这里空空如也</Text>
                     <Button onPress={() => router.push("/(tabs)")}>
                         <ButtonText>去查询</ButtonText>
                     </Button>
-                </Box>
+                </View>
             )}
         </CommonLayout>
     );
 };
+
+const styles = StyleSheet.create({
+    historyItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        height: 72,
+        paddingHorizontal: 16,
+        gap: 16,
+    },
+    thumbnail: {
+        height: 48,
+        aspectRatio: 3 / 2,
+        flex: 0,
+        flexBasis: "auto",
+        borderRadius: 8,
+    },
+    textContainer: {
+        flex: 1,
+        gap: 4,
+    },
+    titleText: {
+        fontWeight: "bold",
+        fontSize: 14,
+    },
+    authorText: {
+        opacity: 0.5,
+        fontSize: 12,
+    },
+    emptyContainer: {
+        alignItems: "center",
+        justifyContent: "center",
+        flexGrow: 1,
+        gap: 16,
+    },
+    emptyText: {
+        fontSize: 14,
+        opacity: 0.5,
+    },
+});
 
 export default History;

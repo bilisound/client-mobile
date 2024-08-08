@@ -1,10 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Box, ButtonText, Pressable, Text, Button } from "@gluestack-ui/themed";
+import { ButtonText, Pressable, Button } from "@gluestack-ui/themed";
 import { CameraView, Camera, PermissionStatus } from "expo-camera";
 import { BarcodeScanningResult } from "expo-camera/build/Camera.types";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, StatusBar } from "react-native";
+import { Alert, StatusBar, View, Text, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import log from "~/utils/logger";
@@ -71,119 +71,91 @@ const ScannerPage: React.FC = () => {
     };
 
     return (
-        <Box
-            sx={{
-                flex: 1,
-                backgroundColor: "#000",
-                position: "relative",
-            }}
-        >
+        <View style={styles.container}>
             <StatusBar barStyle="light-content" showHideTransition="none" />
-            <Box
-                sx={{
-                    width: "100%",
-                    backgroundColor: "rgba(0,0,0,0.5)",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    position: "relative",
-                    height: safeAreaInsets.top + 56,
-                    paddingTop: safeAreaInsets.top,
-                }}
-            >
+            <View style={[styles.header, { height: safeAreaInsets.top + 56, paddingTop: safeAreaInsets.top }]}>
                 <Pressable
                     onPress={() => {
                         router.back();
                     }}
-                    style={{
-                        position: "absolute",
-                        width: 40,
-                        height: 40,
-                        borderRadius: 8,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        left: 8,
-                        top: 8 + safeAreaInsets.top,
-                    }}
+                    style={[styles.backButton, { top: 8 + safeAreaInsets.top }]}
                 >
                     <Ionicons name="arrow-back" size={24} color="#fff" />
                 </Pressable>
-                <Text
-                    style={{
-                        color: "#fff",
-                        fontWeight: "700",
-                        fontSize: 14,
-                    }}
-                >
-                    扫描二维码
-                </Text>
-            </Box>
+                <Text style={styles.headerText}>扫描二维码</Text>
+            </View>
             {(() => {
                 if (hasPermission === null || hasPermission === "undetermined") {
-                    return (
-                        <Box
-                            sx={{
-                                flex: 1,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: 16,
-                            }}
-                        >
-                            {/* <Text style={styles.noCameraContainerText}>Requesting for camera permission</Text> */}
-                        </Box>
-                    );
+                    return <View style={styles.centeredContainer} />;
                 }
                 if (hasPermission === "denied") {
                     return (
-                        <Box
-                            sx={{
-                                flex: 1,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: 16,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    color: "#fff",
-                                }}
-                            >
-                                扫码功能需要摄像头权限喵
-                            </Text>
+                        <View style={styles.centeredContainer}>
+                            <Text style={styles.permissionText}>扫码功能需要摄像头权限喵</Text>
                             <Button action="primary" onPress={() => getBarCodeScannerPermissions()}>
                                 <ButtonText>给予权限</ButtonText>
                             </Button>
-                        </Box>
-                    );
-                }
-                /* if (scanned) {
-                    return (
-                        <View style={styles.noCameraContainer}>
-                            <Text style={styles.noCameraContainerText}>已经扫描过了</Text>
-                            <Button onPress={() => setScanned(false)}>
-                                <Text>再来一次</Text>
-                            </Button>
                         </View>
                     );
-                } */
+                }
                 return (
                     <CameraView
                         onBarcodeScanned={handleBarCodeScanned}
                         barcodeScannerSettings={{
                             barcodeTypes: ["qr"],
                         }}
-                        style={{
-                            position: "absolute",
-                            left: 0,
-                            top: 0,
-                            width: "100%",
-                            height: "100%",
-                            zIndex: -1,
-                        }}
+                        style={styles.cameraView}
                     />
                 );
             })()}
-        </Box>
+        </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#000",
+        position: "relative",
+    },
+    header: {
+        width: "100%",
+        backgroundColor: "rgba(0,0,0,0.5)",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+    },
+    backButton: {
+        position: "absolute",
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+        alignItems: "center",
+        justifyContent: "center",
+        left: 8,
+    },
+    headerText: {
+        color: "#fff",
+        fontWeight: "700",
+        fontSize: 14,
+    },
+    centeredContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 16,
+    },
+    permissionText: {
+        color: "#fff",
+    },
+    cameraView: {
+        position: "absolute",
+        left: 0,
+        top: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: -1,
+    },
+});
 
 export default ScannerPage;
