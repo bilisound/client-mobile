@@ -39,7 +39,7 @@ function AudioProgressBar() {
 
     // 进度提示
     const [glowTotalWidth, setGlowTotalWidth] = useState(0);
-    const glowWidth = glowTotalWidth * 0.618;
+    const glowWidth = glowTotalWidth * 1.2;
     const glowPosition = useSharedValue<number>(0);
 
     useEffect(() => {

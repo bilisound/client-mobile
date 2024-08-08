@@ -22,6 +22,7 @@ import init from "~/utils/init";
 
 // Initialize styles
 import "~/unistyles";
+import { UnistylesRuntime, useInitialTheme } from "react-native-unistyles";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -42,6 +43,12 @@ const queryClient = new QueryClient();
 
 const RootLayoutNav = () => {
     const colorScheme = useColorScheme();
+
+    useInitialTheme(colorScheme === "dark" ? "dark" : "light");
+
+    useEffect(() => {
+        UnistylesRuntime.setTheme(colorScheme === "dark" ? "dark" : "light");
+    }, [colorScheme]);
 
     const modalSettings: NativeStackNavigationOptions =
         Platform.OS === "ios"

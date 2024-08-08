@@ -1,19 +1,22 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Button, Pressable, ButtonText } from "@gluestack-ui/themed";
+import { Button, ButtonText } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { useEffect, useRef } from "react";
-import { Alert, View, Text, StyleSheet } from "react-native";
+import { Alert, View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE, COMMON_TOUCH_COLOR } from "~/constants/style";
+import Pressable from "~/components/ui/Pressable";
+import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "~/constants/style";
 import useHistoryStore, { HistoryItem } from "~/store/history";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 
 const History: React.FC = () => {
     const edgeInsets = useSafeAreaInsets();
+    const { styles, theme } = useStyles(styleSheet);
 
     // 历史记录信息
     const { historyList, clearHistoryList, repairHistoryList } = useHistoryStore(state => ({
@@ -32,6 +35,7 @@ const History: React.FC = () => {
         <FlashList
             ref={flashListRef}
             data={historyList}
+            extraData={theme.name}
             keyExtractor={item => `${item?.key}`}
             ListFooterComponent={<View style={{ height: edgeInsets.bottom }} />}
             estimatedItemSize={historyList.length}
@@ -47,7 +51,7 @@ const History: React.FC = () => {
                             router.push(`/query/${data.id}?noHistory=1`);
                         }}
                         onLongPress={() => null}
-                        style={[styles.historyItem, COMMON_TOUCH_COLOR]}
+                        style={[styles.historyItem]}
                     >
                         <Image source={getImageProxyUrl(data.thumbnailUrl, data.id)} style={styles.thumbnail} />
                         <View style={styles.textContainer}>
@@ -71,7 +75,7 @@ const History: React.FC = () => {
             leftAccessories="backButton"
             rightAccessories={
                 <Pressable
-                    sx={COMMON_FRAME_SOLID_BUTTON_STYLE}
+                    style={COMMON_FRAME_SOLID_BUTTON_STYLE}
                     onPress={() => {
                         Alert.alert("清除历史记录", "确定要清除历史记录吗？", [
                             {
@@ -106,7 +110,7 @@ const History: React.FC = () => {
     );
 };
 
-const styles = StyleSheet.create({
+const styleSheet = createStyleSheet(theme => ({
     historyItem: {
         flexDirection: "row",
         alignItems: "center",
@@ -128,10 +132,12 @@ const styles = StyleSheet.create({
     titleText: {
         fontWeight: "bold",
         fontSize: 14,
+        color: theme.colorTokens.foreground,
     },
     authorText: {
         opacity: 0.5,
         fontSize: 12,
+        color: theme.colorTokens.foreground,
     },
     emptyContainer: {
         alignItems: "center",
@@ -143,6 +149,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         opacity: 0.5,
     },
-});
+}));
 
 export default History;

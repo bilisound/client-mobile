@@ -1,13 +1,14 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Box, Pressable, Text, Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
+import { Toast, ToastDescription, ToastTitle, useToast } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
 import CommonLayout from "~/components/CommonLayout";
 import PlaylistItem from "~/components/PlaylistItem";
-import { COMMON_TOUCH_COLOR } from "~/constants/style";
+import Pressable from "~/components/ui/Pressable";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import { addToPlaylist, quickCreatePlaylist, syncPlaylistAmount, usePlaylistStorage } from "~/storage/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
@@ -28,42 +29,33 @@ export default function Page() {
     const [playlistStorage] = usePlaylistStorage();
     return (
         <CommonLayout title="添加到歌单" leftAccessories="backButton">
-            <Box gap="$4" py="$4">
-                <Text px="$5" fontWeight="700" opacity={0.6}>
+            <View style={styles.container}>
+                <Text style={styles.headerText}>
                     {playlistDetail?.length === 1
                         ? "添加以下曲目到指定歌单："
                         : `添加 ${playlistDetail?.length} 项到指定歌单：`}
                 </Text>
                 {playlistDetail && playlistDetail.length === 1 && (
-                    <Box w="100%" px="$5" flexDirection="row" gap="$4">
+                    <View style={styles.singleItemContainer}>
                         <Image
                             source={getImageProxyUrl(playlistDetail[0].imgUrl, playlistDetail[0].bvid)}
-                            style={{
-                                height: 48,
-                                aspectRatio: "16/9",
-                                flex: 0,
-                                flexBasis: "auto",
-                                borderRadius: 8,
-                            }}
+                            style={styles.image}
                         />
-                        <Box flex={1} gap="$1">
-                            <Text numberOfLines={1} ellipsizeMode="tail" fontSize={16} fontWeight="700">
+                        <View style={styles.textContainer}>
+                            <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
                                 {playlistDetail[0].title}
                             </Text>
-                            <Text numberOfLines={1} ellipsizeMode="tail" fontSize={14} opacity={0.7}>
+                            <Text style={styles.author} numberOfLines={1} ellipsizeMode="tail">
                                 {playlistDetail[0].author}
                             </Text>
-                        </Box>
-                    </Box>
+                        </View>
+                    </View>
                 )}
-            </Box>
+            </View>
             <FlashList
                 ListHeaderComponent={
                     <Pressable
-                        gap="$1"
-                        px="$5"
-                        py="$3"
-                        sx={COMMON_TOUCH_COLOR}
+                        style={[styles.pressable]}
                         onPress={() => {
                             quickCreatePlaylist(name, playlistDetail ?? []);
                             toast.show({
@@ -71,25 +63,23 @@ export default function Page() {
                                 containerStyle,
                                 render: ({ id }) => (
                                     <Toast nativeID={`toast-${id}`} action="success" variant="accent">
-                                        <VStack space="xs">
+                                        <View style={styles.toastContainer}>
                                             <ToastTitle>歌单创建成功</ToastTitle>
                                             <ToastDescription>{"新歌单的名称：" + name}</ToastDescription>
-                                        </VStack>
+                                        </View>
                                     </Toast>
                                 ),
                             });
                             router.back();
                         }}
                     >
-                        <Box flexDirection="row" alignItems="center" gap="$3">
-                            <MaterialIcons name="add" size={24} color="red" flex={0} flexBasis="auto" />
-                            <Text fontSize="$md" lineHeight={24} numberOfLines={1} ellipsizeMode="tail" flex={1}>
+                        <View style={styles.pressableContent}>
+                            <MaterialIcons name="add" size={24} color="red" />
+                            <Text style={styles.pressableText} numberOfLines={1} ellipsizeMode="tail">
                                 {name}
                             </Text>
-                        </Box>
-                        <Text ml="$9" fontSize="$sm" opacity={0.6} lineHeight={21}>
-                            添加新的歌单
-                        </Text>
+                        </View>
+                        <Text style={styles.pressableSubtext}>添加新的歌单</Text>
                     </Pressable>
                 }
                 renderItem={item => {
@@ -104,10 +94,10 @@ export default function Page() {
                                     containerStyle,
                                     render: ({ id }) => (
                                         <Toast nativeID={`toast-${id}`} action="success" variant="accent">
-                                            <VStack space="xs">
+                                            <View style={styles.toastContainer}>
                                                 <ToastTitle>曲目添加成功</ToastTitle>
                                                 <ToastDescription>{`已添加 ${playlistDetail?.length ?? 0} 首曲目到歌单`}</ToastDescription>
-                                            </VStack>
+                                            </View>
                                         </Toast>
                                     ),
                                 });
@@ -122,3 +112,64 @@ export default function Page() {
         </CommonLayout>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        gap: 16,
+        paddingVertical: 16,
+    },
+    headerText: {
+        paddingHorizontal: 20,
+        fontWeight: "700",
+        opacity: 0.6,
+    },
+    singleItemContainer: {
+        width: "100%",
+        paddingHorizontal: 20,
+        flexDirection: "row",
+        gap: 16,
+    },
+    image: {
+        height: 48,
+        aspectRatio: 16 / 9,
+        flex: 0,
+        flexBasis: "auto",
+        borderRadius: 8,
+    },
+    textContainer: {
+        flex: 1,
+        gap: 4,
+    },
+    title: {
+        fontSize: 16,
+        fontWeight: "700",
+    },
+    author: {
+        fontSize: 14,
+        opacity: 0.7,
+    },
+    pressable: {
+        gap: 4,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+    },
+    pressableContent: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+    },
+    pressableText: {
+        fontSize: 16,
+        lineHeight: 24,
+        flex: 1,
+    },
+    pressableSubtext: {
+        marginLeft: 36,
+        fontSize: 14,
+        opacity: 0.6,
+        lineHeight: 21,
+    },
+    toastContainer: {
+        gap: 4,
+    },
+});

@@ -1,8 +1,8 @@
-import { Box, Center, Pressable, Text } from "@gluestack-ui/themed";
+import { Box, Center, Text } from "@gluestack-ui/themed";
 import React from "react";
 
-import { COMMON_TOUCH_COLOR } from "../constants/style";
-import { PlaylistMeta } from "../storage/playlist";
+import Pressable from "~/components/ui/Pressable";
+import { PlaylistMeta } from "~/storage/playlist";
 
 export interface PlaylistItemProps {
     item: PlaylistMeta;
@@ -15,7 +15,11 @@ export interface PlaylistItemProps {
  */
 export default function PlaylistItem({ item, onPress, onLongPress }: PlaylistItemProps) {
     return (
-        <Pressable gap="$1" px="$5" py="$3" sx={COMMON_TOUCH_COLOR} onPress={onPress} onLongPress={onLongPress}>
+        <Pressable
+            style={[{ gap: 4, paddingHorizontal: 20, paddingVertical: 12 }]}
+            onPress={onPress}
+            onLongPress={onLongPress}
+        >
             <Box flexDirection="row" alignItems="center" gap="$3">
                 <Center w={24} h={24} flex={0} flexBasis="auto">
                     <Box w="$3.5" h="$3.5" bg={item.color} borderRadius="$full" />

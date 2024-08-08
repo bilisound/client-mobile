@@ -14,7 +14,7 @@ export default function Page() {
             <ScrollView>
                 <View style={styles.container}>
                     <Image style={styles.logoImage} source={require("../assets/images/icon.png")} />
-                    <Text style={styles.logoTitle}>BILISOUND</Text>
+                    <Text style={styles.logoTitle}>Bilisound</Text>
                     <Text style={styles.version}>{`版本 ${require("../package.json").version}`}</Text>
                     <View style={styles.action}>
                         <Pressable onPress={() => Linking.openURL(BILISOUND_OFFICIAL_WEBSITE)}>
