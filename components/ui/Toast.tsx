@@ -52,7 +52,7 @@ const vanillaStyles = StyleSheet.create({
 const styleSheet = createStyleSheet(theme => ({
     toast: {
         backgroundColor: theme.colorTokens.dialogBackground,
-        borderColor: theme.colors.neutral[100],
+        borderColor: theme.colorTokens.dialogBorder,
         borderWidth: 1,
         minHeight: 50,
         borderRadius: 25,
