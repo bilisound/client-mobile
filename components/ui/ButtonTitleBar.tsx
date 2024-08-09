@@ -8,6 +8,7 @@ export interface ButtonTitleBarProps {
     label: string;
     solid?: boolean;
     Icon?: (iconProps: Partial<IconProps<any>>) => React.ReactNode;
+    iconColor?: string;
     onPress?: () => void;
 }
 
@@ -16,6 +17,7 @@ export default function ButtonTitleBar({
     solid,
     onPress,
     Icon,
+    iconColor,
     children,
 }: PropsWithChildren<ButtonTitleBarProps>) {
     const { styles, theme } = useStyles(styleSheet);
@@ -27,7 +29,7 @@ export default function ButtonTitleBar({
             aria-label={label}
             onPress={onPress}
         >
-            {Icon ? <Icon size={24} color={solid ? "#fff" : theme.colorTokens.foreground} /> : children}
+            {Icon ? <Icon size={24} color={iconColor || (solid ? "#fff" : theme.colorTokens.foreground)} /> : children}
         </Pressable>
     );
 }

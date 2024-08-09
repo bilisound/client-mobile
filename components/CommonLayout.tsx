@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import React, { PropsWithChildren } from "react";
 import { View, Text, StatusBar, useColorScheme, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import useCommonColors from "../hooks/useCommonColors";
 
@@ -33,12 +34,13 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     leftAccessories,
     rightAccessories,
 }) => {
+    const { styles, theme } = useStyles(styleSheet);
     const edgeInsets = useSafeAreaInsets();
     const { textBasicColor } = useCommonColors();
-    const colorMode = useColorScheme();
 
-    const computedSolidColor = solidColor || (colorMode === "dark" ? "#1a365d" : "#3182ce");
-    const textSolidColor = solidScheme === "dark" ? "#ffffff" : "#1a202c";
+    const computedSolidColor = solidColor || theme.colorTokens.topBarSolidBackground;
+    const textSolidColor = solidScheme === "dark" ? theme.colors.neutral[200] : theme.colors.neutral[700];
+    const textColor = titleBarTheme === "solid" ? textSolidColor : textBasicColor;
 
     return (
         <View style={[styles.container, { backgroundColor: bgColor }]}>
@@ -55,20 +57,14 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                 ]}
             >
                 <View style={styles.titleBar}>
-                    <Text
-                        style={[
-                            styles.titleText,
-                            { color: titleBarTheme === "solid" ? textSolidColor : textBasicColor },
-                        ]}
-                    >
-                        {title}
-                    </Text>
+                    <Text style={[styles.titleText, { color: textColor }]}>{title}</Text>
                     {leftAccessories && (
                         <View style={styles.leftAccessories}>
                             {leftAccessories === "backButton" ? (
                                 <ButtonTitleBar
                                     label="返回"
                                     Icon={IconArrowBack}
+                                    iconColor={textColor}
                                     solid={titleBarTheme === "solid"}
                                     onPress={() => router.back()}
                                 />
@@ -96,7 +92,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     );
 };
 
-const styles = StyleSheet.create({
+const styleSheet = createStyleSheet(theme => ({
     container: {
         height: "100%",
     },
@@ -133,6 +129,6 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
     },
-});
+}));
 
 export default CommonLayout;
