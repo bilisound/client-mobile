@@ -393,7 +393,7 @@ export const classicDark: BilisoundTheme = {
     name: "classicDark",
     colorTokens: {
         background: colors.neutral["950"],
-        foreground: colors.neutral["200"],
+        foreground: colors.white,
         topBarSolidBackground: colors.primary["900"],
     },
 };

@@ -65,6 +65,13 @@ const Settings: React.FC = () => {
             {Platform.OS === "web" ? null : (
                 <>
                     <SettingMenuItem
+                        icon={DeveloperIcon}
+                        title="组件测试页面"
+                        onPress={() => {
+                            router.push("/test");
+                        }}
+                    />
+                    <SettingMenuItem
                         icon={CDNIcon}
                         title="只从云服务商 CDN 节点获取音频"
                         subTitle="开启后可能会显著改善连接速度"

@@ -15,6 +15,7 @@ import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import React, { useEffect, useRef } from "react";
 import { Platform, useColorScheme } from "react-native";
+import Toast from "react-native-toast-message";
 
 import AudioManager from "~/components/AudioManager";
 import { config } from "~/config/gluestack-ui.config";
@@ -108,6 +109,7 @@ const RootLayoutNav = () => {
             <Stack.Screen name="log-show" options={{ headerShown: false }} />
             <Stack.Screen name="apply-playlist" options={{ headerShown: false }} />
             <Stack.Screen name="remote-list" options={{ headerShown: false }} />
+            <Stack.Screen name="test" options={{ title: "测试页面" }} />
         </Stack>
     );
 
@@ -117,6 +119,7 @@ const RootLayoutNav = () => {
                 <ThemeProvider value={theme}>
                     {routes}
                     <AudioManager />
+                    <Toast />
                 </ThemeProvider>
             </QueryClientProvider>
         </GluestackUIProvider>
