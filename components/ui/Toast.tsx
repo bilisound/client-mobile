@@ -73,6 +73,7 @@ const styleSheet = createStyleSheet(theme => ({
     },
     toastTitle: {
         fontSize: 16,
+        fontWeight: "bold",
         lineHeight: 26,
         color: theme.colorTokens.foreground,
     },

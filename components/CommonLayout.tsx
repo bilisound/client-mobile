@@ -39,7 +39,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     const { textBasicColor } = useCommonColors();
 
     const computedSolidColor = solidColor || theme.colorTokens.topBarSolidBackground;
-    const textSolidColor = solidScheme === "dark" ? theme.colors.neutral[200] : theme.colors.neutral[700];
+    const textSolidColor = solidScheme === "dark" ? theme.colors.white : theme.colors.neutral[700];
     const textColor = titleBarTheme === "solid" ? textSolidColor : textBasicColor;
 
     return (

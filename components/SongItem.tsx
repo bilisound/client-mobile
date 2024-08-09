@@ -1,12 +1,12 @@
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-import { Box, Center, Pressable, Text } from "@gluestack-ui/themed";
+import { Box, Center, Text } from "@gluestack-ui/themed";
 import React from "react";
 import { ActivityIndicator } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 
 import ProgressBar from "./ProgressBar";
 
-import { COMMON_TOUCH_COLOR } from "~/constants/style";
+import Pressable from "~/components/ui/Pressable";
 import useCommonColors from "~/hooks/useCommonColors";
 import { PlaylistDetailRow } from "~/storage/playlist";
 import { formatSecond } from "~/utils/misc";
@@ -51,7 +51,6 @@ export default function SongItem({
 
     return (
         <Pressable
-            sx={COMMON_TOUCH_COLOR}
             onPress={async () => {
                 if (isChecking) {
                     onToggle();

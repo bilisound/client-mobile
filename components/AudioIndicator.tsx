@@ -1,16 +1,15 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Pressable, Text, Box } from "@gluestack-ui/themed";
+import { Text, Box } from "@gluestack-ui/themed";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
-import { View } from "react-native";
+import { View, Pressable } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 
-import { COMMON_TOUCH_COLOR } from "../constants/style";
 import useCommonColors from "../hooks/useCommonColors";
-import { handleTogglePlay } from "../utils/player-control";
 
 import { getImageProxyUrl } from "~/utils/constant-helper";
+import { handleTogglePlay } from "~/utils/player-control";
 
 const AudioIndicator: React.FC = () => {
     const activeTrack = useActiveTrack();
@@ -42,7 +41,7 @@ const AudioIndicator: React.FC = () => {
                 onPress={() => {
                     router.push("/modal");
                 }}
-                sx={{
+                style={{
                     flexDirection: "row",
                     flex: 1,
                     gap: 12,
@@ -71,7 +70,7 @@ const AudioIndicator: React.FC = () => {
                 </View>
             </Pressable>
             <Pressable
-                sx={{
+                style={{
                     width: 40,
                     height: 40,
                     alignItems: "center",
@@ -79,7 +78,6 @@ const AudioIndicator: React.FC = () => {
                     borderRadius: 6,
                     flex: 0,
                     flexBasis: "auto",
-                    ...COMMON_TOUCH_COLOR,
                 }}
                 onPressOut={async () => {
                     await handleTogglePlay();

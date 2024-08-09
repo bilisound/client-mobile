@@ -1,5 +1,5 @@
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Pressable, Text, Box } from "@gluestack-ui/themed";
+import { Text, Box } from "@gluestack-ui/themed";
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
@@ -20,7 +20,7 @@ import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } fro
 
 import SongItem from "./SongItem";
 
-import { COMMON_TOUCH_COLOR } from "~/constants/style";
+import Pressable from "~/components/ui/Pressable";
 import useCommonColors from "~/hooks/useCommonColors";
 import useTracks from "~/hooks/useTracks";
 import useSettingsStore from "~/store/settings";
@@ -479,13 +479,15 @@ export default function AudioPlayerModal() {
                 >
                     {/* 歌单 */}
                     <Pressable
-                        sx={{
-                            ...COMMON_TOUCH_COLOR,
+                        style={{
                             width: 40,
                             height: 40,
-                            borderRadius: 999,
                             alignItems: "center",
                             justifyContent: "center",
+                        }}
+                        outerStyle={{
+                            borderRadius: 999,
+                            overflow: "hidden",
                         }}
                         onPress={() => {
                             setShowList(prevState => !prevState);
@@ -511,13 +513,15 @@ export default function AudioPlayerModal() {
                     >
                         {/* 上一首 */}
                         <Pressable
-                            sx={{
-                                ...COMMON_TOUCH_COLOR,
+                            style={{
                                 width: 68,
                                 height: 68,
-                                borderRadius: 999,
                                 alignItems: "center",
                                 justifyContent: "center",
+                            }}
+                            outerStyle={{
+                                borderRadius: 999,
+                                overflow: "hidden",
                             }}
                             onPress={async () => {
                                 await handlePrev();
@@ -534,17 +538,17 @@ export default function AudioPlayerModal() {
                         </Pressable>
 
                         {/* 播放/暂停 */}
+                        {/* todo 修正背景色 */}
                         <Pressable
-                            sx={{
+                            style={{
                                 width: 72,
                                 height: 72,
-                                borderRadius: 999,
                                 alignItems: "center",
                                 justifyContent: "center",
-                                backgroundColor: "$primary500",
-                                ":active": {
-                                    backgroundColor: "$primary400",
-                                },
+                            }}
+                            outerStyle={{
+                                borderRadius: 999,
+                                overflow: "hidden",
                             }}
                             onPressOut={async () => {
                                 await handleTogglePlay();
@@ -555,13 +559,15 @@ export default function AudioPlayerModal() {
 
                         {/* 下一首 */}
                         <Pressable
-                            sx={{
-                                ...COMMON_TOUCH_COLOR,
+                            style={{
                                 width: 68,
                                 height: 68,
-                                borderRadius: 999,
                                 alignItems: "center",
                                 justifyContent: "center",
+                            }}
+                            outerStyle={{
+                                borderRadius: 999,
+                                overflow: "hidden",
                             }}
                             onPress={async () => {
                                 await TrackPlayer.skipToNext();
@@ -580,13 +586,15 @@ export default function AudioPlayerModal() {
 
                     {/* 导出 */}
                     <Pressable
-                        sx={{
-                            ...COMMON_TOUCH_COLOR,
+                        style={{
                             width: 40,
                             height: 40,
-                            borderRadius: 999,
                             alignItems: "center",
                             justifyContent: "center",
+                        }}
+                        outerStyle={{
+                            borderRadius: 999,
+                            overflow: "hidden",
                         }}
                         onPress={async () => {
                             if (Platform.OS === "web") {
