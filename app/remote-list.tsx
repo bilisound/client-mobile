@@ -1,23 +1,13 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import {
-    Box,
-    Button,
-    ButtonText,
-    Pressable,
-    Text,
-    Toast,
-    ToastDescription,
-    ToastTitle,
-    useToast,
-    VStack,
-} from "@gluestack-ui/themed";
+import { Toast, ToastDescription, ToastTitle, useToast } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, ScrollView, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import {
     getBilisoundMetadata,
@@ -27,7 +17,8 @@ import {
     UserListMode,
 } from "~/api/bilisound";
 import CommonLayout from "~/components/CommonLayout";
-import { COMMON_TOUCH_COLOR, SCREEN_BREAKPOINTS } from "~/constants/style";
+import Pressable from "~/components/ui/Pressable";
+import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import useApplyPlaylistStore from "~/store/apply-playlist";
@@ -40,6 +31,7 @@ interface HeaderProps {
 }
 
 function Header({ data, mode }: HeaderProps) {
+    const { styles } = useStyles(styleSheet);
     const containerStyle = useToastContainerStyle();
     const toast = useToast();
     const [loading, setLoading] = useState(false);
@@ -73,10 +65,10 @@ function Header({ data, mode }: HeaderProps) {
                 containerStyle,
                 render: ({ id }) => (
                     <Toast nativeID={`toast-${id}`} action="success" variant="accent">
-                        <VStack space="xs">
+                        <View>
                             <ToastTitle>歌单创建操作失败</ToastTitle>
                             <ToastDescription>{(e as Error)?.message || `${e}`}</ToastDescription>
-                        </VStack>
+                        </View>
                     </Toast>
                 ),
             });
@@ -86,59 +78,28 @@ function Header({ data, mode }: HeaderProps) {
     }
 
     return (
-        <Box flex={0} flexBasis="auto" padding="$4">
-            <Image
-                source={getImageProxyUrl(data.meta.cover, data.rows[0].bvid)}
-                style={{
-                    aspectRatio: "16/9",
-                    borderRadius: 8,
-                    flex: 0,
-                    flexBasis: "auto",
-                }}
-            />
-            {/* 标题 */}
-            <Text
-                sx={{
-                    fontSize: 18,
-                    fontWeight: "bold",
-                    marginTop: 16,
-                    lineHeight: 24,
-                }}
-                selectable
-            >
+        <View style={styles.container}>
+            <Image source={getImageProxyUrl(data.meta.cover, data.rows[0].bvid)} style={styles.image} />
+            <Text style={styles.title} selectable>
                 {data.meta.name}
             </Text>
-            {/* 简介 */}
-            {data.meta.description && (
-                <Text fontSize={15} lineHeight={15 * 1.5} marginTop={16}>
-                    {data.meta.description}
-                </Text>
-            )}
-            {/* 操作 */}
-            <Box flexDirection="row">
-                <Button
-                    mt="$5"
-                    rounded="$full"
-                    size="md"
-                    variant="solid"
-                    action="primary"
-                    isDisabled={false}
-                    isFocusVisible={false}
-                    onPress={handleCreatePlaylist}
-                >
+            {data.meta.description && <Text style={styles.description}>{data.meta.description}</Text>}
+            <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity style={styles.button} disabled={false} onPress={handleCreatePlaylist}>
                     {loading ? (
                         <ActivityIndicator style={{ width: 22, height: 22 }} color="white" />
                     ) : (
                         <MaterialIcons name="add" size={22} color="white" />
                     )}
-                    <ButtonText fontSize="$sm"> 创建歌单</ButtonText>
-                </Button>
-            </Box>
-        </Box>
+                    <Text style={styles.buttonText}>创建歌单</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
     );
 }
 
 function HeaderSkeleton() {
+    const { styles } = useStyles(styleSheet);
     const { textBasicColor } = useCommonColors();
 
     const skeletonBlock = {
@@ -148,37 +109,53 @@ function HeaderSkeleton() {
     };
 
     return (
-        <Box flex={0} flexBasis="auto" padding="$4">
-            <Box
-                sx={{
+        <View style={styles.container}>
+            <View
+                style={{
                     ...skeletonBlock,
                     aspectRatio: "16/9",
                     flex: 0,
                     flexBasis: "auto",
                 }}
             />
-            {/* 标题 */}
-            <Box
-                sx={{
+            <View
+                style={{
                     marginTop: 16,
                     height: 24,
                 }}
             >
-                <Box sx={{ ...skeletonBlock, height: 16 }} />
-            </Box>
-            {/* 简介 */}
-            <Box sx={{ height: 15 * 1.5, marginTop: 16 }}>
-                <Box sx={{ ...skeletonBlock, height: 15 }} />
-            </Box>
-            {/* 操作 */}
-            <Box flexDirection="row">
-                <Box sx={{ ...skeletonBlock, height: 40, width: 120, marginTop: 20, borderRadius: 9999 }} />
-            </Box>
-        </Box>
+                <View
+                    style={{
+                        ...skeletonBlock,
+                        height: 16,
+                    }}
+                />
+            </View>
+            <View style={{ height: 15 * 1.5, marginTop: 16 }}>
+                <View
+                    style={{
+                        ...skeletonBlock,
+                        height: 15,
+                    }}
+                />
+            </View>
+            <View style={{ flexDirection: "row" }}>
+                <View
+                    style={{
+                        ...skeletonBlock,
+                        height: 40,
+                        width: 120,
+                        marginTop: 20,
+                        borderRadius: 9999,
+                    }}
+                />
+            </View>
+        </View>
     );
 }
 
 export default function Page() {
+    const { styles } = useStyles(styleSheet);
     const { userId, listId, mode } = useLocalSearchParams<{ userId: string; listId: string; mode: UserListMode }>();
 
     const { width } = useWindowDimensions();
@@ -201,55 +178,17 @@ export default function Page() {
             onPress={() => {
                 router.push(`/query/${item.bvid}`);
             }}
-            onLongPress={() => null}
-            sx={{
-                ...COMMON_TOUCH_COLOR,
-                flexDirection: "row",
-                alignItems: "center",
-                height: 72,
-                paddingHorizontal: 16,
-                gap: 16,
-            }}
+            style={styles.listItem}
         >
-            {/* 图片 */}
-            <Image
-                source={getImageProxyUrl(item.cover, item.bvid)}
-                style={{
-                    height: 48,
-                    aspectRatio: "3/2",
-                    flex: 0,
-                    flexBasis: "auto",
-                    borderRadius: 8,
-                }}
-            />
-            {/* 文字内容 */}
-            <Box
-                sx={{
-                    flex: 1,
-                    gap: "$1",
-                }}
-            >
-                <Text
-                    sx={{
-                        fontWeight: "bold",
-                        fontSize: 14,
-                    }}
-                    ellipsizeMode="tail"
-                    numberOfLines={1}
-                >
+            <Image source={getImageProxyUrl(item.cover, item.bvid)} style={styles.listItemImage} />
+            <View style={styles.listItemContent}>
+                <Text style={styles.listItemTitle} ellipsizeMode="tail" numberOfLines={1}>
                     {item.title}
                 </Text>
-                <Text
-                    sx={{
-                        opacity: 0.5,
-                        fontSize: 12,
-                    }}
-                    ellipsizeMode="tail"
-                    numberOfLines={1}
-                >
+                <Text style={styles.listItemDuration} ellipsizeMode="tail" numberOfLines={1}>
                     {formatSecond(item.duration)}
                 </Text>
-            </Box>
+            </View>
         </Pressable>
     );
 
@@ -262,16 +201,16 @@ export default function Page() {
     return (
         <CommonLayout title="合集详情" leftAccessories="backButton" extendToBottom>
             {data ? (
-                <Box sx={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: 1, flexDirection: "row" }}>
                     {width >= SCREEN_BREAKPOINTS.md ? (
-                        <Box flex={0} flexBasis="auto" width={384}>
+                        <View style={{ flex: 0, flexBasis: "auto", width: 384 }}>
                             <ScrollView>
                                 <Header data={data.pages[0]} mode={mode!} />
-                                <Box height={edgeInsets.bottom} aria-hidden />
+                                <View style={{ height: edgeInsets.bottom }} aria-hidden />
                             </ScrollView>
-                        </Box>
+                        </View>
                     ) : null}
-                    <Box sx={{ flex: 1 }}>
+                    <View style={{ flex: 1 }}>
                         <FlashList
                             data={data.pages.flatMap(page => page.rows) || []}
                             renderItem={renderItem}
@@ -282,29 +221,96 @@ export default function Page() {
                                 width < SCREEN_BREAKPOINTS.md && data.pages[0] ? (
                                     <Header data={data.pages[0]} mode={mode!} />
                                 ) : (
-                                    <Box height={4} aria-hidden />
+                                    <View style={{ height: 4 }} aria-hidden />
                                 )
                             }
                             ListFooterComponent={
                                 <>
                                     {isFetchingNextPage ? <ActivityIndicator /> : null}
-                                    <Box height={edgeInsets.bottom} aria-hidden />
+                                    <View style={{ height: edgeInsets.bottom }} aria-hidden />
                                 </>
                             }
                             estimatedItemSize={100}
                         />
-                    </Box>
-                </Box>
+                    </View>
+                </View>
             ) : (
-                <Box sx={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: 1, flexDirection: "row" }}>
                     {width >= SCREEN_BREAKPOINTS.md ? (
-                        <Box flex={0} flexBasis="auto" width={384}>
+                        <View style={{ flex: 0, flexBasis: "auto", width: 384 }}>
                             <HeaderSkeleton />
-                        </Box>
+                        </View>
                     ) : null}
-                    <Box sx={{ flex: 1 }}>{width < SCREEN_BREAKPOINTS.md ? <HeaderSkeleton /> : null}</Box>
-                </Box>
+                    <View style={{ flex: 1 }}>{width < SCREEN_BREAKPOINTS.md ? <HeaderSkeleton /> : null}</View>
+                </View>
             )}
         </CommonLayout>
     );
 }
+
+const styleSheet = createStyleSheet(theme => ({
+    container: {
+        flex: 1,
+        padding: 16,
+    },
+    image: {
+        aspectRatio: 16 / 9,
+        borderRadius: 8,
+        flex: 0,
+        flexBasis: "auto",
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginTop: 16,
+        lineHeight: 24,
+        color: theme.colorTokens.foreground,
+    },
+    description: {
+        fontSize: 15,
+        lineHeight: 15 * 1.5,
+        marginTop: 16,
+        color: theme.colorTokens.foreground,
+    },
+    button: {
+        marginTop: 20,
+        borderRadius: 9999,
+        padding: 10,
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "blue",
+    },
+    buttonText: {
+        color: "white",
+        fontSize: 14,
+        marginLeft: 5,
+    },
+    listItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        height: 72,
+        paddingHorizontal: 16,
+        gap: 16,
+    },
+    listItemImage: {
+        height: 48,
+        aspectRatio: "3/2",
+        flex: 0,
+        flexBasis: "auto",
+        borderRadius: 8,
+    },
+    listItemContent: {
+        flex: 1,
+        gap: 4,
+    },
+    listItemTitle: {
+        fontWeight: "bold",
+        fontSize: 14,
+        color: theme.colorTokens.foreground,
+    },
+    listItemDuration: {
+        opacity: 0.5,
+        fontSize: 12,
+        color: theme.colorTokens.foreground,
+    },
+}));
