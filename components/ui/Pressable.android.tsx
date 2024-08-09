@@ -1,4 +1,4 @@
-import { omit } from "lodash";
+import omit from "lodash/omit";
 import {
     Pressable as NativePressable,
     StyleProp,
@@ -6,7 +6,6 @@ import {
     PressableProps as NativePressableProps,
     useColorScheme,
     View,
-    StyleSheet,
 } from "react-native";
 
 interface PressableProps extends NativePressableProps {

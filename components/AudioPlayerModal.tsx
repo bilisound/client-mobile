@@ -1,12 +1,12 @@
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Text, Box } from "@gluestack-ui/themed";
+import { Box } from "@gluestack-ui/themed";
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
+import { Linking, Platform, StatusBar, useColorScheme, View, Text } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import Animated, {
     ReduceMotion,
@@ -17,6 +17,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import SongItem from "./SongItem";
 
@@ -189,58 +190,35 @@ function AudioProgressBar() {
 function AudioProgressTimer() {
     const { position, duration } = useProgress();
     const activeTrack = useActiveTrack();
+    const { styles } = useStyles(styleSheet);
 
     return (
-        <Box
-            sx={{
-                paddingHorizontal: 30,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingTop: 8,
-            }}
-        >
-            <Text
-                sx={{
-                    fontSize: 14,
-                    opacity: 0.65,
-                }}
-            >
-                {activeTrack?.bilisoundIsLoaded ? formatSecond(position) : "00:00"}
-            </Text>
-            <Text
-                sx={{
-                    fontSize: 14,
-                    opacity: 0.65,
-                }}
-            >
-                {activeTrack?.bilisoundIsLoaded ? formatSecond(duration) : "00:00"}
-            </Text>
-        </Box>
+        <View style={styles.timerContainer}>
+            <Text style={styles.timerText}>{activeTrack?.bilisoundIsLoaded ? formatSecond(position) : "00:00"}</Text>
+            <Text style={styles.timerText}>{activeTrack?.bilisoundIsLoaded ? formatSecond(duration) : "00:00"}</Text>
+        </View>
     );
 }
 
 function AudioPlayButtonIcon() {
     const playbackState = usePlaybackState();
+    const { theme } = useStyles();
 
     return playbackState.state === State.Playing ? (
-        <FontAwesome5 name="pause" size={28} color="#fff" />
+        <FontAwesome5 name="pause" size={28} color={theme.colorTokens.buttonForeground("primary", "default")} />
     ) : (
-        <FontAwesome5 name="play" size={28} color="#fff" />
+        <FontAwesome5 name="play" size={28} color={theme.colorTokens.buttonForeground("primary", "default")} />
     );
 }
 
 function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: string }) {
     const colorScheme = useColorScheme();
     const [smallestSize, setSmallestSize] = useState(0);
+    const { styles } = useStyles(styleSheet);
 
     return (
-        <Box
-            sx={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-            }}
+        <View
+            style={styles.musicPictureContainer}
             onLayout={e => {
                 const layout = e.nativeEvent.layout;
                 setSmallestSize(Math.min(layout.width, layout.height) - 64);
@@ -249,65 +227,33 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
             {colorScheme === "dark" ? (
                 <Image
                     source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
-                    style={{
-                        aspectRatio: "1/1",
-                        borderRadius: 16,
-                        width: smallestSize,
-                    }}
+                    style={[styles.musicImage, { width: smallestSize }]}
                     contentFit="cover"
                 />
             ) : (
-                <ShadowedView
-                    style={{
-                        shadowOpacity: 0.2,
-                        shadowRadius: 24,
-                        shadowOffset: {
-                            width: 4,
-                            height: 4,
-                        },
-                        borderRadius: 16,
-                    }}
-                >
+                <ShadowedView style={styles.shadowedView}>
                     <Image
                         source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
-                        style={{
-                            aspectRatio: "1/1",
-                            borderRadius: 16,
-                            width: smallestSize,
-                        }}
+                        style={[styles.musicImage, { width: smallestSize }]}
                         contentFit="cover"
                     />
                 </ShadowedView>
             )}
-        </Box>
+        </View>
     );
 }
 
 function MusicList() {
     const { tracks } = useTracks();
-    // const { primaryColor } = useCommonColors();
+    const { styles } = useStyles(styleSheet);
 
     // 转换后的列表
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
 
     return (
-        <Box
-            sx={{
-                flex: 1,
-                mb: "$6",
-            }}
-        >
-            <Box
-                flex={0}
-                flexBasis="auto"
-                pl="$4"
-                pr="$3"
-                py="$3"
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="space-between"
-            >
-                <Text fontWeight="700" fontSize="$lg">{`当前队列 (${tracks.length})`}</Text>
+        <View style={styles.musicListContainer}>
+            <View style={styles.musicListHeader}>
+                <Text style={styles.musicListHeaderText}>{`当前队列 (${tracks.length})`}</Text>
                 {/*<Pressable
                     sx={COMMON_FRAME_BUTTON_STYLE}
                     onPress={() => {
@@ -316,19 +262,8 @@ function MusicList() {
                 >
                     <FontAwesome5 name="random" size={20} color={primaryColor} />
                 </Pressable>*/}
-            </Box>
-            <Box
-                sx={{
-                    flex: 1,
-                    borderWidth: 1,
-                    borderColor: "$backgroundLight100",
-                    _dark: {
-                        borderColor: "$backgroundDark900",
-                    },
-                    borderLeftWidth: 0,
-                    borderRightWidth: 0,
-                }}
-            >
+            </View>
+            <View style={styles.musicListContent}>
                 <FlashList
                     renderItem={item => {
                         return (
@@ -346,12 +281,13 @@ function MusicList() {
                     estimatedItemSize={64}
                     extraData={[]}
                 />
-            </Box>
-        </Box>
+            </View>
+        </View>
     );
 }
 
 export default function AudioPlayerModal() {
+    const { styles, theme } = useStyles(styleSheet);
     const colorScheme = useColorScheme();
     const { textBasicColor } = useCommonColors();
     const activeTrack = useActiveTrack();
@@ -362,23 +298,16 @@ export default function AudioPlayerModal() {
     }));
 
     return (
-        <Box
-            sx={{
-                height: "100%",
-                paddingTop: safeAreaInsets.top,
-                paddingBottom: safeAreaInsets.bottom,
-                paddingLeft: safeAreaInsets.left,
-                paddingRight: safeAreaInsets.right,
-                _ios: {
-                    paddingTop: 0,
-                    paddingLeft: 0,
-                    paddingRight: 0,
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: safeAreaInsets.top,
+                    paddingBottom: safeAreaInsets.bottom,
+                    paddingLeft: safeAreaInsets.left,
+                    paddingRight: safeAreaInsets.right,
                 },
-                backgroundColor: "$backgroundLight",
-                _dark: {
-                    backgroundColor: "$backgroundDark",
-                },
-            }}
+            ]}
         >
             {Platform.OS === "ios" ? null : (
                 <StatusBar
@@ -386,35 +315,15 @@ export default function AudioPlayerModal() {
                     showHideTransition="none"
                 />
             )}
-            <Box
-                sx={{
-                    alignItems: "center",
-                    // backgroundColor: "yellow",
-                    padding: "$2",
-                }}
-                aria-hidden
-            >
-                <Box
-                    sx={{
-                        width: "$12",
-                        height: "$1",
-                        backgroundColor: "$primary500",
-                        borderRadius: 9999,
-                    }}
-                />
-            </Box>
+            <View style={styles.handleContainer} aria-hidden>
+                <View style={styles.handle} />
+            </View>
             {showList ? (
                 <MusicList />
             ) : (
                 <MusicPicture image={activeTrack?.artwork} bilisoundId={activeTrack?.bilisoundId} />
             )}
-            <Box
-                sx={{
-                    flex: 0,
-                    flexBasis: "auto",
-                    height: 240,
-                }}
-            >
+            <View style={styles.controlsContainer}>
                 <Pressable
                     onPress={() => {
                         if (Platform.OS === "ios") {
@@ -425,70 +334,24 @@ export default function AudioPlayerModal() {
                         router.replace(`/query/${activeTrack?.bilisoundId}`);
                     }}
                 >
-                    <Box
-                        sx={{
-                            paddingHorizontal: 30,
-                            height: 80,
-                            gap: 8,
-                        }}
-                    >
-                        <Text
-                            sx={{
-                                fontSize: 20,
-                                fontWeight: "800",
-                                lineHeight: 30,
-                            }}
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                        >
+                    <View style={styles.trackInfoContainer}>
+                        <Text style={styles.trackTitle} numberOfLines={1} ellipsizeMode="tail">
                             {activeTrack?.title}
                         </Text>
-                        <Text
-                            sx={{
-                                fontSize: 16,
-                                lineHeight: 24,
-                                opacity: 0.65,
-                                fontWeight: "400",
-                            }}
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                        >
+                        <Text style={styles.trackArtist} numberOfLines={1} ellipsizeMode="tail">
                             {activeTrack?.artist}
                         </Text>
-                    </Box>
+                    </View>
                 </Pressable>
-                <Box
-                    sx={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        height: 16,
-                        paddingHorizontal: 20,
-                    }}
-                >
+                <View style={styles.progressBarWrapper}>
                     <AudioProgressBar />
-                </Box>
+                </View>
                 <AudioProgressTimer />
-                <Box
-                    sx={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        paddingTop: 20,
-                        paddingHorizontal: 20,
-                    }}
-                >
+                <View style={styles.controlButtonsContainer}>
                     {/* 歌单 */}
                     <Pressable
-                        style={{
-                            width: 40,
-                            height: 40,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                        outerStyle={{
-                            borderRadius: 999,
-                            overflow: "hidden",
-                        }}
+                        style={styles.controlButtonSmall}
+                        outerStyle={styles.controlButtonOuter}
                         onPress={() => {
                             setShowList(prevState => !prevState);
                         }}
@@ -503,26 +366,11 @@ export default function AudioPlayerModal() {
                         />
                     </Pressable>
 
-                    <Box
-                        sx={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: 12,
-                        }}
-                    >
+                    <View style={styles.controlButtonsGroup}>
                         {/* 上一首 */}
                         <Pressable
-                            style={{
-                                width: 68,
-                                height: 68,
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            outerStyle={{
-                                borderRadius: 999,
-                                overflow: "hidden",
-                            }}
+                            style={styles.controlButton}
+                            outerStyle={styles.controlButtonOuter}
                             onPress={async () => {
                                 await handlePrev();
                             }}
@@ -531,25 +379,15 @@ export default function AudioPlayerModal() {
                                 name="step-backward"
                                 size={24}
                                 color={textBasicColor}
-                                style={{
-                                    transform: [{ scaleX: 1.4 }],
-                                }}
+                                style={styles.controlButtonIcon}
                             />
                         </Pressable>
 
                         {/* 播放/暂停 */}
                         {/* todo 修正背景色 */}
                         <Pressable
-                            style={{
-                                width: 72,
-                                height: 72,
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            outerStyle={{
-                                borderRadius: 999,
-                                overflow: "hidden",
-                            }}
+                            style={styles.controlButtonPlay}
+                            outerStyle={styles.controlButtonOuter}
                             onPressOut={async () => {
                                 await handleTogglePlay();
                             }}
@@ -559,16 +397,8 @@ export default function AudioPlayerModal() {
 
                         {/* 下一首 */}
                         <Pressable
-                            style={{
-                                width: 68,
-                                height: 68,
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            outerStyle={{
-                                borderRadius: 999,
-                                overflow: "hidden",
-                            }}
+                            style={styles.controlButton}
+                            outerStyle={styles.controlButtonOuter}
                             onPress={async () => {
                                 await TrackPlayer.skipToNext();
                             }}
@@ -577,25 +407,15 @@ export default function AudioPlayerModal() {
                                 name="step-forward"
                                 size={24}
                                 color={textBasicColor}
-                                style={{
-                                    transform: [{ scaleX: 1.4 }],
-                                }}
+                                style={styles.controlButtonIcon}
                             />
                         </Pressable>
-                    </Box>
+                    </View>
 
                     {/* 导出 */}
                     <Pressable
-                        style={{
-                            width: 40,
-                            height: 40,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                        outerStyle={{
-                            borderRadius: 999,
-                            overflow: "hidden",
-                        }}
+                        style={styles.controlButtonSmall}
+                        outerStyle={styles.controlButtonOuter}
                         onPress={async () => {
                             if (Platform.OS === "web") {
                                 await Linking.openURL(
@@ -616,8 +436,159 @@ export default function AudioPlayerModal() {
                     >
                         <Ionicons name="save" size={22} color={textBasicColor} />
                     </Pressable>
-                </Box>
-            </Box>
-        </Box>
+                </View>
+            </View>
+        </View>
     );
 }
+
+const styleSheet = createStyleSheet(theme => ({
+    container: {
+        flex: 1,
+        backgroundColor: theme.colorTokens.background,
+    },
+    handleContainer: {
+        alignItems: "center",
+        padding: 8,
+    },
+    handle: {
+        width: 48,
+        height: 4,
+        backgroundColor: "#007AFF",
+        borderRadius: 2,
+    },
+    timerContainer: {
+        paddingHorizontal: 30,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingTop: 8,
+    },
+    timerText: {
+        fontSize: 14,
+        opacity: 0.65,
+        color: theme.colorTokens.foreground,
+    },
+    musicPictureContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    musicImage: {
+        aspectRatio: 1,
+        borderRadius: 16,
+    },
+    shadowedView: {
+        shadowOpacity: 0.2,
+        shadowRadius: 24,
+        shadowOffset: {
+            width: 4,
+            height: 4,
+        },
+        borderRadius: 16,
+    },
+    controlsContainer: {
+        flex: 0,
+        flexBasis: "auto",
+        height: 240,
+    },
+    trackInfoContainer: {
+        paddingHorizontal: 30,
+        height: 80,
+        gap: 8,
+    },
+    trackTitle: {
+        fontSize: 20,
+        fontWeight: "800",
+        lineHeight: 30,
+        color: theme.colorTokens.foreground,
+    },
+    trackArtist: {
+        fontSize: 16,
+        lineHeight: 24,
+        opacity: 0.65,
+        fontWeight: "400",
+        color: theme.colorTokens.foreground,
+    },
+    progressBarWrapper: {
+        flexDirection: "row",
+        alignItems: "center",
+        height: 16,
+        paddingHorizontal: 20,
+    },
+    controlButtonsContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingTop: 20,
+        paddingHorizontal: 20,
+    },
+    controlButton: {
+        width: 68,
+        height: 68,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    controlButtonSmall: {
+        width: 40,
+        height: 40,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    controlButtonPlay: {
+        width: 68,
+        height: 68,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: theme.colorTokens.buttonBackground("primary", "default"),
+    },
+    controlButtonOuter: {
+        borderRadius: 999,
+        overflow: "hidden",
+    },
+    controlButtonIcon: {
+        transform: [{ scaleX: 1.4 }],
+    },
+    controlButtonsGroup: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 12,
+    },
+    musicListContainer: {
+        flex: 1,
+        marginBottom: 24,
+    },
+    musicListHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+    },
+    musicListHeaderText: {
+        fontWeight: "700",
+        fontSize: 18,
+    },
+    musicListContent: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: "#E5E5E5",
+        borderLeftWidth: 0,
+        borderRightWidth: 0,
+    },
+    trackStyle: {
+        backgroundColor: "transparent",
+    },
+    minimumTrackStyle: {
+        backgroundColor: "transparent",
+    },
+    thumbStyle: {
+        width: 16,
+        height: 16,
+    },
+    thumbTouchSize: {
+        width: 16,
+        height: 16,
+    },
+}));
