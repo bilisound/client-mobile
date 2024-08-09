@@ -25,6 +25,8 @@ import init from "~/utils/init";
 import "~/unistyles";
 import { UnistylesRuntime, useInitialTheme } from "react-native-unistyles";
 
+import { toastConfig } from "~/config/toast";
+
 export {
     // Catch any errors thrown by the Layout component.
     ErrorBoundary,
@@ -119,7 +121,7 @@ const RootLayoutNav = () => {
                 <ThemeProvider value={theme}>
                     {routes}
                     <AudioManager />
-                    <Toast />
+                    <Toast config={toastConfig} />
                 </ThemeProvider>
             </QueryClientProvider>
         </GluestackUIProvider>

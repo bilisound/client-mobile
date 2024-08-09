@@ -12,9 +12,9 @@ export default function Page() {
                 title="测试 Toast"
                 onPress={() => {
                     Toast.show({
-                        type: ["success", "error", "info"][Math.floor(Math.random() * 3)],
-                        text1: "Hello " + num,
-                        text2: "This is some something 👋",
+                        type: ["success", "error", "info", "warning"][Math.floor(Math.random() * 4)],
+                        text1: "测试消息 " + num,
+                        text2: "这是一条 toast 消息",
                     });
                     setNum(Math.random());
                 }}

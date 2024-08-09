@@ -56,6 +56,7 @@ export interface SemanticColor {
     background: string;
     foreground: string;
     topBarSolidBackground: string;
+    dialogBackground: string;
 }
 
 const colors: ThemeColor = {
@@ -385,6 +386,7 @@ export const classicLight: BilisoundTheme = {
         background: colors.white,
         foreground: colors.neutral["700"],
         topBarSolidBackground: colors.primary["500"],
+        dialogBackground: colors.white,
     },
 } as const;
 
@@ -395,5 +397,6 @@ export const classicDark: BilisoundTheme = {
         background: colors.neutral["950"],
         foreground: colors.white,
         topBarSolidBackground: colors.primary["900"],
+        dialogBackground: colors.neutral["800"],
     },
 };

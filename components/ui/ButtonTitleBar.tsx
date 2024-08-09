@@ -25,7 +25,7 @@ export default function ButtonTitleBar({
         <Pressable
             outerStyle={styles.buttonOuter}
             style={styles.button}
-            pressedBackgroundColor={solid ? "rgba(255,255,255,0.1)" : undefined}
+            pressedBackgroundColor={solid ? "rgba(255,255,255,0.15)" : undefined}
             aria-label={label}
             onPress={onPress}
         >
@@ -43,5 +43,6 @@ const styleSheet = createStyleSheet(theme => ({
     },
     buttonOuter: {
         borderRadius: 6,
+        overflow: "hidden",
     },
 }));

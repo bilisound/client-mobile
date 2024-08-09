@@ -1,9 +1,9 @@
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
-import { Text, Pressable, Box } from "@gluestack-ui/themed";
+import { Text, Box } from "@gluestack-ui/themed";
 import React from "react";
 import { GestureResponderEvent } from "react-native/Libraries/Types/CoreEventTypes";
 
-import { COMMON_TOUCH_COLOR } from "~/constants/style";
+import Pressable from "~/components/ui/Pressable";
 import useCommonColors from "~/hooks/useCommonColors";
 
 export interface SettingMenuItemProps {
@@ -86,11 +86,7 @@ const SettingMenuItem: React.FC<SettingMenuItemProps> = ({
         return inner;
     }
 
-    return (
-        <Pressable sx={COMMON_TOUCH_COLOR} onPress={onPress}>
-            {inner}
-        </Pressable>
-    );
+    return <Pressable onPress={onPress}>{inner}</Pressable>;
 };
 
 export default SettingMenuItem;
