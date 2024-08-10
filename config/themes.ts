@@ -6,7 +6,7 @@ export interface BilisoundTheme {
     colorTokens: SemanticColor;
 }
 
-type ButtonStatus = "default" | "hover" | "active" | "disabled";
+export type ButtonStatus = "default" | "hover" | "active" | "disabled";
 
 export interface SemanticColor {
     background: string;
