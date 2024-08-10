@@ -76,7 +76,8 @@
             "minSdkVersion": 28,
             "buildToolsVersion": "34.0.0",
             "usesCleartextTraffic": true,
-            "enableProguardInReleaseBuilds": true
+            "enableProguardInReleaseBuilds": true,
+            "extraProguardRules": "-keep class com.unistyles.** { *; }"
           },
           "ios": {
             "deploymentTarget": "15.0"
