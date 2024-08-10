@@ -1,5 +1,4 @@
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Box } from "@gluestack-ui/themed";
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
@@ -22,7 +21,6 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 import SongItem from "./SongItem";
 
 import Pressable from "~/components/ui/Pressable";
-import useCommonColors from "~/hooks/useCommonColors";
 import useTracks from "~/hooks/useTracks";
 import useSettingsStore from "~/store/settings";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -32,8 +30,8 @@ import { handlePrev, handleTogglePlay } from "~/utils/player-control";
 import { tracksToPlaylist } from "~/utils/track-data";
 
 function AudioProgressBar() {
-    const { primaryColor } = useCommonColors();
     const colorScheme = useColorScheme();
+    const { theme, styles } = useStyles(styleSheet);
 
     const [value, setValue] = useState(0);
     const [holding, setHolding] = useState(false);
@@ -69,90 +67,32 @@ function AudioProgressBar() {
 
     if (!activeTrack?.bilisoundIsLoaded) {
         return (
-            <View
-                onLayout={e => setGlowTotalWidth(e.nativeEvent.layout.width - 20)}
-                style={{
-                    height: 16,
-                    justifyContent: "center",
-                    flex: 1,
-                    position: "relative",
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                }}
-            >
-                <Box
-                    sx={{
-                        height: 3,
-                        borderRadius: 9999,
-                        backgroundColor: "$trueGray200",
-                        _dark: {
-                            backgroundColor: "$primary900",
-                        },
-                        overflow: "hidden",
-                    }}
-                >
+            <View onLayout={e => setGlowTotalWidth(e.nativeEvent.layout.width - 20)} style={styles.barLoadingContainer}>
+                <View style={styles.barLoading}>
                     <Animated.View style={[{ width: glowWidth, height: 3 }, animatedStyle]}>
                         <LinearGradient
                             colors={
                                 colorScheme === "dark"
-                                    ? ["#0c554d", "#028373", "#0c554d"]
-                                    : ["#e5e5e5", "#a3a3a3", "#e5e5e5"]
+                                    ? [theme.colors.primary[900], theme.colors.primary[700], theme.colors.primary[900]]
+                                    : [theme.colors.primary[200], theme.colors.primary[400], theme.colors.primary[200]]
                             }
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
-                            style={{ width: "100%", height: "100%" }}
+                            style={styles.barLoadingGradient}
                         />
                     </Animated.View>
-                </Box>
+                </View>
             </View>
         );
     }
 
     return (
-        <Box
-            sx={{
-                height: 16,
-                justifyContent: "center",
-                flex: 1,
-                position: "relative",
-            }}
-        >
-            <Box
-                sx={{
-                    left: 10,
-                    right: 10,
-                    top: 6.5,
-                    height: 3,
-                    borderRadius: 2,
-                    backgroundColor: "$trueGray200",
-                    _dark: {
-                        backgroundColor: "$primary900",
-                    },
-                    position: "absolute",
-                    overflow: "hidden",
-                }}
-            >
-                <Box
-                    sx={{
-                        height: "100%",
-                        backgroundColor: "$trueGray200",
-                        _dark: {
-                            backgroundColor: "$primary900",
-                        },
-                        position: "absolute",
-                        width: `${(buffered / duration) * 100}%`,
-                    }}
-                />
-                <Box
-                    sx={{
-                        height: "100%",
-                        backgroundColor: "$primary500",
-                        position: "absolute",
-                        width: `${(value / duration) * 100}%`,
-                    }}
-                />
-            </Box>
-            <Box position="absolute" px={8} w="100%">
+        <View style={styles.barContainer}>
+            <View style={styles.bar}>
+                <View style={[styles.barBuffered, { width: `${(buffered / duration) * 100}%` }]} />
+                <View style={[styles.barPlayed, { width: `${(value / duration) * 100}%` }]} />
+            </View>
+            <View style={styles.barSliderOuter}>
                 <Slider
                     value={value}
                     onValueChange={([v]) => setValue(v)}
@@ -166,24 +106,14 @@ function AudioProgressBar() {
                     }}
                     minimumValue={0}
                     maximumValue={duration}
-                    containerStyle={{
-                        width: "100%",
-                    }}
-                    trackStyle={{
-                        backgroundColor: "transparent",
-                    }}
-                    minimumTrackStyle={{
-                        backgroundColor: "transparent",
-                    }}
-                    thumbStyle={{
-                        width: 16,
-                        height: 16,
-                        backgroundColor: primaryColor,
-                    }}
+                    containerStyle={styles.barSliderContainer}
+                    trackStyle={styles.barSliderTrack}
+                    minimumTrackStyle={styles.barSliderMinimumTrack}
+                    thumbStyle={styles.barSliderThumb}
                     thumbTouchSize={{ width: 16, height: 16 }}
                 />
-            </Box>
-        </Box>
+            </View>
+        </View>
     );
 }
 
@@ -254,14 +184,6 @@ function MusicList() {
         <View style={styles.musicListContainer}>
             <View style={styles.musicListHeader}>
                 <Text style={styles.musicListHeaderText}>{`当前队列 (${tracks.length})`}</Text>
-                {/*<Pressable
-                    sx={COMMON_FRAME_BUTTON_STYLE}
-                    onPress={() => {
-                        Alert.alert("警告！！", "本功能正在开发中。如果看到本消息，请暴打开发者！");
-                    }}
-                >
-                    <FontAwesome5 name="random" size={20} color={primaryColor} />
-                </Pressable>*/}
             </View>
             <View style={styles.musicListContent}>
                 <FlashList
@@ -289,7 +211,7 @@ function MusicList() {
 export default function AudioPlayerModal() {
     const { styles, theme } = useStyles(styleSheet);
     const colorScheme = useColorScheme();
-    const { textBasicColor } = useCommonColors();
+    const textBasicColor = theme.colorTokens.foreground;
     const activeTrack = useActiveTrack();
     const safeAreaInsets = useSafeAreaInsets();
     const [showList, setShowList] = useState(false);
@@ -458,6 +380,71 @@ const styleSheet = createStyleSheet(theme => ({
         backgroundColor: theme.colorTokens.buttonBackground("primary", "default"),
         borderRadius: 2,
     },
+    // AudioProgressBar
+    barLoadingContainer: {
+        height: 16,
+        justifyContent: "center",
+        flex: 1,
+        position: "relative",
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    barLoading: {
+        height: 3,
+        borderRadius: 9999,
+        backgroundColor: theme.colorScheme === "light" ? theme.colors.neutral[200] : theme.colors.primary[900],
+        overflow: "hidden",
+    },
+    barLoadingGradient: {
+        width: "100%",
+        height: "100%",
+    },
+    barContainer: {
+        height: 16,
+        justifyContent: "center",
+        flex: 1,
+        position: "relative",
+    },
+    bar: {
+        left: 10,
+        right: 10,
+        top: 6.5,
+        height: 3,
+        borderRadius: 2,
+        backgroundColor: theme.colorScheme === "light" ? theme.colors.neutral[200] : theme.colors.primary[900],
+        position: "absolute",
+        overflow: "hidden",
+    },
+    barBuffered: {
+        height: "100%",
+        backgroundColor: theme.colorScheme === "light" ? theme.colors.neutral[200] : theme.colors.primary[900],
+        position: "absolute",
+    },
+    barPlayed: {
+        height: "100%",
+        backgroundColor: theme.colors.primary[500],
+        position: "absolute",
+    },
+    barSliderOuter: {
+        position: "absolute",
+        paddingHorizontal: 32,
+        width: "100%",
+    },
+    barSliderContainer: {
+        width: "100%",
+    },
+    barSliderTrack: {
+        backgroundColor: "transparent",
+    },
+    barSliderMinimumTrack: {
+        backgroundColor: "transparent",
+    },
+    barSliderThumb: {
+        width: 16,
+        height: 16,
+        backgroundColor: theme.colors.primary[500],
+    },
+    // AudioProgressTimer
     timerContainer: {
         paddingHorizontal: 30,
         flexDirection: "row",

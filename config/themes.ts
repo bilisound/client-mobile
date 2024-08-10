@@ -1,7 +1,7 @@
 import { ColorPalettes, colors, ThemeColorPaletteKeys } from "~/config/palettes";
 
 export interface BilisoundTheme {
-    name: string;
+    colorScheme: "light" | "dark";
     colors: ColorPalettes;
     colorTokens: SemanticColor;
 }
@@ -23,7 +23,7 @@ export interface SemanticColor {
 }
 
 export const classicLight: BilisoundTheme = {
-    name: "classicLight",
+    colorScheme: "light",
     colors,
     colorTokens: {
         background: colors.white,
@@ -74,7 +74,7 @@ export const classicLight: BilisoundTheme = {
 
 export const classicDark: BilisoundTheme = {
     ...classicLight,
-    name: "classicDark",
+    colorScheme: "dark",
     colorTokens: {
         background: colors.neutral["900"],
         foreground: colors.white,
