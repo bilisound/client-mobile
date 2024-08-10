@@ -59,7 +59,7 @@ const styleSheet = createStyleSheet(theme => ({
         padding: 12,
         flexDirection: "row",
         gap: 12,
-        marginHorizontal: 32,
+        marginHorizontal: 24,
         marginVertical: 8,
         maxWidth: 400,
     },
