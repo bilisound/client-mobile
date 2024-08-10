@@ -14,6 +14,7 @@ export interface SemanticColor {
     topBarSolidBackground: string;
     dialogBackground: string;
     dialogBorder: string;
+    border: string;
     buttonBackground: (color: ThemeColorPaletteKeys, status: ButtonStatus) => string;
     buttonForeground: (color: ThemeColorPaletteKeys, status: ButtonStatus) => string;
     buttonOutlineBackground: (color: ThemeColorPaletteKeys, status: ButtonStatus) => string;
@@ -27,6 +28,7 @@ export const classicLight: BilisoundTheme = {
     colorTokens: {
         background: colors.white,
         foreground: colors.neutral["700"],
+        border: colors.neutral["100"],
         topBarSolidBackground: colors.primary["500"],
         dialogBackground: colors.white,
         dialogBorder: colors.neutral[100],
@@ -76,6 +78,7 @@ export const classicDark: BilisoundTheme = {
     colorTokens: {
         background: colors.neutral["900"],
         foreground: colors.white,
+        border: colors.neutral["800"],
         topBarSolidBackground: colors.primary["900"],
         dialogBackground: colors.neutral["800"],
         dialogBorder: colors.neutral[800],

@@ -570,11 +570,12 @@ const styleSheet = createStyleSheet(theme => ({
     musicListHeaderText: {
         fontWeight: "700",
         fontSize: 18,
+        color: theme.colorTokens.foreground,
     },
     musicListContent: {
         flex: 1,
         borderWidth: 1,
-        borderColor: "#E5E5E5",
+        borderColor: theme.colorTokens.border,
         borderLeftWidth: 0,
         borderRightWidth: 0,
     },
