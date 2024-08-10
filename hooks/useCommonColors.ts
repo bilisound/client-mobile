@@ -1,6 +1,9 @@
 import { useToken } from "@gluestack-ui/themed";
 import { useColorScheme } from "react-native";
 
+/**
+ * @deprecated 请直接调用 unistyles 主题系统的颜色
+ */
 const useCommonColors = () => {
     const colorScheme = useColorScheme();
 

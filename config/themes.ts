@@ -27,9 +27,9 @@ export const classicLight: BilisoundTheme = {
     colors,
     colorTokens: {
         background: colors.white,
-        foreground: colors.neutral["700"],
-        border: colors.neutral["100"],
-        topBarSolidBackground: colors.primary["500"],
+        foreground: colors.neutral[700],
+        border: colors.neutral[100],
+        topBarSolidBackground: colors.primary[500],
         dialogBackground: colors.white,
         dialogBorder: colors.neutral[100],
         buttonBackground: (color, status) => {

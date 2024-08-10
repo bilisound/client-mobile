@@ -427,7 +427,7 @@ const styleSheet = createStyleSheet(theme => ({
     },
     barSliderOuter: {
         position: "absolute",
-        paddingHorizontal: 32,
+        paddingHorizontal: 8,
         width: "100%",
     },
     barSliderContainer: {
@@ -457,6 +457,7 @@ const styleSheet = createStyleSheet(theme => ({
         opacity: 0.65,
         color: theme.colorTokens.foreground,
     },
+    // MusicPicture
     musicPictureContainer: {
         flex: 1,
         alignItems: "center",
@@ -478,11 +479,11 @@ const styleSheet = createStyleSheet(theme => ({
     controlsContainer: {
         flex: 0,
         flexBasis: "auto",
-        height: 240,
+        height: 256,
     },
     trackInfoContainer: {
         paddingHorizontal: 30,
-        height: 80,
+        paddingVertical: 16,
         gap: 8,
     },
     trackTitle: {
@@ -503,6 +504,7 @@ const styleSheet = createStyleSheet(theme => ({
         alignItems: "center",
         height: 16,
         paddingHorizontal: 20,
+        marginTop: 8,
     },
     controlButtonsContainer: {
         flexDirection: "row",
@@ -543,6 +545,7 @@ const styleSheet = createStyleSheet(theme => ({
         justifyContent: "center",
         gap: 12,
     },
+    // MusicList
     musicListContainer: {
         flex: 1,
         marginBottom: 24,
@@ -565,19 +568,5 @@ const styleSheet = createStyleSheet(theme => ({
         borderColor: theme.colorTokens.border,
         borderLeftWidth: 0,
         borderRightWidth: 0,
-    },
-    trackStyle: {
-        backgroundColor: "transparent",
-    },
-    minimumTrackStyle: {
-        backgroundColor: "transparent",
-    },
-    thumbStyle: {
-        width: 16,
-        height: 16,
-    },
-    thumbTouchSize: {
-        width: 16,
-        height: 16,
     },
 }));

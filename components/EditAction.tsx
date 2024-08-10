@@ -1,7 +1,6 @@
-import { Box, Button, ButtonText, Text } from "@gluestack-ui/themed";
 import React from "react";
-
-import useCommonColors from "../hooks/useCommonColors";
+import { View, Text, TouchableOpacity } from "react-native";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 interface EditActionProps {
     onAll: () => void;
@@ -11,41 +10,71 @@ interface EditActionProps {
 }
 
 export default function EditAction({ onAll, onReverse, onDelete, amount }: EditActionProps) {
-    const { bgColor } = useCommonColors();
+    const { theme, styles } = useStyles(styleSheet);
+    const bgColor = theme.colorTokens.background;
 
     return (
-        <Box
-            sx={{
-                borderWidth: 1,
-                borderColor: "$backgroundLight100",
-                _dark: {
-                    borderColor: "$backgroundDark900",
-                },
-                borderLeftWidth: 0,
-                borderRightWidth: 0,
-                borderBottomWidth: 0,
-                flex: 0,
-                flexBasis: "auto",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                height: 52,
-                px: 12,
-                bg: bgColor,
-            }}
-        >
-            <Text>{`已选择 ${amount} 项`}</Text>
-            <Box flexDirection="row" gap="$2">
-                <Button size="sm" variant="outline" action="primary" onPress={onAll}>
-                    <ButtonText>全选</ButtonText>
-                </Button>
-                <Button size="sm" variant="outline" action="primary" onPress={onReverse}>
-                    <ButtonText>反选</ButtonText>
-                </Button>
-                <Button size="sm" action="negative" isDisabled={amount <= 0} onPress={onDelete}>
-                    <ButtonText>删除</ButtonText>
-                </Button>
-            </Box>
-        </Box>
+        <View style={[styles.container, { backgroundColor: bgColor }]}>
+            <Text style={styles.text}>{`已选择 ${amount} 项`}</Text>
+            <View style={styles.buttonContainer}>
+                {/* todo 按钮状态变更动画 */}
+                <TouchableOpacity style={styles.outlineButton} onPress={onAll}>
+                    <Text style={styles.outlineButtonText}>全选</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.outlineButton} onPress={onReverse}>
+                    <Text style={styles.outlineButtonText}>反选</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.deleteButton, amount <= 0 && styles.disabledButton]}
+                    onPress={onDelete}
+                    disabled={amount <= 0}
+                >
+                    <Text style={styles.deleteButtonText}>删除</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
     );
 }
+
+const styleSheet = createStyleSheet(theme => ({
+    container: {
+        borderTopWidth: 1,
+        borderColor: theme.colorTokens.border,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        height: 52,
+        paddingHorizontal: 12,
+    },
+    text: {
+        fontSize: 14,
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        gap: 8,
+    },
+    outlineButton: {
+        borderWidth: 1,
+        borderColor: theme.colorTokens.buttonOutlineBorder("primary", "default"),
+        borderRadius: 4,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+    },
+    outlineButtonText: {
+        color: theme.colorTokens.buttonOutlineForeground("primary", "default"),
+        fontSize: 14,
+    },
+    deleteButton: {
+        backgroundColor: theme.colorTokens.buttonBackground("red", "default"),
+        borderRadius: 4,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+    },
+    disabledButton: {
+        opacity: 0.5,
+    },
+    deleteButtonText: {
+        color: theme.colorTokens.buttonForeground("red", "default"),
+        fontSize: 14,
+    },
+}));
