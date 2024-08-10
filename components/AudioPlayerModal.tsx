@@ -358,7 +358,7 @@ export default function AudioPlayerModal() {
                     >
                         <MaterialIcons
                             name="playlist-play"
-                            size={34}
+                            size={32}
                             color={textBasicColor}
                             style={{
                                 transform: [{ translateX: 2 }],
@@ -388,6 +388,7 @@ export default function AudioPlayerModal() {
                         <Pressable
                             style={styles.controlButtonPlay}
                             outerStyle={styles.controlButtonOuter}
+                            pressedBackgroundColor={theme.colorTokens.buttonBackground("primary", "active")}
                             onPressOut={async () => {
                                 await handleTogglePlay();
                             }}
@@ -434,7 +435,7 @@ export default function AudioPlayerModal() {
                             );
                         }}
                     >
-                        <Ionicons name="save" size={22} color={textBasicColor} />
+                        <Ionicons name="save" size={20} color={textBasicColor} />
                     </Pressable>
                 </View>
             </View>
@@ -454,7 +455,7 @@ const styleSheet = createStyleSheet(theme => ({
     handle: {
         width: 48,
         height: 4,
-        backgroundColor: "#007AFF",
+        backgroundColor: theme.colorTokens.buttonBackground("primary", "default"),
         borderRadius: 2,
     },
     timerContainer: {

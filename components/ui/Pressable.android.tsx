@@ -24,7 +24,6 @@ export default function Pressable(props: PressableProps) {
             <NativePressable
                 {...omit(props, ["outerStyle"])}
                 android_ripple={{
-                    foreground: true,
                     color: pressedBackgroundColorUser || pressedBackgroundColor,
                 }}
             >
