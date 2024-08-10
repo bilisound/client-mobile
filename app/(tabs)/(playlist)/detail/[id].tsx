@@ -1,5 +1,5 @@
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Box, Button, ButtonText, Pressable, Text } from "@gluestack-ui/themed";
+import { Box, Button, ButtonText, Text } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import Color from "color";
 import { Image } from "expo-image";
@@ -14,7 +14,8 @@ import CommonLayout from "~/components/CommonLayout";
 import EditAction from "~/components/EditAction";
 import Empty from "~/components/Empty";
 import SongItem from "~/components/SongItem";
-import { COMMON_FRAME_BUTTON_STYLE } from "~/constants/style";
+import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
+import { createIcon } from "~/components/ui/utils/icon";
 import useCommonColors from "~/hooks/useCommonColors";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import {
@@ -36,6 +37,10 @@ function extractAndProcessImgUrls(playlistDetails: PlaylistDetailRow[]) {
 }
 
 const HEADER_BASE_SIZE = 120;
+
+const IconEditMeta = createIcon(Feather, "edit");
+const IconEditingDone = createIcon(Entypo, "check");
+const IconEditing = createIcon(MaterialCommunityIcons, "format-list-checks");
 
 function ImagesGroup({ images: origImages }: { images: string[] }) {
     const images = origImages.map(image => getImageProxyUrl(image));
@@ -156,7 +161,7 @@ function Header({
 }
 
 export default function Page() {
-    const { bgColor, textBasicColor } = useCommonColors();
+    const { bgColor } = useCommonColors();
     const colorMode = useColorScheme();
     const { id } = useLocalSearchParams<{ id: string }>();
 
@@ -264,19 +269,17 @@ export default function Page() {
             leftAccessories="backButton"
             rightAccessories={
                 <>
-                    <Pressable
-                        aria-label="编辑歌单信息"
-                        sx={COMMON_FRAME_BUTTON_STYLE}
+                    <ButtonTitleBar
+                        label="编辑歌单信息"
                         onPress={() => {
                             router.push(`../meta/${id}`);
                         }}
-                    >
-                        <Feather name="edit" size={20} color={textBasicColor} />
-                    </Pressable>
+                        Icon={IconEditMeta}
+                        iconSize={20}
+                    />
                     {playlistDetail.length > 0 ? (
-                        <Pressable
-                            aria-label={editing ? "完成" : "编辑"}
-                            sx={COMMON_FRAME_BUTTON_STYLE}
+                        <ButtonTitleBar
+                            label={editing ? "完成" : "编辑"}
                             onPress={() =>
                                 setEditing(prevState => {
                                     if (prevState) {
@@ -285,13 +288,8 @@ export default function Page() {
                                     return !prevState;
                                 })
                             }
-                        >
-                            {editing ? (
-                                <Entypo name="check" size={24} color={textBasicColor} />
-                            ) : (
-                                <MaterialCommunityIcons name="format-list-checks" size={24} color={textBasicColor} />
-                            )}
-                        </Pressable>
+                            Icon={editing ? IconEditingDone : IconEditing}
+                        />
                     ) : null}
                 </>
             }

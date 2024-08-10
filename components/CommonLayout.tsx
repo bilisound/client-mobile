@@ -65,7 +65,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                                     label="返回"
                                     Icon={IconArrowBack}
                                     iconColor={textColor}
-                                    solid={titleBarTheme === "solid"}
+                                    solid={titleBarTheme === "solid" && !solidColor}
                                     onPress={() => router.back()}
                                 />
                             ) : (
