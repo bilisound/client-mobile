@@ -1,27 +1,40 @@
-// import { useState } from "react";
-import { View, Text } from "react-native";
+import { Entypo } from "@expo/vector-icons";
+import { useState } from "react";
+import { View, Text, Switch } from "react-native";
 
 import Button from "~/components/ui/Button";
-// import Toast from "react-native-toast-message";
+import { createIcon } from "~/components/ui/utils/icon";
+
+const LinkIcon = createIcon(Entypo, "link");
 
 export default function Page() {
-    // const [num, setNum] = useState(1);
+    const [disabled, setDisabled] = useState(true);
 
     return (
         <View style={{ padding: 16, gap: 16 }}>
             <Text>Hello World!</Text>
-            {/*<Button
-                title="测试 Toast"
-                onPress={() => {
-                    Toast.show({
-                        type: ["success", "error", "info", "warning"][Math.floor(Math.random() * 4)],
-                        text1: "测试消息 " + num,
-                        text2: "这是一条 toast 消息",
-                    });
-                    setNum(Math.random());
-                }}
-            />*/}
-            <Button />
+            <Switch value={disabled} onValueChange={setDisabled} />
+            <View style={{ flexDirection: "row", gap: 8 }}>
+                <Button disabled={disabled} />
+                <Button disabled={disabled} variant="outline" />
+                <Button disabled={disabled} variant="ghost" />
+            </View>
+            <View style={{ flexDirection: "row", gap: 8 }}>
+                <Button disabled={disabled} rounded />
+                <Button disabled={disabled} rounded variant="outline" />
+                <Button disabled={disabled} rounded variant="ghost" />
+            </View>
+            <View style={{ flexDirection: "row", gap: 8 }}>
+                <Button disabled={disabled} color="red" rounded />
+                <Button disabled={disabled} color="red" rounded variant="outline" />
+                <Button disabled={disabled} color="red" rounded variant="ghost" />
+            </View>
+            <View style={{ flexDirection: "row", gap: 8 }}>
+                <Button disabled={disabled} color="blue" rounded Icon={LinkIcon} />
+                <Button disabled={disabled} color="blue" rounded Icon={LinkIcon} variant="outline" />
+                <Button disabled={disabled} color="blue" rounded Icon={LinkIcon} variant="ghost" />
+            </View>
+            <Button disabled={disabled} color="blue" rounded Icon={LinkIcon} />
         </View>
     );
 }

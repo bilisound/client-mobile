@@ -6,3 +6,5 @@ export function createIcon<G extends string, FN extends string>(IconComponent: I
         return <IconComponent name={name} {...iconProps} />;
     };
 }
+
+export type IconComponent = ReturnType<typeof createIcon<any, any>>;

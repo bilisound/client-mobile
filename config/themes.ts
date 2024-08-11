@@ -57,6 +57,9 @@ export const classicLight: BilisoundTheme = {
             }
         },
         buttonForeground: (color, status) => {
+            if (status === "disabled") {
+                return colors[color][700];
+            }
             return colors.white;
         },
         buttonOutlineBackground: (color, status) => {
