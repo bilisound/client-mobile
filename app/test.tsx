@@ -1,14 +1,16 @@
-import { useState } from "react";
-import { View, Text, Button } from "react-native";
-import Toast from "react-native-toast-message";
+// import { useState } from "react";
+import { View, Text } from "react-native";
+
+import Button from "~/components/ui/Button";
+// import Toast from "react-native-toast-message";
 
 export default function Page() {
-    const [num, setNum] = useState(1);
+    // const [num, setNum] = useState(1);
 
     return (
         <View style={{ padding: 16, gap: 16 }}>
             <Text>Hello World!</Text>
-            <Button
+            {/*<Button
                 title="测试 Toast"
                 onPress={() => {
                     Toast.show({
@@ -18,7 +20,8 @@ export default function Page() {
                     });
                     setNum(Math.random());
                 }}
-            />
+            />*/}
+            <Button />
         </View>
     );
 }

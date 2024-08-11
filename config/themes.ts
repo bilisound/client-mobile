@@ -4,6 +4,7 @@ export interface BilisoundTheme {
     colorScheme: "light" | "dark";
     colors: ColorPalettes;
     colorTokens: SemanticColor;
+    sizes: SemanticSizes;
 }
 
 export type ButtonStatus = "default" | "hover" | "active" | "disabled";
@@ -22,9 +23,18 @@ export interface SemanticColor {
     buttonOutlineBorder: (color: ThemeColorPaletteKeys, status: ButtonStatus) => string;
 }
 
+export interface SemanticSizes {
+    radiusButton: number;
+    radiusButtonFull: number;
+}
+
 export const classicLight: BilisoundTheme = {
     colorScheme: "light",
     colors,
+    sizes: {
+        radiusButton: 8,
+        radiusButtonFull: 9999,
+    },
     colorTokens: {
         background: colors.white,
         foreground: colors.neutral[700],

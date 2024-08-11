@@ -1,14 +1,14 @@
 import { Entypo, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { Pressable, Text, Box, ButtonText, Button, ButtonIcon } from "@gluestack-ui/themed";
+import { Pressable, Box, ButtonText, Button, ButtonIcon } from "@gluestack-ui/themed";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Platform } from "react-native";
+import { Platform, View, Text } from "react-native";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
-import useCommonColors from "~/hooks/useCommonColors";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { formatDate } from "~/utils/misc";
@@ -20,8 +20,10 @@ export interface VideoMetaProps {
 }
 
 const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
-    const { textBasicColor, accentColor, bgColor } = useCommonColors();
-    // const { width } = useWindowDimensions();
+    const { theme, styles } = useStyles(styleSheet);
+    const textBasicColor = theme.colorTokens.foreground;
+    const accentColor = theme.colors.accent[500];
+    const bgColor = theme.colorTokens.background;
 
     // 展示更多
     const [showMore, setShowMore] = useState(false);
@@ -49,7 +51,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
     }
 
     const showMoreEl = (
-        <Text selectable fontSize={15} lineHeight={15 * 1.5}>
+        <Text selectable style={styles.descText}>
             {meta.desc}
         </Text>
     );
@@ -75,8 +77,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                                     setShowMore(true);
                                 }
                             }}
-                            fontSize={15}
-                            lineHeight={15 * 1.5}
+                            style={styles.descText}
                         >
                             {meta.desc}
                         </Text>
@@ -98,7 +99,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                             paddingTop: 40,
                         }}
                     >
-                        <Text sx={{ color: "$accent500", fontWeight: "700", fontSize: 14 }}>查看更多</Text>
+                        <Text style={styles.showMoreText}>查看更多</Text>
                         <Entypo name="chevron-down" size={20} color={accentColor} />
                     </LinearGradient>
                 </>
@@ -121,8 +122,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                                             setShowMore(true);
                                         }
                                     }}
-                                    fontSize={15}
-                                    lineHeight={15 * 1.5}
+                                    style={styles.descText}
                                 >
                                     {meta.desc}
                                 </Text>
@@ -153,15 +153,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                             padding: 16,
                         }}
                     >
-                        <Text
-                            sx={{
-                                color: "$accent500",
-                                fontWeight: "700",
-                                fontSize: 14,
-                            }}
-                        >
-                            查看更多
-                        </Text>
+                        <Text style={styles.showMoreText}>查看更多</Text>
                         <Entypo name="chevron-down" size={20} color={accentColor} />
                     </Box>
                 </>
@@ -191,15 +183,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
 
             <Box flex={1}>
                 {/* 标题 */}
-                <Text
-                    sx={{
-                        fontSize: 16,
-                        fontWeight: "bold",
-                        marginBottom: 16,
-                        lineHeight: 24,
-                    }}
-                    selectable
-                >
+                <Text style={styles.titleText} selectable>
                     {meta.title}
                 </Text>
 
@@ -222,26 +206,10 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                             flexShrink: 0,
                         }}
                     />
-                    <Text
-                        sx={{
-                            flexGrow: 1,
-                            fontSize: 14,
-                            fontWeight: "bold",
-                        }}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                    >
+                    <Text style={styles.authorText} numberOfLines={1} ellipsizeMode="tail">
                         {meta.owner.name}
                     </Text>
-                    <Text
-                        sx={{
-                            flexShrink: 0,
-                            fontSize: 14,
-                            opacity: 0.5,
-                        }}
-                    >
-                        {formatDate(meta.pubDate, "yyyy-MM-dd")}
-                    </Text>
+                    <Text style={styles.dateText}>{formatDate(meta.pubDate, "yyyy-MM-dd")}</Text>
                 </Box>
 
                 {/* 简介 */}
@@ -289,6 +257,23 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                             <ButtonText fontSize="$sm"> 查看所属合集</ButtonText>
                         </Button>
                     ) : null}
+                    <View
+                        style={{
+                            height: 40,
+                            backgroundColor: "blue",
+                            marginTop: 20,
+                            borderRadius: 99999,
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: 8,
+                        }}
+                    >
+                        <MaterialCommunityIcons name="playlist-music" size={20} color="white" />
+                        <Text style={{ fontWeight: "600", color: "white" }}>测试文本</Text>
+                    </View>
                 </Box>
             </Box>
         </Box>
@@ -296,3 +281,27 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
 };
 
 export default VideoMeta;
+
+const styleSheet = createStyleSheet(theme => ({
+    descText: {
+        fontSize: 15,
+        lineHeight: 15 * 1.5,
+    },
+    showMoreText: {
+        color: theme.colors.accent[500],
+        fontWeight: "700",
+        fontSize: 14,
+    },
+    titleText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        marginBottom: 16,
+        lineHeight: 24,
+    },
+    authorText: { flexGrow: 1, fontSize: 14, fontWeight: "bold" },
+    dateText: {
+        flexShrink: 0,
+        fontSize: 14,
+        opacity: 0.5,
+    },
+}));
