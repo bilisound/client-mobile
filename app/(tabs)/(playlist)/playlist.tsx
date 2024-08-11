@@ -8,7 +8,6 @@ import {
     ActionsheetItem,
     ActionsheetItemText,
     Box,
-    Pressable,
     Text,
 } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
@@ -16,11 +15,13 @@ import { router } from "expo-router";
 import React, { createContext, useContext, useState } from "react";
 import { Alert, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import Empty from "~/components/Empty";
 import PlaylistItem from "~/components/PlaylistItem";
-import { COMMON_FRAME_BUTTON_STYLE } from "~/constants/style";
+import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
+import { createIcon } from "~/components/ui/utils/icon";
 import useCommonColors from "~/hooks/useCommonColors";
 import {
     invalidateOnQueueStatus,
@@ -34,6 +35,9 @@ import log from "~/utils/logger";
 interface PlaylistContextProps {
     onLongPress: (id: string) => void;
 }
+
+const IconQrcodeScan = createIcon(MaterialCommunityIcons, "qrcode-scan");
+const IconAdd = createIcon(MaterialIcons, "add");
 
 const PlaylistContext = createContext<PlaylistContextProps>({
     onLongPress: () => {},
@@ -74,7 +78,8 @@ interface LongPressActionsProps {
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
     const edgeInsets = useSafeAreaInsets();
-    const { textBasicColor } = useCommonColors();
+    const { theme } = useStyles();
+    const textBasicColor = theme.colorTokens.foreground;
 
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose} zIndex={999}>
@@ -156,18 +161,20 @@ export default function Page() {
                 rightAccessories={
                     <>
                         {Platform.OS === "web" ? null : (
-                            <Pressable sx={COMMON_FRAME_BUTTON_STYLE} onPress={() => router.push("/barcode")}>
-                                <MaterialCommunityIcons name="qrcode-scan" size={20} color={primaryColor} />
-                            </Pressable>
+                            <ButtonTitleBar
+                                label="扫描二维码"
+                                Icon={IconQrcodeScan}
+                                iconSize={20}
+                                onPress={() => router.push("/barcode")}
+                            />
                         )}
-                        <Pressable
-                            sx={COMMON_FRAME_BUTTON_STYLE}
+                        <ButtonTitleBar
+                            label="新建歌单"
+                            Icon={IconAdd}
                             onPress={() => {
                                 router.push(`/(tabs)/(playlist)/meta/new`);
                             }}
-                        >
-                            <MaterialIcons name="add" size={24} color={primaryColor} />
-                        </Pressable>
+                        />
                     </>
                 }
             >

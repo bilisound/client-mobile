@@ -7,7 +7,6 @@ import {
     FormControlError,
     FormControlErrorIcon,
     FormControlErrorText,
-    Pressable,
     InputField,
     Text,
     Input,
@@ -18,17 +17,19 @@ import React, { useState } from "react";
 import { Platform, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { COMMON_FRAME_BUTTON_STYLE } from "~/constants/style";
-import useCommonColors from "~/hooks/useCommonColors";
+import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
+import { createIcon } from "~/components/ui/utils/icon";
 import { resolveVideoAndJump } from "~/utils/format";
 import log from "~/utils/logger";
+
+const IconQrcodeScan = createIcon(MaterialCommunityIcons, "qrcode-scan");
+const IconHistory = createIcon(FontAwesome5, "history");
 
 const TabIndexScreen: React.FC = () => {
     const [value, setValue] = useState("");
     const [inputError, setInputError] = useState(false);
 
     const { width } = useWindowDimensions();
-    const { primaryColor } = useCommonColors();
     const insets = useSafeAreaInsets();
     const [fontsLoaded] = useFonts({
         Poppins_700Bold,
@@ -131,13 +132,19 @@ const TabIndexScreen: React.FC = () => {
                 }}
             >
                 {Platform.OS === "web" ? null : (
-                    <Pressable sx={COMMON_FRAME_BUTTON_STYLE} onPress={() => router.push("/barcode")}>
-                        <MaterialCommunityIcons name="qrcode-scan" size={20} color={primaryColor} />
-                    </Pressable>
+                    <ButtonTitleBar
+                        label="扫描二维码"
+                        Icon={IconQrcodeScan}
+                        iconSize={20}
+                        onPress={() => router.push("/barcode")}
+                    />
                 )}
-                <Pressable sx={COMMON_FRAME_BUTTON_STYLE} onPress={() => router.push("/history")}>
-                    <FontAwesome5 name="history" size={20} color={primaryColor} />
-                </Pressable>
+                <ButtonTitleBar
+                    label="历史记录"
+                    Icon={IconHistory}
+                    iconSize={20}
+                    onPress={() => router.push("/history")}
+                />
             </Box>
             <View style={{ flex: 1 }} />
         </Box>

@@ -6,23 +6,6 @@ export const SCREEN_BREAKPOINTS = {
     xxl: 1400,
 } as const;
 
-export const COMMON_TOUCH_COLOR = {
-    ":hover": {
-        bg: "#00000010",
-    },
-    ":active": {
-        bg: "#00000010",
-    },
-    _dark: {
-        ":hover": {
-            bg: "#ffffff10",
-        },
-        ":active": {
-            bg: "#ffffff10",
-        },
-    },
-} as const;
-
 export const COMMON_FRAME_SOLID_TOUCH_COLOR = {
     ":hover": {
         bg: "#ffffff40",
@@ -38,14 +21,6 @@ export const COMMON_FRAME_SOLID_TOUCH_COLOR = {
             bg: "#ffffff40",
         },
     },
-} as const;
-
-export const COMMON_FRAME_BUTTON_STYLE = {
-    ...COMMON_TOUCH_COLOR,
-    alignItems: "center",
-    justifyContent: "center",
-    width: 40,
-    height: 40,
 } as const;
 
 export const COMMON_FRAME_SOLID_BUTTON_STYLE = {

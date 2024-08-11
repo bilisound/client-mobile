@@ -1,13 +1,13 @@
-import { IconProps } from "@expo/vector-icons/build/createIconSet";
 import React, { PropsWithChildren } from "react";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import Pressable from "~/components/ui/Pressable";
+import { IconComponent } from "~/components/ui/utils/icon";
 
 export interface ButtonTitleBarProps {
     label: string;
     solid?: boolean;
-    Icon?: (iconProps: Partial<IconProps<any>>) => React.ReactNode;
+    Icon?: IconComponent;
     iconColor?: string;
     iconSize?: number;
     onPress?: () => void;
