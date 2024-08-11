@@ -1,19 +1,24 @@
-import { Entypo, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { Pressable, Box, ButtonText, Button, ButtonIcon } from "@gluestack-ui/themed";
+import { Entypo, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Box } from "@gluestack-ui/themed";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Platform, View, Text } from "react-native";
+import { Platform, Text, Pressable } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
+import Button from "~/components/ui/Button";
+import { createIcon } from "~/components/ui/utils/icon";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { formatDate } from "~/utils/misc";
 
 const detailMaxHeight = 192;
+
+const AddIcon = createIcon(Feather, "plus");
+const PlaylistIcon = createIcon(MaterialCommunityIcons, "playlist-music");
 
 export interface VideoMetaProps {
     meta: GetBilisoundMetadataResponse;
@@ -58,7 +63,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
 
     const showMoreElHidden = (
         <Pressable
-            sx={{
+            style={{
                 position: "relative",
             }}
             onPress={() => setShowMore(true)}
@@ -216,64 +221,24 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                 {meta.desc.trim() !== "" && showMoreComputed}
 
                 {/* 操作 */}
-                <Box flexDirection="row" gap={8}>
-                    <Button
-                        mt="$5"
-                        rounded="$full"
-                        size="md"
-                        variant="solid"
-                        action="primary"
-                        isDisabled={false}
-                        isFocusVisible={false}
-                        onPress={handleCreatePlaylist}
-                    >
-                        <ButtonIcon
-                            as={MaterialIcons}
-                            // @ts-ignore
-                            name="add"
-                        />
-                        <ButtonText fontSize="$sm"> 创建歌单</ButtonText>
+                <Box flexDirection="row" gap={8} marginTop={20}>
+                    <Button rounded onPress={handleCreatePlaylist} Icon={AddIcon} style={{ paddingLeft: 16 }}>
+                        创建歌单
                     </Button>
                     {meta.seasonId ? (
                         <Button
-                            mt="$5"
-                            rounded="$full"
-                            size="md"
+                            rounded
                             variant="outline"
-                            action="primary"
-                            isDisabled={false}
-                            isFocusVisible={false}
                             onPress={() => {
                                 router.push(
                                     `/remote-list?mode=episode&userId=${meta.owner.mid}&listId=${meta.seasonId}`,
                                 );
                             }}
+                            Icon={PlaylistIcon}
                         >
-                            <ButtonIcon
-                                as={MaterialCommunityIcons}
-                                // @ts-ignore
-                                name="playlist-music"
-                            />
-                            <ButtonText fontSize="$sm"> 查看所属合集</ButtonText>
+                            查看所属合集
                         </Button>
                     ) : null}
-                    <View
-                        style={{
-                            height: 40,
-                            backgroundColor: "blue",
-                            marginTop: 20,
-                            borderRadius: 99999,
-                            paddingLeft: 20,
-                            paddingRight: 20,
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            gap: 8,
-                        }}
-                    >
-                        <MaterialCommunityIcons name="playlist-music" size={20} color="white" />
-                        <Text style={{ fontWeight: "600", color: "white" }}>测试文本</Text>
-                    </View>
                 </Box>
             </Box>
         </Box>

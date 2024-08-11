@@ -1,5 +1,6 @@
+import omit from "lodash/omit";
 import React from "react";
-import { Platform, Pressable, View } from "react-native";
+import { Platform, Pressable, PressableProps as NativePressableProps, StyleProp, ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useStyles } from "react-native-unistyles";
 
@@ -12,23 +13,20 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const isAndroid = Platform.OS === "android";
 // const isAndroid = false;
 
-export interface ButtonProps {
+export interface ButtonProps extends NativePressableProps {
     color?: ThemeColorPaletteKeys;
     disabled?: boolean;
     rounded?: boolean;
     variant?: "solid" | "outline" | "ghost";
     Icon?: IconComponent;
     children?: string;
+    style?: StyleProp<ViewStyle>;
+    outerStyle?: StyleProp<ViewStyle>;
 }
 
-export default function Button({
-    color = "primary",
-    disabled = false,
-    rounded = false,
-    variant = "solid",
-    Icon,
-    children = "按钮",
-}: ButtonProps) {
+export default function Button(props: ButtonProps) {
+    const { color = "primary", disabled = false, rounded = false, variant = "solid", Icon, children = "按钮" } = props;
+
     // 0 - default, 1 - hover (unused now), 2 - active
     const pressState = useSharedValue<0 | 1 | 2>(0);
     const { theme } = useStyles();
@@ -118,18 +116,21 @@ export default function Button({
                     overflow: "hidden",
                     opacity: disabled ? 0.5 : 1,
                 },
+                props.outerStyle,
             ]}
         >
             <AnimatedPressable
-                onPressIn={() => {
+                onPressIn={event => {
                     if (!isAndroid && !disabled) {
                         pressState.value = 2;
                     }
+                    props.onPressIn?.(event);
                 }}
-                onPressOut={() => {
+                onPressOut={event => {
                     if (!isAndroid && !disabled) {
                         pressState.value = 0;
                     }
+                    props.onPressOut?.(event);
                 }}
                 android_ripple={
                     disabled || !isAndroid
@@ -149,7 +150,9 @@ export default function Button({
                         alignItems: "center",
                         gap: 8,
                     },
+                    props.style,
                 ]}
+                {...omit(props, ["color", "disabled", "rounded", "variant", "Icon", "children", "style", "outerStyle"])}
             >
                 {Icon ? <Icon size={20} style={animatedTextStyle} /> : null}
                 <Animated.Text style={[animatedTextStyle, { fontWeight: "600" }]}>{children}</Animated.Text>
