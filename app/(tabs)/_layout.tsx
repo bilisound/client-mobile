@@ -5,13 +5,12 @@ import BottomTabBar from "@react-navigation/bottom-tabs/src/views/BottomTabBar";
 import { Tabs } from "expo-router";
 import React from "react";
 import { View } from "react-native";
+import { useStyles } from "react-native-unistyles";
 
 import AudioIndicator from "~/components/AudioIndicator";
 import YuruChara from "~/components/YuruChara";
-import useCommonColors from "~/hooks/useCommonColors";
 
 const SearchIcon = ({ color }: { color: string }) => <FontAwesome5 name="search" size={20} color={color} />;
-// const HistoryIcon = ({ color }: { color: string }) => <Ionicons name="play-circle" size={24} color={color} />;
 const SettingsIcon = ({ color }: { color: string }) => <Ionicons name="settings-sharp" size={22} color={color} />;
 const ListIcon = ({ color }: { color: string }) => <Entypo name="list" size={22} color={color} />;
 
@@ -22,11 +21,9 @@ const TabBar = (props: BottomTabBarProps) => (
     </View>
 );
 
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-const TabLayout = () => {
-    const { accentColor: tabBarActiveTintColor } = useCommonColors();
+export default function TabLayout() {
+    const { theme } = useStyles();
+    const tabBarActiveTintColor = theme.colors.accent[500];
 
     return (
         <Box h="100%">
@@ -43,14 +40,11 @@ const TabLayout = () => {
                         backgroundColor: "transparent",
                         borderTopWidth: 0,
                         shadowColor: "transparent",
-                    },
-                    headerTitleStyle: {
-                        // color: colors.fgPrimary,
+                        height: 70,
                     },
                     tabBarLabelStyle: {
-                        paddingTop: 1,
+                        fontSize: 11,
                     },
-                    tabBarItemStyle: {},
                     tabBarActiveTintColor,
                 }}
             >
@@ -82,6 +76,4 @@ const TabLayout = () => {
             <YuruChara />
         </Box>
     );
-};
-
-export default TabLayout;
+}
