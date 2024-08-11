@@ -43,11 +43,13 @@ const stylesheet = createStyleSheet(theme => ({
         fontWeight: "700",
         marginTop: 8,
         marginBottom: 4,
+        color: theme.colorTokens.foreground,
     },
     version: {
         fontSize: 14,
         lineHeight: 14 * 1.5,
-        opacity: 0.7,
+        opacity: 0.5,
+        color: theme.colorTokens.foreground,
     },
     action: {
         flexDirection: "row",
