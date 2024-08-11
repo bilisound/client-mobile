@@ -306,7 +306,6 @@ export default function AudioPlayerModal() {
                         </Pressable>
 
                         {/* 播放/暂停 */}
-                        {/* todo 修正背景色 */}
                         <Pressable
                             style={styles.controlButtonPlay}
                             outerStyle={styles.controlButtonOuter}

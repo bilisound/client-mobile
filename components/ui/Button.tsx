@@ -13,8 +13,14 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const isAndroid = Platform.OS === "android";
 // const isAndroid = false;
 
+const sizes = {
+    sm: { h: 36, px: 18 },
+    md: { h: 40, px: 20 },
+};
+
 export interface ButtonProps extends NativePressableProps {
     color?: ThemeColorPaletteKeys;
+    size?: keyof typeof sizes;
     disabled?: boolean;
     rounded?: boolean;
     variant?: "solid" | "outline" | "ghost";
@@ -26,7 +32,15 @@ export interface ButtonProps extends NativePressableProps {
 }
 
 export default function Button(props: ButtonProps) {
-    const { color = "primary", disabled = false, rounded = false, variant = "solid", Icon, children = "按钮" } = props;
+    const {
+        color = "primary",
+        disabled = false,
+        rounded = false,
+        variant = "solid",
+        Icon,
+        children = "按钮",
+        size = "md",
+    } = props;
 
     // 0 - default, 1 - hover (unused now), 2 - active
     const pressState = useSharedValue<0 | 1 | 2>(0);
@@ -122,13 +136,13 @@ export default function Button(props: ButtonProps) {
         >
             <AnimatedPressable
                 onPressIn={event => {
-                    if (!isAndroid && !disabled) {
+                    if (!isAndroid) {
                         pressState.value = 2;
                     }
                     props.onPressIn?.(event);
                 }}
                 onPressOut={event => {
-                    if (!isAndroid && !disabled) {
+                    if (!isAndroid) {
                         pressState.value = 0;
                     }
                     props.onPressOut?.(event);
@@ -142,10 +156,8 @@ export default function Button(props: ButtonProps) {
                 }
                 style={[
                     {
-                        height: variant === "outline" ? 38 : 40,
-                        // paddingLeft: variant === "outline" ? 18 : 20,
-                        // paddingRight: variant === "outline" ? 18 : 20,
-                        paddingHorizontal: variant === "outline" ? 18 : 20,
+                        height: variant === "outline" ? sizes[size].h - 2 : sizes[size].h,
+                        paddingHorizontal: variant === "outline" ? sizes[size].px - 2 : sizes[size].px,
                         flexDirection: "row",
                         justifyContent: "center",
                         alignItems: "center",
@@ -153,17 +165,7 @@ export default function Button(props: ButtonProps) {
                     },
                     props.style,
                 ]}
-                {...omit(props, [
-                    "color",
-                    "disabled",
-                    "rounded",
-                    "variant",
-                    "Icon",
-                    "iconSize",
-                    "children",
-                    "style",
-                    "outerStyle",
-                ])}
+                {...omit(props, ["color", "rounded", "variant", "Icon", "iconSize", "children", "style", "outerStyle"])}
             >
                 {Icon ? <Icon size={props.iconSize ?? 20} style={animatedTextStyle} /> : null}
                 <Animated.Text style={[animatedTextStyle, { fontWeight: "600" }]}>{children}</Animated.Text>
