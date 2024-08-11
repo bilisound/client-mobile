@@ -5,6 +5,7 @@ import {
     ViewStyle,
     PressableProps as NativePressableProps,
     useColorScheme,
+    Platform,
 } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
@@ -35,12 +36,19 @@ export default function Pressable(props: PressableProps) {
         <Animated.View style={[props.outerStyle, animatedStyle]}>
             <NativePressable
                 onPressIn={event => {
-                    pressed.value = true;
+                    if (Platform.OS !== "android") {
+                        pressed.value = true;
+                    }
                     props.onPressIn?.(event);
                 }}
                 onPressOut={event => {
-                    pressed.value = false;
+                    if (Platform.OS !== "android") {
+                        pressed.value = false;
+                    }
                     props.onPressOut?.(event);
+                }}
+                android_ripple={{
+                    color: pressedBackgroundColorUser || pressedBackgroundColor,
                 }}
                 {...omit(props, ["onPressIn", "onPressOut", "outerStyle"])}
             >
