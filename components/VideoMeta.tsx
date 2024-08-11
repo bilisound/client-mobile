@@ -8,12 +8,10 @@ import React, { useState } from "react";
 import { Platform } from "react-native";
 
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
-// import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useCommonColors from "~/hooks/useCommonColors";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { formatDate } from "~/utils/misc";
-import { convertToHTTPS } from "~/utils/string";
 
 const detailMaxHeight = 192;
 
@@ -171,6 +169,8 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
         </Pressable>
     );
 
+    const showMoreComputed = showMore ? showMoreEl : showMoreElHidden;
+
     return (
         <Box
             sx={{
@@ -245,7 +245,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                 </Box>
 
                 {/* 简介 */}
-                {showMore ? showMoreEl : showMoreElHidden}
+                {meta.desc.trim() !== "" && showMoreComputed}
 
                 {/* 操作 */}
                 <Box flexDirection="row" gap={8}>
