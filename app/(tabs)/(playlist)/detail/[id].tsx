@@ -1,5 +1,5 @@
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Box, Button, ButtonText, Text } from "@gluestack-ui/themed";
+import { Box, Text } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import Color from "color";
 import { Image } from "expo-image";
@@ -9,14 +9,15 @@ import React, { useCallback, useState } from "react";
 import { Alert, useColorScheme } from "react-native";
 import { useMMKVObject } from "react-native-mmkv";
 import TrackPlayer from "react-native-track-player";
+import { useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import EditAction from "~/components/EditAction";
 import Empty from "~/components/Empty";
 import SongItem from "~/components/SongItem";
+import Button from "~/components/ui/Button";
 import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
 import { createIcon } from "~/components/ui/utils/icon";
-import useCommonColors from "~/hooks/useCommonColors";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import {
     PLAYLIST_ITEM_KEY_PREFIX,
@@ -30,6 +31,8 @@ import {
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import log from "~/utils/logger";
 import { playlistToTracks } from "~/utils/track-data";
+
+const IconPlay = createIcon(Ionicons, "play");
 
 function extractAndProcessImgUrls(playlistDetails: PlaylistDetailRow[]) {
     const imgUrls = playlistDetails.map(detail => detail.imgUrl);
@@ -139,19 +142,9 @@ function Header({
                 </Text>
                 <Text opacity={0.6} mt="$2">{`${meta.amount} 首歌曲`}</Text>
                 {showPlayButton && (
-                    <Box flexDirection="row">
-                        <Button
-                            mt="$5"
-                            rounded="$full"
-                            size="md"
-                            variant="solid"
-                            action="primary"
-                            isDisabled={false}
-                            isFocusVisible={false}
-                            onPress={onPlay}
-                        >
-                            <Ionicons name="play" size={20} color="white" />
-                            <ButtonText> 播放</ButtonText>
+                    <Box flexDirection="row" marginTop="$5">
+                        <Button Icon={IconPlay} rounded>
+                            播放
                         </Button>
                     </Box>
                 )}
@@ -161,7 +154,8 @@ function Header({
 }
 
 export default function Page() {
-    const { bgColor } = useCommonColors();
+    const { theme } = useStyles();
+    const bgColor = theme.colorTokens.background;
     const colorMode = useColorScheme();
     const { id } = useLocalSearchParams<{ id: string }>();
 

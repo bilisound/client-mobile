@@ -1,13 +1,12 @@
 import { Octicons } from "@expo/vector-icons";
-import { Pressable } from "@gluestack-ui/themed";
 import React, { useEffect, useRef, useState } from "react";
-import { Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useStyles } from "react-native-unistyles";
 import WebView from "react-native-webview";
 
 import CommonLayout from "~/components/CommonLayout";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE } from "~/constants/style";
-import useCommonColors from "~/hooks/useCommonColors";
+import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
+import { createIcon } from "~/components/ui/utils/icon";
 import { getLogContentForDisplay, shareLogContent } from "~/utils/logger";
 
 const webTemplate = (content: string) => `
@@ -41,16 +40,11 @@ const webTemplate = (content: string) => `
 </body>
 </html>`;
 
-const osMap: Record<typeof Platform.OS, string> = {
-    ios: "iOS",
-    android: "Android",
-    macos: "macOS",
-    windows: "Windows",
-    web: "Web",
-};
+const IconShare = createIcon(Octicons, "share");
 
 const App: React.FC = () => {
-    const { textBasicColor } = useCommonColors();
+    const { theme } = useStyles();
+    const textBasicColor = theme.colorTokens.foreground;
     const safeAreaInsets = useSafeAreaInsets();
     const [content, setContent] = useState("");
 
@@ -81,9 +75,7 @@ const App: React.FC = () => {
             title="导出日志"
             leftAccessories="backButton"
             rightAccessories={
-                <Pressable sx={COMMON_FRAME_SOLID_BUTTON_STYLE} onPress={() => handleShare()}>
-                    <Octicons name="share" size={24} color="#fff" />
-                </Pressable>
+                <ButtonTitleBar label="分享日志文件" Icon={IconShare} iconSize={22} onPress={() => handleShare()} />
             }
             extendToBottom
         >

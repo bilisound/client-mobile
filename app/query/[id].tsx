@@ -9,7 +9,6 @@ import {
     ActionsheetItemText,
     Box,
     Fab,
-    Pressable,
     Text,
     useToast,
 } from "@gluestack-ui/themed";
@@ -21,6 +20,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ScrollView, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
+import { useStyles } from "react-native-unistyles";
 import { v4 } from "uuid";
 
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "~/api/bilisound";
@@ -28,9 +28,10 @@ import CommonLayout from "~/components/CommonLayout";
 import SongItem from "~/components/SongItem";
 import VideoMeta from "~/components/VideoMeta";
 import VideoSkeleton from "~/components/VideoSkeleton";
+import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
+import { createIcon } from "~/components/ui/utils/icon";
 import { BILIBILI_VIDEO_URL_PREFIX } from "~/constants/network";
-import { COMMON_FRAME_SOLID_BUTTON_STYLE, SCREEN_BREAKPOINTS } from "~/constants/style";
-import useCommonColors from "~/hooks/useCommonColors";
+import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import useHistoryStore from "~/store/history";
@@ -40,6 +41,8 @@ import { formatSecond } from "~/utils/misc";
 import { convertToHTTPS } from "~/utils/string";
 
 type PageItem = GetBilisoundMetadataResponse["pages"][number];
+
+const IconShare = createIcon(FontAwesome5, "share");
 
 const iconWrapperStyle = {
     w: 24,
@@ -60,7 +63,8 @@ interface LongPressActionsProps {
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
     const edgeInsets = useSafeAreaInsets();
-    const { textBasicColor } = useCommonColors();
+    const { theme } = useStyles();
+    const textBasicColor = theme.colorTokens.foreground;
 
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose} zIndex={999}>
@@ -100,7 +104,8 @@ const QueryIdScreen: React.FC = () => {
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
     const toast = useToast();
     const edgeInsets = useSafeAreaInsets();
-    const { textBasicColor } = useCommonColors();
+    const { theme } = useStyles();
+    const textBasicColor = theme.colorTokens.foreground;
     const containerStyle = useToastContainerStyle();
 
     const [showActionSheet, setShowActionSheet] = useState(false);
@@ -200,14 +205,14 @@ const QueryIdScreen: React.FC = () => {
             extendToBottom
             leftAccessories="backButton"
             rightAccessories={
-                <Pressable
-                    sx={COMMON_FRAME_SOLID_BUTTON_STYLE}
+                <ButtonTitleBar
+                    label="在外部应用查看"
+                    Icon={IconShare}
+                    iconSize={18}
                     onPress={async () => {
                         await Linking.openURL(`${BILIBILI_VIDEO_URL_PREFIX}${data?.data.bvid}`);
                     }}
-                >
-                    <FontAwesome5 name="share" size={16} color="#fff" />
-                </Pressable>
+                />
             }
         >
             {isLoading ? <VideoSkeleton /> : null}

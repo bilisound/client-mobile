@@ -19,6 +19,7 @@ export interface ButtonProps extends NativePressableProps {
     rounded?: boolean;
     variant?: "solid" | "outline" | "ghost";
     Icon?: IconComponent;
+    iconSize?: number;
     children?: string;
     style?: StyleProp<ViewStyle>;
     outerStyle?: StyleProp<ViewStyle>;
@@ -152,9 +153,19 @@ export default function Button(props: ButtonProps) {
                     },
                     props.style,
                 ]}
-                {...omit(props, ["color", "disabled", "rounded", "variant", "Icon", "children", "style", "outerStyle"])}
+                {...omit(props, [
+                    "color",
+                    "disabled",
+                    "rounded",
+                    "variant",
+                    "Icon",
+                    "iconSize",
+                    "children",
+                    "style",
+                    "outerStyle",
+                ])}
             >
-                {Icon ? <Icon size={20} style={animatedTextStyle} /> : null}
+                {Icon ? <Icon size={props.iconSize ?? 20} style={animatedTextStyle} /> : null}
                 <Animated.Text style={[animatedTextStyle, { fontWeight: "600" }]}>{children}</Animated.Text>
             </AnimatedPressable>
         </Animated.View>
