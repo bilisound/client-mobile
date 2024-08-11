@@ -1,8 +1,9 @@
 import * as Sharing from "expo-sharing";
 import path from "path-browserify";
-import { Platform, ToastAndroid } from "react-native";
+import { Platform } from "react-native";
 import RNFS from "react-native-fs";
 import { createDocument } from "react-native-saf-x";
+import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
 
 import log from "./logger";
@@ -73,7 +74,10 @@ export async function saveFile(location: string, replaceFileName?: string) {
             },
         );
         if (response) {
-            ToastAndroid.show("音频文件保存成功了！", ToastAndroid.SHORT);
+            Toast.show({
+                type: "success",
+                text1: "音频文件已保存",
+            });
         }
         return !!response;
     }

@@ -56,7 +56,8 @@ const styleSheet = createStyleSheet(theme => ({
         borderWidth: 1,
         minHeight: 50,
         borderRadius: 25,
-        padding: 12,
+        paddingHorizontal: 12,
+        paddingVertical: 13,
         flexDirection: "row",
         gap: 12,
         marginHorizontal: 24,
@@ -74,7 +75,7 @@ const styleSheet = createStyleSheet(theme => ({
     toastTitle: {
         fontSize: 16,
         fontWeight: "bold",
-        lineHeight: 26,
+        lineHeight: 16 * 1.5,
         color: theme.colorTokens.foreground,
     },
     toastDescription: {

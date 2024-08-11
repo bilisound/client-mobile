@@ -1,5 +1,3 @@
-import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
-
 export function formatDate(date: number | string | Date, fmt = "yyyy-MM-dd hh:mm:ss") {
     date = new Date(date);
     const o = {
@@ -63,8 +61,5 @@ export async function cleanAudioCache() {
 }
 
 export function getCacheAudioPath(id: string, episode: number, isAudio = true) {
-    if (isAudio) {
-        return `${BILISOUND_OFFLINE_PATH}/${id}_${episode}.m4a`;
-    }
-    return `${BILISOUND_OFFLINE_PATH}/${id}_${episode}.tmp`;
+    return "";
 }
