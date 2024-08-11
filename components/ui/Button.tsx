@@ -1,6 +1,13 @@
 import omit from "lodash/omit";
 import React from "react";
-import { Platform, Pressable, PressableProps as NativePressableProps, StyleProp, ViewStyle } from "react-native";
+import {
+    ActivityIndicator,
+    Platform,
+    Pressable,
+    PressableProps as NativePressableProps,
+    StyleProp,
+    ViewStyle,
+} from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useStyles } from "react-native-unistyles";
 
@@ -24,7 +31,7 @@ export interface ButtonProps extends NativePressableProps {
     disabled?: boolean;
     rounded?: boolean;
     variant?: "solid" | "outline" | "ghost";
-    Icon?: IconComponent;
+    Icon?: IconComponent | "loading";
     iconSize?: number;
     children?: string;
     style?: StyleProp<ViewStyle>;
@@ -167,7 +174,13 @@ export default function Button(props: ButtonProps) {
                 ]}
                 {...omit(props, ["color", "rounded", "variant", "Icon", "iconSize", "children", "style", "outerStyle"])}
             >
-                {Icon ? <Icon size={props.iconSize ?? 20} style={animatedTextStyle} /> : null}
+                {typeof Icon === "function" ? <Icon size={props.iconSize ?? 20} style={animatedTextStyle} /> : null}
+                {Icon === "loading" ? (
+                    <ActivityIndicator
+                        style={{ width: props.iconSize ?? 22, height: props.iconSize ?? 22 }}
+                        color={disabled ? disabledForeground : normalForeground}
+                    />
+                ) : null}
                 <Animated.Text style={[animatedTextStyle, { fontWeight: "600" }]}>{children}</Animated.Text>
             </AnimatedPressable>
         </Animated.View>

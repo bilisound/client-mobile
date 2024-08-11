@@ -1,12 +1,12 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Toast, ToastDescription, ToastTitle, useToast } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import {
@@ -17,13 +17,15 @@ import {
     UserListMode,
 } from "~/api/bilisound";
 import CommonLayout from "~/components/CommonLayout";
+import Button from "~/components/ui/Button";
 import Pressable from "~/components/ui/Pressable";
+import { createIcon } from "~/components/ui/utils/icon";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
-import useCommonColors from "~/hooks/useCommonColors";
-import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { formatSecond } from "~/utils/misc";
+
+const IconAdd = createIcon(MaterialIcons, "add");
 
 interface HeaderProps {
     data: GetEpisodeUserResponse;
@@ -32,8 +34,6 @@ interface HeaderProps {
 
 function Header({ data, mode }: HeaderProps) {
     const { styles } = useStyles(styleSheet);
-    const containerStyle = useToastContainerStyle();
-    const toast = useToast();
     const [loading, setLoading] = useState(false);
 
     // 添加歌单
@@ -60,17 +60,10 @@ function Header({ data, mode }: HeaderProps) {
             setName(data.meta.name);
             router.push(`/apply-playlist`);
         } catch (e) {
-            toast.show({
-                placement: "top",
-                containerStyle,
-                render: ({ id }) => (
-                    <Toast nativeID={`toast-${id}`} action="success" variant="accent">
-                        <View>
-                            <ToastTitle>歌单创建操作失败</ToastTitle>
-                            <ToastDescription>{(e as Error)?.message || `${e}`}</ToastDescription>
-                        </View>
-                    </Toast>
-                ),
+            Toast.show({
+                type: "error",
+                text1: "歌单创建操作失败",
+                text2: (e as Error)?.message || `${e}`,
             });
         } finally {
             setLoading(false);
@@ -84,23 +77,18 @@ function Header({ data, mode }: HeaderProps) {
                 {data.meta.name}
             </Text>
             {data.meta.description && <Text style={styles.description}>{data.meta.description}</Text>}
-            <View style={{ flexDirection: "row" }}>
-                <TouchableOpacity style={styles.button} disabled={false} onPress={handleCreatePlaylist}>
-                    {loading ? (
-                        <ActivityIndicator style={{ width: 22, height: 22 }} color="white" />
-                    ) : (
-                        <MaterialIcons name="add" size={22} color="white" />
-                    )}
-                    <Text style={styles.buttonText}>创建歌单</Text>
-                </TouchableOpacity>
+            <View style={{ flexDirection: "row", marginTop: 20 }}>
+                <Button rounded disabled={loading} Icon={loading ? "loading" : IconAdd} onPress={handleCreatePlaylist}>
+                    创建歌单
+                </Button>
             </View>
         </View>
     );
 }
 
 function HeaderSkeleton() {
-    const { styles } = useStyles(styleSheet);
-    const { textBasicColor } = useCommonColors();
+    const { styles, theme } = useStyles(styleSheet);
+    const textBasicColor = theme.colorTokens.foreground;
 
     const skeletonBlock = {
         backgroundColor: textBasicColor,
@@ -271,19 +259,6 @@ const styleSheet = createStyleSheet(theme => ({
         lineHeight: 15 * 1.5,
         marginTop: 16,
         color: theme.colorTokens.foreground,
-    },
-    button: {
-        marginTop: 20,
-        borderRadius: 9999,
-        padding: 10,
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "blue",
-    },
-    buttonText: {
-        color: "white",
-        fontSize: 14,
-        marginLeft: 5,
     },
     listItem: {
         flexDirection: "row",
