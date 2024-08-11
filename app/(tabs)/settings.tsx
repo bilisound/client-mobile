@@ -62,13 +62,15 @@ const Settings: React.FC = () => {
 
     const developerOptions = (
         <>
-            <SettingMenuItem
-                icon={DeveloperIcon}
-                title="组件测试页面"
-                onPress={() => {
-                    router.push("/test");
-                }}
-            />
+            {process.env.NODE_ENV !== "production" ? (
+                <SettingMenuItem
+                    icon={DeveloperIcon}
+                    title="组件测试页面"
+                    onPress={() => {
+                        router.push("/test");
+                    }}
+                />
+            ) : null}
             {Platform.OS === "web" ? null : (
                 <>
                     <SettingMenuItem
