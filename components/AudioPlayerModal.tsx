@@ -311,7 +311,7 @@ export default function AudioPlayerModal() {
                             style={styles.controlButtonPlay}
                             outerStyle={styles.controlButtonOuter}
                             pressedBackgroundColor={theme.colorTokens.buttonBackground("primary", "active")}
-                            onPressOut={async () => {
+                            onPress={async () => {
                                 await handleTogglePlay();
                             }}
                         >
