@@ -75,7 +75,13 @@ const App: React.FC = () => {
             title="导出日志"
             leftAccessories="backButton"
             rightAccessories={
-                <ButtonTitleBar label="分享日志文件" Icon={IconShare} iconSize={22} onPress={() => handleShare()} />
+                <ButtonTitleBar
+                    label="分享日志文件"
+                    Icon={IconShare}
+                    iconSize={22}
+                    solid
+                    onPress={() => handleShare()}
+                />
             }
             extendToBottom
         >
