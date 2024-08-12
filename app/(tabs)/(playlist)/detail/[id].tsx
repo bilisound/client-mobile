@@ -9,7 +9,7 @@ import React, { useCallback, useState } from "react";
 import { Alert, useColorScheme, View } from "react-native";
 import { useMMKVObject } from "react-native-mmkv";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import TrackPlayer from "react-native-track-player";
+import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
@@ -20,6 +20,7 @@ import Button from "~/components/ui/Button";
 import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
 import { createIcon } from "~/components/ui/utils/icon";
 import useMultiSelect from "~/hooks/useMultiSelect";
+import useTracks from "~/hooks/useTracks";
 import {
     PLAYLIST_ITEM_KEY_PREFIX,
     PlaylistDetailRow,
@@ -167,6 +168,7 @@ export default function Page() {
         playlistStorage,
     );
     const [playlistOnQueue = {}, setPlaylistOnQueue] = usePlaylistOnQueue();
+    const activeTrack = useActiveTrack();
 
     const [contentHeight, setContentHeight] = useState(0);
     const [viewHeight, setViewHeight] = useState(0);
@@ -179,7 +181,7 @@ export default function Page() {
     const [editing, setEditing] = useState(false);
 
     async function handleRequestPlay(index: number) {
-        if (playlistOnQueue.value?.id === id) {
+        if (playlistOnQueue.value?.id === id && activeTrack) {
             log.debug("当前队列中的内容来自本歌单，就地跳转");
             await TrackPlayer.skip(index);
             return;

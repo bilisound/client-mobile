@@ -1,21 +1,19 @@
 import omit from "lodash/omit";
-import React from "react";
+import React, { useState } from "react";
 import {
     ActivityIndicator,
     Platform,
     Pressable,
     PressableProps as NativePressableProps,
     StyleProp,
+    View,
     ViewStyle,
+    Text,
 } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useStyles } from "react-native-unistyles";
 
 import { IconComponent } from "~/components/ui/utils/icon";
 import { ThemeColorPaletteKeys } from "~/config/palettes";
-
-// const AnimatedIcon = Animated.createAnimatedComponent(MaterialCommunityIcons);
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const isAndroid = Platform.OS === "android";
 // const isAndroid = false;
@@ -50,7 +48,8 @@ export default function Button(props: ButtonProps) {
     } = props;
 
     // 0 - default, 1 - hover (unused now), 2 - active
-    const pressState = useSharedValue<0 | 1 | 2>(0);
+    // const pressState = useSharedValue<0 | 1 | 2>(0);
+    const [pressState, setPressState] = useState<0 | 1 | 2>(0);
     const { theme } = useStyles();
 
     let normalBackground = theme.colorTokens.buttonBackground(color, "default");
@@ -75,17 +74,10 @@ export default function Button(props: ButtonProps) {
         disabledForeground = theme.colorTokens.buttonOutlineForeground(color, "disabled");
     }
 
-    const animatedOuterBackgroundStyle = useAnimatedStyle(() => {
-        let bg = disabled ? disabledBackground : normalBackground;
-        if (pressState.value === 2) {
-            bg = activeBackground;
-        }
-        return {
-            backgroundColor: withTiming(bg, {
-                duration: pressState.value === 2 ? 0 : 150,
-            }),
-        };
-    });
+    const bg = disabled ? disabledBackground : normalBackground;
+    const animatedOuterBackgroundStyle = {
+        backgroundColor: pressState === 2 ? activeBackground : bg,
+    };
 
     const animatedOuterBorderStyle = {
         borderColor: disabled ? disabledBorder : normalBorder,
@@ -96,42 +88,14 @@ export default function Button(props: ButtonProps) {
         color: disabled ? disabledForeground : normalForeground,
     };
 
-    // 因为目前主题定义的 border 颜色始终是一致的，所以这里暂时没必要做动画处理
-    /*const animatedOuterBorderStyle = useAnimatedStyle(() => {
-        let bg = disabled ? disabledBorder : normalBorder;
-        if (pressState.value === 2) {
-            bg = activeBorder;
-        }
-        return {
-            borderWidth: 1,
-            borderColor: withTiming(bg, {
-                duration: pressState.value === 2 ? 0 : 150,
-            }),
-        };
-    });
-
-    const animatedTextStyle = useAnimatedStyle(() => {
-        let fg = disabled ? disabledForeground : normalForeground;
-        if (pressState.value === 2) {
-            fg = activeForeground;
-        }
-        return {
-            color: withTiming(fg, {
-                duration: pressState.value === 2 ? 0 : 150,
-            }),
-        };
-    });*/
-
-    console.log(disabled ? disabledBackground : normalBackground);
-
     return (
-        <Animated.View
+        <View
             style={[
-                isAndroid
+                /*isAndroid
                     ? {
                           backgroundColor: disabled ? disabledBackground : normalBackground,
                       }
-                    : animatedOuterBackgroundStyle,
+                    : animatedOuterBackgroundStyle,*/
                 variant === "outline" ? animatedOuterBorderStyle : {},
                 {
                     borderRadius: rounded ? theme.sizes.radiusButtonFull : theme.sizes.radiusButton,
@@ -141,16 +105,16 @@ export default function Button(props: ButtonProps) {
                 props.outerStyle,
             ]}
         >
-            <AnimatedPressable
+            <Pressable
                 onPressIn={event => {
                     if (!isAndroid) {
-                        pressState.value = 2;
+                        setPressState(2);
                     }
                     props.onPressIn?.(event);
                 }}
                 onPressOut={event => {
                     if (!isAndroid) {
-                        pressState.value = 0;
+                        setPressState(0);
                     }
                     props.onPressOut?.(event);
                 }}
@@ -161,7 +125,7 @@ export default function Button(props: ButtonProps) {
                               color: activeBackground,
                           }
                 }
-                style={[
+                style={status => [
                     {
                         height: variant === "outline" ? sizes[size].h - 2 : sizes[size].h,
                         paddingHorizontal: variant === "outline" ? sizes[size].px - 2 : sizes[size].px,
@@ -169,6 +133,7 @@ export default function Button(props: ButtonProps) {
                         justifyContent: "center",
                         alignItems: "center",
                         gap: 8,
+                        backgroundColor: status.pressed ? activeBackground : bg,
                     },
                     props.style,
                 ]}
@@ -181,8 +146,8 @@ export default function Button(props: ButtonProps) {
                         color={disabled ? disabledForeground : normalForeground}
                     />
                 ) : null}
-                <Animated.Text style={[animatedTextStyle, { fontWeight: "600" }]}>{children}</Animated.Text>
-            </AnimatedPressable>
-        </Animated.View>
+                <Text style={[animatedTextStyle, { fontWeight: "600" }]}>{children}</Text>
+            </Pressable>
+        </View>
     );
 }
