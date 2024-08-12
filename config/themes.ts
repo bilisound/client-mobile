@@ -13,6 +13,9 @@ export interface SemanticColor {
     background: string;
     foreground: string;
     topBarSolidBackground: string;
+    topBarSolidForeground: string;
+    topBarTransparentForeground: string;
+    topBarTransparentAltForeground: string;
     dialogBackground: string;
     dialogBorder: string;
     border: string;
@@ -40,6 +43,9 @@ export const classicLight: BilisoundTheme = {
         foreground: colors.neutral[700],
         border: colors.neutral[100],
         topBarSolidBackground: colors.primary[500],
+        topBarSolidForeground: colors.white,
+        topBarTransparentForeground: colors.primary[500],
+        topBarTransparentAltForeground: colors.neutral[700],
         dialogBackground: colors.white,
         dialogBorder: colors.neutral[100],
         buttonBackground: (color, status) => {
@@ -93,6 +99,9 @@ export const classicDark: BilisoundTheme = {
         foreground: colors.white,
         border: colors.neutral["800"],
         topBarSolidBackground: colors.primary["900"],
+        topBarSolidForeground: colors.white,
+        topBarTransparentForeground: colors.primary[500],
+        topBarTransparentAltForeground: colors.white,
         dialogBackground: colors.neutral["800"],
         dialogBorder: colors.neutral[800],
         buttonBackground: (color, status) => {

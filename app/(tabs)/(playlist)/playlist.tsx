@@ -163,6 +163,7 @@ export default function Page() {
                         {Platform.OS === "web" ? null : (
                             <ButtonTitleBar
                                 label="扫描二维码"
+                                theme="transparent"
                                 Icon={IconQrcodeScan}
                                 iconSize={20}
                                 onPress={() => router.push("/barcode")}
@@ -171,6 +172,7 @@ export default function Page() {
                         <ButtonTitleBar
                             label="新建歌单"
                             Icon={IconAdd}
+                            theme="transparent"
                             onPress={() => {
                                 router.push(`/(tabs)/(playlist)/meta/new`);
                             }}

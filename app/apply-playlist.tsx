@@ -3,19 +3,19 @@ import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import Toast from "react-native-toast-message";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import PlaylistItem from "~/components/PlaylistItem";
 import Pressable from "~/components/ui/Pressable";
-import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import { addToPlaylist, quickCreatePlaylist, syncPlaylistAmount, usePlaylistStorage } from "~/storage/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 
 export default function Page() {
-    const containerStyle = useToastContainerStyle();
+    const { styles } = useStyles(styleSheet);
 
     // 添加歌单
     const { playlistDetail, name } = useApplyPlaylistStore(state => ({
@@ -98,7 +98,7 @@ export default function Page() {
     );
 }
 
-const styles = StyleSheet.create({
+const styleSheet = createStyleSheet(theme => ({
     container: {
         gap: 16,
         paddingVertical: 16,
@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         fontWeight: "700",
         opacity: 0.6,
+        color: theme.colorTokens.foreground,
     },
     singleItemContainer: {
         width: "100%",
@@ -128,10 +129,12 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 16,
         fontWeight: "700",
+        color: theme.colorTokens.foreground,
     },
     author: {
         fontSize: 14,
         opacity: 0.7,
+        color: theme.colorTokens.foreground,
     },
     pressable: {
         gap: 4,
@@ -147,14 +150,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 24,
         flex: 1,
+        color: theme.colorTokens.foreground,
     },
     pressableSubtext: {
         marginLeft: 36,
         fontSize: 14,
         opacity: 0.6,
         lineHeight: 21,
+        color: theme.colorTokens.foreground,
     },
     toastContainer: {
         gap: 4,
     },
-});
+}));

@@ -79,7 +79,7 @@ const App: React.FC = () => {
                     label="分享日志文件"
                     Icon={IconShare}
                     iconSize={22}
-                    solid
+                    theme="solid"
                     onPress={() => handleShare()}
                 />
             }

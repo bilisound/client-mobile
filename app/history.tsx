@@ -78,7 +78,7 @@ const History: React.FC = () => {
             leftAccessories="backButton"
             rightAccessories={
                 <ButtonTitleBar
-                    solid
+                    theme="solid"
                     Icon={IconDelete}
                     label="清除历史记录"
                     onPress={() => {

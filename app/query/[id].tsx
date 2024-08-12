@@ -209,7 +209,7 @@ const QueryIdScreen: React.FC = () => {
                     label="在外部应用查看"
                     Icon={IconShare}
                     iconSize={18}
-                    solid
+                    theme="solid"
                     onPress={async () => {
                         await Linking.openURL(`${BILIBILI_VIDEO_URL_PREFIX}${data?.data.bvid}`);
                     }}

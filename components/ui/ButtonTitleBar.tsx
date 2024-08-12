@@ -6,7 +6,11 @@ import { IconComponent } from "~/components/ui/utils/icon";
 
 export interface ButtonTitleBarProps {
     label: string;
+    /**
+     * @deprecated
+     */
     solid?: boolean;
+    theme?: "transparent" | "transparentAlt" | "solid";
     Icon?: IconComponent;
     iconColor?: string;
     iconSize?: number;
@@ -15,7 +19,7 @@ export interface ButtonTitleBarProps {
 
 export default function ButtonTitleBar({
     label,
-    solid,
+    theme: colorTheme = "solid",
     onPress,
     Icon,
     iconColor,
@@ -23,19 +27,23 @@ export default function ButtonTitleBar({
     children,
 }: PropsWithChildren<ButtonTitleBarProps>) {
     const { styles, theme } = useStyles(styleSheet);
+    let textColor = theme.colorTokens.topBarSolidForeground;
+    if (colorTheme === "transparent") {
+        textColor = theme.colorTokens.topBarTransparentForeground;
+    }
+    if (colorTheme === "transparentAlt") {
+        textColor = theme.colorTokens.topBarTransparentAltForeground;
+    }
+
     return (
         <Pressable
             outerStyle={styles.buttonOuter}
             style={styles.button}
-            pressedBackgroundColor={solid ? "rgba(255,255,255,0.15)" : undefined}
+            pressedBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.15)" : undefined}
             aria-label={label}
             onPress={onPress}
         >
-            {Icon ? (
-                <Icon size={iconSize} color={iconColor || (solid ? "#fff" : theme.colorTokens.foreground)} />
-            ) : (
-                children
-            )}
+            {Icon ? <Icon size={iconSize} color={iconColor || textColor} /> : children}
         </Pressable>
     );
 }

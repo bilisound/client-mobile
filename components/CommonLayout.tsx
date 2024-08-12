@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { PropsWithChildren } from "react";
-import { View, Text, StatusBar } from "react-native";
+import { View, Text, StatusBar, StyleProp, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
@@ -10,10 +10,12 @@ import { createIcon } from "~/components/ui/utils/icon";
 
 export interface CommonFrameNewProps {
     title?: string;
-    titleBarTheme?: "transparent" | "solid";
+    titleBarTheme?: "transparent" | "transparentAlt" | "solid";
     extendToBottom?: boolean;
     leftAccessories?: React.ReactNode | "backButton";
     rightAccessories?: React.ReactNode;
+    containerStyle?: StyleProp<ViewStyle>;
+    titleBarStyle?: StyleProp<ViewStyle>;
 }
 
 const IconArrowBack = createIcon(Ionicons, "arrow-back");
@@ -25,17 +27,23 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     extendToBottom,
     leftAccessories,
     rightAccessories,
+    containerStyle,
+    titleBarStyle,
 }) => {
     const { styles, theme } = useStyles(styleSheet);
     const edgeInsets = useSafeAreaInsets();
-    const textBasicColor = theme.colorTokens.foreground;
 
     const computedSolidColor = theme.colorTokens.topBarSolidBackground;
-    const textSolidColor = theme.colors.white;
-    const textColor = titleBarTheme === "solid" ? textSolidColor : textBasicColor;
+    let textColor = theme.colorTokens.topBarSolidForeground;
+    if (titleBarTheme === "transparent") {
+        textColor = theme.colorTokens.topBarTransparentForeground;
+    }
+    if (titleBarTheme === "transparentAlt") {
+        textColor = theme.colorTokens.topBarTransparentAltForeground;
+    }
 
     return (
-        <View style={[styles.container]}>
+        <View style={[styles.container, containerStyle]}>
             {titleBarTheme === "solid" && <StatusBar barStyle="light-content" showHideTransition="none" />}
             <View
                 style={[
@@ -44,10 +52,18 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                         paddingTop: edgeInsets.top,
                         backgroundColor: titleBarTheme === "solid" ? computedSolidColor : "transparent",
                     },
+                    titleBarStyle,
                 ]}
             >
                 <View style={styles.titleBar}>
-                    <Text style={[styles.titleText, { color: textColor }]}>{title}</Text>
+                    <Text
+                        style={[
+                            styles.titleText,
+                            { color: titleBarTheme === "solid" ? theme.colors.white : theme.colorTokens.foreground },
+                        ]}
+                    >
+                        {title}
+                    </Text>
                     {leftAccessories && (
                         <View style={styles.leftAccessories}>
                             {leftAccessories === "backButton" ? (
@@ -55,7 +71,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                                     label="返回"
                                     Icon={IconArrowBack}
                                     iconColor={textColor}
-                                    solid={titleBarTheme === "solid"}
+                                    theme={titleBarTheme}
                                     onPress={() => router.back()}
                                 />
                             ) : (

@@ -136,6 +136,7 @@ const TabIndexScreen: React.FC = () => {
                         label="扫描二维码"
                         Icon={IconQrcodeScan}
                         iconSize={20}
+                        theme="transparent"
                         onPress={() => router.push("/barcode")}
                     />
                 )}
@@ -143,6 +144,7 @@ const TabIndexScreen: React.FC = () => {
                     label="历史记录"
                     Icon={IconHistory}
                     iconSize={20}
+                    theme="transparent"
                     onPress={() => router.push("/history")}
                 />
             </Box>

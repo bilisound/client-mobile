@@ -259,113 +259,119 @@ export default function Page() {
         .toString();
 
     return (
-        <View style={{ flex: 1, backgroundColor: enableUnderLayerColor ? fromColor : bgColor }}>
-            <CommonLayout
-                title="查看详情"
-                titleBarTheme="transparent"
-                leftAccessories="backButton"
-                rightAccessories={
-                    <>
-                        <ButtonTitleBar
-                            label="编辑歌单信息"
-                            onPress={() => {
-                                router.push(`../meta/${id}`);
-                            }}
-                            Icon={IconEditMeta}
-                            iconSize={20}
-                        />
-                        {playlistDetail.length > 0 ? (
-                            <ButtonTitleBar
-                                label={editing ? "完成" : "编辑"}
-                                onPress={() =>
-                                    setEditing(prevState => {
-                                        if (prevState) {
-                                            clear();
-                                        }
-                                        return !prevState;
-                                    })
-                                }
-                                Icon={editing ? IconEditingDone : IconEditing}
-                            />
-                        ) : null}
-                    </>
-                }
-                extendToBottom
-            >
-                <FlashList
-                    renderItem={item => {
-                        return (
-                            <SongItem
-                                data={item.item}
-                                index={item.index + 1}
-                                onRequestPlay={() => {
-                                    handleRequestPlay(item.index);
-                                }}
-                                onToggle={() => {
-                                    toggle(item.index);
-                                }}
-                                isChecking={editing}
-                                isChecked={selected.has(item.index)}
-                            />
-                        );
-                    }}
-                    data={playlistDetail}
-                    estimatedItemSize={68}
-                    onContentSizeChange={(contentWidth, contentHeight) => {
-                        setContentHeight(contentHeight);
-                    }}
-                    onLayout={({
-                        nativeEvent: {
-                            layout: { height },
-                        },
-                    }) => {
-                        setViewHeight(height);
-                    }}
-                    contentContainerStyle={{
-                        backgroundColor: bgColor,
-                    }}
-                    extraData={[editing, selected.size]}
-                    ListHeaderComponent={
-                        <LinearGradient
-                            colors={[fromColor, bgColor]}
-                            start={{ x: 0, y: 0.2 }}
-                            end={{ x: 0, y: 1 }}
-                            style={{
-                                width: "100%",
-                            }}
-                            aria-hidden
-                        >
-                            <Header
-                                meta={meta}
-                                images={extractAndProcessImgUrls(playlistDetail)}
-                                showPlayButton={playlistDetail.length > 0}
-                                onPlay={() => {
-                                    handleRequestPlay(0);
-                                }}
-                            />
-                        </LinearGradient>
-                    }
-                    ListEmptyComponent={
-                        <Box flex={1}>
-                            <Empty title="暂无内容" action={null} />
-                        </Box>
-                    }
-                />
-                {editing ? (
-                    <EditAction
-                        onAll={() => {
-                            setAll(new Array(playlistDetail.length).fill(0).map((_, i) => i));
+        <CommonLayout
+            title="查看详情"
+            titleBarTheme="transparentAlt"
+            containerStyle={{
+                backgroundColor: enableUnderLayerColor ? fromColor : bgColor,
+            }}
+            titleBarStyle={{
+                backgroundColor: fromColor,
+            }}
+            leftAccessories="backButton"
+            rightAccessories={
+                <>
+                    <ButtonTitleBar
+                        label="编辑歌单信息"
+                        onPress={() => {
+                            router.push(`../meta/${id}`);
                         }}
-                        onReverse={() => {
-                            reverse(new Array(playlistDetail.length).fill(0).map((_, i) => i));
-                        }}
-                        onDelete={() => {
-                            handleDelete();
-                        }}
-                        amount={selected.size}
+                        Icon={IconEditMeta}
+                        iconSize={20}
+                        theme="transparentAlt"
                     />
-                ) : null}
-            </CommonLayout>
-        </View>
+                    {playlistDetail.length > 0 ? (
+                        <ButtonTitleBar
+                            label={editing ? "完成" : "编辑"}
+                            onPress={() =>
+                                setEditing(prevState => {
+                                    if (prevState) {
+                                        clear();
+                                    }
+                                    return !prevState;
+                                })
+                            }
+                            Icon={editing ? IconEditingDone : IconEditing}
+                            theme="transparentAlt"
+                        />
+                    ) : null}
+                </>
+            }
+            extendToBottom
+        >
+            <FlashList
+                renderItem={item => {
+                    return (
+                        <SongItem
+                            data={item.item}
+                            index={item.index + 1}
+                            onRequestPlay={() => {
+                                handleRequestPlay(item.index);
+                            }}
+                            onToggle={() => {
+                                toggle(item.index);
+                            }}
+                            isChecking={editing}
+                            isChecked={selected.has(item.index)}
+                        />
+                    );
+                }}
+                data={playlistDetail}
+                estimatedItemSize={68}
+                onContentSizeChange={(contentWidth, contentHeight) => {
+                    setContentHeight(contentHeight);
+                }}
+                onLayout={({
+                    nativeEvent: {
+                        layout: { height },
+                    },
+                }) => {
+                    setViewHeight(height);
+                }}
+                contentContainerStyle={{
+                    backgroundColor: bgColor,
+                }}
+                extraData={[editing, selected.size]}
+                ListHeaderComponent={
+                    <LinearGradient
+                        colors={[fromColor, bgColor]}
+                        start={{ x: 0, y: 0.2 }}
+                        end={{ x: 0, y: 1 }}
+                        style={{
+                            width: "100%",
+                        }}
+                        aria-hidden
+                    >
+                        <Header
+                            meta={meta}
+                            images={extractAndProcessImgUrls(playlistDetail)}
+                            showPlayButton={playlistDetail.length > 0}
+                            onPlay={() => {
+                                handleRequestPlay(0);
+                            }}
+                        />
+                    </LinearGradient>
+                }
+                ListEmptyComponent={
+                    <Box flex={1}>
+                        <Empty title="暂无内容" action={null} />
+                    </Box>
+                }
+            />
+            {editing ? (
+                <EditAction
+                    onAll={() => {
+                        setAll(new Array(playlistDetail.length).fill(0).map((_, i) => i));
+                    }}
+                    onReverse={() => {
+                        reverse(new Array(playlistDetail.length).fill(0).map((_, i) => i));
+                    }}
+                    onDelete={() => {
+                        handleDelete();
+                    }}
+                    amount={selected.size}
+                />
+            ) : null}
+        </CommonLayout>
     );
 }
