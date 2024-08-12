@@ -5,7 +5,7 @@ import BottomTabBar from "@react-navigation/bottom-tabs/src/views/BottomTabBar";
 import { Tabs } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import { useStyles } from "react-native-unistyles";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import AudioIndicator from "~/components/AudioIndicator";
 import YuruChara from "~/components/YuruChara";
@@ -22,7 +22,7 @@ const TabBar = (props: BottomTabBarProps) => (
 );
 
 export default function TabLayout() {
-    const { theme } = useStyles();
+    const { theme, styles } = useStyles(styleSheet);
     const tabBarActiveTintColor = theme.colors.accent[500];
 
     return (
@@ -30,21 +30,9 @@ export default function TabLayout() {
             <Tabs
                 tabBar={TabBar}
                 screenOptions={{
-                    headerStyle: {
-                        backgroundColor: "transparent",
-                        borderStyle: "solid",
-                        borderBottomWidth: 0,
-                        shadowColor: "transparent",
-                    },
-                    tabBarStyle: {
-                        backgroundColor: "transparent",
-                        borderTopWidth: 0,
-                        shadowColor: "transparent",
-                        height: 70,
-                    },
-                    tabBarLabelStyle: {
-                        // fontSize: 11,
-                    },
+                    headerStyle: styles.headerStyle,
+                    tabBarStyle: styles.tabBarStyle,
+                    tabBarLabelStyle: styles.tabBarLabelStyle,
                     tabBarActiveTintColor,
                 }}
             >
@@ -77,3 +65,18 @@ export default function TabLayout() {
         </Box>
     );
 }
+
+const styleSheet = createStyleSheet(theme => ({
+    headerStyle: {
+        backgroundColor: "transparent",
+        borderStyle: "solid",
+        borderBottomWidth: 0,
+        shadowColor: "transparent",
+    },
+    tabBarStyle: {
+        backgroundColor: "transparent",
+        borderTopWidth: 0,
+        shadowColor: "transparent",
+    },
+    tabBarLabelStyle: {},
+}));
