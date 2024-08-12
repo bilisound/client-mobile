@@ -10,7 +10,6 @@ import {
     Box,
     Fab,
     Text,
-    useToast,
 } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery } from "@tanstack/react-query";
@@ -32,7 +31,6 @@ import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
 import { createIcon } from "~/components/ui/utils/icon";
 import { BILIBILI_VIDEO_URL_PREFIX } from "~/constants/network";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
-import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import useHistoryStore from "~/store/history";
 import { addTrackToQueue } from "~/utils/download-service";
@@ -102,11 +100,9 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 
 const QueryIdScreen: React.FC = () => {
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
-    const toast = useToast();
     const edgeInsets = useSafeAreaInsets();
     const { theme } = useStyles();
     const textBasicColor = theme.colorTokens.foreground;
-    const containerStyle = useToastContainerStyle();
 
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
@@ -164,17 +160,14 @@ const QueryIdScreen: React.FC = () => {
             return (
                 <SongItem
                     onRequestPlay={() =>
-                        addTrackToQueue(
-                            {
-                                id: rootData.bvid,
-                                episode: item.page,
-                                artist: data!.data.owner.name,
-                                artwork: data!.data.pic,
-                                duration: item.duration,
-                                title: item.part,
-                            },
-                            { toast, containerStyle },
-                        )
+                        addTrackToQueue({
+                            id: rootData.bvid,
+                            episode: item.page,
+                            artist: data!.data.owner.name,
+                            artwork: data!.data.pic,
+                            duration: item.duration,
+                            title: item.part,
+                        })
                     }
                     onLongPress={() => {
                         setDisplayTrack(item);
@@ -191,7 +184,7 @@ const QueryIdScreen: React.FC = () => {
                 />
             );
         },
-        [containerStyle, data, toast],
+        [data],
     );
 
     const dataList = data?.data.pages ?? [];

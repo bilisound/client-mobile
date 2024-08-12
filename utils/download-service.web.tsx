@@ -1,15 +1,12 @@
-import { Toast, ToastDescription, ToastTitle, useToast, VStack } from "@gluestack-ui/themed";
-import React from "react";
 import { Platform } from "react-native";
+import Toast from "react-native-toast-message";
 import TrackPlayer, { Track } from "react-native-track-player";
-import { getActiveTrack } from "react-native-track-player/lib/src/trackPlayer";
 import { v4 as uuidv4 } from "uuid";
 
 import log from "./logger";
 import { convertToHTTPS } from "./string";
 import { saveTrackData } from "./track-data";
 
-import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import { invalidateOnQueueStatus } from "~/storage/playlist";
 import { getOnlineUrl } from "~/utils/constant-helper";
 
@@ -29,16 +26,7 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
     }
 }
 
-export async function addTrackToQueue(
-    playingRequest: PlayingInformation,
-    {
-        toast,
-        containerStyle,
-    }: {
-        toast: ReturnType<typeof useToast>;
-        containerStyle: ReturnType<typeof useToastContainerStyle>;
-    },
-) {
+export async function addTrackToQueue(playingRequest: PlayingInformation) {
     try {
         log.info("收到用户播放请求");
         log.debug(`playingRequest 对象内容：${JSON.stringify(playingRequest)}`);
@@ -94,17 +82,10 @@ export async function addTrackToQueue(
         }
     } catch (e) {
         // 操作失败
-        toast.show({
-            placement: "top",
-            containerStyle,
-            render: ({ id }) => (
-                <Toast nativeID={`toast-${id}`} action="error" variant="accent">
-                    <VStack space="xs">
-                        <ToastTitle>操作失败</ToastTitle>
-                        <ToastDescription>目前无法完成当前播放请求，请稍后再试</ToastDescription>
-                    </VStack>
-                </Toast>
-            ),
+        Toast.show({
+            type: "error",
+            text1: "操作失败",
+            text2: "目前无法完成当前播放请求，请稍后再试",
         });
         log.error(`执行播放操作时发生错误。错误信息：${e}`);
         throw e;
