@@ -1,5 +1,8 @@
-import { Box, Button, ButtonText, Text } from "@gluestack-ui/themed";
 import React from "react";
+import { View, Text } from "react-native";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
+
+import Button from "~/components/ui/Button";
 
 export interface EmptyProps {
     onPress?: () => void;
@@ -8,28 +11,27 @@ export interface EmptyProps {
 }
 
 export default function Empty({ onPress = () => {}, title = "这里空空如也", action = "去查询" }: EmptyProps) {
+    const { styles } = useStyles(styleSheet);
+
     return (
-        <Box
-            sx={{
-                alignItems: "center",
-                justifyContent: "center",
-                flexGrow: 1,
-                gap: 16,
-            }}
-        >
-            <Text
-                sx={{
-                    fontSize: 14,
-                    opacity: 0.5,
-                }}
-            >
-                {title}
-            </Text>
-            {action && (
-                <Button onPress={onPress}>
-                    <ButtonText>{action}</ButtonText>
-                </Button>
-            )}
-        </Box>
+        <View style={styles.container}>
+            <Text style={styles.title}>{title}</Text>
+            {action && <Button onPress={onPress}>{action}</Button>}
+        </View>
     );
 }
+
+const styleSheet = createStyleSheet(theme => ({
+    container: {
+        alignItems: "center",
+        justifyContent: "center",
+        flexGrow: 1,
+        gap: 16,
+    },
+    title: {
+        fontSize: 14,
+        lineHeight: 14 * 1.5,
+        opacity: 0.5,
+        color: theme.colorTokens.foreground,
+    },
+}));
