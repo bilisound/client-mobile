@@ -91,11 +91,11 @@ export default function Button(props: ButtonProps) {
     return (
         <View
             style={[
-                /*isAndroid
+                isAndroid
                     ? {
                           backgroundColor: disabled ? disabledBackground : normalBackground,
                       }
-                    : animatedOuterBackgroundStyle,*/
+                    : animatedOuterBackgroundStyle,
                 variant === "outline" ? animatedOuterBorderStyle : {},
                 {
                     borderRadius: rounded ? theme.sizes.radiusButtonFull : theme.sizes.radiusButton,
