@@ -1,7 +1,6 @@
-import { Box, Text } from "@gluestack-ui/themed";
 import { router } from "expo-router";
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { Directions, Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 
 import AudioPlayerModal from "~/components/AudioPlayerModal";
@@ -19,20 +18,28 @@ const ModalScreen: React.FC = () => {
 
     if (Platform.OS === "ios") {
         return (
-            <Box w="100%" h="100%">
+            <View style={styles.container}>
                 <AudioPlayerModal />
-            </Box>
+            </View>
         );
     }
 
     return (
         <GestureHandlerRootView>
             <GestureDetector gesture={flingGesture}>
-                <Box w="100%" h="100%">
+                <View style={styles.container}>
                     <AudioPlayerModal />
-                </Box>
+                </View>
             </GestureDetector>
         </GestureHandlerRootView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        width: "100%",
+        height: "100%",
+    },
+});
+
 export default ModalScreen;

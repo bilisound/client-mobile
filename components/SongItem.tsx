@@ -1,13 +1,12 @@
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-import { Box, Center, Text } from "@gluestack-ui/themed";
 import React from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, View, Text } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
+import { useStyles, createStyleSheet } from "react-native-unistyles";
 
 import ProgressBar from "./ProgressBar";
 
 import Pressable from "~/components/ui/Pressable";
-import useCommonColors from "~/hooks/useCommonColors";
 import { PlaylistDetailRow } from "~/storage/playlist";
 import { formatSecond } from "~/utils/misc";
 import { handleTogglePlay } from "~/utils/player-control";
@@ -17,7 +16,8 @@ function PlayingIcon() {
     const playingState = usePlaybackState().state;
     const activeTrack = useActiveTrack();
     const isPlaying = playingState === State.Playing;
-    const { accentColor } = useCommonColors();
+    const { theme } = useStyles(styleSheet);
+    const accentColor = theme.colors.accent[500];
 
     if (!activeTrack?.bilisoundIsLoaded) {
         return <ActivityIndicator color={accentColor} />;
@@ -47,7 +47,8 @@ export default function SongItem({
 }: SongItemProps) {
     const activeTrack = useActiveTrack();
     const isActiveTrack = data.bvid === activeTrack?.bilisoundId && data.episode === activeTrack?.bilisoundEpisode;
-    const { textBasicColor } = useCommonColors();
+    const { theme, styles } = useStyles(styleSheet);
+    const textBasicColor = theme.colorTokens.foreground;
 
     return (
         <Pressable
@@ -64,109 +65,122 @@ export default function SongItem({
             }}
             onLongPress={onLongPress}
         >
-            <Box
-                sx={{
-                    px: 16,
-                    height: 64,
-                    flexDirection: "row",
-                    gap: 12,
-                    position: "relative",
-                    alignItems: "center",
-                }}
-            >
-                <Box
-                    sx={{
-                        flexDirection: "row",
-                        flex: 1,
-                        gap: 12,
-                        justifyContent: "flex-start",
-                    }}
-                >
-                    <Box
-                        sx={{
-                            backgroundColor: isActiveTrack ? "$accent500" : "$primary500",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            paddingLeft: 6,
-                            paddingRight: 6,
-                            height: 22,
-                            borderRadius: 6,
-                            flex: 0,
-                            flexBasis: "auto",
-                        }}
+            <View style={styles.container}>
+                <View style={styles.rowContainer}>
+                    <View
+                        style={[
+                            styles.episodeContainer,
+                            { backgroundColor: isActiveTrack ? theme.colors.accent[500] : theme.colors.primary[500] },
+                        ]}
                     >
+                        <Text style={styles.episodeText}>{typeof index === "number" ? index : data.episode}</Text>
+                    </View>
+                    <View style={styles.titleContainer}>
                         <Text
-                            sx={{
-                                fontSize: 14,
-                                fontWeight: "bold",
-                                color: "$white",
-                            }}
-                        >
-                            {typeof index === "number" ? index : data.episode}
-                        </Text>
-                    </Box>
-                    <Box flex={1}>
-                        <Text
-                            sx={{
-                                lineHeight: 22,
-                                fontSize: 14,
-                                fontWeight: isActiveTrack ? "700" : "400",
-                                color: isActiveTrack ? "$accent500" : textBasicColor,
-                            }}
+                            style={[
+                                styles.titleText,
+                                {
+                                    fontWeight: isActiveTrack ? "600" : "400",
+                                    color: isActiveTrack ? theme.colors.accent[500] : textBasicColor,
+                                },
+                            ]}
                             numberOfLines={1}
                             ellipsizeMode="tail"
                         >
                             {data.title}
                         </Text>
-                        <Box
-                            sx={{
-                                marginTop: 4,
-                                gap: 4,
-                                flexDirection: "row",
-                                alignItems: "center",
-                                opacity: 0.5,
-                            }}
-                        >
-                            <Text
-                                sx={{
-                                    fontSize: 14,
-                                }}
-                            >
-                                {formatSecond(data.duration)}
-                            </Text>
-                        </Box>
-                    </Box>
-                </Box>
+                        <View style={styles.durationContainer}>
+                            <Text style={styles.durationText}>{formatSecond(data.duration)}</Text>
+                        </View>
+                    </View>
+                </View>
                 {isChecking ? (
-                    <Box flex={0} flexBasis="auto">
-                        <Center
-                            w="$7"
-                            h="$7"
-                            rounded="$full"
-                            borderWidth={2}
-                            bg={isChecked ? "$primary500" : "transparent"}
-                            borderColor="$primary500"
+                    <View style={styles.checkContainer}>
+                        <View
+                            style={[
+                                styles.checkCircle,
+                                { backgroundColor: isChecked ? theme.colors.primary[500] : "transparent" },
+                            ]}
                         >
                             <Entypo name="check" size={18} color={isChecked ? "white" : "transparent"} />
-                        </Center>
-                    </Box>
+                        </View>
+                    </View>
                 ) : isActiveTrack ? (
                     <>
-                        <Box
-                            sx={{
-                                flex: 0,
-                                flexBasis: "auto",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                width: 32,
-                            }}
-                        >
+                        <View style={styles.playingIconContainer}>
                             <PlayingIcon />
-                        </Box>
+                        </View>
                         <ProgressBar item={`${data.bvid}_${data.episode}`} />
                     </>
                 ) : null}
-            </Box>
+            </View>
         </Pressable>
     );
 }
+
+const styleSheet = createStyleSheet(theme => ({
+    container: {
+        paddingHorizontal: 16,
+        height: 64,
+        flexDirection: "row",
+        gap: 12,
+        position: "relative",
+        alignItems: "center",
+    },
+    rowContainer: {
+        flexDirection: "row",
+        flex: 1,
+        gap: 12,
+        justifyContent: "flex-start",
+    },
+    episodeContainer: {
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 6,
+        height: 22,
+        borderRadius: 6,
+        flexBasis: "auto",
+    },
+    episodeText: {
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "white",
+    },
+    titleContainer: {
+        flex: 1,
+    },
+    titleText: {
+        lineHeight: 22,
+        fontSize: 14,
+    },
+    durationContainer: {
+        marginTop: 4,
+        gap: 4,
+        flexDirection: "row",
+        alignItems: "center",
+        opacity: 0.5,
+    },
+    durationText: {
+        fontSize: 14,
+        color: theme.colorTokens.foreground,
+    },
+    checkContainer: {
+        flexBasis: "auto",
+    },
+    checkCircle: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        borderWidth: 2,
+        borderColor: theme.colors.primary[500],
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    playingIconContainer: {
+        flex: 0,
+        flexBasis: "auto",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 32,
+    },
+}));

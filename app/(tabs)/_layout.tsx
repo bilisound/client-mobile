@@ -1,5 +1,4 @@
 import { Ionicons, FontAwesome5, Entypo } from "@expo/vector-icons";
-import { Box } from "@gluestack-ui/themed";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
 import BottomTabBar from "@react-navigation/bottom-tabs/src/views/BottomTabBar";
 import { Tabs } from "expo-router";
@@ -26,7 +25,7 @@ export default function TabLayout() {
     const tabBarActiveTintColor = theme.colors.accent[500];
 
     return (
-        <Box h="100%">
+        <View style={styles.container}>
             <Tabs
                 tabBar={TabBar}
                 screenOptions={{
@@ -62,11 +61,14 @@ export default function TabLayout() {
                 />
             </Tabs>
             <YuruChara />
-        </Box>
+        </View>
     );
 }
 
 const styleSheet = createStyleSheet(theme => ({
+    container: {
+        height: "100%",
+    },
     headerStyle: {
         backgroundColor: "transparent",
         borderStyle: "solid",

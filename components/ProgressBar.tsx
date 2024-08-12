@@ -1,7 +1,8 @@
-import { Box } from "@gluestack-ui/themed";
+import React from "react";
+import { View } from "react-native";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import useCommonColors from "../hooks/useCommonColors";
-import useDownloadStore from "../store/download";
+import useDownloadStore from "~/store/download";
 
 // 加载进度条
 export default function ProgressBar({ item }: { item: string }) {
@@ -9,22 +10,23 @@ export default function ProgressBar({ item }: { item: string }) {
         downloadList: state.downloadList,
     }));
     const downloadEntry = downloadList.get(item);
-    const { accentColor } = useCommonColors();
+    const { styles } = useStyles(stylesheet);
 
     if (!downloadEntry) {
         return null;
     }
 
-    return (
-        <Box
-            sx={{
-                height: 3,
-                position: "absolute",
-                backgroundColor: accentColor,
-                left: 0,
-                bottom: 0,
-                width: `${(downloadEntry.progress.bytesWritten / downloadEntry.progress.contentLength) * 100}%`,
-            }}
-        />
-    );
+    const progressWidth = (downloadEntry.progress.bytesWritten / downloadEntry.progress.contentLength) * 100;
+
+    return <View style={[styles.progressBar, { width: `${progressWidth}%` }]} />;
 }
+
+const stylesheet = createStyleSheet(theme => ({
+    progressBar: {
+        height: 3,
+        position: "absolute",
+        left: 0,
+        bottom: 0,
+        backgroundColor: theme.colors.accent[500],
+    },
+}));

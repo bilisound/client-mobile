@@ -1,10 +1,9 @@
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
-import { Text, Box } from "@gluestack-ui/themed";
 import React from "react";
-import { GestureResponderEvent } from "react-native/Libraries/Types/CoreEventTypes";
+import { View, Text, GestureResponderEvent } from "react-native";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import Pressable from "~/components/ui/Pressable";
-import useCommonColors from "~/hooks/useCommonColors";
 
 export interface SettingMenuItemProps {
     title: string;
@@ -25,61 +24,24 @@ const SettingMenuItem: React.FC<SettingMenuItemProps> = ({
     onPress,
     disabled,
 }) => {
-    const { textBasicColor } = useCommonColors();
+    const { styles, theme } = useStyles(stylesheet);
+    const textBasicColor = theme.colorTokens.foreground;
+
     const inner = (
-        <Box
-            sx={{
-                flexDirection: "row",
-                padding: 16,
-                gap: 12,
-                alignItems: subTitle ? "flex-start" : "center",
-                opacity: disabled ? 0.6 : 1,
-            }}
-        >
-            <Box flex={1}>
-                <Box
-                    sx={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 12,
-                    }}
-                >
+        <View style={[styles.container, disabled && styles.disabled]}>
+            <View style={styles.flex}>
+                <View style={styles.titleContainer}>
                     {icon({
                         size: 24,
                         color: textBasicColor,
-                        style: {
-                            width: 26,
-                        },
+                        style: styles.icon,
                     })}
-                    <Text
-                        sx={{
-                            fontWeight: "700",
-                            fontSize: 15,
-                        }}
-                    >
-                        {title}
-                    </Text>
-                </Box>
-                {subTitle ? (
-                    <Text
-                        sx={{
-                            marginTop: 4,
-                            marginLeft: 38,
-                            opacity: 0.6,
-                            fontSize: 15,
-                            lineHeight: 15 * 1.5,
-                        }}
-                    >
-                        {subTitle}
-                    </Text>
-                ) : null}
-            </Box>
-            {rightAccessories ? (
-                <Box flex={0} flexBasis="auto">
-                    {rightAccessories}
-                </Box>
-            ) : null}
-        </Box>
+                    <Text style={styles.title}>{title}</Text>
+                </View>
+                {subTitle ? <Text style={styles.subtitle}>{subTitle}</Text> : null}
+            </View>
+            {rightAccessories ? <View style={styles.accessoriesContainer}>{rightAccessories}</View> : null}
+        </View>
     );
 
     if (!onPress || disabled) {
@@ -88,5 +50,45 @@ const SettingMenuItem: React.FC<SettingMenuItemProps> = ({
 
     return <Pressable onPress={onPress}>{inner}</Pressable>;
 };
+
+const stylesheet = createStyleSheet(theme => ({
+    container: {
+        flexDirection: "row",
+        padding: 16,
+        gap: 12,
+        alignItems: "flex-start",
+    },
+    disabled: {
+        opacity: 0.6,
+    },
+    flex: {
+        flex: 1,
+    },
+    titleContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+    },
+    icon: {
+        width: 26,
+    },
+    title: {
+        fontWeight: "700",
+        fontSize: 15,
+        color: theme.colorTokens.foreground,
+    },
+    subtitle: {
+        marginTop: 4,
+        marginLeft: 38,
+        opacity: 0.6,
+        fontSize: 15,
+        lineHeight: 15 * 1.5,
+        color: theme.colorTokens.foreground,
+    },
+    accessoriesContainer: {
+        flex: 0,
+        flexBasis: "auto",
+    },
+}));
 
 export default SettingMenuItem;
