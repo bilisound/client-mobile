@@ -104,13 +104,17 @@ export function getFileName(options: GetFileNameOptions) {
     return sanitize(fileName);
 }
 
-export async function resolveVideoAndJump(value: string) {
+export async function resolveVideoAndJump(value: string, replace = false) {
     const parseResult = await resolveVideo(value);
     log.debug(`关键词解析结果: ${parseResult}`);
+    let action = router.push;
+    if (replace) {
+        action = router.replace;
+    }
     if (typeof parseResult === "string") {
-        router.push(`/query/${parseResult}`);
+        action(`/query/${parseResult}`);
     } else if (parseResult.type === "userList") {
-        router.push(`/remote-list?mode=${parseResult.mode}&userId=${parseResult.userId}&listId=${parseResult.listId}`);
+        action(`/remote-list?mode=${parseResult.mode}&userId=${parseResult.userId}&listId=${parseResult.listId}`);
     } else {
         throw new Error("不是有效的输入，无法进行下一步操作");
     }

@@ -1,5 +1,4 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Button, ButtonText } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { router } from "expo-router";
@@ -9,6 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
+import Empty from "~/components/Empty";
 import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
 import Pressable from "~/components/ui/Pressable";
 import { createIcon } from "~/components/ui/utils/icon";
@@ -38,7 +38,7 @@ const History: React.FC = () => {
         <FlashList
             ref={flashListRef}
             data={historyList}
-            extraData={theme.name}
+            extraData={theme}
             keyExtractor={item => `${item?.key}`}
             ListFooterComponent={<View style={{ height: edgeInsets.bottom }} />}
             estimatedItemSize={historyList.length}
@@ -77,38 +77,31 @@ const History: React.FC = () => {
             extendToBottom
             leftAccessories="backButton"
             rightAccessories={
-                <ButtonTitleBar
-                    theme="solid"
-                    Icon={IconDelete}
-                    label="清除历史记录"
-                    onPress={() => {
-                        Alert.alert("清除历史记录", "确定要清除历史记录吗？", [
-                            {
-                                text: "取消",
-                                style: "cancel",
-                            },
-                            {
-                                text: "确定",
-                                style: "default",
-                                onPress: () => {
-                                    clearHistoryList();
+                historyList.length > 0 ? (
+                    <ButtonTitleBar
+                        theme="solid"
+                        Icon={IconDelete}
+                        label="清除历史记录"
+                        onPress={() => {
+                            Alert.alert("清除历史记录", "确定要清除历史记录吗？", [
+                                {
+                                    text: "取消",
+                                    style: "cancel",
                                 },
-                            },
-                        ]);
-                    }}
-                />
+                                {
+                                    text: "确定",
+                                    style: "default",
+                                    onPress: () => {
+                                        clearHistoryList();
+                                    },
+                                },
+                            ]);
+                        }}
+                    />
+                ) : null
             }
         >
-            {historyList.length > 0 ? (
-                historyListElement
-            ) : (
-                <View style={styles.emptyContainer}>
-                    <Text style={styles.emptyText}>这里空空如也</Text>
-                    <Button onPress={() => router.push("/(tabs)")}>
-                        <ButtonText>去查询</ButtonText>
-                    </Button>
-                </View>
-            )}
+            {historyList.length > 0 ? historyListElement : <Empty onPress={() => router.push("/(tabs)")} />}
         </CommonLayout>
     );
 };

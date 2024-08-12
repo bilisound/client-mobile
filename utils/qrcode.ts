@@ -20,7 +20,7 @@ export async function handleQrCode(input: string) {
             return "";
         }
         default: {
-            await resolveVideoAndJump(input);
+            await resolveVideoAndJump(input, true);
             return "";
         }
     }

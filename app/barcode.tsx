@@ -1,12 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
-import { ButtonText, Pressable, Button } from "@gluestack-ui/themed";
 import { CameraView, Camera, PermissionStatus } from "expo-camera";
 import { BarcodeScanningResult } from "expo-camera/build/Camera.types";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, StatusBar, View, Text, StyleSheet } from "react-native";
+import { Alert, StatusBar, View, Text, StyleSheet, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import Button from "~/components/ui/Button";
 import log from "~/utils/logger";
 import { handleQrCode } from "~/utils/qrcode";
 
@@ -92,9 +92,7 @@ const ScannerPage: React.FC = () => {
                     return (
                         <View style={styles.centeredContainer}>
                             <Text style={styles.permissionText}>扫码功能需要摄像头权限喵</Text>
-                            <Button action="primary" onPress={() => getBarCodeScannerPermissions()}>
-                                <ButtonText>给予权限</ButtonText>
-                            </Button>
+                            <Button onPress={() => getBarCodeScannerPermissions()}>给予权限</Button>
                         </View>
                     );
                 }
@@ -147,6 +145,8 @@ const styles = StyleSheet.create({
     },
     permissionText: {
         color: "#fff",
+        fontSize: 14,
+        lineHeight: 14 * 1.5,
     },
     cameraView: {
         position: "absolute",
