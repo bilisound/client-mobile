@@ -133,7 +133,7 @@ export default function Button(props: ButtonProps) {
                         justifyContent: "center",
                         alignItems: "center",
                         gap: 8,
-                        backgroundColor: status.pressed ? activeBackground : bg,
+                        backgroundColor: status.pressed && !isAndroid ? activeBackground : bg,
                     },
                     props.style,
                 ]}
