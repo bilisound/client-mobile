@@ -4,7 +4,8 @@ import { View, Text, Switch } from "react-native";
 import Toast from "react-native-toast-message";
 
 import Button from "~/components/ui/Button";
-import ModalBackdrop from "~/components/ui/ModalBackdrop";
+import Modal from "~/components/ui/Modal";
+import ModalContentDialog from "~/components/ui/ModalContentDialog";
 import { createIcon } from "~/components/ui/utils/icon";
 
 const LinkIcon = createIcon(Entypo, "link");
@@ -12,6 +13,8 @@ const LinkIcon = createIcon(Entypo, "link");
 export default function Page() {
     const [disabled, setDisabled] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
+
+    console.log({ modalVisible });
 
     return (
         <View style={{ padding: 16, gap: 16 }}>
@@ -52,34 +55,10 @@ export default function Page() {
             >
                 Toast 测试
             </Button>
-            {/*<NativeModal
-                transparent
-                animationType="fade"
-                visible={modalVisible}
-                statusBarTranslucent
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View
-                    style={{
-                        backgroundColor: "#00000080",
-                        width: "100%",
-                        height: "100%",
-                        padding: 16,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    <View style={{ flex: 0, padding: 16, gap: 16, backgroundColor: "white", borderRadius: 16 }}>
-                        <Text>Hello World! Hello World!</Text>
-                        <Button onPress={() => setModalVisible(!modalVisible)}>关闭</Button>
-                    </View>
-                </View>
-            </NativeModal>*/}
             <Button onPress={() => setModalVisible(!modalVisible)}>Modal 测试</Button>
-            <ModalBackdrop open={modalVisible} onOpenChange={setModalVisible} />
+            <Modal open={modalVisible} onOpenChange={setModalVisible}>
+                <ModalContentDialog />
+            </Modal>
         </View>
     );
 }
