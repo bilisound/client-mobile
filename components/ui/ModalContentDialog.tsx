@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { View, Text } from "react-native";
+import { ShadowedView } from "react-native-fast-shadow";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import { ModalContext } from "~/components/ui/ModalContext";
@@ -12,9 +13,9 @@ export default function ModalContentDialog() {
 
     return (
         <View style={[styles.container, { display: show ? "flex" : "none" }]}>
-            <View style={styles.content}>
+            <ShadowedView style={styles.content}>
                 <Text>Hello world</Text>
-            </View>
+            </ShadowedView>
         </View>
     );
 }
@@ -33,5 +34,11 @@ const styleSheet = createStyleSheet(theme => ({
         backgroundColor: theme.colorTokens.dialogBackground,
         padding: 24,
         borderRadius: 24,
+        shadowOpacity: 0.1,
+        shadowRadius: 25,
+        shadowOffset: {
+            width: 0,
+            height: 20,
+        },
     },
 }));

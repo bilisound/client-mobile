@@ -27,9 +27,16 @@ export default function Modal({ open, onOpenChange, children }: PropsWithChildre
                     reduceMotion: ReduceMotion.System,
                 },
                 done => {
-                    if (done && backdropOpacity.value === 0) {
+                    if (!done) {
+                        return;
+                    }
+                    if (backdropOpacity.value === 0) {
                         backdropDisplay.value = false;
                         runOnJS(setBackdropDisplayState)(false);
+                    }
+                    if (backdropOpacity.value === 1) {
+                        backdropDisplay.value = true;
+                        runOnJS(setBackdropDisplayState)(true);
                     }
                 },
             ),

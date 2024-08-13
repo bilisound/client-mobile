@@ -18,6 +18,8 @@ export interface SemanticColor {
     topBarTransparentAltForeground: string;
     dialogBackground: string;
     dialogBorder: string;
+    toastBackground: string;
+    toastBorder: string;
     border: string;
     buttonBackground: (color: ThemeColorPaletteKeys, status: ButtonStatus) => string;
     buttonForeground: (color: ThemeColorPaletteKeys, status: ButtonStatus) => string;
@@ -48,6 +50,8 @@ export const classicLight: BilisoundTheme = {
         topBarTransparentAltForeground: colors.neutral[700],
         dialogBackground: colors.white,
         dialogBorder: colors.neutral[100],
+        toastBackground: colors.white,
+        toastBorder: colors.neutral[100],
         buttonBackground: (color, status) => {
             switch (status) {
                 case "default":
@@ -102,8 +106,10 @@ export const classicDark: BilisoundTheme = {
         topBarSolidForeground: colors.white,
         topBarTransparentForeground: colors.primary[500],
         topBarTransparentAltForeground: colors.white,
-        dialogBackground: colors.neutral["800"],
+        dialogBackground: colors.neutral["900"],
         dialogBorder: colors.neutral[800],
+        toastBackground: colors.neutral["800"],
+        toastBorder: colors.neutral[800],
         buttonBackground: (color, status) => {
             switch (status) {
                 case "default":

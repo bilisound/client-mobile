@@ -51,8 +51,8 @@ const vanillaStyles = StyleSheet.create({
 
 const styleSheet = createStyleSheet(theme => ({
     toast: {
-        backgroundColor: theme.colorTokens.dialogBackground,
-        borderColor: theme.colorTokens.dialogBorder,
+        backgroundColor: theme.colorTokens.toastBackground,
+        borderColor: theme.colorTokens.toastBorder,
         borderWidth: 1,
         minHeight: 50,
         borderRadius: 25,
