@@ -1,11 +1,10 @@
-// Polyfill
 import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
 import "core-js/actual/array/to-spliced";
-
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { COLORMODES } from "@gluestack-style/react/lib/typescript/types";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
+import { PortalProvider } from "@gorhom/portal";
 import { ThemeProvider } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -16,16 +15,14 @@ import * as SystemUI from "expo-system-ui";
 import React, { useEffect, useRef } from "react";
 import { Platform, useColorScheme } from "react-native";
 import Toast from "react-native-toast-message";
+import { UnistylesRuntime, useInitialTheme } from "react-native-unistyles";
 
 import AudioManager from "~/components/AudioManager";
 import { config } from "~/config/gluestack-ui.config";
+import { toastConfig } from "~/config/toast";
 import init from "~/utils/init";
 
-// Initialize styles
 import "~/unistyles";
-import { UnistylesRuntime, useInitialTheme } from "react-native-unistyles";
-
-import { toastConfig } from "~/config/toast";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -119,9 +116,11 @@ const RootLayoutNav = () => {
         <GluestackUIProvider config={config} colorMode={(colorScheme ?? "light") as COLORMODES}>
             <QueryClientProvider client={queryClient}>
                 <ThemeProvider value={theme}>
-                    {routes}
-                    <AudioManager />
-                    <Toast config={toastConfig} />
+                    <PortalProvider>
+                        {routes}
+                        <AudioManager />
+                        <Toast config={toastConfig} />
+                    </PortalProvider>
                 </ThemeProvider>
             </QueryClientProvider>
         </GluestackUIProvider>

@@ -1,9 +1,10 @@
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
-import { View, Text, Switch, Modal, Alert } from "react-native";
+import { View, Text, Switch } from "react-native";
 import Toast from "react-native-toast-message";
 
 import Button from "~/components/ui/Button";
+import ModalBackdrop from "~/components/ui/ModalBackdrop";
 import { createIcon } from "~/components/ui/utils/icon";
 
 const LinkIcon = createIcon(Entypo, "link");
@@ -51,7 +52,7 @@ export default function Page() {
             >
                 Toast 测试
             </Button>
-            <Modal
+            {/*<NativeModal
                 transparent
                 animationType="fade"
                 visible={modalVisible}
@@ -76,8 +77,9 @@ export default function Page() {
                         <Button onPress={() => setModalVisible(!modalVisible)}>关闭</Button>
                     </View>
                 </View>
-            </Modal>
-            <Button onPress={() => setModalVisible(!modalVisible)}>原生 Modal 测试</Button>
+            </NativeModal>*/}
+            <Button onPress={() => setModalVisible(!modalVisible)}>Modal 测试</Button>
+            <ModalBackdrop open={modalVisible} onOpenChange={setModalVisible} />
         </View>
     );
 }

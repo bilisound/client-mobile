@@ -1,16 +1,14 @@
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Box, Text } from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useState } from "react";
-import { Alert, useColorScheme, View } from "react-native";
+import { Alert, useColorScheme, View, Text } from "react-native";
 import { useMMKVObject } from "react-native-mmkv";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
-import { useStyles } from "react-native-unistyles";
+import { useStyles, createStyleSheet } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import EditAction from "~/components/EditAction";
@@ -20,7 +18,6 @@ import Button from "~/components/ui/Button";
 import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
 import { createIcon } from "~/components/ui/utils/icon";
 import useMultiSelect from "~/hooks/useMultiSelect";
-import useTracks from "~/hooks/useTracks";
 import {
     PLAYLIST_ITEM_KEY_PREFIX,
     PlaylistDetailRow,
@@ -47,80 +44,84 @@ const IconEditMeta = createIcon(Feather, "edit");
 const IconEditingDone = createIcon(Entypo, "check");
 const IconEditing = createIcon(MaterialCommunityIcons, "format-list-checks");
 
+const stylesheet = createStyleSheet(theme => ({
+    imageGroupBase: {
+        flex: 0,
+        flexBasis: "auto",
+        width: HEADER_BASE_SIZE,
+        height: HEADER_BASE_SIZE,
+        borderRadius: 12,
+        overflow: "hidden",
+    },
+    emptyImageGroup: {
+        backgroundColor: "$trueGray500",
+    },
+    singleImage: {
+        width: HEADER_BASE_SIZE,
+        height: HEADER_BASE_SIZE,
+        objectFit: "cover",
+    },
+    imageRow: {
+        flexDirection: "row",
+    },
+    quarterImage: {
+        width: HEADER_BASE_SIZE / 2,
+        height: HEADER_BASE_SIZE / 2,
+        objectFit: "cover",
+    },
+    headerContainer: {
+        flexDirection: "row",
+        gap: 16,
+        paddingHorizontal: 16,
+        paddingTop: 16,
+        paddingBottom: 24,
+    },
+    headerContent: {
+        flex: 1,
+    },
+    headerTitle: {
+        fontSize: 20,
+        fontWeight: "700",
+        lineHeight: 20 * 1.5,
+        color: theme.colorTokens.foreground,
+    },
+    headerSubtitle: {
+        opacity: 0.6,
+        marginTop: 8,
+        fontSize: 14,
+        lineHeight: 14 * 1.5,
+        color: theme.colorTokens.foreground,
+    },
+    playButtonContainer: {
+        flexDirection: "row",
+        marginTop: 20,
+    },
+}));
+
 function ImagesGroup({ images: origImages }: { images: string[] }) {
+    const { styles } = useStyles(stylesheet);
     const images = origImages.map(image => getImageProxyUrl(image));
     if (images.length === 0) {
-        return (
-            <Box
-                flex={0}
-                flexBasis="auto"
-                bg="$trueGray500"
-                w={HEADER_BASE_SIZE}
-                h={HEADER_BASE_SIZE}
-                borderRadius="$xl"
-            />
-        );
+        return <View style={[styles.imageGroupBase, styles.emptyImageGroup]} />;
     }
     if (images.length >= 1 && images.length <= 3) {
         return (
-            <Box
-                flex={0}
-                flexBasis="auto"
-                w={HEADER_BASE_SIZE}
-                h={HEADER_BASE_SIZE}
-                borderRadius="$xl"
-                overflow="hidden"
-            >
-                <Image
-                    source={images[0]}
-                    style={{
-                        width: HEADER_BASE_SIZE,
-                        height: HEADER_BASE_SIZE,
-                        objectFit: "cover",
-                    }}
-                />
-            </Box>
+            <View style={styles.imageGroupBase}>
+                <Image source={images[0]} style={styles.singleImage} />
+            </View>
         );
     }
     return (
-        <Box flex={0} flexBasis="auto" w={HEADER_BASE_SIZE} h={HEADER_BASE_SIZE} borderRadius="$xl" overflow="hidden">
-            <Box flexDirection="row">
-                <Image
-                    source={images[0]}
-                    style={{
-                        width: HEADER_BASE_SIZE / 2,
-                        height: HEADER_BASE_SIZE / 2,
-                        objectFit: "cover",
-                    }}
-                />
-                <Image
-                    source={images[1]}
-                    style={{
-                        width: HEADER_BASE_SIZE / 2,
-                        height: HEADER_BASE_SIZE / 2,
-                        objectFit: "cover",
-                    }}
-                />
-            </Box>
-            <Box flexDirection="row">
-                <Image
-                    source={images[2]}
-                    style={{
-                        width: HEADER_BASE_SIZE / 2,
-                        height: HEADER_BASE_SIZE / 2,
-                        objectFit: "cover",
-                    }}
-                />
-                <Image
-                    source={images[3]}
-                    style={{
-                        width: HEADER_BASE_SIZE / 2,
-                        height: HEADER_BASE_SIZE / 2,
-                        objectFit: "cover",
-                    }}
-                />
-            </Box>
-        </Box>
+        <View style={styles.imageGroupBase}>
+            <View style={styles.imageRow}>
+                <Image source={images[0]} style={styles.quarterImage} />
+                <Image source={images[1]} style={styles.quarterImage} />
+            </View>
+            <View style={styles.imageRow}>
+                <Image source={images[2]} style={styles.quarterImage} />
+                <Image source={images[3]} style={styles.quarterImage} />
+            </View>
+        </View>
     );
 }
 
@@ -135,23 +136,22 @@ function Header({
     onPlay: () => void;
     showPlayButton: boolean;
 }) {
+    const { styles } = useStyles(stylesheet);
     return (
-        <Box flexDirection="row" gap="$4" px="$4" pt="$4" pb="$6">
+        <View style={styles.headerContainer}>
             <ImagesGroup images={images} />
-            <Box flex={1}>
-                <Text fontSize="$xl" fontWeight="700" lineHeight="$xl">
-                    {meta.title}
-                </Text>
-                <Text opacity={0.6} mt="$2">{`${meta.amount} 首歌曲`}</Text>
+            <View style={styles.headerContent}>
+                <Text style={styles.headerTitle}>{meta.title}</Text>
+                <Text style={styles.headerSubtitle}>{`${meta.amount} 首歌曲`}</Text>
                 {showPlayButton && (
-                    <Box flexDirection="row" marginTop="$5">
+                    <View style={styles.playButtonContainer}>
                         <Button Icon={IconPlay} rounded>
                             播放
                         </Button>
-                    </Box>
+                    </View>
                 )}
-            </Box>
-        </Box>
+            </View>
+        </View>
     );
 }
 
@@ -159,7 +159,6 @@ export default function Page() {
     const { theme } = useStyles();
     const bgColor = theme.colorTokens.background;
     const colorMode = useColorScheme();
-    const edgeInsets = useSafeAreaInsets();
     const { id } = useLocalSearchParams<{ id: string }>();
 
     const [playlistMeta = []] = usePlaylistStorage();
@@ -353,9 +352,9 @@ export default function Page() {
                     </LinearGradient>
                 }
                 ListEmptyComponent={
-                    <Box flex={1}>
+                    <View style={{ flex: 1 }}>
                         <Empty title="暂无内容" action={null} />
-                    </Box>
+                    </View>
                 }
             />
             {editing ? (
