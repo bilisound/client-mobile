@@ -3,8 +3,8 @@ import { FlashList } from "@shopify/flash-list";
 import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { router, useLocalSearchParams } from "expo-router";
-import React, { useCallback, useState } from "react";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import { Alert, useColorScheme, View, Text } from "react-native";
 import { useMMKVObject } from "react-native-mmkv";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
@@ -43,60 +43,6 @@ const HEADER_BASE_SIZE = 120;
 const IconEditMeta = createIcon(Feather, "edit");
 const IconEditingDone = createIcon(Entypo, "check");
 const IconEditing = createIcon(MaterialCommunityIcons, "format-list-checks");
-
-const stylesheet = createStyleSheet(theme => ({
-    imageGroupBase: {
-        flex: 0,
-        flexBasis: "auto",
-        width: HEADER_BASE_SIZE,
-        height: HEADER_BASE_SIZE,
-        borderRadius: 12,
-        overflow: "hidden",
-    },
-    emptyImageGroup: {
-        backgroundColor: "$trueGray500",
-    },
-    singleImage: {
-        width: HEADER_BASE_SIZE,
-        height: HEADER_BASE_SIZE,
-        objectFit: "cover",
-    },
-    imageRow: {
-        flexDirection: "row",
-    },
-    quarterImage: {
-        width: HEADER_BASE_SIZE / 2,
-        height: HEADER_BASE_SIZE / 2,
-        objectFit: "cover",
-    },
-    headerContainer: {
-        flexDirection: "row",
-        gap: 16,
-        paddingHorizontal: 16,
-        paddingTop: 16,
-        paddingBottom: 24,
-    },
-    headerContent: {
-        flex: 1,
-    },
-    headerTitle: {
-        fontSize: 20,
-        fontWeight: "700",
-        lineHeight: 20 * 1.5,
-        color: theme.colorTokens.foreground,
-    },
-    headerSubtitle: {
-        opacity: 0.6,
-        marginTop: 8,
-        fontSize: 14,
-        lineHeight: 14 * 1.5,
-        color: theme.colorTokens.foreground,
-    },
-    playButtonContainer: {
-        flexDirection: "row",
-        marginTop: 20,
-    },
-}));
 
 function ImagesGroup({ images: origImages }: { images: string[] }) {
     const { styles } = useStyles(stylesheet);
@@ -145,7 +91,7 @@ function Header({
                 <Text style={styles.headerSubtitle}>{`${meta.amount} 首歌曲`}</Text>
                 {showPlayButton && (
                     <View style={styles.playButtonContainer}>
-                        <Button Icon={IconPlay} rounded>
+                        <Button Icon={IconPlay} rounded onPress={onPlay}>
                             播放
                         </Button>
                     </View>
@@ -247,6 +193,25 @@ export default function Page() {
             },
         ]);
     }, [clear, id, playlistOnQueue.value?.id, selected, setPlaylistDetail, setPlaylistOnQueue]);
+
+    // 返回时先关闭编辑模式
+    const navigation = useNavigation();
+    useEffect(() => {
+        const handler = (e: any) => {
+            if (!editing) {
+                return;
+            }
+            e.preventDefault();
+            setEditing(false);
+            navigation.removeListener("beforeRemove", handler);
+        };
+        if (editing) {
+            navigation.addListener("beforeRemove", handler);
+        }
+        return () => {
+            navigation.removeListener("beforeRemove", handler);
+        };
+    }, [editing, navigation]);
 
     if (!meta) {
         return null;
@@ -374,3 +339,57 @@ export default function Page() {
         </CommonLayout>
     );
 }
+
+const stylesheet = createStyleSheet(theme => ({
+    imageGroupBase: {
+        flex: 0,
+        flexBasis: "auto",
+        width: HEADER_BASE_SIZE,
+        height: HEADER_BASE_SIZE,
+        borderRadius: 12,
+        overflow: "hidden",
+    },
+    emptyImageGroup: {
+        backgroundColor: "$trueGray500",
+    },
+    singleImage: {
+        width: HEADER_BASE_SIZE,
+        height: HEADER_BASE_SIZE,
+        objectFit: "cover",
+    },
+    imageRow: {
+        flexDirection: "row",
+    },
+    quarterImage: {
+        width: HEADER_BASE_SIZE / 2,
+        height: HEADER_BASE_SIZE / 2,
+        objectFit: "cover",
+    },
+    headerContainer: {
+        flexDirection: "row",
+        gap: 16,
+        paddingHorizontal: 16,
+        paddingTop: 16,
+        paddingBottom: 24,
+    },
+    headerContent: {
+        flex: 1,
+    },
+    headerTitle: {
+        fontSize: 20,
+        fontWeight: "700",
+        lineHeight: 20 * 1.5,
+        color: theme.colorTokens.foreground,
+    },
+    headerSubtitle: {
+        opacity: 0.6,
+        marginTop: 8,
+        fontSize: 14,
+        lineHeight: 14 * 1.5,
+        color: theme.colorTokens.foreground,
+    },
+    playButtonContainer: {
+        flexDirection: "row",
+        marginTop: 20,
+    },
+}));
