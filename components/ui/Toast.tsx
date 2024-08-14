@@ -46,6 +46,7 @@ const vanillaStyles = StyleSheet.create({
             width: 0,
             height: 20,
         },
+        shadowColor: "#000000",
     },
 });
 

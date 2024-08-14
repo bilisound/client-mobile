@@ -40,5 +40,6 @@ const styleSheet = createStyleSheet(theme => ({
             width: 0,
             height: 20,
         },
+        shadowColor: "#000000",
     },
 }));

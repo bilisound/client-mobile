@@ -474,6 +474,7 @@ const styleSheet = createStyleSheet(theme => ({
             height: 4,
         },
         borderRadius: 16,
+        shadowColor: "#000000",
     },
     controlsContainer: {
         flex: 0,
