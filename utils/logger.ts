@@ -7,20 +7,14 @@ import { logger, fileAsyncTransport, consoleTransport, configLoggerType } from "
 
 import { BILISOUND_LOG_PATH } from "~/constants/file";
 
-let transport: Partial<configLoggerType> = {
-    transport: fileAsyncTransport,
+const transport: Partial<configLoggerType> = {
+    transport: [fileAsyncTransport, consoleTransport],
     transportOptions: {
         FS: RNFS,
         fileName: "bilisound_log_{date-today}.log",
         filePath: BILISOUND_LOG_PATH,
     },
 };
-
-if (process.env.NODE_ENV === "development") {
-    transport = {
-        transport: consoleTransport,
-    };
-}
 
 const config = {
     levels: {
