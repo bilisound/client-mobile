@@ -124,8 +124,12 @@ function AudioProgressTimer() {
 
     return (
         <View style={styles.timerContainer}>
-            <Text style={styles.timerText}>{activeTrack?.bilisoundIsLoaded ? formatSecond(position) : "00:00"}</Text>
-            <Text style={styles.timerText}>{activeTrack?.bilisoundIsLoaded ? formatSecond(duration) : "00:00"}</Text>
+            <Text style={[styles.timerText, { textAlign: "left" }]}>
+                {activeTrack?.bilisoundIsLoaded ? formatSecond(position) : "00:00"}
+            </Text>
+            <Text style={[styles.timerText, { textAlign: "right" }]}>
+                {activeTrack?.bilisoundIsLoaded ? formatSecond(duration) : "00:00"}
+            </Text>
         </View>
     );
 }
@@ -448,13 +452,14 @@ const styleSheet = createStyleSheet(theme => ({
         paddingHorizontal: 30,
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
         paddingTop: 8,
     },
     timerText: {
         fontSize: 14,
         opacity: 0.65,
         color: theme.colorTokens.foreground,
+        flex: 1,
     },
     // MusicPicture
     musicPictureContainer: {

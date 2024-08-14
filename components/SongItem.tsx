@@ -89,9 +89,10 @@ export default function SongItem({
                         >
                             {data.title}
                         </Text>
-                        <View style={styles.durationContainer}>
+                        <Text style={styles.durationText}>{formatSecond(data.duration)}</Text>
+                        {/*<View style={styles.durationContainer}>
                             <Text style={styles.durationText}>{formatSecond(data.duration)}</Text>
-                        </View>
+                        </View>*/}
                     </View>
                 </View>
                 {isChecking ? (
@@ -153,16 +154,11 @@ const styleSheet = createStyleSheet(theme => ({
         lineHeight: 22,
         fontSize: 14,
     },
-    durationContainer: {
-        marginTop: 4,
-        gap: 4,
-        flexDirection: "row",
-        alignItems: "center",
-        opacity: 0.5,
-    },
     durationText: {
+        marginTop: 4,
         fontSize: 14,
         color: theme.colorTokens.foreground,
+        opacity: 0.5,
     },
     checkContainer: {
         flexBasis: "auto",
