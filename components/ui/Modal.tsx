@@ -1,6 +1,7 @@
 import { Portal } from "@gorhom/portal";
 import { useNavigation } from "expo-router";
 import { PropsWithChildren, useEffect, useState } from "react";
+import { StatusBar } from "react-native";
 import Animated, { ReduceMotion, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
@@ -11,7 +12,7 @@ export interface ModalProps {
     onOpenChange: (value: boolean) => void;
 }
 
-export default function Modal({ open, onOpenChange, children }: PropsWithChildren<ModalProps>) {
+export function Modal({ open, onOpenChange, children }: PropsWithChildren<ModalProps>) {
     const { styles } = useStyles(styleSheet);
     const backdropOpacity = useSharedValue(0);
     const backdropDisplay = useSharedValue(false);
@@ -69,12 +70,15 @@ export default function Modal({ open, onOpenChange, children }: PropsWithChildre
     }, [navigation, onOpenChange, open]);
 
     return (
-        <Portal>
-            <ModalContext.Provider value={{ show: backdropDisplayState, open }}>
-                <Animated.View style={[styles.backdrop, backdropStyle]} />
-                {children}
-            </ModalContext.Provider>
-        </Portal>
+        <>
+            {open ? <StatusBar barStyle="light-content" showHideTransition="none" /> : null}
+            <Portal>
+                <ModalContext.Provider value={{ show: backdropDisplayState, open }}>
+                    <Animated.View style={[styles.backdrop, backdropStyle]} />
+                    {children}
+                </ModalContext.Provider>
+            </Portal>
+        </>
     );
 }
 

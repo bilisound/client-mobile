@@ -1,16 +1,17 @@
-import { useContext, useEffect } from "react";
-import { Text, View } from "react-native";
+import { PropsWithChildren, useContext, useEffect } from "react";
+import { View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Button from "~/components/ui/Button";
 import { ModalContext } from "~/components/ui/ModalContext";
 
 const AnimatedShadowedView = Animated.createAnimatedComponent(ShadowedView);
 
-export default function ModalContentDialog() {
+export interface ModalDialogProps {}
+
+export function ModalDialog({ children }: PropsWithChildren<ModalDialogProps>) {
     const { show, open } = useContext(ModalContext);
     const { styles } = useStyles(styleSheet);
     const openProgress = useSharedValue(0);
@@ -50,18 +51,7 @@ export default function ModalContentDialog() {
                 },
             ]}
         >
-            <AnimatedShadowedView style={[styles.content, dialogContentStyle]}>
-                <View style={{ gap: 16, alignItems: "stretch" }}>
-                    <Text style={{ fontSize: 20, lineHeight: 20 * 1.5, fontWeight: "600" }}>测试标题</Text>
-                    <Text style={{ fontSize: 14, lineHeight: 14 * 1.5 }}>
-                        测试消息内容！！测试消息内容！！测试消息内容！！测试消息内容！！测试消息内容！！测试消息内容！！
-                    </Text>
-                    <View style={{ justifyContent: "flex-end", flexDirection: "row", gap: 8 }}>
-                        <Button variant="ghost">取消</Button>
-                        <Button>确定</Button>
-                    </View>
-                </View>
-            </AnimatedShadowedView>
+            <AnimatedShadowedView style={[styles.content, dialogContentStyle]}>{children}</AnimatedShadowedView>
         </View>
     );
 }
@@ -87,5 +77,6 @@ const styleSheet = createStyleSheet(theme => ({
             height: 20,
         },
         shadowColor: "#000000",
+        alignItems: "stretch",
     },
 }));
