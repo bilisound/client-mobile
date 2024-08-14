@@ -23,7 +23,7 @@ export default function Modal({ open, onOpenChange, children }: PropsWithChildre
             opacity: withTiming(
                 backdropOpacity.value,
                 {
-                    duration: 300,
+                    duration: 200,
                     reduceMotion: ReduceMotion.System,
                 },
                 done => {
@@ -70,7 +70,7 @@ export default function Modal({ open, onOpenChange, children }: PropsWithChildre
 
     return (
         <Portal>
-            <ModalContext.Provider value={{ show: backdropDisplayState }}>
+            <ModalContext.Provider value={{ show: backdropDisplayState, open }}>
                 <Animated.View style={[styles.backdrop, backdropStyle]} />
                 {children}
             </ModalContext.Provider>
