@@ -172,10 +172,12 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
             log.debug("现在「播放」的曲目还是正在加载的曲目，因此替换当前的曲目");
             await TrackPlayer.load({ ...activeTrack, url: checkUrl, bilisoundIsLoaded: true });
             await TrackPlayer.play();
+            await saveTrackData();
         } else if (typeof activeTrackIndex === "number") {
             log.debug("现在「播放」的曲目是即将播放的曲目，替换处理");
             await TrackPlayer.remove([activeTrackIndex]);
             await TrackPlayer.add({ ...activeTrack, url: checkUrl, bilisoundIsLoaded: true }, activeTrackIndex);
+            await saveTrackData();
         } else {
             log.debug("现在「播放」的曲目不是正在加载的曲目，放置处理");
         }
