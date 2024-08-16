@@ -13,4 +13,4 @@ export const BILISOUND_OFFLINE_PATH = `${RNFS.DocumentDirectoryPath}/sounds`;
 /**
  * 持久化播放队列路径
  */
-export const BILISOUND_PERSIST_QUEUE_PATH = `${RNFS.DocumentDirectoryPath}/playlist.json`;
+export const BILISOUND_LEGACY_PERSIST_QUEUE_PATH = `${RNFS.DocumentDirectoryPath}/playlist.json`;

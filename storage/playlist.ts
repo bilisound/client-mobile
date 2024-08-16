@@ -7,8 +7,6 @@ export const PLAYLIST_INDEX_KEY = "playlist_index";
 
 export const PLAYLIST_ITEM_KEY_PREFIX = "playlist_item_";
 
-// export const PLAYLIST_LAST_USED = "playlist_last_used";
-
 export const PLAYLIST_ON_QUEUE = "playlist_on_queue";
 
 export interface PlaylistMeta {
@@ -33,10 +31,6 @@ export const playlistStorage = new MMKV({ id: "storage-playlist" });
 export function usePlaylistStorage() {
     return useMMKVObject<PlaylistMeta[]>(PLAYLIST_INDEX_KEY, playlistStorage);
 }
-
-/*export function usePlaylistLastUsed() {
-    return useMMKVStorage<Partial<PlaylistMeta>>(PLAYLIST_LAST_USED, playlistStorage, {});
-}*/
 
 export function usePlaylistOnQueue() {
     return useMMKVObject<{ value?: PlaylistMeta | undefined }>(PLAYLIST_ON_QUEUE, playlistStorage);
