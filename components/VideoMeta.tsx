@@ -149,7 +149,6 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
     return (
         <View style={styles.container}>
             <Image source={getImageProxyUrl(meta.pic, meta.bvid)} style={styles.coverImage} />
-
             <View style={styles.contentContainer}>
                 <Text style={styles.titleText} selectable>
                     {meta.title}

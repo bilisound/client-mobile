@@ -1,15 +1,4 @@
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import {
-    Actionsheet,
-    ActionsheetBackdrop,
-    ActionsheetContent,
-    ActionsheetDragIndicator,
-    ActionsheetDragIndicatorWrapper,
-    ActionsheetItem,
-    ActionsheetItemText,
-    Box,
-    Text,
-} from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
 import React, { createContext, useContext, useState } from "react";
@@ -22,6 +11,17 @@ import Empty from "~/components/Empty";
 import PlaylistItem from "~/components/PlaylistItem";
 import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import {
+    Actionsheet,
+    ActionsheetBackdrop,
+    ActionsheetContent,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper,
+    ActionsheetItem,
+    ActionsheetItemText,
+} from "~/components/ui/actionsheet";
+import { Box } from "~/components/ui/box";
+import { Text } from "~/components/ui/text";
 import useCommonColors from "~/hooks/useCommonColors";
 import {
     invalidateOnQueueStatus,
@@ -60,8 +60,8 @@ function PlaylistActionItem(item: PlaylistMeta) {
 }
 
 const iconWrapperStyle = {
-    w: 24,
-    h: 24,
+    width: 24,
+    height: 24,
     alignItems: "center",
     justifyContent: "center",
 };
@@ -82,34 +82,53 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
     const textBasicColor = theme.colorTokens.foreground;
 
     return (
-        <Actionsheet isOpen={showActionSheet} onClose={onClose} zIndex={999}>
+        <Actionsheet isOpen={showActionSheet} onClose={onClose} className="z-50">
             <ActionsheetBackdrop />
-            <ActionsheetContent zIndex={999} pb={edgeInsets.bottom}>
+            <ActionsheetContent className="z-50" style={{ paddingBottom: edgeInsets.bottom }}>
                 <ActionsheetDragIndicatorWrapper>
                     <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
                 {!!displayTrack && (
-                    <Box alignItems="flex-start" w="100%" px="$4" py="$4" gap="$1">
-                        <Text fontWeight="700">{displayTrack.title}</Text>
-                        <Text fontSize="$sm" opacity={0.6}>
-                            {`${displayTrack.amount} 首歌曲`}
-                        </Text>
+                    <Box className="items-start w-full px-4 py-4 gap-1">
+                        <Text className="font-bold">{displayTrack.title}</Text>
+                        <Text className="text-sm opacity-60">{`${displayTrack.amount} 首歌曲`}</Text>
                     </Box>
                 )}
                 <ActionsheetItem onPress={() => onAction("edit")}>
-                    <Box sx={iconWrapperStyle}>
+                    <Box
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
                         <MaterialIcons name="edit" size={24} color={textBasicColor} />
                     </Box>
                     <ActionsheetItemText>重命名</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("delete")}>
-                    <Box sx={iconWrapperStyle}>
+                    <Box
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
                         <MaterialIcons name="delete" size={24} color={textBasicColor} />
                     </Box>
                     <ActionsheetItemText>删除</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("close")}>
-                    <Box sx={iconWrapperStyle}>
+                    <Box
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
                         <MaterialIcons name="cancel" size={22} color={textBasicColor} />
                     </Box>
                     <ActionsheetItemText>取消</ActionsheetItemText>

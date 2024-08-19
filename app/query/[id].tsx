@@ -1,16 +1,4 @@
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import {
-    Actionsheet,
-    ActionsheetBackdrop,
-    ActionsheetContent,
-    ActionsheetDragIndicator,
-    ActionsheetDragIndicatorWrapper,
-    ActionsheetItem,
-    ActionsheetItemText,
-    Box,
-    Fab,
-    Text,
-} from "@gluestack-ui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
@@ -29,6 +17,18 @@ import VideoMeta from "~/components/VideoMeta";
 import VideoSkeleton from "~/components/VideoSkeleton";
 import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import {
+    Actionsheet,
+    ActionsheetBackdrop,
+    ActionsheetContent,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper,
+    ActionsheetItem,
+    ActionsheetItemText,
+} from "~/components/ui/actionsheet";
+import { Box } from "~/components/ui/box";
+import { Fab } from "~/components/ui/fab";
+import { Text } from "~/components/ui/text";
 import { BILIBILI_VIDEO_URL_PREFIX } from "~/constants/network";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useApplyPlaylistStore from "~/store/apply-playlist";
@@ -41,13 +41,6 @@ import { convertToHTTPS } from "~/utils/string";
 type PageItem = GetBilisoundMetadataResponse["pages"][number];
 
 const IconShare = createIcon(FontAwesome5, "share");
-
-const iconWrapperStyle = {
-    w: 24,
-    h: 24,
-    alignItems: "center",
-    justifyContent: "center",
-};
 
 interface LongPressActionsProps {
     showActionSheet: boolean;
@@ -65,30 +58,42 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
     const textBasicColor = theme.colorTokens.foreground;
 
     return (
-        <Actionsheet isOpen={showActionSheet} onClose={onClose} zIndex={999}>
+        <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
             <ActionsheetBackdrop />
-            <ActionsheetContent zIndex={999} pb={edgeInsets.bottom}>
+            <ActionsheetContent style={{ zIndex: 999, paddingBottom: edgeInsets.bottom }}>
                 <ActionsheetDragIndicatorWrapper>
                     <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
                 {!!displayTrack && (
-                    <Box alignItems="flex-start" w="100%" px="$4" py="$4" gap="$1">
-                        <Text fontWeight="700" ellipsizeMode="tail" numberOfLines={1}>
+                    <Box className="flex items-start w-full px-4 py-4 gap-1">
+                        <Text className="font-bold" ellipsizeMode="tail" numberOfLines={1}>
                             {displayTrack.part}
                         </Text>
-                        <Text fontSize="$sm" opacity={0.6}>
-                            {formatSecond(displayTrack.duration)}
-                        </Text>
+                        <Text className="text-sm opacity-60">{formatSecond(displayTrack.duration)}</Text>
                     </Box>
                 )}
                 <ActionsheetItem onPress={() => onAction("addPlaylist")}>
-                    <Box sx={iconWrapperStyle}>
+                    <Box
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
                         <Entypo name="add-to-list" size={20} color={textBasicColor} />
                     </Box>
                     <ActionsheetItemText>添加到歌单</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("close")}>
-                    <Box sx={iconWrapperStyle}>
+                    <Box
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
                         <MaterialIcons name="cancel" size={22} color={textBasicColor} />
                     </Box>
                     <ActionsheetItemText>取消</ActionsheetItemText>
@@ -212,7 +217,7 @@ const QueryIdScreen: React.FC = () => {
             {isLoading ? <VideoSkeleton /> : null}
             {error ? (
                 <Box
-                    sx={{
+                    style={{
                         flex: 1,
                         alignItems: "center",
                         justifyContent: "center",
@@ -221,27 +226,31 @@ const QueryIdScreen: React.FC = () => {
                     }}
                 >
                     <MaterialIcons name="error-outline" size={72} color={textBasicColor} />
-                    <Text sx={{ fontSize: 20, fontWeight: "700" }}>查询失败了</Text>
-                    <Text sx={{ fontSize: 14 }}>{`${error?.message || error}`}</Text>
+                    <Text style={{ fontSize: 20, fontWeight: "700" }}>查询失败了</Text>
+                    <Text style={{ fontSize: 14 }}>{`${error?.message || error}`}</Text>
                 </Box>
             ) : null}
             {data ? (
-                <Box sx={{ flex: 1, flexDirection: "row" }}>
+                <Box style={{ flex: 1, flexDirection: "row" }}>
                     {width >= SCREEN_BREAKPOINTS.md ? (
-                        <Box flex={0} flexBasis="auto" width={384}>
+                        <Box style={{ flex: 0, flexBasis: "auto", width: 384 }}>
                             <ScrollView>
                                 <VideoMeta meta={data.data} />
-                                <Box height={edgeInsets.bottom} />
+                                <Box style={{ height: edgeInsets.bottom }} />
                             </ScrollView>
                         </Box>
                     ) : null}
-                    <Box flex={1}>
+                    <Box style={{ flex: 1 }}>
                         <FlashList
                             data={dataList}
                             extraData={updateTriggerString}
                             keyExtractor={item => `${item.page}`}
                             ListHeaderComponent={
-                                width < SCREEN_BREAKPOINTS.md ? <VideoMeta meta={data.data} /> : <Box h={12} />
+                                width < SCREEN_BREAKPOINTS.md ? (
+                                    <VideoMeta meta={data.data} />
+                                ) : (
+                                    <Box className="h-12" />
+                                )
                             }
                             ListFooterComponent={
                                 <View style={{ height: edgeInsets.bottom + (activeTrack ? 58 + 36 : 12) }} />
@@ -258,8 +267,10 @@ const QueryIdScreen: React.FC = () => {
                     isHovered={false}
                     isDisabled={false}
                     isPressed={false}
-                    right={edgeInsets.right + 24}
-                    bottom={edgeInsets.bottom + 24}
+                    style={{
+                        right: edgeInsets.right + 24,
+                        bottom: edgeInsets.bottom + 24,
+                    }}
                     onPress={() => router.push("/modal")}
                 >
                     <FontAwesome5 name="headphones" size={24} color="#fff" />

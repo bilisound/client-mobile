@@ -1,16 +1,5 @@
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Poppins_700Bold } from "@expo-google-fonts/poppins";
-import {
-    AlertCircleIcon,
-    Box,
-    FormControl,
-    FormControlError,
-    FormControlErrorIcon,
-    FormControlErrorText,
-    InputField,
-    Text,
-    Input,
-} from "@gluestack-ui/themed";
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -19,6 +8,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Box } from "~/components/ui/box";
+import {
+    FormControl,
+    FormControlError,
+    FormControlErrorIcon,
+    FormControlErrorText,
+} from "~/components/ui/form-control";
+import { AlertCircleIcon } from "~/components/ui/icon";
+import { Input, InputField } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
 import { resolveVideoAndJump } from "~/utils/format";
 import log from "~/utils/logger";
 
@@ -51,7 +50,7 @@ const TabIndexScreen: React.FC = () => {
 
     return (
         <Box
-            sx={{
+            style={{
                 alignItems: "stretch",
                 height: "100%",
                 paddingLeft: insets.left,
@@ -60,7 +59,7 @@ const TabIndexScreen: React.FC = () => {
             }}
         >
             <Box
-                sx={{
+                style={{
                     paddingTop: 96,
                     paddingBottom: 48,
                     alignItems: "center",
@@ -68,7 +67,7 @@ const TabIndexScreen: React.FC = () => {
             >
                 {fontsLoaded ? (
                     <Text
-                        sx={{
+                        style={{
                             fontSize: 32,
                             fontFamily: "Poppins_700Bold",
                             color: "$primary500",
@@ -80,14 +79,14 @@ const TabIndexScreen: React.FC = () => {
                     </Text>
                 ) : null}
             </Box>
-            <Box px={16} alignItems="center">
+            <Box style={{ paddingHorizontal: 16, alignItems: "center" }}>
                 <FormControl
                     isDisabled={false}
                     isInvalid={inputError}
                     isReadOnly={false}
                     isRequired={false}
                     size="md"
-                    sx={{
+                    style={{
                         width: width >= 592 ? 560 : "100%",
                         backgroundColor: "transparent",
                     }}
@@ -95,15 +94,15 @@ const TabIndexScreen: React.FC = () => {
                     <Input
                         variant="outline"
                         size="md"
-                        w="100%"
-                        h="$12"
-                        sx={{
+                        style={{
+                            width: "100%",
+                            height: 48,
                             borderRadius: 8,
                         }}
                     >
                         <InputField
                             placeholder="粘贴完整链接或带前缀 ID 至此"
-                            sx={{
+                            style={{
                                 fontSize: 16,
                             }}
                             value={value}
@@ -121,7 +120,7 @@ const TabIndexScreen: React.FC = () => {
                 </FormControl>
             </Box>
             <Box
-                sx={{
+                style={{
                     position: "absolute",
                     padding: 8,
                     right: 0,

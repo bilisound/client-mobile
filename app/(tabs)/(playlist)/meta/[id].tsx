@@ -1,22 +1,3 @@
-import {
-    AlertCircleIcon,
-    Box,
-    Button,
-    ButtonText,
-    Checkbox,
-    CheckboxIcon,
-    CheckboxIndicator,
-    CheckboxLabel,
-    CheckIcon,
-    FormControl,
-    FormControlError,
-    FormControlErrorIcon,
-    FormControlErrorText,
-    FormControlLabel,
-    FormControlLabelText,
-    Input,
-    InputField,
-} from "@gluestack-ui/themed";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -25,6 +6,19 @@ import TrackPlayer from "react-native-track-player";
 import { v4 } from "uuid";
 
 import CommonLayout from "~/components/CommonLayout";
+import { Box } from "~/components/ui/box";
+import { Button, ButtonText } from "~/components/ui/button";
+import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
+import {
+    FormControl,
+    FormControlError,
+    FormControlErrorIcon,
+    FormControlErrorText,
+    FormControlLabel,
+    FormControlLabelText,
+} from "~/components/ui/form-control";
+import { AlertCircleIcon, CheckIcon } from "~/components/ui/icon";
+import { Input, InputField } from "~/components/ui/input";
 import { addToPlaylist, getNewColor, PlaylistMeta, syncPlaylistAmount, usePlaylistStorage } from "~/storage/playlist";
 import log from "~/utils/logger";
 import { tracksToPlaylist } from "~/utils/track-data";
@@ -93,10 +87,10 @@ export default function Page() {
 
     return (
         <CommonLayout title={id === MAGIC_ID_NEW_ENTRY ? "创建歌单" : "修改歌单信息"} titleBarTheme="transparent">
-            <Box p="$4" gap="$4">
+            <Box className="p-4 gap-4">
                 <FormControl isRequired isInvalid={"title" in errors}>
                     <FormControlLabel>
-                        <FormControlLabelText fontSize="$sm">名称</FormControlLabelText>
+                        <FormControlLabelText className="text-sm">名称</FormControlLabelText>
                     </FormControlLabel>
                     <Controller
                         control={control}
@@ -107,7 +101,7 @@ export default function Page() {
                                     onChangeText={onChange}
                                     value={value}
                                     placeholder="请输入名称"
-                                    fontSize="$sm"
+                                    className="text-sm"
                                 />
                             </Input>
                         )}
@@ -131,10 +125,10 @@ export default function Page() {
                                     value={String(value)}
                                     aria-label="从当前队列创建歌单"
                                 >
-                                    <CheckboxIndicator mr="$2">
+                                    <CheckboxIndicator className="mr-2">
                                         <CheckboxIcon as={CheckIcon} />
                                     </CheckboxIndicator>
-                                    <CheckboxLabel fontSize="$sm">从当前队列创建歌单</CheckboxLabel>
+                                    <CheckboxLabel className="text-sm">从当前队列创建歌单</CheckboxLabel>
                                 </Checkbox>
                             )}
                             name="createFromQueue"
@@ -143,16 +137,14 @@ export default function Page() {
                     </FormControl>
                 )}
                 <Button
-                    bg="$primary600"
                     size="md"
                     variant="solid"
                     action="primary"
                     onPress={handleSubmit(onSubmit)}
                     isDisabled={!!errors.title}
+                    className="bg-primary-600"
                 >
-                    <ButtonText fontWeight="$medium" fontSize="$sm">
-                        保存
-                    </ButtonText>
+                    <ButtonText className="font-medium text-sm">保存</ButtonText>
                 </Button>
             </Box>
         </CommonLayout>

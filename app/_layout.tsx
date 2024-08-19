@@ -2,8 +2,6 @@ import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
 import "core-js/actual/array/to-spliced";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { COLORMODES } from "@gluestack-style/react/lib/typescript/types";
-import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { PortalProvider } from "@gorhom/portal";
 import { ThemeProvider } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
@@ -18,10 +16,11 @@ import Toast from "react-native-toast-message";
 import { UnistylesRuntime, useInitialTheme } from "react-native-unistyles";
 
 import AudioManager from "~/components/AudioManager";
-import { config } from "~/config/gluestack-ui.config";
+import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
 import { toastConfig } from "~/config/toast";
 import init from "~/utils/init";
 
+import "~/global.css";
 import "~/unistyles";
 
 export {
@@ -113,7 +112,7 @@ const RootLayoutNav = () => {
     );
 
     return (
-        <GluestackUIProvider config={config} colorMode={(colorScheme ?? "light") as COLORMODES}>
+        <GluestackUIProvider mode={colorScheme ?? "light"}>
             <QueryClientProvider client={queryClient}>
                 <ThemeProvider value={theme}>
                     <PortalProvider>
