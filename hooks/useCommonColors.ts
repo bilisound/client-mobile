@@ -1,4 +1,3 @@
-import { useToken } from "@gluestack-ui/themed";
 import { useColorScheme } from "react-native";
 
 /**
@@ -7,11 +6,11 @@ import { useColorScheme } from "react-native";
 const useCommonColors = () => {
     const colorScheme = useColorScheme();
 
-    const primaryColor = useToken("colors", "primary500");
-    const accentColor = useToken("colors", "accent500");
+    const primaryColor = "#00ba9d";
+    const accentColor = "#09a5ee";
 
-    const textBasicColorLight = useToken("colors", "text700");
-    const textBasicColorDark = useToken("colors", "text200");
+    const textBasicColorLight = "#525252";
+    const textBasicColorDark = "#DBDBDB";
     const textBasicColor = colorScheme === "dark" ? textBasicColorDark : textBasicColorLight;
 
     const bgColor = colorScheme === "dark" ? "#171717" : "#ffffff";

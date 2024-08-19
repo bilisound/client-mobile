@@ -16,20 +16,15 @@ import {
     FormControlLabelText,
     Input,
     InputField,
-    Toast,
-    ToastDescription,
-    ToastTitle,
-    useToast,
-    VStack,
 } from "@gluestack-ui/themed";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
 import { v4 } from "uuid";
 
 import CommonLayout from "~/components/CommonLayout";
-import useToastContainerStyle from "~/hooks/useToastContainerStyle";
 import { addToPlaylist, getNewColor, PlaylistMeta, syncPlaylistAmount, usePlaylistStorage } from "~/storage/playlist";
 import log from "~/utils/logger";
 import { tracksToPlaylist } from "~/utils/track-data";
@@ -37,8 +32,8 @@ import { tracksToPlaylist } from "~/utils/track-data";
 const MAGIC_ID_NEW_ENTRY = "new";
 
 export default function Page() {
-    const toast = useToast();
-    const containerStyle = useToastContainerStyle();
+    // const toast = useToast();
+    // const containerStyle = useToastContainerStyle();
     const { id } = useLocalSearchParams<{ id: string }>();
     const [list = [], setList] = usePlaylistStorage();
     const defaultValues = list.find(e => e.id === id) ?? { id: "", title: "", color: "", amount: 0 };
@@ -82,29 +77,15 @@ export default function Page() {
         }
 
         if (isCreate) {
-            toast.show({
-                placement: "top",
-                containerStyle,
-                render: ({ id }) => (
-                    <Toast nativeID={`toast-${id}`} action="success" variant="accent">
-                        <VStack space="xs">
-                            <ToastTitle>歌单创建成功</ToastTitle>
-                            <ToastDescription>{"新歌单的名称：" + value.title}</ToastDescription>
-                        </VStack>
-                    </Toast>
-                ),
+            Toast.show({
+                type: "success",
+                text1: "歌单创建成功",
+                text2: "新歌单的名称：" + value.title,
             });
         } else {
-            toast.show({
-                placement: "top",
-                containerStyle,
-                render: ({ id }) => (
-                    <Toast nativeID={`toast-${id}`} action="success" variant="accent">
-                        <VStack space="xs">
-                            <ToastTitle>歌单修改成功</ToastTitle>
-                        </VStack>
-                    </Toast>
-                ),
+            Toast.show({
+                type: "success",
+                text1: "歌单修改成功",
             });
         }
         router.back();
