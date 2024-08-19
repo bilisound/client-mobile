@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Pressable from "./ui/Pressable";
+import Pressable from "./potato-ui/Pressable";
 
 import { PlaylistMeta } from "~/storage/playlist";
 

@@ -6,7 +6,7 @@ import { useStyles, createStyleSheet } from "react-native-unistyles";
 
 import ProgressBar from "./ProgressBar";
 
-import Pressable from "~/components/ui/Pressable";
+import Pressable from "~/components/potato-ui/Pressable";
 import { PlaylistDetailRow } from "~/storage/playlist";
 import { formatSecond } from "~/utils/misc";
 import { handleTogglePlay } from "~/utils/player-control";

@@ -20,7 +20,7 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import SongItem from "./SongItem";
 
-import Pressable from "~/components/ui/Pressable";
+import Pressable from "~/components/potato-ui/Pressable";
 import useTracks from "~/hooks/useTracks";
 import useSettingsStore from "~/store/settings";
 import { getImageProxyUrl } from "~/utils/constant-helper";

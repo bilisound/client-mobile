@@ -6,7 +6,7 @@ import { View, Pressable as NativePressable, Text } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Pressable from "~/components/ui/Pressable";
+import Pressable from "~/components/potato-ui/Pressable";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { handleTogglePlay } from "~/utils/player-control";
 

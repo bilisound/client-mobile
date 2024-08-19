@@ -8,8 +8,8 @@ import { Platform, Text, Pressable, View } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
-import Button from "~/components/ui/Button";
-import { createIcon } from "~/components/ui/utils/icon";
+import Button from "~/components/potato-ui/Button";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { formatDate } from "~/utils/misc";

@@ -14,9 +14,9 @@ import CommonLayout from "~/components/CommonLayout";
 import EditAction from "~/components/EditAction";
 import Empty from "~/components/Empty";
 import SongItem from "~/components/SongItem";
-import Button from "~/components/ui/Button";
-import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
-import { createIcon } from "~/components/ui/utils/icon";
+import Button from "~/components/potato-ui/Button";
+import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import {
     PLAYLIST_ITEM_KEY_PREFIX,

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Button from "./ui/Button";
+import Button from "~/components/potato-ui/Button";
 
 interface EditActionProps {
     onAll: () => void;

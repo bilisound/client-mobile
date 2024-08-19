@@ -3,7 +3,7 @@ import React from "react";
 import { View, Text, GestureResponderEvent } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Pressable from "~/components/ui/Pressable";
+import Pressable from "~/components/potato-ui/Pressable";
 
 export interface SettingMenuItemProps {
     title: string;

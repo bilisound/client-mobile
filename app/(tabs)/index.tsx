@@ -17,8 +17,8 @@ import React, { useState } from "react";
 import { Platform, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
-import { createIcon } from "~/components/ui/utils/icon";
+import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 import { resolveVideoAndJump } from "~/utils/format";
 import log from "~/utils/logger";
 

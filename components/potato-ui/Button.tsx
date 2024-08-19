@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useStyles } from "react-native-unistyles";
 
-import { IconComponent } from "~/components/ui/utils/icon";
+import { IconComponent } from "~/components/potato-ui/utils/icon";
 import { ThemeColorPaletteKeys } from "~/config/palettes";
 
 const isAndroid = Platform.OS === "android";

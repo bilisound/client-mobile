@@ -1,8 +1,8 @@
 import React, { PropsWithChildren } from "react";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Pressable from "~/components/ui/Pressable";
-import { IconComponent } from "~/components/ui/utils/icon";
+import Pressable from "~/components/potato-ui/Pressable";
+import { IconComponent } from "~/components/potato-ui/utils/icon";
 
 export interface ButtonTitleBarProps {
     label: string;

@@ -3,13 +3,13 @@ import { useState } from "react";
 import { View, Text, Switch } from "react-native";
 import Toast from "react-native-toast-message";
 
-import Button from "~/components/ui/Button";
-import { Modal } from "~/components/ui/Modal";
-import { ModalDialog } from "~/components/ui/ModalDialog";
-import { ModalDialogAction } from "~/components/ui/ModalDialogAction";
-import { ModalDialogDescription } from "~/components/ui/ModalDialogDescription";
-import { ModalDialogTitle } from "~/components/ui/ModalDialogTitle";
-import { createIcon } from "~/components/ui/utils/icon";
+import Button from "~/components/potato-ui/Button";
+import { Modal } from "~/components/potato-ui/Modal";
+import { ModalDialog } from "~/components/potato-ui/ModalDialog";
+import { ModalDialogAction } from "~/components/potato-ui/ModalDialogAction";
+import { ModalDialogDescription } from "~/components/potato-ui/ModalDialogDescription";
+import { ModalDialogTitle } from "~/components/potato-ui/ModalDialogTitle";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 
 const LinkIcon = createIcon(Entypo, "link");
 

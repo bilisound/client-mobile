@@ -5,8 +5,8 @@ import { View, Text, StatusBar, StyleProp, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
-import { createIcon } from "~/components/ui/utils/icon";
+import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 
 export interface CommonFrameNewProps {
     title?: string;

@@ -5,8 +5,8 @@ import { useStyles } from "react-native-unistyles";
 import WebView from "react-native-webview";
 
 import CommonLayout from "~/components/CommonLayout";
-import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
-import { createIcon } from "~/components/ui/utils/icon";
+import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 import { getLogContentForDisplay, shareLogContent } from "~/utils/logger";
 
 const webTemplate = (content: string) => `

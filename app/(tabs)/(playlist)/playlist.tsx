@@ -20,8 +20,8 @@ import { useStyles } from "react-native-unistyles";
 import CommonLayout from "~/components/CommonLayout";
 import Empty from "~/components/Empty";
 import PlaylistItem from "~/components/PlaylistItem";
-import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
-import { createIcon } from "~/components/ui/utils/icon";
+import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 import useCommonColors from "~/hooks/useCommonColors";
 import {
     invalidateOnQueueStatus,

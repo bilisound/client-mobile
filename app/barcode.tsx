@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Alert, StatusBar, View, Text, StyleSheet, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import Button from "~/components/ui/Button";
+import Button from "~/components/potato-ui/Button";
 import log from "~/utils/logger";
 import { handleQrCode } from "~/utils/qrcode";
 

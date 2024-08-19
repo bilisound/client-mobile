@@ -1,6 +1,6 @@
 import { ToastConfig } from "react-native-toast-message/lib/src/types";
 
-import Toast from "~/components/ui/Toast";
+import Toast from "~/components/potato-ui/Toast";
 
 export const toastConfig: ToastConfig = {
     success: ({ text1, text2 }) => <Toast type="success" title={text1 ?? ""} description={text2} />,

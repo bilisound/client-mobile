@@ -8,7 +8,7 @@ import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
-import { createIcon } from "~/components/ui/utils/icon";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
 import useSettingsStore from "~/store/settings";
 import log from "~/utils/logger";

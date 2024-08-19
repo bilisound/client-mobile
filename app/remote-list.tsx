@@ -17,9 +17,9 @@ import {
     UserListMode,
 } from "~/api/bilisound";
 import CommonLayout from "~/components/CommonLayout";
-import Button from "~/components/ui/Button";
-import Pressable from "~/components/ui/Pressable";
-import { createIcon } from "~/components/ui/utils/icon";
+import Button from "~/components/potato-ui/Button";
+import Pressable from "~/components/potato-ui/Pressable";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";

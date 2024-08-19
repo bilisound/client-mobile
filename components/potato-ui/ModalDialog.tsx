@@ -5,7 +5,7 @@ import Animated, { ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import { ModalContext } from "~/components/ui/ModalContext";
+import { ModalContext } from "~/components/potato-ui/ModalContext";
 
 const AnimatedShadowedView = Animated.createAnimatedComponent(ShadowedView);
 

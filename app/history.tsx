@@ -9,9 +9,9 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import Empty from "~/components/Empty";
-import ButtonTitleBar from "~/components/ui/ButtonTitleBar";
-import Pressable from "~/components/ui/Pressable";
-import { createIcon } from "~/components/ui/utils/icon";
+import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import Pressable from "~/components/potato-ui/Pressable";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 import useHistoryStore, { HistoryItem } from "~/store/history";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 
