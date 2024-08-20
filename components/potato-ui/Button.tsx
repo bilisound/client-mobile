@@ -125,7 +125,7 @@ export default function Button(props: ButtonProps) {
                               color: activeBackground,
                           }
                 }
-                style={status => [
+                style={[
                     {
                         height: variant === "outline" ? sizes[size].h - 2 : sizes[size].h,
                         paddingHorizontal: variant === "outline" ? sizes[size].px - 2 : sizes[size].px,
@@ -133,7 +133,7 @@ export default function Button(props: ButtonProps) {
                         justifyContent: "center",
                         alignItems: "center",
                         gap: 8,
-                        backgroundColor: status.pressed && !isAndroid ? activeBackground : bg,
+                        // backgroundColor: status.pressed && !isAndroid ? activeBackground : bg,
                     },
                     props.style,
                 ]}
