@@ -1,4 +1,5 @@
 import omit from "lodash/omit";
+import { useState } from "react";
 import {
     Pressable as NativePressable,
     StyleProp,
@@ -6,8 +7,8 @@ import {
     PressableProps as NativePressableProps,
     useColorScheme,
     Platform,
+    View,
 } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 interface PressableProps extends NativePressableProps {
     style?: StyleProp<ViewStyle>;
@@ -15,35 +16,33 @@ interface PressableProps extends NativePressableProps {
     pressedBackgroundColor?: string;
 }
 
+const isAndroid = Platform.OS === "android";
+
 export default function Pressable(props: PressableProps) {
-    const pressed = useSharedValue(false);
+    const [pressed, setPressed] = useState(false);
     const colorMode = useColorScheme();
     const pressedBackgroundColor = colorMode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
     const pressedBackgroundColorUser = props.pressedBackgroundColor;
 
-    const animatedStyle = useAnimatedStyle(() => {
-        return {
-            backgroundColor: withTiming(
-                pressed.value ? pressedBackgroundColorUser ?? pressedBackgroundColor : "transparent",
-                {
-                    duration: pressed.value ? 0 : 150,
-                },
-            ),
-        };
-    });
-
     return (
-        <Animated.View style={[props.outerStyle, animatedStyle]}>
+        <View
+            style={[
+                props.outerStyle,
+                {
+                    backgroundColor: pressed ? pressedBackgroundColorUser || pressedBackgroundColor : undefined,
+                },
+            ]}
+        >
             <NativePressable
                 onPressIn={event => {
-                    if (Platform.OS !== "android") {
-                        pressed.value = true;
+                    if (!isAndroid) {
+                        setPressed(true);
                     }
                     props.onPressIn?.(event);
                 }}
                 onPressOut={event => {
-                    if (Platform.OS !== "android") {
-                        pressed.value = false;
+                    if (!isAndroid) {
+                        setPressed(false);
                     }
                     props.onPressOut?.(event);
                 }}
@@ -54,6 +53,6 @@ export default function Pressable(props: PressableProps) {
             >
                 {props.children}
             </NativePressable>
-        </Animated.View>
+        </View>
     );
 }

@@ -64,57 +64,53 @@ export default function SongItem({
                 onRequestPlay();
             }}
             onLongPress={onLongPress}
+            style={styles.container}
         >
-            <View style={styles.container}>
-                <View style={styles.rowContainer}>
+            <View style={styles.rowContainer}>
+                <View
+                    style={[
+                        styles.episodeContainer,
+                        { backgroundColor: isActiveTrack ? theme.colors.accent[500] : theme.colors.primary[500] },
+                    ]}
+                >
+                    <Text style={styles.episodeText}>{typeof index === "number" ? index : data.episode}</Text>
+                </View>
+                <View style={styles.titleContainer}>
+                    <Text
+                        style={[
+                            styles.titleText,
+                            {
+                                fontWeight: isActiveTrack ? "600" : "400",
+                                color: isActiveTrack ? theme.colors.accent[500] : textBasicColor,
+                            },
+                        ]}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                    >
+                        {data.title}
+                    </Text>
+                    <Text style={styles.durationText}>{formatSecond(data.duration)}</Text>
+                </View>
+            </View>
+            {isChecking ? (
+                <View style={styles.checkContainer}>
                     <View
                         style={[
-                            styles.episodeContainer,
-                            { backgroundColor: isActiveTrack ? theme.colors.accent[500] : theme.colors.primary[500] },
+                            styles.checkCircle,
+                            { backgroundColor: isChecked ? theme.colors.primary[500] : "transparent" },
                         ]}
                     >
-                        <Text style={styles.episodeText}>{typeof index === "number" ? index : data.episode}</Text>
-                    </View>
-                    <View style={styles.titleContainer}>
-                        <Text
-                            style={[
-                                styles.titleText,
-                                {
-                                    fontWeight: isActiveTrack ? "600" : "400",
-                                    color: isActiveTrack ? theme.colors.accent[500] : textBasicColor,
-                                },
-                            ]}
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                        >
-                            {data.title}
-                        </Text>
-                        <Text style={styles.durationText}>{formatSecond(data.duration)}</Text>
-                        {/*<View style={styles.durationContainer}>
-                            <Text style={styles.durationText}>{formatSecond(data.duration)}</Text>
-                        </View>*/}
+                        <Entypo name="check" size={18} color={isChecked ? "white" : "transparent"} />
                     </View>
                 </View>
-                {isChecking ? (
-                    <View style={styles.checkContainer}>
-                        <View
-                            style={[
-                                styles.checkCircle,
-                                { backgroundColor: isChecked ? theme.colors.primary[500] : "transparent" },
-                            ]}
-                        >
-                            <Entypo name="check" size={18} color={isChecked ? "white" : "transparent"} />
-                        </View>
+            ) : isActiveTrack ? (
+                <>
+                    <View style={styles.playingIconContainer}>
+                        <PlayingIcon />
                     </View>
-                ) : isActiveTrack ? (
-                    <>
-                        <View style={styles.playingIconContainer}>
-                            <PlayingIcon />
-                        </View>
-                        <ProgressBar item={`${data.bvid}_${data.episode}`} />
-                    </>
-                ) : null}
-            </View>
+                    <ProgressBar item={`${data.bvid}_${data.episode}`} />
+                </>
+            ) : null}
         </Pressable>
     );
 }
