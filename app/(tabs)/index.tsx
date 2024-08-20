@@ -50,61 +50,38 @@ const TabIndexScreen: React.FC = () => {
 
     return (
         <Box
+            className="items-stretch h-full"
             style={{
-                alignItems: "stretch",
-                height: "100%",
                 paddingLeft: insets.left,
                 paddingRight: insets.right,
                 paddingTop: insets.top,
             }}
         >
-            <Box
-                style={{
-                    paddingTop: 96,
-                    paddingBottom: 48,
-                    alignItems: "center",
-                }}
-            >
+            <Box className="pt-24 pb-12 items-center">
                 {fontsLoaded ? (
                     <Text
+                        className="text-3xl text-primary-500 h-12 leading-12"
                         style={{
-                            fontSize: 32,
                             fontFamily: "Poppins_700Bold",
-                            color: "$primary500",
-                            height: 48,
-                            lineHeight: 48,
                         }}
                     >
                         BILISOUND
                     </Text>
                 ) : null}
             </Box>
-            <Box style={{ paddingHorizontal: 16, alignItems: "center" }}>
+            <Box className="px-4 items-center">
                 <FormControl
                     isDisabled={false}
                     isInvalid={inputError}
                     isReadOnly={false}
                     isRequired={false}
                     size="md"
-                    style={{
-                        width: width >= 592 ? 560 : "100%",
-                        backgroundColor: "transparent",
-                    }}
+                    className={`${width >= 592 ? "w-[560px]" : "w-full"} bg-transparent`}
                 >
-                    <Input
-                        variant="outline"
-                        size="md"
-                        style={{
-                            width: "100%",
-                            height: 48,
-                            borderRadius: 8,
-                        }}
-                    >
+                    <Input variant="outline" size="md" className="w-full h-12 rounded-lg">
                         <InputField
                             placeholder="粘贴完整链接或带前缀 ID 至此"
-                            style={{
-                                fontSize: 16,
-                            }}
+                            className="text-base"
                             value={value}
                             onChangeText={nextValue => {
                                 setInputError(false);
@@ -120,13 +97,8 @@ const TabIndexScreen: React.FC = () => {
                 </FormControl>
             </Box>
             <Box
+                className="absolute p-2 right-0 flex-row items-center gap-1"
                 style={{
-                    position: "absolute",
-                    padding: 8,
-                    right: 0,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 4,
                     top: insets.top,
                 }}
             >
@@ -147,7 +119,7 @@ const TabIndexScreen: React.FC = () => {
                     onPress={() => router.push("/history")}
                 />
             </Box>
-            <View style={{ flex: 1 }} />
+            <View className="flex-1" />
         </Box>
     );
 };

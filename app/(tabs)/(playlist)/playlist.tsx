@@ -59,13 +59,6 @@ function PlaylistActionItem(item: PlaylistMeta) {
     );
 }
 
-const iconWrapperStyle = {
-    width: 24,
-    height: 24,
-    alignItems: "center",
-    justifyContent: "center",
-};
-
 interface LongPressActionsProps {
     showActionSheet: boolean;
     displayTrack?: PlaylistMeta;
@@ -82,7 +75,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
     const textBasicColor = theme.colorTokens.foreground;
 
     return (
-        <Actionsheet isOpen={showActionSheet} onClose={onClose} className="z-50">
+        <Actionsheet isOpen={showActionSheet} onClose={onClose}>
             <ActionsheetBackdrop />
             <ActionsheetContent className="z-50" style={{ paddingBottom: edgeInsets.bottom }}>
                 <ActionsheetDragIndicatorWrapper>
@@ -139,8 +132,6 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 }
 
 export default function Page() {
-    const { primaryColor } = useCommonColors();
-
     const [list = [], setList] = usePlaylistStorage();
 
     const [showActionSheet, setShowActionSheet] = useState(false);
