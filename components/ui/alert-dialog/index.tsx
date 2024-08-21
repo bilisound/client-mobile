@@ -50,7 +50,7 @@ const alertDialogStyle = tva({
 });
 
 const alertDialogContentStyle = tva({
-    base: "bg-background-0 rounded-lg overflow-hidden border border-outline-100 p-6",
+    base: "bg-background-0 rounded-3xl overflow-hidden shadow-xl p-6",
     parentVariants: {
         size: {
             xs: "w-[60%] max-w-[360px]",
@@ -77,7 +77,7 @@ const alertDialogFooterStyle = tva({
 const alertDialogBodyStyle = tva({ base: "" });
 
 const alertDialogBackdropStyle = tva({
-    base: "absolute left-0 top-0 right-0 bottom-0 bg-background-dark web:cursor-default",
+    base: "absolute left-0 top-0 right-0 bottom-0 bg-black web:cursor-default",
 });
 
 type IAlertDialogProps = React.ComponentPropsWithoutRef<typeof UIAccessibleAlertDialog> &
@@ -126,7 +126,7 @@ const AlertDialogContent = React.forwardRef<
             pointerEvents="auto"
             ref={ref}
             initial={{
-                scale: 0.9,
+                scale: 0.95,
                 opacity: 0,
             }}
             animate={{
@@ -143,7 +143,7 @@ const AlertDialogContent = React.forwardRef<
                 stiffness: 250,
                 opacity: {
                     type: "timing",
-                    duration: 250,
+                    duration: 200,
                 },
             }}
             {...props}
@@ -228,7 +228,7 @@ const AlertDialogBackdrop = React.forwardRef<
                 opacity: 0,
             }}
             animate={{
-                opacity: 0.5,
+                opacity: 0.6,
             }}
             exit={{
                 opacity: 0,
@@ -239,7 +239,7 @@ const AlertDialogBackdrop = React.forwardRef<
                 stiffness: 250,
                 opacity: {
                     type: "timing",
-                    duration: 250,
+                    duration: 200,
                 },
             }}
             {...props}
