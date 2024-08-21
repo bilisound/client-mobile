@@ -93,7 +93,7 @@ const TabIndexScreen: React.FC = () => {
                         />
                         {value && (
                             <InputSlot
-                                className="pr-3"
+                                className="mr-3 items-center justify-center"
                                 onPress={() => {
                                     setInputError(false);
                                     setValue("");
