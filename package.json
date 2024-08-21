@@ -4,9 +4,9 @@
   "version": "1.2.3",
   "scripts": {
     "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web",
+    "android": "DARK_MODE=media expo run:android",
+    "ios": "DARK_MODE=media expo run:ios",
+    "web": "DARK_MODE=media expo start --web",
     "prepare": "expo prebuild",
     "test": "jest --watchAll",
     "build:android": "eas build --platform android --local --output=dist/bilisound-app-release.apk",

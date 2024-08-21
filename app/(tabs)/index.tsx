@@ -50,8 +50,6 @@ const TabIndexScreen: React.FC = () => {
         }
     }
 
-    console.log({ width });
-
     return (
         <Box
             className="items-stretch h-full"
