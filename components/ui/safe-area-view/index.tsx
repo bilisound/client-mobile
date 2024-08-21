@@ -1,2 +1,2 @@
-'use client';
-export { SafeAreaView } from 'react-native';
+"use client";
+export { SafeAreaView } from "react-native";

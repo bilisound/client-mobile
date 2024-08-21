@@ -8,7 +8,7 @@ import { getCacheAudioPath } from "./misc";
 import { runTasksLimit } from "./promise";
 import { convertToHTTPS } from "./string";
 
-import { BILISOUND_OFFLINE_PATH, BILISOUND_LEGACY_PERSIST_QUEUE_PATH } from "~/constants/file";
+import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
 import { PlaylistDetailRow } from "~/storage/playlist";
 import { QUEUE_CURRENT_INDEX, QUEUE_LIST, queueStorage } from "~/storage/queue";
 import { handleLegacyPlaylist } from "~/utils/migration/legacy-playlist";
