@@ -1,5 +1,6 @@
 import { Octicons } from "@expo/vector-icons";
-import React, { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useRef } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStyles } from "react-native-unistyles";
 import WebView from "react-native-webview";
@@ -46,12 +47,18 @@ const App: React.FC = () => {
     const { theme } = useStyles();
     const textBasicColor = theme.colorTokens.foreground;
     const safeAreaInsets = useSafeAreaInsets();
-    const [content, setContent] = useState("");
+    // const [content, setContent] = useState("");
+
+    const { data } = useQuery({
+        queryKey: ["log-show"],
+        queryFn: getLogContentForDisplay,
+        staleTime: 5000,
+    });
 
     const webviewRef = useRef<WebView>(null);
 
     const handleShare = async () => {
-        await shareLogContent(content);
+        await shareLogContent(data ?? "");
     };
 
     useEffect(() => {
@@ -65,10 +72,6 @@ const App: React.FC = () => {
             document.body.style.marginRight = "${safeAreaInsets.right}px";
         `);
     }, [safeAreaInsets]);
-
-    useEffect(() => {
-        getLogContentForDisplay().then(e => setContent(e));
-    }, []);
 
     return (
         <CommonLayout
@@ -85,11 +88,11 @@ const App: React.FC = () => {
             }
             extendToBottom
         >
-            {content ? (
+            {data ? (
                 <WebView
                     ref={webviewRef}
                     source={{
-                        html: webTemplate(content),
+                        html: webTemplate(data),
                     }}
                     style={{
                         backgroundColor: "transparent",
