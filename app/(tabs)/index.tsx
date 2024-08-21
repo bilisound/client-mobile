@@ -92,7 +92,7 @@ const TabIndexScreen: React.FC = () => {
                     </Input>
                     <FormControlError>
                         <FormControlErrorIcon as={AlertCircleIcon} />
-                        <FormControlErrorText>请输入合法的地址或 ID</FormControlErrorText>
+                        <FormControlErrorText size="sm">请输入合法的地址或 ID</FormControlErrorText>
                     </FormControlError>
                 </FormControl>
             </Box>

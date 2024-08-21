@@ -110,7 +110,7 @@ export default function Page() {
                     />
                     <FormControlError>
                         <FormControlErrorIcon as={AlertCircleIcon} />
-                        <FormControlErrorText>{errors.title?.message}</FormControlErrorText>
+                        <FormControlErrorText size="sm">{errors.title?.message}</FormControlErrorText>
                     </FormControlError>
                 </FormControl>
 
