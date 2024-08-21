@@ -1,10 +1,11 @@
-import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Poppins_700Bold } from "@expo-google-fonts/poppins";
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Platform, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useStyles } from "react-native-unistyles";
 
 import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
@@ -16,13 +17,14 @@ import {
     FormControlErrorText,
 } from "~/components/ui/form-control";
 import { AlertCircleIcon } from "~/components/ui/icon";
-import { Input, InputField } from "~/components/ui/input";
+import { Input, InputField, InputSlot } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { resolveVideoAndJump } from "~/utils/format";
 import log from "~/utils/logger";
 
 const IconQrcodeScan = createIcon(MaterialCommunityIcons, "qrcode-scan");
 const IconHistory = createIcon(FontAwesome5, "history");
+const IconClear = createIcon(Ionicons, "close");
 
 const TabIndexScreen: React.FC = () => {
     const [value, setValue] = useState("");
@@ -30,6 +32,8 @@ const TabIndexScreen: React.FC = () => {
 
     const { width } = useWindowDimensions();
     const insets = useSafeAreaInsets();
+    const { theme } = useStyles();
+
     const [fontsLoaded] = useFonts({
         Poppins_700Bold,
     });
@@ -89,6 +93,20 @@ const TabIndexScreen: React.FC = () => {
                             }}
                             onSubmitEditing={handleSubmitEditing}
                         />
+                        {value && (
+                            <InputSlot
+                                className="pr-3"
+                                onPress={() => {
+                                    setInputError(false);
+                                    setValue("");
+                                }}
+                            >
+                                <IconClear
+                                    size={24}
+                                    color={theme.colorTokens.buttonOutlineForeground("primary", "default")}
+                                />
+                            </InputSlot>
+                        )}
                     </Input>
                     <FormControlError>
                         <FormControlErrorIcon as={AlertCircleIcon} />
