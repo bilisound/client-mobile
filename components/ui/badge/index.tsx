@@ -102,7 +102,7 @@ type IPrimitiveIcon = React.ComponentPropsWithoutRef<typeof Svg> & {
 };
 
 const PrimitiveIcon = React.forwardRef<React.ElementRef<typeof Svg>, IPrimitiveIcon>(
-    ({ height, width, fill, color, size, stroke = "currentColor", as: AsComp, ...props }, ref) => {
+    ({ height, width, fill, color, size, stroke, as: AsComp, ...props }, ref) => {
         const sizeProps = useMemo(() => {
             if (size) return { size };
             if (height && width) return { height, width };
@@ -111,12 +111,20 @@ const PrimitiveIcon = React.forwardRef<React.ElementRef<typeof Svg>, IPrimitiveI
             return {};
         }, [size, height, width]);
 
-        const colorProps = stroke === "currentColor" && color !== undefined ? color : stroke;
-
-        if (AsComp) {
-            return <AsComp ref={ref} fill={fill} {...props} {...sizeProps} stroke={colorProps} />;
+        let colorProps = {};
+        if (color) {
+            colorProps = { ...colorProps, color };
         }
-        return <Svg ref={ref} height={height} width={width} fill={fill} stroke={colorProps} {...props} />;
+        if (stroke) {
+            colorProps = { ...colorProps, stroke };
+        }
+        if (fill) {
+            colorProps = { ...colorProps, fill };
+        }
+        if (AsComp) {
+            return <AsComp ref={ref} {...sizeProps} {...colorProps} {...props} />;
+        }
+        return <Svg ref={ref} height={height} width={width} {...colorProps} {...props} />;
     },
 );
 
