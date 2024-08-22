@@ -11,6 +11,8 @@ import {
     AlertDialogFooter,
     AlertDialogBody,
 } from "~/components/ui/alert-dialog";
+import { Box } from "~/components/ui/box";
+import { Button, ButtonText } from "~/components/ui/button";
 import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
 
@@ -24,17 +26,22 @@ export default function Page() {
     return (
         <View style={{ padding: 16, gap: 16 }}>
             <Text>Hello World!</Text>
-            <PotatoButton
-                onPress={() => {
-                    Toast.show({
-                        type: "success",
-                        text1: "测试消息".repeat(5),
-                        text2: "测试消息详情".repeat(5),
-                    });
-                }}
-            >
-                Toast 测试
-            </PotatoButton>
+            <Box className="flex flex-row items-center gap-2">
+                <PotatoButton
+                    onPress={() => {
+                        Toast.show({
+                            type: "success",
+                            text1: "测试消息".repeat(5),
+                            text2: "测试消息详情".repeat(5),
+                        });
+                    }}
+                >
+                    Toast 测试
+                </PotatoButton>
+                <Button>
+                    <ButtonText className="text-sm">Toast 测试</ButtonText>
+                </Button>
+            </Box>
             <PotatoButton onPress={() => setModalVisible(!modalVisible)}>Modal 测试</PotatoButton>
             <AlertDialog isOpen={modalVisible} onClose={handleClose} size="md">
                 <AlertDialogBackdrop />
