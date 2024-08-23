@@ -302,6 +302,9 @@ importers:
       sanitize-filename:
         specifier: ^1.6.3
         version: 1.6.3
+      semver:
+        specifier: ^7.6.3
+        version: 7.6.3
       shaka-player:
         specifier: ^4.10.9
         version: 4.10.9
@@ -342,6 +345,9 @@ importers:
       '@types/react':
         specifier: ~18.2.79
         version: 18.2.79
+      '@types/semver':
+        specifier: ^7.5.8
+        version: 7.5.8
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
@@ -6050,8 +6056,8 @@ packages:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
 
-  semver@7.6.0:
-    resolution: {integrity: sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==}
+  semver@7.6.3:
+    resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -7970,7 +7976,7 @@ snapshots:
   '@config-plugins/ffmpeg-kit-react-native@8.0.0(expo@51.0.28(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))':
     dependencies:
       expo: 51.0.28(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))
-      semver: 7.6.0
+      semver: 7.6.3
 
   '@egjs/hammerjs@2.0.17':
     dependencies:
@@ -8073,7 +8079,7 @@ snapshots:
       resolve: 1.22.8
       resolve-from: 5.0.0
       resolve.exports: 2.0.2
-      semver: 7.6.0
+      semver: 7.6.3
       send: 0.18.0
       slugify: 1.6.6
       source-map-support: 0.5.21
@@ -8111,7 +8117,7 @@ snapshots:
       getenv: 1.0.0
       glob: 7.1.6
       resolve-from: 5.0.0
-      semver: 7.6.0
+      semver: 7.6.3
       slash: 3.0.0
       slugify: 1.6.6
       xcode: 3.0.1
@@ -8131,7 +8137,7 @@ snapshots:
       getenv: 1.0.0
       glob: 7.1.6
       resolve-from: 5.0.0
-      semver: 7.6.0
+      semver: 7.6.3
       slash: 3.0.0
       slugify: 1.6.6
       xcode: 3.0.1
@@ -8151,7 +8157,7 @@ snapshots:
       glob: 7.1.6
       require-from-string: 2.0.2
       resolve-from: 5.0.0
-      semver: 7.6.0
+      semver: 7.6.3
       slugify: 1.6.6
       sucrase: 3.34.0
     transitivePeerDependencies:
@@ -8167,7 +8173,7 @@ snapshots:
       glob: 7.1.6
       require-from-string: 2.0.2
       resolve-from: 5.0.0
-      semver: 7.6.0
+      semver: 7.6.3
       slugify: 1.6.6
       sucrase: 3.34.0
     transitivePeerDependencies:
@@ -8213,7 +8219,7 @@ snapshots:
       node-fetch: 2.7.0
       parse-png: 2.1.0
       resolve-from: 5.0.0
-      semver: 7.6.0
+      semver: 7.6.3
       tempy: 0.3.0
     transitivePeerDependencies:
       - encoding
@@ -8289,7 +8295,7 @@ snapshots:
       expo-modules-autolinking: 1.11.2
       fs-extra: 9.1.0
       resolve-from: 5.0.0
-      semver: 7.6.0
+      semver: 7.6.3
       xml2js: 0.6.0
     transitivePeerDependencies:
       - encoding
@@ -8307,7 +8313,7 @@ snapshots:
       expo-modules-autolinking: 1.11.2
       fs-extra: 9.1.0
       resolve-from: 5.0.0
-      semver: 7.6.0
+      semver: 7.6.3
       xml2js: 0.6.0
     transitivePeerDependencies:
       - encoding
@@ -9044,7 +9050,7 @@ snapshots:
 
   '@npmcli/fs@3.1.1':
     dependencies:
-      semver: 7.6.0
+      semver: 7.6.3
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -9386,7 +9392,7 @@ snapshots:
       hermes-profile-transformer: 0.0.6
       node-stream-zip: 1.15.0
       ora: 5.4.1
-      semver: 7.6.0
+      semver: 7.6.3
       strip-ansi: 5.2.0
       wcwidth: 1.0.1
       yaml: 2.4.1
@@ -9457,7 +9463,7 @@ snapshots:
       node-fetch: 2.7.0
       open: 6.4.0
       ora: 5.4.1
-      semver: 7.6.0
+      semver: 7.6.3
       shell-quote: 1.8.1
       sudo-prompt: 9.2.1
     transitivePeerDependencies:
@@ -9485,7 +9491,7 @@ snapshots:
       fs-extra: 8.1.0
       graceful-fs: 4.2.11
       prompts: 2.4.2
-      semver: 7.6.0
+      semver: 7.6.3
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -10288,7 +10294,7 @@ snapshots:
       graphemer: 1.4.0
       ignore: 5.3.1
       natural-compare: 1.4.0
-      semver: 7.6.0
+      semver: 7.6.3
       ts-api-utils: 1.3.0(typescript@5.3.3)
     optionalDependencies:
       typescript: 5.3.3
@@ -10335,7 +10341,7 @@ snapshots:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.3
-      semver: 7.6.0
+      semver: 7.6.3
       ts-api-utils: 1.3.0(typescript@5.3.3)
     optionalDependencies:
       typescript: 5.3.3
@@ -10351,7 +10357,7 @@ snapshots:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/typescript-estree': 6.21.0(typescript@5.3.3)
       eslint: 8.57.0
-      semver: 7.6.0
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -11674,7 +11680,7 @@ snapshots:
     dependencies:
       ajv: 8.12.0
       expo: 51.0.28(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))
-      semver: 7.6.0
+      semver: 7.6.3
 
   expo-camera@15.0.14(expo@51.0.28(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))):
     dependencies:
@@ -12466,7 +12472,7 @@ snapshots:
       '@babel/parser': 7.24.1
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
-      semver: 7.6.0
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
 
@@ -12797,7 +12803,7 @@ snapshots:
       jest-util: 29.7.0
       natural-compare: 1.4.0
       pretty-format: 29.7.0
-      semver: 7.6.0
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
 
@@ -13216,7 +13222,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.6.0
+      semver: 7.6.3
 
   makeerror@1.0.12:
     dependencies:
@@ -13783,7 +13789,7 @@ snapshots:
       minimist: 1.2.8
       open: 7.4.2
       rimraf: 2.7.1
-      semver: 7.6.0
+      semver: 7.6.3
       slash: 2.0.0
       tmp: 0.0.33
       yaml: 2.4.1
@@ -14479,9 +14485,7 @@ snapshots:
 
   semver@6.3.1: {}
 
-  semver@7.6.0:
-    dependencies:
-      lru-cache: 6.0.0
+  semver@7.6.3: {}
 
   send@0.18.0:
     dependencies:
