@@ -4,9 +4,9 @@
   "version": "1.3.0",
   "scripts": {
     "start": "expo start",
-    "android": "DARK_MODE=media expo run:android",
-    "ios": "DARK_MODE=media expo run:ios",
-    "web": "DARK_MODE=media expo start --web",
+    "android": "cross-env DARK_MODE=media expo run:android",
+    "ios": "cross-env DARK_MODE=media expo run:ios",
+    "web": "cross-env DARK_MODE=media expo start --web",
     "prepare": "expo prebuild",
     "test": "jest --watchAll",
     "build:android": "eas build --platform android --local --output=dist/bilisound-app-release.apk",
@@ -133,6 +133,7 @@
     "@types/promise-memoize": "^1.2.4",
     "@types/react": "~18.2.79",
     "@types/uuid": "^9.0.8",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-universe": "^12.1.0",
@@ -148,5 +149,6 @@
   "resolutions": {
     "react-refresh": "~0.14.2"
   },
-  "private": true
+  "private": true,
+  "packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247"
 }
