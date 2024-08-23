@@ -10,6 +10,7 @@ import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
+import { VERSION } from "~/constants/releasing";
 import useSettingsStore from "~/store/settings";
 import log from "~/utils/logger";
 import { checkDirectorySize, cleanAudioCache } from "~/utils/misc";
@@ -152,7 +153,7 @@ const Settings: React.FC = () => {
                 <SettingMenuItem
                     icon={InfoIcon}
                     title="关于 Bilisound"
-                    subTitle={`版本 ${require("~/app.json").expo.version}`}
+                    subTitle={`版本 ${VERSION}`}
                     onPress={async () => {
                         router.push("/about");
                     }}

@@ -1,7 +1,7 @@
 import * as semver from "semver";
 
 import { USER_AGENT_BILISOUND } from "~/constants/network";
-import { RELEASE_CHANNEL } from "~/constants/release-channel";
+import { RELEASE_CHANNEL } from "~/constants/releasing";
 
 export interface CheckLatestVersionReturns {
     isLatest: boolean;

@@ -1,4 +1,4 @@
-import { ReleaseChannel } from "~/constants/release-channel";
+import { ReleaseChannel } from "~/constants/releasing";
 
 declare module "react-native-get-random-values" {}
 
