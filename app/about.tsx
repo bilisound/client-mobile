@@ -20,7 +20,7 @@ export default function Page() {
     const { data, isLoading, isError } = useQuery({
         queryKey: ["check_update"],
         queryFn: () => checkLatestVersion(VERSION),
-        staleTime: 10000,
+        staleTime: 86400_000,
     });
 
     function handleClose(positive: boolean) {

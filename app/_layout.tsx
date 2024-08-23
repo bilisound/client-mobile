@@ -5,21 +5,23 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { PortalProvider } from "@gorhom/portal";
 import { ThemeProvider } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import * as NavigationBar from "expo-navigation-bar";
 import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
-import React, { useEffect, useRef } from "react";
-import { Platform, useColorScheme } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Linking, Platform, useColorScheme } from "react-native";
 import Toast from "react-native-toast-message";
 import { UnistylesRuntime, useInitialTheme } from "react-native-unistyles";
 
 import AudioManager from "~/components/AudioManager";
+import CheckUpdateDialog from "~/components/CheckUpdateDialog";
 import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
 import { toastConfig } from "~/config/toast";
+import { VERSION } from "~/constants/releasing";
+import { checkLatestVersion } from "~/utils/check-release";
 import init from "~/utils/init";
-
 import "~/global.css";
 import "~/unistyles";
 
@@ -39,6 +41,31 @@ SplashScreen.preventAutoHideAsync();
 
 // Query Client
 const queryClient = new QueryClient();
+
+function CheckUpdate() {
+    // 检查更新处理
+    const [modalVisible, setModalVisible] = useState(false);
+    const { data } = useQuery({
+        queryKey: ["check_update"],
+        queryFn: () => checkLatestVersion(VERSION),
+        staleTime: 86400_000,
+    });
+
+    function handleClose(positive: boolean) {
+        setModalVisible(false);
+        if (positive) {
+            Linking.openURL(data!.downloadUrl);
+        }
+    }
+
+    useEffect(() => {
+        if (data && !data.isLatest) {
+            setModalVisible(true);
+        }
+    }, [data, setModalVisible]);
+
+    return <CheckUpdateDialog open={modalVisible} onClose={handleClose} result={data} />;
+}
 
 const RootLayoutNav = () => {
     const colorScheme = useColorScheme();
@@ -119,6 +146,7 @@ const RootLayoutNav = () => {
                         {routes}
                         <AudioManager />
                         <Toast config={toastConfig} />
+                        <CheckUpdate />
                     </PortalProvider>
                 </ThemeProvider>
             </QueryClientProvider>
