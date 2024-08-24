@@ -9,8 +9,8 @@ import { runTasksLimit } from "./promise";
 import { convertToHTTPS } from "./string";
 
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
-import { PlaylistDetailRow } from "~/storage/playlist";
 import { QUEUE_CURRENT_INDEX, QUEUE_LIST, queueStorage } from "~/storage/queue";
+import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { handleLegacyPlaylist } from "~/utils/migration/legacy-playlist";
 
 export async function saveTrackData() {
@@ -81,7 +81,7 @@ export async function loadTrackData() {
     await TrackPlayer.stop();
 }
 
-export async function playlistToTracks(input: PlaylistDetailRow[]) {
+export async function playlistToTracks(input: PlaylistDetail[]) {
     const newTracks: Track[] = input.map(e => ({
         url: Asset.fromModule(require("../assets/placeholder.mp3")) as any,
         title: e.title,
@@ -113,7 +113,7 @@ export async function playlistToTracks(input: PlaylistDetailRow[]) {
     return newTracks;
 }
 
-export function tracksToPlaylist(input: Track[]): PlaylistDetailRow[] {
+export function tracksToPlaylist(input: Track[]): PlaylistDetail[] {
     return input.map(e => ({
         author: e.artist ?? "",
         bvid: e.bilisoundId,
@@ -121,5 +121,8 @@ export function tracksToPlaylist(input: Track[]): PlaylistDetailRow[] {
         episode: e.bilisoundEpisode,
         title: e.title ?? "",
         imgUrl: e.artwork ?? "",
+        // todo
+        id: 0,
+        playlistId: 0,
     }));
 }

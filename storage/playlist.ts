@@ -3,13 +3,15 @@ import { v4 } from "uuid";
 
 import log from "../utils/logger";
 
+import { PlaylistMeta } from "~/storage/sqlite/schema";
+
 export const PLAYLIST_INDEX_KEY = "playlist_index";
 
 export const PLAYLIST_ITEM_KEY_PREFIX = "playlist_item_";
 
 export const PLAYLIST_ON_QUEUE = "playlist_on_queue";
 
-export interface PlaylistMeta {
+export interface PlaylistMetaLegacy {
     id: string;
     title: string;
     color: string;
@@ -17,7 +19,7 @@ export interface PlaylistMeta {
     createFromQueue?: boolean;
 }
 
-export interface PlaylistDetailRow {
+export interface PlaylistDetailRowLegacy {
     author: string;
     bvid: string;
     duration: number;
@@ -29,7 +31,7 @@ export interface PlaylistDetailRow {
 export const playlistStorage = new MMKV({ id: "storage-playlist" });
 
 export function usePlaylistStorage() {
-    return useMMKVObject<PlaylistMeta[]>(PLAYLIST_INDEX_KEY, playlistStorage);
+    return useMMKVObject<PlaylistMetaLegacy[]>(PLAYLIST_INDEX_KEY, playlistStorage);
 }
 
 export function usePlaylistOnQueue() {
@@ -70,33 +72,33 @@ export function getNewColor() {
     return `hsl(${Math.random() * 60 + Number(leastKey) * 60}, 80%, 50%)`;
 }
 
-export function addToPlaylist(id: string, row: PlaylistDetailRow | PlaylistDetailRow[]) {
+export function addToPlaylist(id: string, row: PlaylistDetailRowLegacy | PlaylistDetailRowLegacy[]) {
     const list = Array.isArray(row) ? row : [row];
     log.debug(`添加 ${list.length} 首歌曲到歌单 ${id}`);
 
-    const originalList: PlaylistDetailRow[] = JSON.parse(
+    const originalList: PlaylistDetailRowLegacy[] = JSON.parse(
         playlistStorage.getString(PLAYLIST_ITEM_KEY_PREFIX + id) || "[]",
     );
     originalList.push(...list);
     playlistStorage.set(PLAYLIST_ITEM_KEY_PREFIX + id, JSON.stringify(originalList));
 
     // 清空当前播放队列隶属歌单的状态机
-    const got: { value?: PlaylistMeta } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");
+    const got: { value?: PlaylistMetaLegacy } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");
     if (got?.value?.id === id) {
         invalidateOnQueueStatus();
     }
 }
 
-export function quickCreatePlaylist(title: string, row: PlaylistDetailRow | PlaylistDetailRow[]) {
+export function quickCreatePlaylist(title: string, row: PlaylistDetailRowLegacy | PlaylistDetailRowLegacy[]) {
     const list = Array.isArray(row) ? row : [row];
-    const item: PlaylistMeta = {
+    const item: PlaylistMetaLegacy = {
         id: v4(),
         color: getNewColor(),
         title,
         amount: list.length,
     };
     log.info(`快速创建歌单 ${title} (${item.id})`);
-    const originalList: PlaylistMeta[] = JSON.parse(playlistStorage.getString(PLAYLIST_INDEX_KEY) || "[]");
+    const originalList: PlaylistMetaLegacy[] = JSON.parse(playlistStorage.getString(PLAYLIST_INDEX_KEY) || "[]");
     originalList.push(item);
     playlistStorage.set(PLAYLIST_INDEX_KEY, JSON.stringify(originalList));
 
@@ -110,8 +112,8 @@ export function syncPlaylistAmount(id: string) {
         return;
     }
     log.debug(`对歌单 ${id} 进行同步曲目数量操作`);
-    const playlistMetas: PlaylistMeta[] = JSON.parse(playlistStorage.getString(PLAYLIST_INDEX_KEY) || "[]");
-    const playlistData: PlaylistDetailRow[] = JSON.parse(
+    const playlistMetas: PlaylistMetaLegacy[] = JSON.parse(playlistStorage.getString(PLAYLIST_INDEX_KEY) || "[]");
+    const playlistData: PlaylistDetailRowLegacy[] = JSON.parse(
         playlistStorage.getString(PLAYLIST_ITEM_KEY_PREFIX + id) || "[]",
     );
 

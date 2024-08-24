@@ -1,12 +1,12 @@
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
+import { useQuery } from "@tanstack/react-query";
 import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Alert, useColorScheme, View, Text } from "react-native";
-import { useMMKVObject } from "react-native-mmkv";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { useStyles, createStyleSheet } from "react-native-unistyles";
 
@@ -18,22 +18,21 @@ import Button from "~/components/potato-ui/Button";
 import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import useMultiSelect from "~/hooks/useMultiSelect";
+import { usePlaylistOnQueue } from "~/storage/playlist";
 import {
-    PLAYLIST_ITEM_KEY_PREFIX,
-    PlaylistDetailRow,
-    PlaylistMeta,
-    playlistStorage,
+    deletePlaylistDetail,
+    getPlaylistDetail,
+    getPlaylistMeta,
     syncPlaylistAmount,
-    usePlaylistOnQueue,
-    usePlaylistStorage,
-} from "~/storage/playlist";
+} from "~/storage/sqlite/playlist";
+import { PlaylistDetail, PlaylistMeta } from "~/storage/sqlite/schema";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import log from "~/utils/logger";
 import { playlistToTracks } from "~/utils/track-data";
 
 const IconPlay = createIcon(Ionicons, "play");
 
-function extractAndProcessImgUrls(playlistDetails: PlaylistDetailRow[]) {
+function extractAndProcessImgUrls(playlistDetails: PlaylistDetail[]) {
     const imgUrls = playlistDetails.map(detail => detail.imgUrl);
     return Array.from(new Set(imgUrls));
 }
@@ -107,26 +106,39 @@ export default function Page() {
     const colorMode = useColorScheme();
     const { id } = useLocalSearchParams<{ id: string }>();
 
-    const [playlistMeta = []] = usePlaylistStorage();
+    /*const [playlistMeta = []] = usePlaylistStorage();
     const [playlistDetail = [], setPlaylistDetail] = useMMKVObject<PlaylistDetailRow[]>(
         PLAYLIST_ITEM_KEY_PREFIX + id,
         playlistStorage,
     );
+    const [playlistOnQueue = {}, setPlaylistOnQueue] = usePlaylistOnQueue();*/
+
     const [playlistOnQueue = {}, setPlaylistOnQueue] = usePlaylistOnQueue();
+
+    const { data: metaRaw } = useQuery({
+        queryKey: [`playlist_meta_${id}`],
+        queryFn: () => getPlaylistMeta(Number(id)),
+    });
+
+    const meta = metaRaw?.[0];
+
+    const { data: playlistDetail = [] } = useQuery({
+        queryKey: [`playlist_detail_${id}`],
+        queryFn: () => getPlaylistDetail(Number(id)),
+    });
+
     const activeTrack = useActiveTrack();
 
     const [contentHeight, setContentHeight] = useState(0);
     const [viewHeight, setViewHeight] = useState(0);
     const enableUnderLayerColor = contentHeight > viewHeight;
 
-    const meta = playlistMeta.find(e => e.id === id);
-
     // 多选管理
     const { clear, toggle, selected, setAll, reverse } = useMultiSelect<number>();
     const [editing, setEditing] = useState(false);
 
     async function handleRequestPlay(index: number) {
-        if (playlistOnQueue.value?.id === id && activeTrack) {
+        if (playlistOnQueue.value?.id === Number(id) && activeTrack) {
             log.debug("当前队列中的内容来自本歌单，就地跳转");
             await TrackPlayer.skip(index);
             return;
@@ -175,24 +187,18 @@ export default function Page() {
             {
                 text: "确定",
                 style: "default",
-                onPress: () => {
-                    setPlaylistDetail((prevValue = []) => {
-                        Array.from(selected)
-                            .sort((a, b) => b - a)
-                            .forEach(e => {
-                                prevValue.splice(e, 1);
-                            });
-                        return prevValue.concat();
-                    });
-                    clear();
-                    if (playlistOnQueue.value?.id === id) {
-                        setPlaylistOnQueue({});
+                onPress: async () => {
+                    for (const e of selected) {
+                        await deletePlaylistDetail(Number(id), e);
                     }
-                    syncPlaylistAmount(id!);
+                    await syncPlaylistAmount(Number(id));
+                    if (playlistOnQueue.value?.id === Number(id)) {
+                        setPlaylistOnQueue(undefined);
+                    }
                 },
             },
         ]);
-    }, [clear, id, playlistOnQueue.value?.id, selected, setPlaylistDetail, setPlaylistOnQueue]);
+    }, [id, playlistOnQueue.value?.id, selected, setPlaylistOnQueue]);
 
     // 返回时先关闭编辑模式
     const navigation = useNavigation();

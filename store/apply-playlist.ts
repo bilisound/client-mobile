@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
-import { PlaylistDetailRow } from "~/storage/playlist";
+import { PlaylistDetail } from "~/storage/sqlite/schema";
 
 export interface ApplyPlaylistProps {
-    playlistDetail: PlaylistDetailRow[] | null;
+    playlistDetail: PlaylistDetail[] | null;
     name: string;
 }
 
