@@ -1,5 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
@@ -10,7 +11,7 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 import CommonLayout from "~/components/CommonLayout";
 import PlaylistItem from "~/components/PlaylistItem";
 import Pressable from "~/components/potato-ui/Pressable";
-import { addToPlaylist, quickCreatePlaylist, syncPlaylistAmount, usePlaylistStorage } from "~/storage/playlist";
+import { addToPlaylist, getPlaylistMetas, syncPlaylistAmount } from "~/storage/sqlite/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 
@@ -25,7 +26,14 @@ export default function Page() {
 
     // console.log(JSON.stringify(playlistDetail, null, 2));
 
-    const [playlistStorage] = usePlaylistStorage();
+    // const [playlistStorage] = usePlaylistStorage();
+
+    const queryClient = useQueryClient();
+    const { data } = useQuery({
+        queryKey: ["playlist_meta"],
+        queryFn: getPlaylistMetas,
+    });
+
     return (
         <CommonLayout title="添加到歌单" leftAccessories="backButton">
             <View style={styles.container}>
@@ -56,7 +64,8 @@ export default function Page() {
                     <Pressable
                         style={[styles.pressable]}
                         onPress={() => {
-                            quickCreatePlaylist(name, playlistDetail ?? []);
+                            // todo
+                            // quickCreatePlaylist(name, playlistDetail ?? []);
                             Toast.show({
                                 type: "success",
                                 text1: "歌单创建成功",
@@ -78,9 +87,11 @@ export default function Page() {
                     return (
                         <PlaylistItem
                             item={item.item}
-                            onPress={() => {
-                                addToPlaylist(item.item.id, playlistDetail ?? []);
-                                syncPlaylistAmount(item.item.id);
+                            onPress={async () => {
+                                await addToPlaylist(item.item.id, playlistDetail ?? []);
+                                await syncPlaylistAmount(item.item.id);
+                                await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+                                await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${item.item.id}`] });
                                 Toast.show({
                                     type: "success",
                                     text1: "曲目添加成功",
@@ -91,7 +102,7 @@ export default function Page() {
                         />
                     );
                 }}
-                data={playlistStorage}
+                data={data}
                 estimatedItemSize={86}
             />
         </CommonLayout>

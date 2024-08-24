@@ -1,7 +1,7 @@
 import { and, eq, count as countFunc, InferInsertModel } from "drizzle-orm";
 
 import { db } from "~/storage/sqlite/main";
-import { playlistDetail, playlistMeta } from "~/storage/sqlite/schema";
+import { PlaylistDetail, playlistDetail, playlistMeta } from "~/storage/sqlite/schema";
 
 // 歌单元数据部分
 
@@ -27,8 +27,22 @@ export async function getPlaylistDetail(playlistId: number) {
     return db.select().from(playlistDetail).where(eq(playlistDetail.playlistId, playlistId));
 }
 
+export async function insertPlaylistDetail(data: InferInsertModel<typeof playlistDetail>) {
+    return db.insert(playlistDetail).values(data);
+}
+
 export async function deletePlaylistDetail(playlistId: number, id: number) {
     return db.delete(playlistDetail).where(and(eq(playlistDetail.playlistId, playlistId), eq(playlistDetail.id, id)));
+}
+
+// 复杂操作部分
+
+export async function addToPlaylist(playlistId: number, playlist: PlaylistDetail | PlaylistDetail[]) {
+    const parsedPlaylist = Array.isArray(playlist) ? playlist : [playlist];
+    for (let i = 0; i < parsedPlaylist.length; i++) {
+        const e = parsedPlaylist[i];
+        await insertPlaylistDetail({ ...e, playlistId });
+    }
 }
 
 export async function syncPlaylistAmount(playlistId: number) {
