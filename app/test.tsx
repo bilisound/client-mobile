@@ -17,7 +17,7 @@ import { Button, ButtonText } from "~/components/ui/button";
 import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
 import { db } from "~/storage/sqlite/main";
-import { PlaylistMeta } from "~/storage/sqlite/schema";
+import { playlistMeta } from "~/storage/sqlite/schema";
 import log from "~/utils/logger";
 
 export default function Page() {
@@ -51,7 +51,7 @@ export default function Page() {
                 color="amber"
                 onPress={() => {
                     const response = db
-                        .insert(PlaylistMeta)
+                        .insert(playlistMeta)
                         .values({
                             title: "测试列表",
                             color: "#66ccff",
@@ -67,7 +67,7 @@ export default function Page() {
             <PotatoButton
                 color="sky"
                 onPress={() => {
-                    const response = db.select().from(PlaylistMeta);
+                    const response = db.select().from(playlistMeta);
                     const all = response.all();
                     all.forEach(({ id, title, color, amount, createFromQueue }) => {
                         log.info({ id, title, color, amount, createFromQueue });

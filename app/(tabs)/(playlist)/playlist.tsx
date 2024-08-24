@@ -1,5 +1,6 @@
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import React, { createContext, useContext, useState } from "react";
 import { Alert, Platform } from "react-native";
@@ -22,18 +23,13 @@ import {
 } from "~/components/ui/actionsheet";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
-import useCommonColors from "~/hooks/useCommonColors";
-import {
-    invalidateOnQueueStatus,
-    PLAYLIST_ON_QUEUE,
-    PlaylistMeta,
-    playlistStorage,
-    usePlaylistStorage,
-} from "~/storage/playlist";
+import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
+import { deletePlaylistMeta, getPlaylistMetas } from "~/storage/sqlite/playlist";
+import { PlaylistMeta } from "~/storage/sqlite/schema";
 import log from "~/utils/logger";
 
 interface PlaylistContextProps {
-    onLongPress: (id: string) => void;
+    onLongPress: (id: number) => void;
 }
 
 const IconQrcodeScan = createIcon(MaterialCommunityIcons, "qrcode-scan");
@@ -132,28 +128,26 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 }
 
 export default function Page() {
-    const [list = [], setList] = usePlaylistStorage();
+    const queryClient = useQueryClient();
+    const { data } = useQuery({
+        queryKey: ["playlist_meta"],
+        queryFn: getPlaylistMetas,
+    });
 
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PlaylistMeta | undefined>();
 
     const handleClose = () => setShowActionSheet(prevState => !prevState);
 
-    const handleLongPress = (id: string) => {
-        setDisplayTrack(list.find(e => e.id === id));
+    const handleLongPress = (id: number) => {
+        setDisplayTrack(data?.find(e => e.id === id));
         setShowActionSheet(true);
     };
 
-    const handleDelete = () => {
-        setList((prevValue = []) => {
-            log.info("用户删除歌单");
-            const found = prevValue.findIndex(e => e.id === displayTrack?.id);
-            if (found < 0) {
-                log.error(`删除参数异常！found: ${found}, displayTrack?.id: ${displayTrack?.id}`);
-                return prevValue;
-            }
-            return prevValue.toSpliced(found, 1);
-        });
+    const handleDelete = async () => {
+        log.info("用户删除歌单");
+        await deletePlaylistMeta(displayTrack!.id);
+        await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
 
         // 清空当前播放队列隶属歌单的状态机
         const got: { value?: PlaylistMeta } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");
@@ -190,7 +184,7 @@ export default function Page() {
                     </>
                 }
             >
-                {list.length <= 0 ? (
+                {(data ?? []).length <= 0 ? (
                     <Empty
                         action="添加新列表"
                         onPress={() => {
@@ -200,7 +194,7 @@ export default function Page() {
                 ) : (
                     <FlashList
                         renderItem={item => <PlaylistActionItem {...item.item} />}
-                        data={list}
+                        data={data}
                         estimatedItemSize={73}
                     />
                 )}

@@ -4,7 +4,7 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import Pressable from "./potato-ui/Pressable";
 
-import { PlaylistMeta } from "~/storage/playlist";
+import { PlaylistMeta } from "~/storage/sqlite/schema";
 
 export interface PlaylistItemProps {
     item: PlaylistMeta;
@@ -18,6 +18,12 @@ export interface PlaylistItemProps {
 export default function PlaylistItem({ item, onPress, onLongPress }: PlaylistItemProps) {
     const { styles } = useStyles(stylesheet);
 
+    let title = item.title;
+
+    if (process.env.NODE_ENV !== "production") {
+        title = `[${item.id}] ${title}`;
+    }
+
     return (
         <Pressable style={styles.container} onPress={onPress} onLongPress={onLongPress}>
             <View style={styles.row}>
@@ -25,7 +31,7 @@ export default function PlaylistItem({ item, onPress, onLongPress }: PlaylistIte
                     <View style={[styles.colorDot, { backgroundColor: item.color }]} />
                 </View>
                 <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-                    {item.title}
+                    {title}
                 </Text>
             </View>
             <Text style={styles.subtitle}>{`${item.amount} 首歌曲`}</Text>
