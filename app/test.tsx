@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
+import { v4 } from "uuid";
 
 import PotatoButton from "~/components/potato-ui/Button";
 import {
@@ -15,6 +16,9 @@ import { Box } from "~/components/ui/box";
 import { Button, ButtonText } from "~/components/ui/button";
 import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
+import { db } from "~/storage/sqlite/main";
+import { PlaylistMeta } from "~/storage/sqlite/schema";
+import log from "~/utils/logger";
 
 export default function Page() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -43,6 +47,35 @@ export default function Page() {
                 </Button>
             </Box>
             <PotatoButton onPress={() => setModalVisible(!modalVisible)}>Modal 测试</PotatoButton>
+            <PotatoButton
+                color="amber"
+                onPress={() => {
+                    const response = db
+                        .insert(PlaylistMeta)
+                        .values({
+                            title: "测试列表",
+                            color: "#66ccff",
+                            amount: 0,
+                            createFromQueue: 0,
+                        })
+                        .run();
+                    log.info(response);
+                }}
+            >
+                SQLite 插入测试
+            </PotatoButton>
+            <PotatoButton
+                color="sky"
+                onPress={() => {
+                    const response = db.select().from(PlaylistMeta);
+                    const all = response.all();
+                    all.forEach(({ id, title, color, amount, createFromQueue }) => {
+                        log.info({ id, title, color, amount, createFromQueue });
+                    });
+                }}
+            >
+                SQLite 读取测试
+            </PotatoButton>
             <AlertDialog isOpen={modalVisible} onClose={handleClose} size="md">
                 <AlertDialogBackdrop />
                 <AlertDialogContent>

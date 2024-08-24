@@ -8,6 +8,7 @@ import { loadTrackData } from "./track-data";
 import useSettingsStore from "../store/settings";
 
 import { BILISOUND_LOG_PATH, BILISOUND_OFFLINE_PATH } from "~/constants/file";
+import { initDatabase } from "~/storage/sqlite/init";
 
 export default async function init() {
     // 日志系统初始化
@@ -22,6 +23,14 @@ export default async function init() {
         log.debug("目录初始化成功");
     } catch (e) {
         log.error(`目录初始化失败。原因：${e}`);
+    }
+
+    // 数据库初始化
+    try {
+        initDatabase();
+        log.debug("数据库初始化成功");
+    } catch (e) {
+        log.error(`数据库初始化失败。原因：${e}`);
     }
 
     // 播放服务初始化
