@@ -72,7 +72,6 @@ export async function insertPlaylistDetail(data: InferInsertModel<typeof playlis
 
 /**
  * 删除歌单列表项
- * @param playlistId
  * @param id
  */
 export async function deletePlaylistDetail(id: number) {
@@ -126,14 +125,13 @@ export async function quickCreatePlaylist(name: string, list: PlaylistDetail[]) 
                     .toString(16)
                     .padStart(6, "0"), // 生成随机颜色
             amount: list.length,
-            createFromQueue: 0,
         })
         .returning();
 
     const playlistId = newPlaylist[0].id;
 
     // 将 list 中的数据插入到 playlistDetail 表
-    const builtList = list.map(e => ({ ...e, playlistId }));
+    const builtList = list.map(e => omit({ ...e, playlistId }, "id"));
     await db.insert(playlistDetail).values(builtList);
 
     return playlistId;

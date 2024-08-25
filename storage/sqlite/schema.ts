@@ -7,7 +7,6 @@ export const playlistMeta = sqliteTable("playlist_meta", {
     title: text("title").notNull(),
     color: text("color").notNull(),
     amount: integer("amount").notNull(),
-    createFromQueue: integer("create_from_queue"),
 });
 
 // 定义 playlist_detail 表

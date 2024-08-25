@@ -55,7 +55,6 @@ export default function Page() {
                             title: "测试列表",
                             color: "#66ccff",
                             amount: 0,
-                            createFromQueue: 0,
                         })
                         .run();
                     log.info(response);
@@ -68,8 +67,8 @@ export default function Page() {
                 onPress={() => {
                     const response = db.select().from(playlistMeta);
                     const all = response.all();
-                    all.forEach(({ id, title, color, amount, createFromQueue }) => {
-                        log.info({ id, title, color, amount, createFromQueue });
+                    all.forEach(({ id, title, color, amount }) => {
+                        log.info({ id, title, color, amount });
                     });
                 }}
             >

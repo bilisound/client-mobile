@@ -1,13 +1,14 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
+import omit from "lodash/omit";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "~/components/CommonLayout";
+import PotatoButton from "~/components/potato-ui/Button";
 import { Box } from "~/components/ui/box";
-import { Button, ButtonText } from "~/components/ui/button";
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import {
     FormControl,
@@ -32,6 +33,8 @@ import { tracksToPlaylist } from "~/utils/track-data";
 
 const MAGIC_ID_NEW_ENTRY = "new";
 
+type PlaylistMetaFrom = PlaylistMeta & { createFromQueue: boolean };
+
 export default function Page() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const queryClient = useQueryClient();
@@ -54,21 +57,21 @@ export default function Page() {
         control,
         handleSubmit,
         formState: { errors },
-    } = useForm<PlaylistMeta>({
+    } = useForm<PlaylistMetaFrom>({
         defaultValues,
     });
 
-    async function onSubmit(value: PlaylistMeta) {
+    async function onSubmit(value: PlaylistMetaFrom) {
         const isCreate = !value.id;
         let id = value.id;
 
         if (isCreate) {
             log.info("用户创建新的歌单");
-            const result = await insertPlaylistMeta(value);
+            const result = await insertPlaylistMeta(omit(value, "createFromQueue"));
             id = result.lastInsertRowId;
         } else {
             log.info("用户编辑已有歌单");
-            await setPlaylistMeta(value);
+            await setPlaylistMeta(omit(value, "createFromQueue"));
         }
         log.debug(`歌单详情：${JSON.stringify(value)}, id: ${id}`);
 
@@ -145,27 +148,25 @@ export default function Page() {
                                     value={String(value)}
                                     aria-label="从当前队列创建歌单"
                                 >
-                                    <CheckboxIndicator className="mr-2">
+                                    <CheckboxIndicator>
                                         <CheckboxIcon as={CheckIcon} />
                                     </CheckboxIndicator>
                                     <CheckboxLabel className="text-sm">从当前队列创建歌单</CheckboxLabel>
                                 </Checkbox>
                             )}
                             name="createFromQueue"
-                            defaultValue={0}
+                            defaultValue={false}
                         />
                     </FormControl>
                 )}
-                <Button
-                    size="md"
+                <PotatoButton
                     variant="solid"
-                    action="primary"
+                    color="primary"
                     onPress={handleSubmit(onSubmit)}
-                    isDisabled={!!errors.title}
-                    className="bg-primary-600"
+                    disabled={!!errors.title}
                 >
-                    <ButtonText className="font-medium text-sm">保存</ButtonText>
-                </Button>
+                    保存
+                </PotatoButton>
             </Box>
         </CommonLayout>
     );
