@@ -24,10 +24,6 @@ export default function Page() {
         name: state.name,
     }));
 
-    // console.log(JSON.stringify(playlistDetail, null, 2));
-
-    // const [playlistStorage] = usePlaylistStorage();
-
     const queryClient = useQueryClient();
     const { data } = useQuery({
         queryKey: ["playlist_meta"],

@@ -89,7 +89,7 @@ export async function deletePlaylistDetail(id: number) {
  * @param playlist
  */
 export async function addToPlaylist(playlistId: number, playlist: InferInsertModel<typeof playlistDetail>[]) {
-    const parsedPlaylist = playlist.map(e => ({ ...e, playlistId }));
+    const parsedPlaylist = playlist.map(e => omit({ ...e, playlistId }, "id"));
     await db.insert(playlistDetail).values(parsedPlaylist);
 }
 
