@@ -182,21 +182,24 @@ export default function Page() {
                 text: "确定",
                 style: "default",
                 onPress: async () => {
-                    // todo 删除歌单项目还不工作
+                    // 注意，这里的 selected 是数组的 index，不是项目在数据库中的 id！！
                     for (const e of selected) {
-                        await deletePlaylistDetail(Number(id), e);
+                        await deletePlaylistDetail(playlistDetail[e].id);
                     }
                     await syncPlaylistAmount(Number(id));
-                    await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
-                    await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] });
-                    await queryClient.invalidateQueries({ queryKey: [`playlist_detail_${id}`] });
+                    await Promise.all([
+                        queryClient.invalidateQueries({ queryKey: ["playlist_meta"] }),
+                        queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] }),
+                        queryClient.invalidateQueries({ queryKey: [`playlist_detail_${id}`] }),
+                    ]);
                     if (playlistOnQueue.value?.id === Number(id)) {
                         setPlaylistOnQueue(undefined);
                     }
+                    clear();
                 },
             },
         ]);
-    }, [id, playlistOnQueue.value?.id, selected, setPlaylistOnQueue]);
+    }, [clear, id, playlistDetail, playlistOnQueue.value?.id, queryClient, selected, setPlaylistOnQueue]);
 
     // 返回时先关闭编辑模式
     const navigation = useNavigation();

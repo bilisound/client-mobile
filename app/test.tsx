@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
-import { v4 } from "uuid";
 
 import PotatoButton from "~/components/potato-ui/Button";
 import {

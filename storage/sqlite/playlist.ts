@@ -1,4 +1,4 @@
-import { and, eq, count as countFunc, InferInsertModel } from "drizzle-orm";
+import { eq, count as countFunc, InferInsertModel } from "drizzle-orm";
 import omit from "lodash/omit";
 
 import { db } from "~/storage/sqlite/main";
@@ -75,8 +75,8 @@ export async function insertPlaylistDetail(data: InferInsertModel<typeof playlis
  * @param playlistId
  * @param id
  */
-export async function deletePlaylistDetail(playlistId: number, id: number) {
-    return db.delete(playlistDetail).where(and(eq(playlistDetail.playlistId, playlistId), eq(playlistDetail.id, id)));
+export async function deletePlaylistDetail(id: number) {
+    return db.delete(playlistDetail).where(eq(playlistDetail.id, id));
 }
 
 // ============================================================================
