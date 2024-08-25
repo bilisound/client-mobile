@@ -2,13 +2,16 @@ import { MMKV, useMMKVObject } from "react-native-mmkv";
 
 import { PlaylistMeta } from "~/storage/sqlite/schema";
 
-export const PLAYLIST_INDEX_KEY = "playlist_index";
+export const LEGACY_PLAYLIST_INDEX_KEY = "playlist_index";
 
-export const PLAYLIST_ITEM_KEY_PREFIX = "playlist_item_";
+export const LEGACY_PLAYLIST_ITEM_KEY_PREFIX = "playlist_item_";
 
 export const PLAYLIST_ON_QUEUE = "playlist_on_queue";
 
-export interface PlaylistMetaLegacy {
+// 播放列表数据库版本
+export const PLAYLIST_DB_VERSION = "playlist_db_version";
+
+export interface LegacyPlaylistMeta {
     id: string;
     title: string;
     color: string;
@@ -16,7 +19,7 @@ export interface PlaylistMetaLegacy {
     createFromQueue?: boolean;
 }
 
-export interface PlaylistDetailRowLegacy {
+export interface LegacyPlaylistDetailRow {
     author: string;
     bvid: string;
     duration: number;

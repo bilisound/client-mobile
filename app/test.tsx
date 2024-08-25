@@ -15,9 +15,11 @@ import { Box } from "~/components/ui/box";
 import { Button, ButtonText } from "~/components/ui/button";
 import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
+import { PLAYLIST_DB_VERSION, playlistStorage } from "~/storage/playlist";
 import { db } from "~/storage/sqlite/main";
 import { playlistMeta } from "~/storage/sqlite/schema";
 import log from "~/utils/logger";
+import { handlePlaylist } from "~/utils/migration/playlist";
 
 export default function Page() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -49,18 +51,10 @@ export default function Page() {
             <PotatoButton
                 color="amber"
                 onPress={() => {
-                    const response = db
-                        .insert(playlistMeta)
-                        .values({
-                            title: "测试列表",
-                            color: "#66ccff",
-                            amount: 0,
-                        })
-                        .run();
-                    log.info(response);
+                    playlistStorage.set(PLAYLIST_DB_VERSION, 0);
                 }}
             >
-                SQLite 插入测试
+                重置 PLAYLIST_DB_VERSION 以触发迁移程序
             </PotatoButton>
             <PotatoButton
                 color="sky"
