@@ -11,7 +11,7 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 import CommonLayout from "~/components/CommonLayout";
 import PlaylistItem from "~/components/PlaylistItem";
 import Pressable from "~/components/potato-ui/Pressable";
-import { addToPlaylist, getPlaylistMetas, syncPlaylistAmount } from "~/storage/sqlite/playlist";
+import { addToPlaylist, getPlaylistMetas, quickCreatePlaylist, syncPlaylistAmount } from "~/storage/sqlite/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 
@@ -63,9 +63,9 @@ export default function Page() {
                 ListHeaderComponent={
                     <Pressable
                         style={[styles.pressable]}
-                        onPress={() => {
-                            // todo
-                            // quickCreatePlaylist(name, playlistDetail ?? []);
+                        onPress={async () => {
+                            await quickCreatePlaylist(name, playlistDetail ?? []);
+                            await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
                             Toast.show({
                                 type: "success",
                                 text1: "歌单创建成功",

@@ -32,19 +32,6 @@ export async function saveTrackData() {
             queueStorage.set(QUEUE_CURRENT_INDEX, current || 0);
         })(),
     ]);
-    /*const tracks = await TrackPlayer.getQueue();
-    const current = await TrackPlayer.getActiveTrackIndex();
-
-    await RNFS.writeFile(
-        BILISOUND_PERSIST_QUEUE_PATH,
-        JSON.stringify({ tracks, current }, (key, value) => {
-            if (key === "url") {
-                return undefined;
-            }
-            return value;
-        }),
-        "utf8",
-    );*/
 }
 
 export async function loadTrackData() {
@@ -121,7 +108,7 @@ export function tracksToPlaylist(input: Track[]): PlaylistDetail[] {
         episode: e.bilisoundEpisode,
         title: e.title ?? "",
         imgUrl: e.artwork ?? "",
-        // todo
+        // 注意，这里的 id 和 playlistId 需要在事后填充
         id: 0,
         playlistId: 0,
     }));
