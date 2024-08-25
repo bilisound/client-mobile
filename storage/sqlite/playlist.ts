@@ -1,4 +1,5 @@
 import { and, eq, count as countFunc, InferInsertModel } from "drizzle-orm";
+import omit from "lodash/omit";
 
 import { db } from "~/storage/sqlite/main";
 import { PlaylistDetail, playlistDetail, playlistMeta } from "~/storage/sqlite/schema";
@@ -35,7 +36,18 @@ export async function deletePlaylistMeta(id: number) {
  * @param meta
  */
 export async function setPlaylistMeta(meta: Partial<InferInsertModel<typeof playlistMeta>> & { id: number }) {
-    return db.update(playlistMeta).set(meta).where(eq(playlistMeta.id, meta.id));
+    return db
+        .update(playlistMeta)
+        .set(omit(meta, ["id"]))
+        .where(eq(playlistMeta.id, meta.id));
+}
+
+/**
+ * 插入歌单元数据
+ * @param meta
+ */
+export async function insertPlaylistMeta(meta: InferInsertModel<typeof playlistMeta>) {
+    return db.insert(playlistMeta).values(meta);
 }
 
 // ============================================================================
@@ -76,8 +88,8 @@ export async function deletePlaylistDetail(playlistId: number, id: number) {
  * @param playlistId
  * @param playlist
  */
-export async function addToPlaylist(playlistId: number, playlist: PlaylistDetail | PlaylistDetail[]) {
-    const parsedPlaylist = (Array.isArray(playlist) ? playlist : [playlist]).map(e => ({ ...e, playlistId }));
+export async function addToPlaylist(playlistId: number, playlist: InferInsertModel<typeof playlistDetail>[]) {
+    const parsedPlaylist = playlist.map(e => ({ ...e, playlistId }));
     await db.insert(playlistDetail).values(parsedPlaylist);
 }
 

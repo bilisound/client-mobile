@@ -55,6 +55,8 @@ function Header({ data, mode }: HeaderProps) {
                     episode: 1,
                     title: e.title,
                     imgUrl: e.cover ?? "",
+                    id: 0,
+                    playlistId: 0,
                 })),
             );
             setName(data.meta.name);

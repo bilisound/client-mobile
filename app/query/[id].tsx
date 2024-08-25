@@ -185,6 +185,8 @@ const QueryIdScreen: React.FC = () => {
                         episode: item.page,
                         title: item.part,
                         imgUrl: data!.data.pic,
+                        id: 0,
+                        playlistId: 0,
                     }}
                 />
             );
@@ -297,6 +299,8 @@ const QueryIdScreen: React.FC = () => {
                                     episode: displayTrack.page,
                                     title: displayTrack.part,
                                     imgUrl: data?.data.pic ?? "",
+                                    id: 0,
+                                    playlistId: 0,
                                 },
                             ]);
                             break;

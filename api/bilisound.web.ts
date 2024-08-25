@@ -1,7 +1,7 @@
 import { defineWrap } from "./common";
 
 import { BILIBILI_VIDEO_URL_PREFIX, BILISOUND_API_PREFIX, USER_AGENT_BILISOUND } from "~/constants/network";
-import { PlaylistDetailRow } from "~/storage/playlist";
+import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { Numberish } from "~/typings/common";
 
 /**
@@ -94,5 +94,5 @@ export async function getTransferList(id: string) {
             "user-agent": USER_AGENT_BILISOUND,
         },
     });
-    return defineWrap<PlaylistDetailRow[] | null>(await response.json());
+    return defineWrap<PlaylistDetail[] | null>(await response.json());
 }

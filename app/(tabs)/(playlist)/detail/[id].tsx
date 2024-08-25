@@ -1,6 +1,6 @@
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -106,13 +106,6 @@ export default function Page() {
     const colorMode = useColorScheme();
     const { id } = useLocalSearchParams<{ id: string }>();
 
-    /*const [playlistMeta = []] = usePlaylistStorage();
-    const [playlistDetail = [], setPlaylistDetail] = useMMKVObject<PlaylistDetailRow[]>(
-        PLAYLIST_ITEM_KEY_PREFIX + id,
-        playlistStorage,
-    );
-    const [playlistOnQueue = {}, setPlaylistOnQueue] = usePlaylistOnQueue();*/
-
     const [playlistOnQueue = {}, setPlaylistOnQueue] = usePlaylistOnQueue();
 
     const { data: metaRaw } = useQuery({
@@ -122,6 +115,7 @@ export default function Page() {
 
     const meta = metaRaw?.[0];
 
+    const queryClient = useQueryClient();
     const { data: playlistDetail = [] } = useQuery({
         queryKey: [`playlist_detail_${id}`],
         queryFn: () => getPlaylistDetail(Number(id)),
@@ -188,10 +182,14 @@ export default function Page() {
                 text: "确定",
                 style: "default",
                 onPress: async () => {
+                    // todo 删除歌单项目还不工作
                     for (const e of selected) {
                         await deletePlaylistDetail(Number(id), e);
                     }
                     await syncPlaylistAmount(Number(id));
+                    await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+                    await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] });
+                    await queryClient.invalidateQueries({ queryKey: [`playlist_detail_${id}`] });
                     if (playlistOnQueue.value?.id === Number(id)) {
                         setPlaylistOnQueue(undefined);
                     }

@@ -1,9 +1,9 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
-import { v4 } from "uuid";
 
 import CommonLayout from "~/components/CommonLayout";
 import { Box } from "~/components/ui/box";
@@ -19,18 +19,37 @@ import {
 } from "~/components/ui/form-control";
 import { AlertCircleIcon, CheckIcon } from "~/components/ui/icon";
 import { Input, InputField } from "~/components/ui/input";
-import { addToPlaylist, getNewColor, PlaylistMeta, syncPlaylistAmount, usePlaylistStorage } from "~/storage/playlist";
+import {
+    addToPlaylist,
+    getPlaylistMeta,
+    insertPlaylistMeta,
+    setPlaylistMeta,
+    syncPlaylistAmount,
+} from "~/storage/sqlite/playlist";
+import { PlaylistMeta } from "~/storage/sqlite/schema";
 import log from "~/utils/logger";
 import { tracksToPlaylist } from "~/utils/track-data";
 
 const MAGIC_ID_NEW_ENTRY = "new";
 
 export default function Page() {
-    // const toast = useToast();
-    // const containerStyle = useToastContainerStyle();
     const { id } = useLocalSearchParams<{ id: string }>();
-    const [list = [], setList] = usePlaylistStorage();
-    const defaultValues = list.find(e => e.id === id) ?? { id: "", title: "", color: "", amount: 0 };
+    const queryClient = useQueryClient();
+    const { data } = useQuery({
+        queryKey: [`playlist_meta_${id}`],
+        queryFn: () => getPlaylistMeta(Number(id)),
+    });
+    const defaultValues = data?.[0]
+        ? data[0]
+        : {
+              title: "",
+              color:
+                  "#" +
+                  Math.floor(Math.random() * 16777216)
+                      .toString(16)
+                      .padStart(6, "0"),
+              amount: 0,
+          };
     const {
         control,
         handleSubmit,
@@ -41,34 +60,35 @@ export default function Page() {
 
     async function onSubmit(value: PlaylistMeta) {
         const isCreate = !value.id;
-        const createFromQueue = !!value.createFromQueue;
-        delete value.createFromQueue;
+        let id = value.id;
 
         if (isCreate) {
-            value.id = v4();
-            value.color = getNewColor();
             log.info("用户创建新的歌单");
+            const result = await insertPlaylistMeta(value);
+            id = result.lastInsertRowId;
         } else {
             log.info("用户编辑已有歌单");
+            await setPlaylistMeta(value);
         }
-        log.debug(`歌单详情：${JSON.stringify(value)}`);
+        log.debug(`歌单详情：${JSON.stringify(value)}, id: ${id}`);
 
-        setList((prevValue = []) => {
-            const newList = prevValue.concat();
-            if (isCreate) {
-                newList.push(value);
-            } else {
-                const target = newList.findIndex(e => e.id === id);
-                newList[target] = value;
-            }
-            return newList;
-        });
-
-        if (createFromQueue) {
-            const fromTracks = tracksToPlaylist(await TrackPlayer.getQueue());
-            addToPlaylist(value.id, fromTracks);
-            syncPlaylistAmount(value.id);
+        if (value.createFromQueue) {
+            const fromTracks = tracksToPlaylist(await TrackPlayer.getQueue()).map(
+                ({ title, imgUrl, duration, episode, bvid, author }) => ({
+                    title,
+                    imgUrl,
+                    duration,
+                    episode,
+                    bvid,
+                    author,
+                    playlistId: id,
+                }),
+            );
+            await addToPlaylist(id, fromTracks);
+            await syncPlaylistAmount(id);
         }
+        await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+        await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] });
 
         if (isCreate) {
             Toast.show({
@@ -121,7 +141,7 @@ export default function Page() {
                             render={({ field: { onChange, value } }) => (
                                 <Checkbox
                                     onChange={onChange}
-                                    isChecked={value}
+                                    isChecked={!!value}
                                     value={String(value)}
                                     aria-label="从当前队列创建歌单"
                                 >
@@ -132,7 +152,7 @@ export default function Page() {
                                 </Checkbox>
                             )}
                             name="createFromQueue"
-                            defaultValue={false}
+                            defaultValue={0}
                         />
                     </FormControl>
                 )}

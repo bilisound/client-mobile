@@ -8,7 +8,7 @@ import {
     USER_AGENT_BILIBILI,
     USER_AGENT_BILISOUND,
 } from "~/constants/network";
-import { PlaylistDetailRow } from "~/storage/playlist";
+import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { Numberish } from "~/typings/common";
 import log from "~/utils/logger";
 
@@ -335,5 +335,5 @@ export async function getTransferList(id: string) {
             "user-agent": USER_AGENT_BILISOUND,
         },
     });
-    return defineWrap<PlaylistDetailRow[] | null>(await response.json());
+    return defineWrap<PlaylistDetail[] | null>(await response.json());
 }

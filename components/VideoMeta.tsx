@@ -48,6 +48,8 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                 episode: e.page,
                 title: e.part,
                 imgUrl: meta.pic ?? "",
+                id: 0,
+                playlistId: 0,
             })),
         );
         setName(meta.title);

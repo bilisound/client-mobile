@@ -7,7 +7,7 @@ import { useStyles, createStyleSheet } from "react-native-unistyles";
 import ProgressBar from "./ProgressBar";
 
 import Pressable from "~/components/potato-ui/Pressable";
-import { PlaylistDetailRow } from "~/storage/playlist";
+import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { formatSecond } from "~/utils/misc";
 import { handleTogglePlay } from "~/utils/player-control";
 
@@ -30,7 +30,7 @@ export interface SongItemProps {
     onRequestPlay?: () => void;
     onLongPress?: () => void;
     onToggle?: () => void;
-    data: PlaylistDetailRow;
+    data: PlaylistDetail;
     index?: number;
     isChecking?: boolean;
     isChecked?: boolean;
