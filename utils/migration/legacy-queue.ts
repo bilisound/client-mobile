@@ -4,7 +4,7 @@ import { BILISOUND_LEGACY_PERSIST_QUEUE_PATH } from "~/constants/file";
 import { QUEUE_CURRENT_INDEX, QUEUE_LIST, queueStorage } from "~/storage/queue";
 import log from "~/utils/logger";
 
-export async function handleLegacyPlaylist() {
+export async function handleLegacyQueue() {
     if (await RNFS.exists(BILISOUND_LEGACY_PERSIST_QUEUE_PATH)) {
         log.info("发现旧版播放队列缓存数据，正在升级……");
         const raw = await RNFS.readFile(BILISOUND_LEGACY_PERSIST_QUEUE_PATH, "utf8");

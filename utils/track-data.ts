@@ -11,7 +11,7 @@ import { convertToHTTPS } from "./string";
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
 import { QUEUE_CURRENT_INDEX, QUEUE_LIST, queueStorage } from "~/storage/queue";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
-import { handleLegacyPlaylist } from "~/utils/migration/legacy-playlist";
+import { handleLegacyQueue } from "~/utils/migration/legacy-queue";
 
 export async function saveTrackData() {
     await Promise.all([
@@ -43,7 +43,7 @@ export async function loadTrackData() {
         current = queueStorage.getNumber(QUEUE_CURRENT_INDEX) || 0;
     }
 
-    const tryMigrate = await handleLegacyPlaylist();
+    const tryMigrate = await handleLegacyQueue();
     if (tryMigrate) {
         tracks = tryMigrate.tracks;
         current = tryMigrate.current;
