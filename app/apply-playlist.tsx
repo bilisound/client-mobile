@@ -11,7 +11,7 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import PlaylistItem from "~/components/PlaylistItem";
-import Pressable from "~/components/potato-ui/Pressable";
+import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { usePlaylistOnQueue } from "~/storage/playlist";
 import { addToPlaylist, getPlaylistMetas, quickCreatePlaylist, syncPlaylistAmount } from "~/storage/sqlite/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
@@ -62,7 +62,7 @@ export default function Page() {
             </View>
             <FlashList
                 ListHeaderComponent={
-                    <Pressable
+                    <PotatoPressable
                         style={[styles.pressable]}
                         onPress={async () => {
                             await quickCreatePlaylist(name, playlistDetail ?? []);
@@ -82,7 +82,7 @@ export default function Page() {
                             </Text>
                         </View>
                         <Text style={styles.pressableSubtext}>添加新的歌单</Text>
-                    </Pressable>
+                    </PotatoPressable>
                 }
                 renderItem={item => {
                     return (

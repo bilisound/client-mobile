@@ -3,7 +3,7 @@ import React from "react";
 import { View, Text, GestureResponderEvent } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Pressable from "~/components/potato-ui/Pressable";
+import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 
 export interface SettingMenuItemProps {
     title: string;
@@ -48,7 +48,7 @@ const SettingMenuItem: React.FC<SettingMenuItemProps> = ({
         return inner;
     }
 
-    return <Pressable onPress={onPress}>{inner}</Pressable>;
+    return <PotatoPressable onPress={onPress}>{inner}</PotatoPressable>;
 };
 
 const stylesheet = createStyleSheet(theme => ({

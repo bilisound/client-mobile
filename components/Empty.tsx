@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Button from "~/components/potato-ui/Button";
+import PotatoButton from "~/components/potato-ui/PotatoButton";
 
 export interface EmptyProps {
     onPress?: () => void;
@@ -16,7 +16,7 @@ export default function Empty({ onPress = () => {}, title = "这里空空如也"
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{title}</Text>
-            {action && <Button onPress={onPress}>{action}</Button>}
+            {action && <PotatoButton onPress={onPress}>{action}</PotatoButton>}
         </View>
     );
 }

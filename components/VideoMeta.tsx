@@ -8,7 +8,7 @@ import { Platform, Text, Pressable, View } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
-import Button from "~/components/potato-ui/Button";
+import PotatoButton from "~/components/potato-ui/PotatoButton";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -167,11 +167,16 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                 {meta.desc.trim() !== "" && showMoreComputed}
 
                 <View style={styles.actionContainer}>
-                    <Button rounded onPress={handleCreatePlaylist} Icon={AddIcon} style={styles.createPlaylistButton}>
+                    <PotatoButton
+                        rounded
+                        onPress={handleCreatePlaylist}
+                        Icon={AddIcon}
+                        style={styles.createPlaylistButton}
+                    >
                         创建歌单
-                    </Button>
+                    </PotatoButton>
                     {meta.seasonId ? (
-                        <Button
+                        <PotatoButton
                             rounded
                             variant="outline"
                             onPress={() => {
@@ -182,7 +187,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                             Icon={PlaylistIcon}
                         >
                             查看所属合集
-                        </Button>
+                        </PotatoButton>
                     ) : null}
                 </View>
             </View>

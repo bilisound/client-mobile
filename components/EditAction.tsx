@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Button from "~/components/potato-ui/Button";
+import PotatoButton from "~/components/potato-ui/PotatoButton";
 
 interface EditActionProps {
     onAll: () => void;
@@ -19,15 +19,15 @@ export default function EditAction({ onAll, onReverse, onDelete, amount }: EditA
         <View style={[styles.container, { backgroundColor: bgColor }]}>
             <Text style={styles.text}>{`已选择 ${amount} 项`}</Text>
             <View style={styles.buttonContainer}>
-                <Button size="sm" variant="outline" onPress={onAll}>
+                <PotatoButton size="sm" variant="outline" onPress={onAll}>
                     全选
-                </Button>
-                <Button size="sm" variant="outline" onPress={onReverse}>
+                </PotatoButton>
+                <PotatoButton size="sm" variant="outline" onPress={onReverse}>
                     反选
-                </Button>
-                <Button size="sm" variant="solid" color="red" onPress={onDelete} disabled={amount <= 0}>
+                </PotatoButton>
+                <PotatoButton size="sm" variant="solid" color="red" onPress={onDelete} disabled={amount <= 0}>
                     删除
-                </Button>
+                </PotatoButton>
             </View>
         </View>
     );

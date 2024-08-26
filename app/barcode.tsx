@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Alert, StatusBar, View, Text, StyleSheet, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import Button from "~/components/potato-ui/Button";
+import PotatoButton from "~/components/potato-ui/PotatoButton";
 import log from "~/utils/logger";
 import { handleQrCode } from "~/utils/qrcode";
 
@@ -92,7 +92,7 @@ const ScannerPage: React.FC = () => {
                     return (
                         <View style={styles.centeredContainer}>
                             <Text style={styles.permissionText}>扫码功能需要摄像头权限喵</Text>
-                            <Button onPress={() => getBarCodeScannerPermissions()}>给予权限</Button>
+                            <PotatoButton onPress={() => getBarCodeScannerPermissions()}>给予权限</PotatoButton>
                         </View>
                     );
                 }

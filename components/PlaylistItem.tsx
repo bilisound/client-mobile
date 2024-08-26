@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Pressable from "./potato-ui/Pressable";
+import PotatoPressable from "./potato-ui/PotatoPressable";
 
 import { PlaylistMeta } from "~/storage/sqlite/schema";
 
@@ -25,7 +25,7 @@ export default function PlaylistItem({ item, onPress, onLongPress }: PlaylistIte
     }
 
     return (
-        <Pressable style={styles.container} onPress={onPress} onLongPress={onLongPress}>
+        <PotatoPressable style={styles.container} onPress={onPress} onLongPress={onLongPress}>
             <View style={styles.row}>
                 <View style={styles.colorBox}>
                     <View style={[styles.colorDot, { backgroundColor: item.color }]} />
@@ -35,7 +35,7 @@ export default function PlaylistItem({ item, onPress, onLongPress }: PlaylistIte
                 </Text>
             </View>
             <Text style={styles.subtitle}>{`${item.amount} 首歌曲`}</Text>
-        </Pressable>
+        </PotatoPressable>
     );
 }
 

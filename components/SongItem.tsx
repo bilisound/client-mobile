@@ -6,7 +6,7 @@ import { useStyles, createStyleSheet } from "react-native-unistyles";
 
 import ProgressBar from "./ProgressBar";
 
-import Pressable from "~/components/potato-ui/Pressable";
+import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { formatSecond } from "~/utils/misc";
 import { handleTogglePlay } from "~/utils/player-control";
@@ -51,7 +51,7 @@ export default function SongItem({
     const textBasicColor = theme.colorTokens.foreground;
 
     return (
-        <Pressable
+        <PotatoPressable
             onPress={async () => {
                 if (isChecking) {
                     onToggle();
@@ -111,7 +111,7 @@ export default function SongItem({
                     <ProgressBar item={`${data.bvid}_${data.episode}`} />
                 </>
             ) : null}
-        </Pressable>
+        </PotatoPressable>
     );
 }
 

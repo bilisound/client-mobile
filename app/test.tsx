@@ -2,7 +2,7 @@ import { useState } from "react";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 
-import PotatoButton from "~/components/potato-ui/Button";
+import PotatoButton from "~/components/potato-ui/PotatoButton";
 import {
     AlertDialog,
     AlertDialogBackdrop,

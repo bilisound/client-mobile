@@ -44,7 +44,7 @@ export interface ButtonProps extends NativePressableProps {
     outerStyle?: StyleProp<ViewStyle>;
 }
 
-export default function Button(props: ButtonProps) {
+export default function PotatoButton(props: ButtonProps) {
     const {
         color = "primary",
         disabled = false,

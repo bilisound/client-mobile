@@ -7,7 +7,7 @@ import { Platform, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStyles } from "react-native-unistyles";
 
-import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import { Box } from "~/components/ui/box";
 import {
@@ -119,7 +119,7 @@ const TabIndexScreen: React.FC = () => {
                 }}
             >
                 {Platform.OS === "web" ? null : (
-                    <ButtonTitleBar
+                    <PotatoButtonTitleBar
                         label="扫描二维码"
                         Icon={IconQrcodeScan}
                         iconSize={20}
@@ -127,7 +127,7 @@ const TabIndexScreen: React.FC = () => {
                         onPress={() => router.push("/barcode")}
                     />
                 )}
-                <ButtonTitleBar
+                <PotatoButtonTitleBar
                     label="历史记录"
                     Icon={IconHistory}
                     iconSize={20}

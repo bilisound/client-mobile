@@ -20,7 +20,7 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import SongItem from "./SongItem";
 
-import Pressable from "~/components/potato-ui/Pressable";
+import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import useTracks from "~/hooks/useTracks";
 import useSettingsStore from "~/store/settings";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -250,7 +250,7 @@ export default function AudioPlayerModal() {
                 <MusicPicture image={activeTrack?.artwork} bilisoundId={activeTrack?.bilisoundId} />
             )}
             <View style={styles.controlsContainer}>
-                <Pressable
+                <PotatoPressable
                     onPress={() => {
                         if (Platform.OS === "ios") {
                             router.back();
@@ -268,14 +268,14 @@ export default function AudioPlayerModal() {
                             {activeTrack?.artist}
                         </Text>
                     </View>
-                </Pressable>
+                </PotatoPressable>
                 <View style={styles.progressBarWrapper}>
                     <AudioProgressBar />
                 </View>
                 <AudioProgressTimer />
                 <View style={styles.controlButtonsContainer}>
                     {/* 歌单 */}
-                    <Pressable
+                    <PotatoPressable
                         style={styles.controlButtonSmall}
                         outerStyle={styles.controlButtonOuter}
                         onPress={() => {
@@ -290,11 +290,11 @@ export default function AudioPlayerModal() {
                                 transform: [{ translateX: 2 }],
                             }}
                         />
-                    </Pressable>
+                    </PotatoPressable>
 
                     <View style={styles.controlButtonsGroup}>
                         {/* 上一首 */}
-                        <Pressable
+                        <PotatoPressable
                             style={styles.controlButton}
                             outerStyle={styles.controlButtonOuter}
                             onPress={async () => {
@@ -307,10 +307,10 @@ export default function AudioPlayerModal() {
                                 color={textBasicColor}
                                 style={styles.controlButtonIcon}
                             />
-                        </Pressable>
+                        </PotatoPressable>
 
                         {/* 播放/暂停 */}
-                        <Pressable
+                        <PotatoPressable
                             style={styles.controlButtonPlay}
                             outerStyle={styles.controlButtonOuter}
                             pressedBackgroundColor={theme.colorTokens.buttonBackground("primary", "active")}
@@ -319,10 +319,10 @@ export default function AudioPlayerModal() {
                             }}
                         >
                             <AudioPlayButtonIcon />
-                        </Pressable>
+                        </PotatoPressable>
 
                         {/* 下一首 */}
-                        <Pressable
+                        <PotatoPressable
                             style={styles.controlButton}
                             outerStyle={styles.controlButtonOuter}
                             onPress={async () => {
@@ -335,11 +335,11 @@ export default function AudioPlayerModal() {
                                 color={textBasicColor}
                                 style={styles.controlButtonIcon}
                             />
-                        </Pressable>
+                        </PotatoPressable>
                     </View>
 
                     {/* 导出 */}
-                    <Pressable
+                    <PotatoPressable
                         style={styles.controlButtonSmall}
                         outerStyle={styles.controlButtonOuter}
                         onPress={async () => {
@@ -361,7 +361,7 @@ export default function AudioPlayerModal() {
                         }}
                     >
                         <Ionicons name="save" size={20} color={textBasicColor} />
-                    </Pressable>
+                    </PotatoPressable>
                 </View>
             </View>
         </View>

@@ -14,8 +14,8 @@ import CommonLayout from "~/components/CommonLayout";
 import EditAction from "~/components/EditAction";
 import Empty from "~/components/Empty";
 import SongItem from "~/components/SongItem";
-import Button from "~/components/potato-ui/Button";
-import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import PotatoButton from "~/components/potato-ui/PotatoButton";
+import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import { usePlaylistOnQueue } from "~/storage/playlist";
@@ -90,9 +90,9 @@ function Header({
                 <Text style={styles.headerSubtitle}>{`${meta.amount} 首歌曲`}</Text>
                 {showPlayButton && (
                     <View style={styles.playButtonContainer}>
-                        <Button Icon={IconPlay} rounded onPress={onPlay}>
+                        <PotatoButton Icon={IconPlay} rounded onPress={onPlay}>
                             播放
-                        </Button>
+                        </PotatoButton>
                     </View>
                 )}
             </View>
@@ -242,7 +242,7 @@ export default function Page() {
             leftAccessories="backButton"
             rightAccessories={
                 <>
-                    <ButtonTitleBar
+                    <PotatoButtonTitleBar
                         label="编辑歌单信息"
                         onPress={() => {
                             router.push(`../meta/${id}`);
@@ -252,7 +252,7 @@ export default function Page() {
                         theme="transparentAlt"
                     />
                     {playlistDetail.length > 0 ? (
-                        <ButtonTitleBar
+                        <PotatoButtonTitleBar
                             label={editing ? "完成" : "编辑"}
                             onPress={() =>
                                 setEditing(prevState => {

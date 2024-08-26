@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "react-native";
 
-import PotatoButton from "~/components/potato-ui/Button";
+import PotatoButton from "~/components/potato-ui/PotatoButton";
 import {
     AlertDialog,
     AlertDialogBackdrop,

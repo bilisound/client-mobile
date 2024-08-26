@@ -15,7 +15,7 @@ import CommonLayout from "~/components/CommonLayout";
 import SongItem from "~/components/SongItem";
 import VideoMeta from "~/components/VideoMeta";
 import VideoSkeleton from "~/components/VideoSkeleton";
-import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import {
     Actionsheet,
@@ -205,7 +205,7 @@ const QueryIdScreen: React.FC = () => {
             extendToBottom
             leftAccessories="backButton"
             rightAccessories={
-                <ButtonTitleBar
+                <PotatoButtonTitleBar
                     label="在外部应用查看"
                     Icon={IconShare}
                     iconSize={18}

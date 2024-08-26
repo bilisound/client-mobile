@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Pressable from "~/components/potato-ui/Pressable";
+import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { IconComponent } from "~/components/potato-ui/utils/icon";
 
 export interface ButtonTitleBarProps {
@@ -17,7 +17,7 @@ export interface ButtonTitleBarProps {
     onPress?: () => void;
 }
 
-export default function ButtonTitleBar({
+export default function PotatoButtonTitleBar({
     label,
     theme: colorTheme = "solid",
     onPress,
@@ -36,7 +36,7 @@ export default function ButtonTitleBar({
     }
 
     return (
-        <Pressable
+        <PotatoPressable
             outerStyle={styles.buttonOuter}
             style={styles.button}
             pressedBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.15)" : undefined}
@@ -44,7 +44,7 @@ export default function ButtonTitleBar({
             onPress={onPress}
         >
             {Icon ? <Icon size={iconSize} color={iconColor || textColor} /> : children}
-        </Pressable>
+        </PotatoPressable>
     );
 }
 

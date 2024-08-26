@@ -9,8 +9,8 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import Empty from "~/components/Empty";
-import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
-import Pressable from "~/components/potato-ui/Pressable";
+import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
+import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import useHistoryStore, { HistoryItem } from "~/store/history";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -49,7 +49,7 @@ const History: React.FC = () => {
                     return null;
                 }
                 return (
-                    <Pressable
+                    <PotatoPressable
                         onPress={() => {
                             router.push(`/query/${data.id}?noHistory=1`);
                         }}
@@ -65,7 +65,7 @@ const History: React.FC = () => {
                                 {data.authorName}
                             </Text>
                         </View>
-                    </Pressable>
+                    </PotatoPressable>
                 );
             }}
         />
@@ -78,7 +78,7 @@ const History: React.FC = () => {
             leftAccessories="backButton"
             rightAccessories={
                 historyList.length > 0 ? (
-                    <ButtonTitleBar
+                    <PotatoButtonTitleBar
                         theme="solid"
                         Icon={IconDelete}
                         label="清除历史记录"

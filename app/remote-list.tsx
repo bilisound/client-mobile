@@ -17,8 +17,8 @@ import {
     UserListMode,
 } from "~/api/bilisound";
 import CommonLayout from "~/components/CommonLayout";
-import Button from "~/components/potato-ui/Button";
-import Pressable from "~/components/potato-ui/Pressable";
+import PotatoButton from "~/components/potato-ui/PotatoButton";
+import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useApplyPlaylistStore from "~/store/apply-playlist";
@@ -80,9 +80,14 @@ function Header({ data, mode }: HeaderProps) {
             </Text>
             {data.meta.description && <Text style={styles.description}>{data.meta.description}</Text>}
             <View style={{ flexDirection: "row", marginTop: 20 }}>
-                <Button rounded disabled={loading} Icon={loading ? "loading" : IconAdd} onPress={handleCreatePlaylist}>
+                <PotatoButton
+                    rounded
+                    disabled={loading}
+                    Icon={loading ? "loading" : IconAdd}
+                    onPress={handleCreatePlaylist}
+                >
                     创建歌单
-                </Button>
+                </PotatoButton>
             </View>
         </View>
     );
@@ -164,7 +169,7 @@ export default function Page() {
     });
 
     const renderItem = ({ item }: { item: GetEpisodeUserResponse["rows"][number] }) => (
-        <Pressable
+        <PotatoPressable
             onPress={() => {
                 router.push(`/query/${item.bvid}`);
             }}
@@ -179,7 +184,7 @@ export default function Page() {
                     {formatSecond(item.duration)}
                 </Text>
             </View>
-        </Pressable>
+        </PotatoPressable>
     );
 
     const loadMore = () => {

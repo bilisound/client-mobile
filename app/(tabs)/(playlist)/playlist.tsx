@@ -10,7 +10,7 @@ import { useStyles } from "react-native-unistyles";
 import CommonLayout from "~/components/CommonLayout";
 import Empty from "~/components/Empty";
 import PlaylistItem from "~/components/PlaylistItem";
-import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import {
     Actionsheet,
@@ -165,7 +165,7 @@ export default function Page() {
                 rightAccessories={
                     <>
                         {Platform.OS === "web" ? null : (
-                            <ButtonTitleBar
+                            <PotatoButtonTitleBar
                                 label="扫描二维码"
                                 theme="transparent"
                                 Icon={IconQrcodeScan}
@@ -173,7 +173,7 @@ export default function Page() {
                                 onPress={() => router.push("/barcode")}
                             />
                         )}
-                        <ButtonTitleBar
+                        <PotatoButtonTitleBar
                             label="新建歌单"
                             Icon={IconAdd}
                             theme="transparent"

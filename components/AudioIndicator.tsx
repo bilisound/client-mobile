@@ -6,7 +6,7 @@ import { View, Pressable as NativePressable, Text } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import Pressable from "~/components/potato-ui/Pressable";
+import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { handleTogglePlay } from "~/utils/player-control";
 
@@ -38,7 +38,7 @@ export default function AudioIndicator() {
                     </Text>
                 </View>
             </NativePressable>
-            <Pressable
+            <PotatoPressable
                 outerStyle={styles.playButtonOuter}
                 style={styles.playButton}
                 onPressOut={async () => {
@@ -50,7 +50,7 @@ export default function AudioIndicator() {
                     size={16}
                     color={primaryColor}
                 />
-            </Pressable>
+            </PotatoPressable>
         </View>
     );
 }

@@ -6,7 +6,7 @@ import { useStyles } from "react-native-unistyles";
 import WebView from "react-native-webview";
 
 import CommonLayout from "~/components/CommonLayout";
-import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import { getLogContentForDisplay, shareLogContent } from "~/utils/logger";
 
@@ -78,7 +78,7 @@ const App: React.FC = () => {
             title="导出日志"
             leftAccessories="backButton"
             rightAccessories={
-                <ButtonTitleBar
+                <PotatoButtonTitleBar
                     label="分享日志文件"
                     Icon={IconShare}
                     iconSize={22}

@@ -9,7 +9,7 @@ export interface ToastProps {
     description?: string;
 }
 
-export default function Toast({ type, title, description }: ToastProps) {
+export default function PotatoToast({ type, title, description }: ToastProps) {
     const { styles, theme } = useStyles(styleSheet);
     return (
         <ShadowedView style={[styles.toast, vanillaStyles.toast]}>

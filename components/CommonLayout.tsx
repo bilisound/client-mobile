@@ -5,7 +5,7 @@ import { View, Text, StatusBar, StyleProp, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import ButtonTitleBar from "~/components/potato-ui/ButtonTitleBar";
+import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 
 export interface CommonFrameNewProps {
@@ -67,7 +67,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                     {leftAccessories && (
                         <View style={styles.leftAccessories}>
                             {leftAccessories === "backButton" ? (
-                                <ButtonTitleBar
+                                <PotatoButtonTitleBar
                                     label="返回"
                                     Icon={IconArrowBack}
                                     iconColor={textColor}

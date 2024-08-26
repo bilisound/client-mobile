@@ -7,7 +7,7 @@ import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "~/components/CommonLayout";
-import PotatoButton from "~/components/potato-ui/Button";
+import PotatoButton from "~/components/potato-ui/PotatoButton";
 import { Box } from "~/components/ui/box";
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import {
