@@ -8,6 +8,7 @@ export interface SettingsProps {
     downloadNextTrack: boolean;
     filterResourceURL: boolean;
     debugMode: boolean;
+    theme: string;
 }
 
 export interface SettingsMethods {
@@ -20,6 +21,7 @@ const initialState: SettingsProps = {
     downloadNextTrack: true,
     filterResourceURL: true,
     debugMode: false,
+    theme: "classic",
 };
 
 const useSettingsStore = create<SettingsProps & SettingsMethods>()(
