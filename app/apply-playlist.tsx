@@ -99,6 +99,7 @@ export default function Page() {
 
                                 await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
                                 await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${item.item.id}`] });
+                                await queryClient.invalidateQueries({ queryKey: [`playlist_detail_${item.item.id}`] });
                                 Toast.show({
                                     type: "success",
                                     text1: "曲目添加成功",
