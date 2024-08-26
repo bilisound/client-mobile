@@ -1,5 +1,5 @@
-import React from "react";
-import { View } from "react-native";
+import React, { useEffect } from "react";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import useDownloadStore from "~/store/download";
@@ -12,13 +12,31 @@ export default function ProgressBar({ item }: { item: string }) {
     const downloadEntry = downloadList.get(item);
     const { styles } = useStyles(stylesheet);
 
+    const progress = useSharedValue(0);
+
+    useEffect(() => {
+        let progressWidth = 0;
+        if (downloadEntry) {
+            progressWidth = (downloadEntry.progress.bytesWritten / downloadEntry.progress.contentLength) * 100;
+        }
+        // NaN 去除操作
+        if (!progressWidth) {
+            progressWidth = 0;
+        }
+        progress.value = withTiming(progressWidth, { duration: 200 });
+    }, [downloadEntry, progress]);
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            width: `${progress.value}%`,
+        };
+    });
+
     if (!downloadEntry) {
         return null;
     }
 
-    const progressWidth = (downloadEntry.progress.bytesWritten / downloadEntry.progress.contentLength) * 100;
-
-    return <View style={[styles.progressBar, { width: `${progressWidth}%` }]} />;
+    return <Animated.View style={[styles.progressBar, animatedStyle]} />;
 }
 
 const stylesheet = createStyleSheet(theme => ({
