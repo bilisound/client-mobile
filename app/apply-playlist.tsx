@@ -6,17 +6,22 @@ import { router } from "expo-router";
 import React from "react";
 import { View, Text } from "react-native";
 import Toast from "react-native-toast-message";
+import TrackPlayer from "react-native-track-player";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import PlaylistItem from "~/components/PlaylistItem";
 import Pressable from "~/components/potato-ui/Pressable";
+import { usePlaylistOnQueue } from "~/storage/playlist";
 import { addToPlaylist, getPlaylistMetas, quickCreatePlaylist, syncPlaylistAmount } from "~/storage/sqlite/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
+import { playlistToTracks } from "~/utils/track-data";
 
 export default function Page() {
     const { styles } = useStyles(styleSheet);
+
+    const [playlistOnQueue = {}] = usePlaylistOnQueue();
 
     // 添加歌单
     const { playlistDetail, name } = useApplyPlaylistStore(state => ({
@@ -86,6 +91,12 @@ export default function Page() {
                             onPress={async () => {
                                 await addToPlaylist(item.item.id, playlistDetail ?? []);
                                 await syncPlaylistAmount(item.item.id);
+
+                                // 如果当前的 queue 来自试图被添加的播放列表，给 queue 也添加这些曲目
+                                if (playlistOnQueue) {
+                                    await TrackPlayer.add(await playlistToTracks(playlistDetail ?? []));
+                                }
+
                                 await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
                                 await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${item.item.id}`] });
                                 Toast.show({
