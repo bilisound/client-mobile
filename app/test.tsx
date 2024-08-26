@@ -16,10 +16,6 @@ import { Button, ButtonText } from "~/components/ui/button";
 import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
 import { PLAYLIST_DB_VERSION, playlistStorage } from "~/storage/playlist";
-import { db } from "~/storage/sqlite/main";
-import { playlistMeta } from "~/storage/sqlite/schema";
-import log from "~/utils/logger";
-import { handlePlaylist } from "~/utils/migration/playlist";
 
 export default function Page() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -55,18 +51,6 @@ export default function Page() {
                 }}
             >
                 重置 PLAYLIST_DB_VERSION 以触发迁移程序
-            </PotatoButton>
-            <PotatoButton
-                color="sky"
-                onPress={() => {
-                    const response = db.select().from(playlistMeta);
-                    const all = response.all();
-                    all.forEach(({ id, title, color, amount }) => {
-                        log.info({ id, title, color, amount });
-                    });
-                }}
-            >
-                SQLite 读取测试
             </PotatoButton>
             <AlertDialog isOpen={modalVisible} onClose={handleClose} size="md">
                 <AlertDialogBackdrop />
