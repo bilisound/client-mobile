@@ -68,7 +68,7 @@ export default function Page() {
 我从没奢望嘉然小姐能喜欢自己。我明白的，所有人都喜欢理解余裕上手天才打钱的萌萌的狗狗或者猫猫，没有人会喜欢阴湿带病的老鼠。`}
                         </Text>
                     </AlertDialogBody>
-                    <AlertDialogFooter className="gap-3">
+                    <AlertDialogFooter className="gap-2">
                         <PotatoButton variant="ghost" onPress={handleClose}>
                             取消
                         </PotatoButton>

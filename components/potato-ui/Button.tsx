@@ -23,6 +23,14 @@ const sizes = {
     md: { h: 40, px: 20 },
 };
 
+function handleTextEffect(input: string) {
+    const texts = Array.from(input);
+    if (texts.length > 2) {
+        return input;
+    }
+    return texts.join(" ");
+}
+
 export interface ButtonProps extends NativePressableProps {
     color?: ThemeColorPaletteKeys;
     size?: keyof typeof sizes;
@@ -146,7 +154,7 @@ export default function Button(props: ButtonProps) {
                         color={disabled ? disabledForeground : normalForeground}
                     />
                 ) : null}
-                <Text style={[animatedTextStyle, { fontWeight: "600" }]}>{children}</Text>
+                <Text style={[animatedTextStyle, { fontWeight: "600" }]}>{handleTextEffect(children)}</Text>
             </Pressable>
         </View>
     );
