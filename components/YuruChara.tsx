@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
 
 const YuruChara: React.FC = () => (
     <View style={styles.image} pointerEvents="none">
-        <Image source={require("../assets/images/bg-corner.svg")} style={styles.imageInner} />
+        <Image source={require("../assets/images/bg-corner-green.svg")} style={styles.imageInner} />
+        {/*<Image source={require("../assets/images/bg-corner-red.png")} style={styles.imageInner} />*/}
     </View>
 );
 
