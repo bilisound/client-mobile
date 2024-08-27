@@ -14,7 +14,6 @@ import Animated, {
     withRepeat,
     withTiming,
 } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
@@ -217,24 +216,13 @@ export default function AudioPlayerModal() {
     const colorScheme = useColorScheme();
     const textBasicColor = theme.colorTokens.foreground;
     const activeTrack = useActiveTrack();
-    const safeAreaInsets = useSafeAreaInsets();
     const [showList, setShowList] = useState(false);
     const { useLegacyID } = useSettingsStore(state => ({
         useLegacyID: state.useLegacyID,
     }));
 
     return (
-        <View
-            style={[
-                styles.container,
-                {
-                    paddingTop: safeAreaInsets.top,
-                    paddingBottom: safeAreaInsets.bottom,
-                    paddingLeft: safeAreaInsets.left,
-                    paddingRight: safeAreaInsets.right,
-                },
-            ]}
-        >
+        <View style={styles.container}>
             {Platform.OS === "ios" ? null : (
                 <StatusBar
                     barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
@@ -375,7 +363,7 @@ const styleSheet = createStyleSheet(theme => ({
     },
     handleContainer: {
         alignItems: "center",
-        padding: 8,
+        padding: Platform.OS === "ios" ? 16 : 8,
     },
     handle: {
         width: 48,
