@@ -2,6 +2,8 @@ import { Image } from "expo-image";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
+import useSettingsStore from "~/store/settings";
+
 const styles = StyleSheet.create({
     image: {
         width: 240,
@@ -18,11 +20,19 @@ const styles = StyleSheet.create({
     },
 });
 
-const YuruChara: React.FC = () => (
-    <View style={styles.image} pointerEvents="none">
-        <Image source={require("../assets/images/bg-corner-green.svg")} style={styles.imageInner} />
-        {/*<Image source={require("../assets/images/bg-corner-red.png")} style={styles.imageInner} />*/}
-    </View>
-);
+const YuruChara: React.FC = () => {
+    const { theme } = useSettingsStore(state => ({ theme: state.theme }));
+
+    return (
+        <View style={styles.image} pointerEvents="none">
+            {theme === "classic" && (
+                <Image source={require("../assets/images/bg-corner-classic.svg")} style={styles.imageInner} />
+            )}
+            {theme === "red" && (
+                <Image source={require("../assets/images/bg-corner-red.webp")} style={styles.imageInner} />
+            )}
+        </View>
+    );
+};
 
 export default YuruChara;
