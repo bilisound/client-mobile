@@ -1,41 +1,40 @@
-import { IconProps } from "@expo/vector-icons/build/createIconSet";
 import React from "react";
 import { View, Text, GestureResponderEvent } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
+import { IconComponent } from "~/components/potato-ui/utils/icon";
 
 export interface SettingMenuItemProps {
     title: string;
     subTitle?: string;
-    icon: (iconProps: Partial<IconProps<any>>) => React.ReactNode;
+    icon: IconComponent;
+    iconSize?: number;
     rightAccessories?: React.ReactNode;
     onPress?: (event: GestureResponderEvent) => void;
     disabled?: boolean;
 }
 
-export type SettingMenuItemIcon = (iconProps: Partial<IconProps<any>>) => React.ReactNode;
-
 const SettingMenuItem: React.FC<SettingMenuItemProps> = ({
     title,
     subTitle,
     icon,
+    iconSize = 24,
     rightAccessories,
     onPress,
     disabled,
 }) => {
     const { styles, theme } = useStyles(stylesheet);
     const textBasicColor = theme.colorTokens.foreground;
+    const Icon = icon;
 
     const inner = (
         <View style={[styles.container, disabled && styles.disabled]}>
             <View style={styles.flex}>
                 <View style={styles.titleContainer}>
-                    {icon({
-                        size: 24,
-                        color: textBasicColor,
-                        style: styles.icon,
-                    })}
+                    <View style={styles.iconContainer}>
+                        <Icon size={iconSize} color={textBasicColor} />
+                    </View>
                     <Text style={styles.title}>{title}</Text>
                 </View>
                 {subTitle ? <Text style={styles.subtitle}>{subTitle}</Text> : null}
@@ -69,8 +68,11 @@ const stylesheet = createStyleSheet(theme => ({
         alignItems: "center",
         gap: 12,
     },
-    icon: {
-        width: 26,
+    iconContainer: {
+        width: 24,
+        height: 24,
+        alignItems: "center",
+        justifyContent: "center",
     },
     title: {
         fontWeight: "700",

@@ -23,6 +23,7 @@ const InfoIcon = createIcon(FontAwesome5, "info-circle");
 // const ReadmeIcon = createIcon(Entypo, "help-with-circle");
 const DeveloperIcon = createIcon(Entypo, "code");
 const BugIcon = createIcon(FontAwesome5, "bug");
+const PaintBrushIcon = createIcon(FontAwesome5, "paint-brush");
 
 const Settings: React.FC = () => {
     const { useLegacyID, downloadNextTrack, filterResourceURL, debugMode, toggle } = useSettingsStore(state => ({
@@ -149,6 +150,17 @@ const Settings: React.FC = () => {
                             disabled={cacheSizeFree <= 0}
                         />
                     </>
+                )}
+                {process.env.NODE_ENV !== "production" && (
+                    <SettingMenuItem
+                        icon={PaintBrushIcon}
+                        iconSize={20}
+                        title="切换主题"
+                        subTitle="未完工！！"
+                        onPress={async () => {
+                            router.push("/theme");
+                        }}
+                    />
                 )}
                 <SettingMenuItem
                     icon={InfoIcon}
