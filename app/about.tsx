@@ -1,15 +1,21 @@
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import React from "react";
-import { Linking, ScrollView, View, Text, Pressable } from "react-native";
+import { Linking, ScrollView, View, Text } from "react-native";
 import Toast from "react-native-toast-message";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
+import SettingMenuItem from "~/components/SettingMenuItem";
+import { createIcon } from "~/components/potato-ui/utils/icon";
 import { BILISOUND_OFFICIAL_WEBSITE } from "~/constants/branding";
 import { RELEASE_CHANNEL, VERSION } from "~/constants/releasing";
 import { checkLatestVersion } from "~/utils/check-release";
 import log from "~/utils/logger";
+
+const UpdateIcon = createIcon(MaterialIcons, "update");
+const HomeIcon = createIcon(MaterialIcons, "home");
 
 export default function Page() {
     const { styles } = useStyles(stylesheet);
@@ -49,20 +55,21 @@ export default function Page() {
                     <Image style={styles.logoImage} source={require("../assets/images/icon.png")} />
                     <Text style={styles.logoTitle}>Bilisound</Text>
                     <Text style={styles.version}>{`版本 ${VERSION}`}</Text>
-                    <View style={styles.action}>
-                        <Pressable onPress={() => Linking.openURL(BILISOUND_OFFICIAL_WEBSITE)}>
-                            <Text style={styles.link}>访问官网</Text>
-                        </Pressable>
-                        {/* 注意区分分发渠道！！ */}
-                        {RELEASE_CHANNEL === "android_github" ? (
-                            <Pressable onPress={() => handleCheckUpdate()} disabled={isError || isLoading}>
-                                <Text style={[styles.link, isError || isLoading ? styles.linkDisabled : null]}>
-                                    检查更新
-                                </Text>
-                            </Pressable>
-                        ) : null}
-                    </View>
                 </View>
+                <SettingMenuItem
+                    icon={HomeIcon}
+                    title="访问官网"
+                    onPress={() => Linking.openURL(BILISOUND_OFFICIAL_WEBSITE)}
+                />
+                {/* 注意区分分发渠道！！ */}
+                {RELEASE_CHANNEL === "android_github" ? (
+                    <SettingMenuItem
+                        icon={UpdateIcon}
+                        title="检查更新"
+                        disabled={isError || isLoading}
+                        onPress={() => handleCheckUpdate()}
+                    />
+                ) : null}
             </ScrollView>
         </CommonLayout>
     );
@@ -91,18 +98,5 @@ const stylesheet = createStyleSheet(theme => ({
         lineHeight: 14 * 1.5,
         opacity: 0.5,
         color: theme.colorTokens.foreground,
-    },
-    action: {
-        flexDirection: "row",
-        gap: 16,
-    },
-    link: {
-        marginTop: 24,
-        color: theme.colorTokens.buttonOutlineForeground("accent", "default"),
-        textDecorationLine: "underline",
-    },
-    linkDisabled: {
-        color: theme.colorTokens.buttonOutlineForeground("accent", "disabled"),
-        opacity: 0.5,
     },
 }));

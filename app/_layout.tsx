@@ -19,7 +19,7 @@ import AudioManager from "~/components/AudioManager";
 import CheckUpdateDialog from "~/components/CheckUpdateDialog";
 import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
 import { toastConfig } from "~/config/toast";
-import { VERSION } from "~/constants/releasing";
+import { RELEASE_CHANNEL, VERSION } from "~/constants/releasing";
 import useSettingsStore from "~/store/settings";
 import { checkLatestVersion } from "~/utils/check-release";
 import init from "~/utils/init";
@@ -153,7 +153,7 @@ const RootLayoutNav = () => {
                         {routes}
                         <AudioManager />
                         <Toast config={toastConfig} />
-                        <CheckUpdate />
+                        {RELEASE_CHANNEL === "android_github" && <CheckUpdate />}
                     </PortalProvider>
                 </ThemeProvider>
             </QueryClientProvider>
