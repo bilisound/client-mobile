@@ -90,6 +90,15 @@ const Settings: React.FC = () => {
                         onPress={() => toggle("filterResourceURL")}
                     />
                     <SettingMenuItem
+                        icon={PaintBrushIcon}
+                        iconSize={20}
+                        title="切换主题"
+                        subTitle="试验性功能"
+                        onPress={async () => {
+                            router.push("/theme");
+                        }}
+                    />
+                    <SettingMenuItem
                         icon={BugIcon}
                         title="导出日志"
                         subTitle="对开发者真的太有用了"
@@ -150,17 +159,6 @@ const Settings: React.FC = () => {
                             disabled={cacheSizeFree <= 0}
                         />
                     </>
-                )}
-                {process.env.NODE_ENV !== "production" && (
-                    <SettingMenuItem
-                        icon={PaintBrushIcon}
-                        iconSize={20}
-                        title="切换主题"
-                        subTitle="未完工！！"
-                        onPress={async () => {
-                            router.push("/theme");
-                        }}
-                    />
                 )}
                 <SettingMenuItem
                     icon={InfoIcon}
