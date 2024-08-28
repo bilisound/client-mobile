@@ -1,8 +1,16 @@
+import { FontAwesome5, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+import React from "react";
 import { Pressable } from "react-native";
 import { twMerge } from "tailwind-merge";
 
 import CommonLayout from "~/components/CommonLayout";
+import SettingMenuItem from "~/components/SettingMenuItem";
+import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Box } from "~/components/ui/box";
+import { Center } from "~/components/ui/center";
 import { Heading } from "~/components/ui/heading";
+import { HStack } from "~/components/ui/hstack";
+import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { VStack } from "~/components/ui/vstack";
 import useSettingsStore from "~/store/settings";
@@ -32,16 +40,26 @@ function ThemeButton({ selected = false, name, onPress }: ThemeButtonProps) {
     );
 }
 
+const PaintBrushIcon = createIcon(FontAwesome5, "paint-brush");
+const BackgroundIcon = createIcon(FontAwesome6, "image");
+
 export default function Page() {
-    const { theme, update } = useSettingsStore(state => ({
+    const { theme, update, showYuruChara, toggle } = useSettingsStore(state => ({
         theme: state.theme,
         update: state.update,
+        showYuruChara: state.showYuruChara,
+        toggle: state.toggle,
     }));
 
     return (
         <CommonLayout titleBarTheme="solid" title="切换主题" leftAccessories="backButton">
-            <VStack space="lg" className="p-4">
-                <Heading size="md">App 界面主题</Heading>
+            <VStack space="xl" className="p-4">
+                <HStack space="md" className="items-center">
+                    <Center className="size-[26px]">
+                        <PaintBrushIcon size={20} />
+                    </Center>
+                    <Text className="text-[15px] font-semibold">App 界面主题</Text>
+                </HStack>
                 <VStack space="md">
                     <ThemeButton
                         name="默认主题"
@@ -51,6 +69,20 @@ export default function Page() {
                     <ThemeButton name="红色主题" onPress={() => update("theme", "red")} selected={theme === "red"} />
                 </VStack>
             </VStack>
+            <SettingMenuItem
+                icon={BackgroundIcon}
+                iconSize={20}
+                title="在右下角展示看板娘"
+                rightAccessories={
+                    <Switch
+                        value={showYuruChara}
+                        onChange={() => {
+                            toggle("showYuruChara");
+                        }}
+                    />
+                }
+                onPress={() => toggle("showYuruChara")}
+            />
         </CommonLayout>
     );
 }

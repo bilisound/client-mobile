@@ -75,7 +75,7 @@ const stylesheet = createStyleSheet(theme => ({
         justifyContent: "center",
     },
     title: {
-        fontWeight: "700",
+        fontWeight: "600",
         fontSize: 15,
         color: theme.colorTokens.foreground,
     },

@@ -91,15 +91,6 @@ const Settings: React.FC = () => {
                         onPress={() => toggle("filterResourceURL")}
                     />
                     <SettingMenuItem
-                        icon={PaintBrushIcon}
-                        iconSize={20}
-                        title="切换主题"
-                        subTitle="试验性功能"
-                        onPress={async () => {
-                            router.push("/theme");
-                        }}
-                    />
-                    <SettingMenuItem
                         icon={BugIcon}
                         title="导出日志"
                         subTitle="对开发者真的太有用了"
@@ -128,6 +119,15 @@ const Settings: React.FC = () => {
                         />
                     }
                     onPress={() => toggle("useLegacyID")}
+                />
+                <SettingMenuItem
+                    icon={PaintBrushIcon}
+                    iconSize={20}
+                    title="外观设置"
+                    subTitle="切换应用主题和看板娘显示"
+                    onPress={async () => {
+                        router.push("/theme");
+                    }}
                 />
                 {Platform.OS === "web" ? null : (
                     <>

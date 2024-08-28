@@ -9,6 +9,7 @@ export interface SettingsProps {
     filterResourceURL: boolean;
     debugMode: boolean;
     theme: string;
+    showYuruChara: boolean;
 }
 
 export interface SettingsMethods {
@@ -22,6 +23,7 @@ const initialState: SettingsProps = {
     filterResourceURL: true,
     debugMode: false,
     theme: "classic",
+    showYuruChara: true,
 };
 
 const useSettingsStore = create<SettingsProps & SettingsMethods>()(

@@ -8,6 +8,7 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import AudioIndicator from "~/components/AudioIndicator";
 import YuruChara from "~/components/YuruChara";
+import useSettingsStore from "~/store/settings";
 
 const SearchIcon = ({ color }: { color: string }) => <FontAwesome5 name="search" size={20} color={color} />;
 const SettingsIcon = ({ color }: { color: string }) => <Ionicons name="settings-sharp" size={22} color={color} />;
@@ -23,6 +24,9 @@ const TabBar = (props: BottomTabBarProps) => (
 export default function TabLayout() {
     const { theme, styles } = useStyles(styleSheet);
     const tabBarActiveTintColor = theme.colors.accent[500];
+    const { showYuruChara } = useSettingsStore(state => ({
+        showYuruChara: state.showYuruChara,
+    }));
 
     return (
         <View style={styles.container}>
@@ -60,7 +64,7 @@ export default function TabLayout() {
                     }}
                 />
             </Tabs>
-            <YuruChara />
+            {showYuruChara && <YuruChara />}
         </View>
     );
 }
