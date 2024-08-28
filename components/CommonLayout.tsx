@@ -114,7 +114,7 @@ const styleSheet = createStyleSheet(theme => ({
     },
     titleText: {
         fontSize: 16,
-        fontWeight: "700",
+        fontWeight: "600",
     },
     leftAccessories: {
         position: "absolute",

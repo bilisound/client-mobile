@@ -1,14 +1,13 @@
-import { FontAwesome5, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import { Pressable } from "react-native";
 import { twMerge } from "tailwind-merge";
 
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
+import YuruChara from "~/components/YuruChara";
 import { createIcon } from "~/components/potato-ui/utils/icon";
-import { Box } from "~/components/ui/box";
 import { Center } from "~/components/ui/center";
-import { Heading } from "~/components/ui/heading";
 import { HStack } from "~/components/ui/hstack";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
@@ -52,7 +51,7 @@ export default function Page() {
     }));
 
     return (
-        <CommonLayout titleBarTheme="solid" title="切换主题" leftAccessories="backButton">
+        <CommonLayout titleBarTheme="solid" title="外观设置" leftAccessories="backButton">
             <VStack space="xl" className="p-4">
                 <HStack space="md" className="items-center">
                     <Center className="size-[26px]">
@@ -83,6 +82,7 @@ export default function Page() {
                 }
                 onPress={() => toggle("showYuruChara")}
             />
+            {showYuruChara && <YuruChara />}
         </CommonLayout>
     );
 }

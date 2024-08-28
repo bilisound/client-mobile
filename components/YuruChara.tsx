@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const YuruChara: React.FC = () => {
+export default function YuruChara() {
     const { theme } = useSettingsStore(state => ({ theme: state.theme }));
 
     return (
@@ -33,6 +33,4 @@ const YuruChara: React.FC = () => {
             )}
         </View>
     );
-};
-
-export default YuruChara;
+}
