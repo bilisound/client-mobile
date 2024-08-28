@@ -33,6 +33,23 @@ export interface SemanticSizes {
     radiusButtonFull: number;
 }
 
+const colorsRed = {
+    ...colors,
+    primary: {
+        "50": "#fef2f2",
+        "100": "#fde6e7",
+        "200": "#fad1d4",
+        "300": "#f6abb1",
+        "400": "#f07c88",
+        "500": "#e64f62",
+        "600": "#d22c49",
+        "700": "#b0203c",
+        "800": "#941d39",
+        "900": "#7f1c37",
+        "950": "#460b18",
+    },
+};
+
 export const classicLight: BilisoundTheme = {
     colorScheme: "light",
     colors,
@@ -149,6 +166,126 @@ export const classicDark: BilisoundTheme = {
         },
         buttonOutlineBorder: (color, status) => {
             return colors[color][300];
+        },
+    },
+};
+
+export const redLight: BilisoundTheme = {
+    colorScheme: "light",
+    colors: colorsRed,
+    sizes: {
+        radiusButton: 8,
+        radiusButtonFull: 9999,
+    },
+    colorTokens: {
+        background: colorsRed.white,
+        foreground: colorsRed.neutral[700],
+        border: colorsRed.neutral[100],
+        topBarSolidBackground: colorsRed.primary[500],
+        topBarSolidForeground: colorsRed.white,
+        topBarTransparentForeground: colorsRed.primary[500],
+        topBarTransparentAltForeground: colorsRed.neutral[700],
+        dialogBackground: colorsRed.white,
+        dialogBorder: colorsRed.neutral[100],
+        toastBackground: colorsRed.white,
+        toastBorder: colorsRed.neutral[100],
+        buttonBackground: (color, status) => {
+            switch (status) {
+                case "default":
+                    return colorsRed[color][500];
+                case "hover":
+                    return colorsRed[color][600];
+                case "active":
+                    return colorsRed[color][700];
+                case "disabled":
+                    return colorsRed[color][200];
+                default:
+                    return colorsRed[color][500];
+            }
+        },
+        buttonForeground: (color, status) => {
+            if (status === "disabled") {
+                return colorsRed[color][700];
+            }
+            return colorsRed.white;
+        },
+        buttonOutlineBackground: (color, status) => {
+            switch (status) {
+                case "default":
+                    return colorsRed.transparent;
+                case "hover":
+                    return colorsRed[color][50];
+                case "active":
+                    return colorsRed[color][100];
+                case "disabled":
+                    return colorsRed.transparent;
+                default:
+                    return colorsRed.transparent;
+            }
+        },
+        buttonOutlineForeground: (color, status) => {
+            return colorsRed[color][700];
+        },
+        buttonOutlineBorder: (color, status) => {
+            return colorsRed[color][700];
+        },
+    },
+} as const;
+
+export const redDark: BilisoundTheme = {
+    ...redLight,
+    colorScheme: "dark",
+    colorTokens: {
+        background: colorsRed.neutral["900"],
+        foreground: colorsRed.white,
+        border: colorsRed.neutral["800"],
+        topBarSolidBackground: colorsRed.primary["900"],
+        topBarSolidForeground: colorsRed.white,
+        topBarTransparentForeground: colorsRed.primary[500],
+        topBarTransparentAltForeground: colorsRed.white,
+        dialogBackground: colorsRed.neutral["900"],
+        dialogBorder: colorsRed.neutral[800],
+        toastBackground: colorsRed.neutral["800"],
+        toastBorder: colorsRed.neutral[800],
+        buttonBackground: (color, status) => {
+            switch (status) {
+                case "default":
+                    return colorsRed[color][400];
+                case "hover":
+                    return colorsRed[color][300];
+                case "active":
+                    return colorsRed[color][500];
+                case "disabled":
+                    return colorsRed[color][800];
+                default:
+                    return colorsRed[color][400];
+            }
+        },
+        buttonForeground: (color, status) => {
+            if (status === "disabled") {
+                return colorsRed[color][100];
+            }
+            return colorsRed[color][950];
+        },
+        buttonOutlineBackground: (color, status) => {
+            switch (status) {
+                case "default":
+                    return colorsRed.transparent;
+                case "hover":
+                    return colorsRed[color][950];
+                case "active":
+                    return colorsRed[color][900];
+                case "disabled":
+                    return colorsRed.transparent;
+                default:
+                    return colorsRed.transparent;
+            }
+        },
+        buttonOutlineForeground: (color, status) => {
+            return colorsRed[color][300];
+        },
+        buttonOutlineBorder: (color, status) => {
+            return colorsRed[color][300];
         },
     },
 };

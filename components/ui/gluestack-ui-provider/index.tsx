@@ -6,6 +6,8 @@ import { ColorSchemeName, useColorScheme, View, ViewProps } from "react-native";
 
 import { config } from "./config";
 
+import useSettingsStore from "~/store/settings";
+
 type ModeType = "light" | "dark" | "system";
 
 const getColorSchemeName = (colorScheme: ColorSchemeName, mode: ModeType): "light" | "dark" => {
@@ -23,6 +25,10 @@ export function GluestackUIProvider({
     children?: React.ReactNode;
     style?: ViewProps["style"];
 }) {
+    const { theme } = useSettingsStore(state => ({
+        theme: state.theme,
+    }));
+
     const colorScheme = useColorScheme();
 
     const colorSchemeName = getColorSchemeName(colorScheme, mode);
@@ -30,7 +36,7 @@ export function GluestackUIProvider({
     colorSchemeNW.set(mode);
 
     return (
-        <View style={[config[colorSchemeName], { flex: 1, height: "100%", width: "100%" }, props.style]}>
+        <View style={[config[theme + "_" + colorSchemeName], { flex: 1, height: "100%", width: "100%" }, props.style]}>
             <OverlayProvider>
                 <ToastProvider>{props.children}</ToastProvider>
             </OverlayProvider>

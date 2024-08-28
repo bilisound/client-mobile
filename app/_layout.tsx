@@ -24,6 +24,7 @@ import { checkLatestVersion } from "~/utils/check-release";
 import init from "~/utils/init";
 import "~/global.css";
 import "~/unistyles";
+import useSettingsStore from "~/store/settings";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -68,13 +69,17 @@ function CheckUpdate() {
 }
 
 const RootLayoutNav = () => {
+    const { theme } = useSettingsStore(state => ({
+        theme: state.theme,
+    }));
     const colorScheme = useColorScheme();
+    const themeName = theme + "_" + (colorScheme === "dark" ? "dark" : "light");
 
-    useInitialTheme(colorScheme === "dark" ? "dark" : "light");
+    useInitialTheme(themeName);
 
     useEffect(() => {
-        UnistylesRuntime.setTheme(colorScheme === "dark" ? "dark" : "light");
-    }, [colorScheme]);
+        UnistylesRuntime.setTheme(themeName);
+    }, [themeName]);
 
     const modalSettings: NativeStackNavigationOptions =
         Platform.OS === "ios"
@@ -90,7 +95,7 @@ const RootLayoutNav = () => {
 
     const dark = colorScheme === "dark";
 
-    const theme = {
+    const reactNavigationTheme = {
         dark,
         colors: dark
             ? {
@@ -142,7 +147,7 @@ const RootLayoutNav = () => {
     return (
         <GluestackUIProvider mode="system">
             <QueryClientProvider client={queryClient}>
-                <ThemeProvider value={theme}>
+                <ThemeProvider value={reactNavigationTheme}>
                     <PortalProvider>
                         {routes}
                         <AudioManager />
