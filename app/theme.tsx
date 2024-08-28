@@ -54,7 +54,7 @@ export default function Page() {
         <CommonLayout titleBarTheme="solid" title="外观设置" leftAccessories="backButton">
             <VStack space="xl" className="p-4">
                 <HStack space="md" className="items-center">
-                    <Center className="size-[26px]">
+                    <Center className="size-[24px]">
                         <PaintBrushIcon size={20} />
                     </Center>
                     <Text className="text-[15px] font-semibold">App 界面主题</Text>
