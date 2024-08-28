@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import React, { useState } from "react";
+import React from "react";
 import { Linking, ScrollView, View, Text, Pressable } from "react-native";
 import Toast from "react-native-toast-message";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
-import CheckUpdateDialog from "~/components/CheckUpdateDialog";
 import CommonLayout from "~/components/CommonLayout";
 import { BILISOUND_OFFICIAL_WEBSITE } from "~/constants/branding";
 import { RELEASE_CHANNEL, VERSION } from "~/constants/releasing";
@@ -16,22 +15,15 @@ export default function Page() {
     const { styles } = useStyles(stylesheet);
 
     // 检查更新
-    const [modalVisible, setModalVisible] = useState(false);
-    const { data, isLoading, isError } = useQuery({
+    const { data, isLoading, isError, refetch } = useQuery({
         queryKey: ["check_update"],
         queryFn: () => checkLatestVersion(VERSION),
         staleTime: 86400_000,
     });
 
-    function handleClose(positive: boolean) {
-        setModalVisible(false);
-        if (positive) {
-            Linking.openURL(data!.downloadUrl);
-        }
-    }
-
-    function handleCheckUpdate() {
+    async function handleCheckUpdate() {
         try {
+            await refetch();
             log.info(`检查更新结果：${JSON.stringify(data)}`);
             if (data?.isLatest) {
                 Toast.show({
@@ -39,8 +31,6 @@ export default function Page() {
                     text1: "好耶，您使用的是最新版本！",
                     text2: `版本号：${data.latestVersion}`,
                 });
-            } else {
-                setModalVisible(true);
             }
         } catch (e) {
             log.error(`检查更新失败，原因：${e}`);
@@ -74,7 +64,6 @@ export default function Page() {
                     </View>
                 </View>
             </ScrollView>
-            <CheckUpdateDialog open={modalVisible} onClose={handleClose} result={data} />
         </CommonLayout>
     );
 }
