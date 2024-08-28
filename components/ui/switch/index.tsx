@@ -6,7 +6,8 @@ import { withStyleContextAndStates } from "@gluestack-ui/nativewind-utils/withSt
 import { createSwitch } from "@gluestack-ui/switch";
 import { cssInterop } from "nativewind";
 import React from "react";
-import { Switch as RNSwitch, Platform } from "react-native";
+import { Switch as RNSwitch, Platform, useColorScheme } from "react-native";
+import { useStyles } from "react-native-unistyles";
 
 const SwitchWrapper = React.forwardRef<React.ElementRef<typeof RNSwitch>, React.ComponentProps<typeof RNSwitch>>(
     ({ ...props }, ref) => {
@@ -35,7 +36,24 @@ const switchStyle = tva({
 type ISwitchProps = React.ComponentProps<typeof UISwitch> & VariantProps<typeof switchStyle>;
 const Switch = React.forwardRef<React.ElementRef<typeof UISwitch>, ISwitchProps>(
     ({ className, size = "md", ...props }, ref) => {
-        return <UISwitch ref={ref} {...props} className={switchStyle({ size, class: className })} />;
+        // 不是很科学的做法，但是 workaround
+        const { theme } = useStyles();
+        const colorScheme = useColorScheme();
+        const dark = colorScheme === "dark";
+
+        return (
+            <UISwitch
+                ref={ref}
+                trackColor={{
+                    false: theme.colors.primary[dark ? 950 : 300],
+                    true: theme.colors.primary[dark ? 700 : 500],
+                }}
+                thumbColor={theme.colors.primary[dark ? 500 : 50]}
+                ios_backgroundColor={theme.colors.primary[dark ? 950 : 300]}
+                {...props}
+                className={switchStyle({ size, class: className })}
+            />
+        );
     },
 );
 
