@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     imageInner: {
         width: 240,
         aspectRatio: "1/1",
-        opacity: 0.25,
+        opacity: 0.2,
     },
 });
 

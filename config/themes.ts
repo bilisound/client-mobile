@@ -1,3 +1,5 @@
+import * as twColors from "tailwindcss/colors";
+
 import { ColorPalettes, colors, ThemeColorPaletteKeys } from "~/config/palettes";
 
 export interface BilisoundTheme {
@@ -48,6 +50,7 @@ const colorsRed = {
         "900": "#7f1c37",
         "950": "#460b18",
     },
+    accent: twColors.orange,
 };
 
 export const classicLight: BilisoundTheme = {

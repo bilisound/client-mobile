@@ -225,7 +225,7 @@ export default function Page() {
     }
 
     const fromColor = Color(meta.color)
-        .lightness(colorMode === "dark" ? 20 : 95)
+        .lightness(colorMode === "dark" ? 12 : 95)
         .saturationl(100)
         .toString();
 
@@ -357,7 +357,7 @@ const stylesheet = createStyleSheet(theme => ({
         overflow: "hidden",
     },
     emptyImageGroup: {
-        backgroundColor: "$trueGray500",
+        backgroundColor: theme.colors.neutral[500],
     },
     singleImage: {
         width: HEADER_BASE_SIZE,

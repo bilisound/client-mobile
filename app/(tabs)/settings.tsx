@@ -3,12 +3,13 @@ import { router } from "expo-router";
 import { filesize } from "filesize";
 import path from "path-browserify";
 import React, { useEffect, useState } from "react";
-import { Platform, ScrollView, Switch } from "react-native";
+import { Platform, ScrollView } from "react-native";
 import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Switch } from "~/components/ui/switch";
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
 import { VERSION } from "~/constants/releasing";
 import useSettingsStore from "~/store/settings";

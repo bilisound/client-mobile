@@ -13,18 +13,18 @@ import * as SystemUI from "expo-system-ui";
 import React, { useEffect, useRef, useState } from "react";
 import { Linking, Platform, useColorScheme } from "react-native";
 import Toast from "react-native-toast-message";
-import { UnistylesRuntime, useInitialTheme } from "react-native-unistyles";
+import { UnistylesRuntime, useInitialTheme, useStyles } from "react-native-unistyles";
 
 import AudioManager from "~/components/AudioManager";
 import CheckUpdateDialog from "~/components/CheckUpdateDialog";
 import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
 import { toastConfig } from "~/config/toast";
 import { VERSION } from "~/constants/releasing";
+import useSettingsStore from "~/store/settings";
 import { checkLatestVersion } from "~/utils/check-release";
 import init from "~/utils/init";
 import "~/global.css";
 import "~/unistyles";
-import useSettingsStore from "~/store/settings";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -69,17 +69,18 @@ function CheckUpdate() {
 }
 
 const RootLayoutNav = () => {
-    const { theme } = useSettingsStore(state => ({
+    const { theme: currentTheme } = useSettingsStore(state => ({
         theme: state.theme,
     }));
     const colorScheme = useColorScheme();
-    const themeName = theme + "_" + (colorScheme === "dark" ? "dark" : "light");
+    const themeName = currentTheme + "_" + (colorScheme === "dark" ? "dark" : "light");
 
     useInitialTheme(themeName);
-
     useEffect(() => {
         UnistylesRuntime.setTheme(themeName);
     }, [themeName]);
+
+    const { theme } = useStyles();
 
     const modalSettings: NativeStackNavigationOptions =
         Platform.OS === "ios"
@@ -99,7 +100,7 @@ const RootLayoutNav = () => {
         dark,
         colors: dark
             ? {
-                  primary: "#00a48e",
+                  primary: theme.colors.primary[500],
                   background: "#171717",
                   card: "#171717",
                   text: "#ffffff",
@@ -107,7 +108,7 @@ const RootLayoutNav = () => {
                   notification: "red",
               }
             : {
-                  primary: "#00a48e",
+                  primary: theme.colors.primary[500],
                   background: "#ffffff",
                   card: "#ffffff",
                   text: "#000000",
