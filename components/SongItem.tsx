@@ -1,29 +1,37 @@
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { remapProps } from "nativewind";
 import React from "react";
-import { ActivityIndicator, View, Text } from "react-native";
+import { ActivityIndicator, Text } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
-import { useStyles, createStyleSheet } from "react-native-unistyles";
+import { useStyles } from "react-native-unistyles";
 
 import ProgressBar from "./ProgressBar";
 
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
+import { Box } from "~/components/ui/box";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { formatSecond } from "~/utils/misc";
 import { handleTogglePlay } from "~/utils/player-control";
+
+const PotatoPressableWind = remapProps(PotatoPressable, { className: "style" });
 
 // 播放状态图标
 function PlayingIcon() {
     const playingState = usePlaybackState().state;
     const activeTrack = useActiveTrack();
     const isPlaying = playingState === State.Playing;
-    const { theme } = useStyles(styleSheet);
+    const { theme } = useStyles();
     const accentColor = theme.colors.accent[500];
 
     if (!activeTrack?.bilisoundIsLoaded) {
         return <ActivityIndicator color={accentColor} />;
     }
 
-    return <FontAwesome5 name={isPlaying ? "pause" : "play"} size={20} color={accentColor} />;
+    return (
+        <Box className="items-center justify-center">
+            <FontAwesome5 name={isPlaying ? "pause" : "play"} size={20} color={accentColor} />
+        </Box>
+    );
 }
 
 export interface SongItemProps {
@@ -47,11 +55,9 @@ export default function SongItem({
 }: SongItemProps) {
     const activeTrack = useActiveTrack();
     const isActiveTrack = data.bvid === activeTrack?.bilisoundId && data.episode === activeTrack?.bilisoundEpisode;
-    const { theme, styles } = useStyles(styleSheet);
-    const textBasicColor = theme.colorTokens.foreground;
 
     return (
-        <PotatoPressable
+        <PotatoPressableWind
             onPress={async () => {
                 if (isChecking) {
                     onToggle();
@@ -64,115 +70,49 @@ export default function SongItem({
                 onRequestPlay();
             }}
             onLongPress={onLongPress}
-            style={styles.container}
+            className="px-4 h-16 flex-row gap-3 items-center"
         >
-            <View style={styles.rowContainer}>
-                <View
-                    style={[
-                        styles.episodeContainer,
-                        { backgroundColor: isActiveTrack ? theme.colors.accent[500] : theme.colors.primary[500] },
-                    ]}
+            <Box className="flex-row flex-1 gap-3 justify-start">
+                <Box
+                    className={`items-center justify-center px-1.5 h-[22px] rounded-md ${
+                        isActiveTrack ? "bg-accent-500 shadow-md" : "bg-primary-500"
+                    }`}
                 >
-                    <Text style={styles.episodeText}>{typeof index === "number" ? index : data.episode}</Text>
-                </View>
-                <View style={styles.titleContainer}>
+                    <Text className="text-sm font-bold text-white">
+                        {typeof index === "number" ? index : data.episode}
+                    </Text>
+                </Box>
+                <Box className="flex-1">
                     <Text
-                        style={[
-                            styles.titleText,
-                            {
-                                fontWeight: isActiveTrack ? "600" : "400",
-                                color: isActiveTrack ? theme.colors.accent[500] : textBasicColor,
-                            },
-                        ]}
+                        className={`leading-[22px] text-sm ${
+                            isActiveTrack ? "font-semibold text-accent-500" : "font-normal text-foreground"
+                        }`}
                         numberOfLines={1}
                         ellipsizeMode="tail"
                     >
                         {data.title}
                     </Text>
-                    <Text style={styles.durationText}>{formatSecond(data.duration)}</Text>
-                </View>
-            </View>
+                    <Text className="mt-1 text-sm text-foreground opacity-50">{formatSecond(data.duration)}</Text>
+                </Box>
+            </Box>
             {isChecking ? (
-                <View style={styles.checkContainer}>
-                    <View
-                        style={[
-                            styles.checkCircle,
-                            { backgroundColor: isChecked ? theme.colors.primary[500] : "transparent" },
-                        ]}
+                <Box className="flex-basis-auto">
+                    <Box
+                        className={`w-7 h-7 rounded-full border-2 border-primary-500 items-center justify-center ${
+                            isChecked ? "bg-primary-500" : "bg-transparent"
+                        }`}
                     >
                         <Entypo name="check" size={18} color={isChecked ? "white" : "transparent"} />
-                    </View>
-                </View>
+                    </Box>
+                </Box>
             ) : isActiveTrack ? (
                 <>
-                    <View style={styles.playingIconContainer}>
+                    <Box className="flex-0 flex-basis-auto items-center justify-center w-8">
                         <PlayingIcon />
-                    </View>
+                    </Box>
                     <ProgressBar item={`${data.bvid}_${data.episode}`} />
                 </>
             ) : null}
-        </PotatoPressable>
+        </PotatoPressableWind>
     );
 }
-
-const styleSheet = createStyleSheet(theme => ({
-    container: {
-        paddingHorizontal: 16,
-        height: 64,
-        flexDirection: "row",
-        gap: 12,
-        position: "relative",
-        alignItems: "center",
-    },
-    rowContainer: {
-        flexDirection: "row",
-        flex: 1,
-        gap: 12,
-        justifyContent: "flex-start",
-    },
-    episodeContainer: {
-        alignItems: "center",
-        justifyContent: "center",
-        paddingHorizontal: 6,
-        height: 22,
-        borderRadius: 6,
-        flexBasis: "auto",
-    },
-    episodeText: {
-        fontSize: 14,
-        fontWeight: "bold",
-        color: "white",
-    },
-    titleContainer: {
-        flex: 1,
-    },
-    titleText: {
-        lineHeight: 22,
-        fontSize: 14,
-    },
-    durationText: {
-        marginTop: 4,
-        fontSize: 14,
-        color: theme.colorTokens.foreground,
-        opacity: 0.5,
-    },
-    checkContainer: {
-        flexBasis: "auto",
-    },
-    checkCircle: {
-        width: 28,
-        height: 28,
-        borderRadius: 14,
-        borderWidth: 2,
-        borderColor: theme.colors.primary[500],
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    playingIconContainer: {
-        flex: 0,
-        flexBasis: "auto",
-        alignItems: "center",
-        justifyContent: "center",
-        width: 32,
-    },
-}));

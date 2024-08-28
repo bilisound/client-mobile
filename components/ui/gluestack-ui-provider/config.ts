@@ -3,7 +3,6 @@ import { vars } from "nativewind";
 
 export const config: Record<string, ReturnType<typeof vars>> = {
     classic_light: vars({
-        "--color-primary-0": "247 255 253",
         "--color-primary-50": "238 255 250",
         "--color-primary-100": "198 255 241",
         "--color-primary-200": "142 255 230",
@@ -15,6 +14,18 @@ export const config: Record<string, ReturnType<typeof vars>> = {
         "--color-primary-800": "8 103 93",
         "--color-primary-900": "12 85 77",
         "--color-primary-950": "0 52 49",
+
+        "--color-accent-50": "239 246 255",
+        "--color-accent-100": "219 234 254",
+        "--color-accent-200": "191 219 254",
+        "--color-accent-300": "147 197 253",
+        "--color-accent-400": "96 165 250",
+        "--color-accent-500": "59 130 246",
+        "--color-accent-600": "37 99 235",
+        "--color-accent-700": "29 78 216",
+        "--color-accent-800": "30 64 175",
+        "--color-accent-900": "30 58 138",
+        "--color-accent-950": "23 37 84",
 
         /* Secondary  */
         "--color-secondary-0": "254 255 255",
@@ -155,7 +166,6 @@ export const config: Record<string, ReturnType<typeof vars>> = {
         "--color-indicator-error": "185 28 28",
     }),
     classic_dark: vars({
-        "--color-primary-0": "247 255 253",
         "--color-primary-50": "238 255 250",
         "--color-primary-100": "198 255 241",
         "--color-primary-200": "142 255 230",
@@ -167,6 +177,18 @@ export const config: Record<string, ReturnType<typeof vars>> = {
         "--color-primary-800": "8 103 93",
         "--color-primary-900": "12 85 77",
         "--color-primary-950": "0 52 49",
+
+        "--color-accent-50": "239 246 255",
+        "--color-accent-100": "219 234 254",
+        "--color-accent-200": "191 219 254",
+        "--color-accent-300": "147 197 253",
+        "--color-accent-400": "96 165 250",
+        "--color-accent-500": "59 130 246",
+        "--color-accent-600": "37 99 235",
+        "--color-accent-700": "29 78 216",
+        "--color-accent-800": "30 64 175",
+        "--color-accent-900": "30 58 138",
+        "--color-accent-950": "23 37 84",
 
         /* Secondary  */
         "--color-secondary-0": "11 12 12",
@@ -307,7 +329,6 @@ export const config: Record<string, ReturnType<typeof vars>> = {
         "--color-indicator-error": "232 70 69",
     }),
     red_light: vars({
-        "--color-primary-0": "255 253 247",
         "--color-primary-50": "254 242 242",
         "--color-primary-100": "253 230 231",
         "--color-primary-200": "250 209 212",
@@ -319,6 +340,18 @@ export const config: Record<string, ReturnType<typeof vars>> = {
         "--color-primary-800": "148 29 57",
         "--color-primary-900": "127 28 55",
         "--color-primary-950": "70 11 24",
+
+        "--color-accent-50": "255 247 237",
+        "--color-accent-100": "255 237 213",
+        "--color-accent-200": "254 215 170",
+        "--color-accent-300": "253 186 116",
+        "--color-accent-400": "251 146 60",
+        "--color-accent-500": "249 115 22",
+        "--color-accent-600": "234 88 12",
+        "--color-accent-700": "194 65 12",
+        "--color-accent-800": "154 52 18",
+        "--color-accent-900": "124 45 18",
+        "--color-accent-950": "67 20 7",
 
         /* Secondary  */
         "--color-secondary-0": "254 255 255",
@@ -459,7 +492,6 @@ export const config: Record<string, ReturnType<typeof vars>> = {
         "--color-indicator-error": "185 28 28",
     }),
     red_dark: vars({
-        "--color-primary-0": "255 253 247",
         "--color-primary-50": "254 242 242",
         "--color-primary-100": "253 230 231",
         "--color-primary-200": "250 209 212",
@@ -471,6 +503,18 @@ export const config: Record<string, ReturnType<typeof vars>> = {
         "--color-primary-800": "148 29 57",
         "--color-primary-900": "127 28 55",
         "--color-primary-950": "70 11 24",
+
+        "--color-accent-50": "255 247 237",
+        "--color-accent-100": "255 237 213",
+        "--color-accent-200": "254 215 170",
+        "--color-accent-300": "253 186 116",
+        "--color-accent-400": "251 146 60",
+        "--color-accent-500": "249 115 22",
+        "--color-accent-600": "234 88 12",
+        "--color-accent-700": "194 65 12",
+        "--color-accent-800": "154 52 18",
+        "--color-accent-900": "124 45 18",
+        "--color-accent-950": "67 20 7",
 
         /* Secondary  */
         "--color-secondary-0": "11 12 12",
