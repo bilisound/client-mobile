@@ -1,4 +1,6 @@
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
+import { Image as ExpoImage } from "expo-image";
+import { cssInterop } from "nativewind";
 import React from "react";
 import { Pressable } from "react-native";
 import { useStyles } from "react-native-unistyles";
@@ -15,27 +17,35 @@ import { Text } from "~/components/ui/text";
 import { VStack } from "~/components/ui/vstack";
 import useSettingsStore from "~/store/settings";
 
+const Image = cssInterop(ExpoImage, {
+    className: {
+        target: "style",
+        nativeStyleToProp: {
+            height: true,
+            width: true,
+        },
+    },
+});
+
 interface ThemeButtonProps {
     selected?: boolean;
     name: string;
     onPress?: () => void;
+    yuruChara?: any;
 }
 
-function ThemeButton({ selected = false, name, onPress }: ThemeButtonProps) {
+function ThemeButton({ selected = false, name, onPress, yuruChara }: ThemeButtonProps) {
     return (
         <Pressable
             onPress={onPress}
             className={twMerge(
-                "group flex flex-row items-center justify-start text-left px-5 h-12 rounded-lg gap-3 cursor-pointer focus:ring-0.125rem focus:ring-primary-500 dark:focus:ring-primary-900",
-                selected ? "bg-primary-700 shadow-md" : "bg-background-100",
+                "flex px-5 py-5 h-24 justify-between rounded-lg cursor-pointer overflow-hidden focus:ring-0.125rem focus:ring-primary-500 dark:focus:ring-primary-900",
+                selected ? "bg-primary-700 shadow-md" : "bg-background-50",
             )}
         >
-            <Text className={`truncate flex-1 text-left font-semibold text-sm ${selected ? "text-white" : ""}`}>
-                {name}
-            </Text>
-            {selected && (
-                <Text className={`flex-none font-semibold text-sm ${selected ? "text-white" : ""}`}>已启用</Text>
-            )}
+            <Text className={`font-semibold text-lg ${selected ? "text-white" : ""}`}>{name}</Text>
+            {selected && <Text className={`font-semibold text-sm ${selected ? "text-white" : ""}`}>已启用</Text>}
+            <Image source={yuruChara} className="absolute right-0 -top-16 w-64 h-64 opacity-30" />
         </Pressable>
     );
 }
@@ -62,13 +72,19 @@ export default function Page() {
                     </Center>
                     <Text className="text-[15px] font-semibold">App 界面主题</Text>
                 </HStack>
-                <VStack space="md">
+                <VStack space="lg">
                     <ThemeButton
                         name="默认主题"
+                        yuruChara={require("../assets/images/bg-corner-classic.svg")}
                         onPress={() => update("theme", "classic")}
                         selected={theme === "classic"}
                     />
-                    <ThemeButton name="红色主题" onPress={() => update("theme", "red")} selected={theme === "red"} />
+                    <ThemeButton
+                        name="红色主题"
+                        yuruChara={require("../assets/images/bg-corner-red.webp")}
+                        onPress={() => update("theme", "red")}
+                        selected={theme === "red"}
+                    />
                 </VStack>
             </VStack>
             <SettingMenuItem
