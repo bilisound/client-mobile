@@ -54,6 +54,7 @@
     },
     "plugins": [
       "./plugins/withAbiFilters",
+      "./plugins/withAndroidSignature",
       [
         "@config-plugins/ffmpeg-kit-react-native",
         {

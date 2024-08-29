@@ -7,14 +7,14 @@
     "android": "cross-env DARK_MODE=media expo run:android",
     "ios": "cross-env DARK_MODE=media expo run:ios",
     "web": "cross-env DARK_MODE=media expo start --web",
-    "prepare": "node -e \"fs.rmSync('./ios', { recursive: true, force: true }); fs.rmSync('./android', { recursive: true, force: true })\" && expo prebuild",
+    "prepare": "pnpm run clean && expo prebuild",
     "test": "jest --watchAll",
-    "build:android": "eas build --platform android --local --output=dist/bilisound-app-release.apk",
-    "build:ios": "eas build --platform ios --local",
+    "build:android": "react-native build-android --mode=release",
     "build:web": "expo export --platform web",
     "lint": "eslint --fix .",
     "postinstall": "patch-package",
-    "generate-migration": "drizzle-kit generate"
+    "generate-migration": "drizzle-kit generate",
+    "clean": "node -e \"fs.rmSync('./ios', { recursive: true, force: true }); fs.rmSync('./android', { recursive: true, force: true })\""
   },
   "jest": {
     "preset": "jest-expo"
