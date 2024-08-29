@@ -1,7 +1,7 @@
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { remapProps } from "nativewind";
 import React from "react";
-import { ActivityIndicator, Text } from "react-native";
+import { ActivityIndicator } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 import { useStyles } from "react-native-unistyles";
 
@@ -9,6 +9,7 @@ import ProgressBar from "./ProgressBar";
 
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { Box } from "~/components/ui/box";
+import { Text } from "~/components/ui/text";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { formatSecond } from "~/utils/misc";
 import { handleTogglePlay } from "~/utils/player-control";
@@ -85,14 +86,14 @@ export default function SongItem({
                 <Box className="flex-1">
                     <Text
                         className={`leading-[22px] text-sm ${
-                            isActiveTrack ? "font-semibold text-accent-500" : "font-normal text-foreground"
+                            isActiveTrack ? "font-semibold text-accent-500" : "font-normal"
                         }`}
                         numberOfLines={1}
                         ellipsizeMode="tail"
                     >
                         {data.title}
                     </Text>
-                    <Text className="mt-1 text-sm text-foreground opacity-50">{formatSecond(data.duration)}</Text>
+                    <Text className="mt-1 text-sm opacity-50">{formatSecond(data.duration)}</Text>
                 </Box>
             </Box>
             {isChecking ? (
