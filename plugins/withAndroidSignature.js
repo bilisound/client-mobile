@@ -19,7 +19,9 @@ function setAndroidSignature(appBuildGradle) {
         return appBuildGradle;
     }
     const info = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../credentials.json"), { encoding: "utf8" }));
-    return appBuildGradle.replace(
+
+    // 插入签名信息
+    let output = appBuildGradle.replace(
         /signingConfigs\s*{/,
         `signingConfigs {
         release {
@@ -29,4 +31,17 @@ function setAndroidSignature(appBuildGradle) {
             keyPassword ${JSON.stringify(info.android.keystore.keyPassword)}
         }`,
     );
+
+    // 替换 signingConfig
+    output = output.replaceAll(
+        `
+        release {
+            // Caution! In production, you need to generate your own keystore file.
+            // see https://reactnative.dev/docs/signed-apk-android.
+            signingConfig signingConfigs.debug`,
+        `
+        release {
+            signingConfig signingConfigs.release`,
+    );
+    return output;
 }

@@ -14,7 +14,7 @@
     "lint": "eslint --fix .",
     "postinstall": "patch-package",
     "generate-migration": "drizzle-kit generate",
-    "clean": "node -e \"fs.rmSync('./ios', { recursive: true, force: true }); fs.rmSync('./android', { recursive: true, force: true })\""
+    "clean": "node -e \"const opt = { recursive: true, force: true }; fs.rmSync('./ios', opt); fs.rmSync('./android', opt)\""
   },
   "jest": {
     "preset": "jest-expo"
