@@ -1,6 +1,7 @@
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import { Pressable } from "react-native";
+import { useStyles } from "react-native-unistyles";
 import { twMerge } from "tailwind-merge";
 
 import CommonLayout from "~/components/CommonLayout";
@@ -50,12 +51,14 @@ export default function Page() {
         toggle: state.toggle,
     }));
 
+    const { theme: themeData } = useStyles();
+
     return (
         <CommonLayout titleBarTheme="solid" title="外观设置" leftAccessories="backButton">
             <VStack space="xl" className="p-4">
                 <HStack space="md" className="items-center">
                     <Center className="size-[24px]">
-                        <PaintBrushIcon size={20} />
+                        <PaintBrushIcon size={20} color={themeData.colorTokens.foreground} />
                     </Center>
                     <Text className="text-[15px] font-semibold">App 界面主题</Text>
                 </HStack>

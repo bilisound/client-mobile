@@ -120,7 +120,7 @@ export const classicDark: BilisoundTheme = {
     colorScheme: "dark",
     colorTokens: {
         background: colors.neutral["900"],
-        foreground: colors.white,
+        foreground: colors.neutral["200"],
         border: colors.neutral["800"],
         topBarSolidBackground: colors.primary["900"],
         topBarSolidForeground: colors.white,
@@ -240,7 +240,7 @@ export const redDark: BilisoundTheme = {
     colorScheme: "dark",
     colorTokens: {
         background: colorsRed.neutral["900"],
-        foreground: colorsRed.white,
+        foreground: colorsRed.neutral["200"],
         border: colorsRed.neutral["800"],
         topBarSolidBackground: colorsRed.primary["900"],
         topBarSolidForeground: colorsRed.white,
