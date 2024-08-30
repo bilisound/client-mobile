@@ -7,6 +7,10 @@ export const playlistMeta = sqliteTable("playlist_meta", {
     title: text("title").notNull(),
     color: text("color").notNull(),
     amount: integer("amount").notNull(),
+    imgUrl: text("img_url"),
+    description: text("description"),
+    source: text("source"),
+    extendedData: text("extended_data"),
 });
 
 // 定义 playlist_detail 表
@@ -21,6 +25,7 @@ export const playlistDetail = sqliteTable("playlist_detail", {
     episode: integer("episode").notNull(),
     title: text("title").notNull(),
     imgUrl: text("img_url").notNull(),
+    extendedData: text("extended_data"),
 });
 
 export type PlaylistMeta = InferSelectModel<typeof playlistMeta>;

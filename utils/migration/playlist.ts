@@ -23,7 +23,7 @@ export async function handlePlaylist(forceVersion?: number) {
 
     // 版本为 0：首次使用 Bilisound 或从 1.5.0 以下版本升级上来，需要创建数据库，并且导入存在 MMKV 中的旧版歌单数据
     if (version <= 0) {
-        log.info("正在执行 v0 -> v1 升级程序……");
+        log.info("正在执行 v0 -> v2 升级程序……");
 
         // 备份旧数据
         const got = playlistStorage.getString(LEGACY_PLAYLIST_INDEX_KEY);
@@ -46,26 +46,31 @@ export async function handlePlaylist(forceVersion?: number) {
         log.info("正在创建数据库……");
         db.transaction(tx => {
             tx.run(sql`
-                CREATE TABLE IF NOT EXISTS \`playlist_meta\`
+                CREATE TABLE \`playlist_detail\`
                 (
-                    \`id\`                integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-                    \`title\`             text    NOT NULL,
-                    \`color\`             text    NOT NULL,
-                    \`amount\`            integer NOT NULL
+                    \`id\`            integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    \`playlist_id\`   integer NOT NULL,
+                    \`author\`        text    NOT NULL,
+                    \`bvid\`          text    NOT NULL,
+                    \`duration\`      integer NOT NULL,
+                    \`episode\`       integer NOT NULL,
+                    \`title\`         text    NOT NULL,
+                    \`img_url\`       text    NOT NULL,
+                    \`extended_data\` text,
+                    FOREIGN KEY (\`playlist_id\`) REFERENCES \`playlist_meta\` (\`id\`) ON UPDATE no action ON DELETE no action
                 );
             `);
             tx.run(sql`
-                CREATE TABLE IF NOT EXISTS \`playlist_detail\`
+                CREATE TABLE \`playlist_meta\`
                 (
-                    \`id\`          integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-                    \`playlist_id\` text    NOT NULL,
-                    \`author\`      text    NOT NULL,
-                    \`bvid\`        text    NOT NULL,
-                    \`duration\`    integer NOT NULL,
-                    \`episode\`     integer NOT NULL,
-                    \`title\`       text    NOT NULL,
-                    \`img_url\`     text    NOT NULL,
-                    FOREIGN KEY (\`playlist_id\`) REFERENCES \`playlist_meta\` (\`id\`) ON UPDATE no action ON DELETE no action
+                    \`id\`            integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    \`title\`         text    NOT NULL,
+                    \`color\`         text    NOT NULL,
+                    \`amount\`        integer NOT NULL,
+                    \`img_url\`       text,
+                    \`description\`   text,
+                    \`source\`        text,
+                    \`extended_data\` text
                 );
             `);
 
@@ -105,7 +110,26 @@ export async function handlePlaylist(forceVersion?: number) {
             });
         });
 
-        log.info(`升级完毕，将数据库版本设置为 1`);
-        playlistStorage.set(PLAYLIST_DB_VERSION, 1);
+        log.info(`升级完毕，将数据库版本设置为 2`);
+        playlistStorage.set(PLAYLIST_DB_VERSION, 2);
+    }
+
+    if (version === 1) {
+        log.info("正在执行 v1 -> v2 升级程序……");
+
+        db.transaction(tx => {
+            tx.run(sql`ALTER TABLE \`playlist_detail\`
+                ADD \`extended_data\` text;`);
+            tx.run(sql`ALTER TABLE \`playlist_meta\` ADD \`img_url\` text;`);
+            tx.run(sql`ALTER TABLE \`playlist_meta\`
+                ADD \`description\` text;`);
+            tx.run(sql`ALTER TABLE \`playlist_meta\`
+                ADD \`source\` text;`);
+            tx.run(sql`ALTER TABLE \`playlist_meta\`
+                ADD \`extended_data\` text;`);
+        });
+
+        log.info(`升级完毕，将数据库版本设置为 2`);
+        playlistStorage.set(PLAYLIST_DB_VERSION, 2);
     }
 }
