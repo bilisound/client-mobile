@@ -94,11 +94,7 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "e35f5bd0-80cc-4e24-a130-b66b7145ff7a"
       }
-    },
-    "owner": "tcdw"
+    }
   }
 }
