@@ -9,9 +9,9 @@
     "userInterfaceStyle": "automatic",
     "primaryColor": "#00ba9d",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/splash-new.png",
       "resizeMode": "cover",
-      "backgroundColor": "#8EBEA7"
+      "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -24,7 +24,16 @@
           "audio"
         ]
       },
-      "bundleIdentifier": "moe.bilisound.app"
+      "bundleIdentifier": "moe.bilisound.app",
+      "splash": {
+        "resizeMode": "cover",
+        "backgroundColor": "#ffffff",
+        "image": "./assets/images/splash-new.png",
+        "dark": {
+          "backgroundColor": "#171717",
+          "image": "./assets/images/splash-new-dark.png"
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -39,12 +48,12 @@
       "package": "moe.bilisound.app",
       "splash": {
         "resizeMode": "cover",
-        "backgroundColor": "#8EBEA7",
-        "mdpi": "./assets/images/splash-mdpi.png",
-        "hdpi": "./assets/images/splash-hdpi.png",
-        "xhdpi": "./assets/images/splash-xhdpi.png",
-        "xxhdpi": "./assets/images/splash-xxhdpi.png",
-        "xxxhdpi": "./assets/images/splash.png"
+        "backgroundColor": "#ffffff",
+        "image": "./assets/images/splash-new.png",
+        "dark": {
+          "backgroundColor": "#171717",
+          "image": "./assets/images/splash-new-dark.png"
+        }
       }
     },
     "web": {
