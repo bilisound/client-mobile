@@ -22,6 +22,7 @@ const androidDir = path.resolve(__dirname, "../android");
 const child = spawn(command, args, {
     stdio: "inherit",
     cwd: androidDir, // 设置工作目录为 android 目录
+    shell: os.platform() === "win32",
 });
 
 // 处理子进程的退出
