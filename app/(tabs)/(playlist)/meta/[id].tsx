@@ -20,6 +20,7 @@ import {
 } from "~/components/ui/form-control";
 import { AlertCircleIcon, CheckIcon } from "~/components/ui/icon";
 import { Input, InputField } from "~/components/ui/input";
+import { Textarea, TextareaInput } from "~/components/ui/textarea";
 import {
     addToPlaylist,
     getPlaylistMeta,
@@ -113,7 +114,7 @@ export default function Page() {
             <Box className="p-4 gap-4">
                 <FormControl isRequired isInvalid={"title" in errors}>
                     <FormControlLabel>
-                        <FormControlLabelText className="text-sm">名称</FormControlLabelText>
+                        <FormControlLabelText className="text-sm">歌单名称</FormControlLabelText>
                     </FormControlLabel>
                     <Controller
                         control={control}
@@ -130,6 +131,38 @@ export default function Page() {
                         )}
                         name="title"
                         rules={{ required: "请输入名称" }}
+                    />
+                    <FormControlError>
+                        <FormControlErrorIcon as={AlertCircleIcon} />
+                        <FormControlErrorText size="sm">{errors.title?.message}</FormControlErrorText>
+                    </FormControlError>
+                </FormControl>
+
+                <FormControl isInvalid={"description" in errors}>
+                    <FormControlLabel>
+                        <FormControlLabelText className="text-sm">备注</FormControlLabelText>
+                    </FormControlLabel>
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <Textarea
+                                size="md"
+                                isReadOnly={false}
+                                isInvalid={false}
+                                isDisabled={false}
+                                className="h-64"
+                            >
+                                {/* todo 解决文本垂直居中的问题 */}
+                                <TextareaInput
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value ?? ""}
+                                    placeholder="可以在这里设置歌单的备注"
+                                    className="text-sm"
+                                />
+                            </Textarea>
+                        )}
+                        name="description"
                     />
                     <FormControlError>
                         <FormControlErrorIcon as={AlertCircleIcon} />
