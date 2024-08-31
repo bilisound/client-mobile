@@ -79,7 +79,10 @@ export default function SongItem({
                         isActiveTrack ? "bg-accent-500 shadow-md" : "bg-primary-500"
                     }`}
                 >
-                    <Text className="text-sm font-bold text-white">
+                    <Text
+                        className="text-sm font-bold text-white"
+                        style={{ fontFamily: isActiveTrack ? "Roboto_700Bold" : "Roboto_400Regular" }}
+                    >
                         {typeof index === "number" ? index : data.episode}
                     </Text>
                 </Box>

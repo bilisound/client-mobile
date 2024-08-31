@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.6.1",
   "scripts": {
-    "start": "expo start --dev-client",
+    "start": "cross-env DARK_MODE=media expo start --dev-client",
     "android": "cross-env DARK_MODE=media expo run:android",
     "ios": "cross-env DARK_MODE=media expo run:ios",
     "web": "cross-env DARK_MODE=media expo start --web",
@@ -22,6 +22,7 @@
   "dependencies": {
     "@config-plugins/ffmpeg-kit-react-native": "^8.0.0",
     "@expo-google-fonts/poppins": "^0.2.3",
+    "@expo-google-fonts/roboto": "^0.2.3",
     "@expo/config-plugins": "^8.0.7",
     "@expo/html-elements": "^0.10.1",
     "@expo/vector-icons": "^14.0.2",

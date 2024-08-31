@@ -81,7 +81,7 @@ const stylesheet = createStyleSheet(theme => ({
     },
     subtitle: {
         marginTop: 4,
-        marginLeft: 38,
+        marginLeft: 36,
         opacity: 0.6,
         fontSize: 15,
         lineHeight: 15 * 1.5,

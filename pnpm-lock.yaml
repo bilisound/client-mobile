@@ -17,6 +17,9 @@ importers:
       '@expo-google-fonts/poppins':
         specifier: ^0.2.3
         version: 0.2.3
+      '@expo-google-fonts/roboto':
+        specifier: ^0.2.3
+        version: 0.2.3
       '@expo/config-plugins':
         specifier: ^8.0.7
         version: 8.0.7
@@ -1539,6 +1542,9 @@ packages:
 
   '@expo-google-fonts/poppins@0.2.3':
     resolution: {integrity: sha512-PXkur1ZY/puy1PwVFYPJx8qiI3dtBzC2ig1bo53swCt7/sI7krCGYRO6hLBNp15M0kcNh2J4cCR9ZQyFxsving==}
+
+  '@expo-google-fonts/roboto@0.2.3':
+    resolution: {integrity: sha512-PF6S//ZYWeXfpYTwvY2oEe0d5RnqwR5KMsGjuTgg6y9p/CPK/IkWL+wsbkzjfd+Jck1Q1pRlWOoe5uz42sQFRg==}
 
   '@expo/bunyan@4.0.0':
     resolution: {integrity: sha512-Ydf4LidRB/EBI+YrB+cVLqIseiRfjUI/AeHBgjGMtq3GroraDu81OV7zqophRgupngoL3iS3JUMDMnxO7g39qA==}
@@ -8578,6 +8584,8 @@ snapshots:
   '@eslint/js@8.57.0': {}
 
   '@expo-google-fonts/poppins@0.2.3': {}
+
+  '@expo-google-fonts/roboto@0.2.3': {}
 
   '@expo/bunyan@4.0.0':
     dependencies:
