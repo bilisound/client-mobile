@@ -6,12 +6,13 @@ import RNFS from "react-native-fs";
 import { logger, fileAsyncTransport, consoleTransport, configLoggerType } from "react-native-logs";
 
 import { BILISOUND_LOG_PATH } from "~/constants/file";
+import { VERSION } from "~/constants/releasing";
 
 const transport: Partial<configLoggerType> = {
     transport: [fileAsyncTransport, consoleTransport],
     transportOptions: {
         FS: RNFS,
-        fileName: "bilisound_log_{date-today}.log",
+        fileName: `bilisound_log_${VERSION}_{date-today}.log`,
         filePath: BILISOUND_LOG_PATH,
     },
 };
