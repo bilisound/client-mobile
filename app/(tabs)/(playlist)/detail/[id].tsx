@@ -139,7 +139,18 @@ export default function Page() {
     const [editing, setEditing] = useState(false);
 
     async function handleRequestPlay(index: number) {
-        if (playlistOnQueue.value?.id === Number(id) && activeTrack) {
+        // 前提条件：
+        // playlistOnQueue 的 id 是这个歌单的 id
+        // 有 activeTrack
+        // 当前 queue 对应 index 的 bvid 和 episode 与请求播放的一致
+        const from = (await TrackPlayer.getQueue())[index];
+        const to = playlistDetail[index];
+        if (
+            playlistOnQueue.value?.id === Number(id) &&
+            activeTrack &&
+            from.bilisoundId === to.bvid &&
+            from.bilisoundEpisode === to.episode
+        ) {
             log.debug("当前队列中的内容来自本歌单，就地跳转");
             await TrackPlayer.skip(index);
             return;
