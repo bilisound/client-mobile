@@ -115,9 +115,10 @@ export default function QueryIdScreen() {
     const { width } = useWindowDimensions();
 
     // 添加歌单
-    const { setPlaylistDetail, setName } = useApplyPlaylistStore(state => ({
+    const { setPlaylistDetail, setName, setDescription } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
+        setDescription: state.setDescription,
     }));
 
     // 数据请求
@@ -294,6 +295,7 @@ export default function QueryIdScreen() {
                         case "addPlaylist":
                             router.push(`/apply-playlist`);
                             setName(data?.data.title ?? "");
+                            setDescription(data?.data.desc ?? "");
                             setPlaylistDetail([
                                 {
                                     author: data?.data.owner.name ?? "",

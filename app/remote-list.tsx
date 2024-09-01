@@ -37,9 +37,10 @@ function Header({ data, mode }: HeaderProps) {
     const [loading, setLoading] = useState(false);
 
     // 添加歌单
-    const { setPlaylistDetail, setName } = useApplyPlaylistStore(state => ({
+    const { setPlaylistDetail, setName, setDescription } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
+        setDescription: state.setDescription,
     }));
 
     async function handleCreatePlaylist() {
@@ -61,6 +62,7 @@ function Header({ data, mode }: HeaderProps) {
                 })),
             );
             setName(data.meta.name);
+            setDescription(data.meta.description);
             router.push(`/apply-playlist`);
         } catch (e) {
             Toast.show({

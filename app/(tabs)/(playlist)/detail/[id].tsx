@@ -83,19 +83,26 @@ function Header({
 }) {
     const { styles } = useStyles(stylesheet);
     return (
-        <View style={styles.headerContainer}>
-            <ImagesGroup images={images} />
-            <View style={styles.headerContent}>
-                <Text style={styles.headerTitle}>{meta.title}</Text>
-                <Text style={styles.headerSubtitle}>{`${meta.amount} 首歌曲`}</Text>
-                {showPlayButton && (
-                    <View style={styles.playButtonContainer}>
-                        <PotatoButton Icon={IconPlay} rounded onPress={onPlay}>
-                            播放
-                        </PotatoButton>
-                    </View>
-                )}
+        <View style={styles.headerContainerOuter}>
+            <View style={styles.headerContainer}>
+                <ImagesGroup images={images} />
+                <View style={styles.headerContent}>
+                    <Text style={styles.headerTitle}>{meta.title}</Text>
+                    <Text style={styles.headerSubtitle}>{`${meta.amount} 首歌曲`}</Text>
+                    {showPlayButton && (
+                        <View style={styles.playButtonContainer}>
+                            <PotatoButton Icon={IconPlay} rounded onPress={onPlay}>
+                                播放
+                            </PotatoButton>
+                        </View>
+                    )}
+                </View>
             </View>
+            {(meta.description ?? "").trim() && (
+                <Text style={styles.headerDescription} selectable>
+                    {meta.description}
+                </Text>
+            )}
         </View>
     );
 }
@@ -372,12 +379,15 @@ const stylesheet = createStyleSheet(theme => ({
         height: HEADER_BASE_SIZE / 2,
         objectFit: "cover",
     },
+    headerContainerOuter: {
+        paddingBottom: 24,
+        paddingHorizontal: 16,
+        gap: 24,
+    },
     headerContainer: {
         flexDirection: "row",
-        gap: 16,
-        paddingHorizontal: 16,
         paddingTop: 16,
-        paddingBottom: 24,
+        gap: 16,
     },
     headerContent: {
         flex: 1,
@@ -398,5 +408,11 @@ const stylesheet = createStyleSheet(theme => ({
     playButtonContainer: {
         flexDirection: "row",
         marginTop: 20,
+    },
+    headerDescription: {
+        fontSize: 14,
+        lineHeight: 14 * 1.5,
+        color: theme.colorTokens.foreground,
+        opacity: 0.8,
     },
 }));

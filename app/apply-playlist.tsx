@@ -24,9 +24,10 @@ export default function Page() {
     const [playlistOnQueue = {}] = usePlaylistOnQueue();
 
     // 添加歌单
-    const { playlistDetail, name } = useApplyPlaylistStore(state => ({
+    const { playlistDetail, name, description } = useApplyPlaylistStore(state => ({
         playlistDetail: state.playlistDetail,
         name: state.name,
+        description: state.description,
     }));
 
     const queryClient = useQueryClient();
@@ -65,7 +66,7 @@ export default function Page() {
                     <PotatoPressable
                         style={[styles.pressable]}
                         onPress={async () => {
-                            await quickCreatePlaylist(name, playlistDetail ?? []);
+                            await quickCreatePlaylist(name, description, playlistDetail ?? []);
                             await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
                             Toast.show({
                                 type: "success",

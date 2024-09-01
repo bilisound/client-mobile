@@ -110,15 +110,17 @@ export async function syncPlaylistAmount(playlistId: number) {
 
 /**
  * 从多首曲目快速创建新的播放列表
- * @param name
+ * @param title
+ * @param description
  * @param list
  */
-export async function quickCreatePlaylist(name: string, list: PlaylistDetail[]) {
+export async function quickCreatePlaylist(title: string, description: string, list: PlaylistDetail[]) {
     // 在 playlistMeta 表中创建新的播放列表
     const newPlaylist = await db
         .insert(playlistMeta)
         .values({
-            title: name,
+            title,
+            description,
             color:
                 "#" +
                 Math.floor(Math.random() * 16777216)
