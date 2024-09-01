@@ -414,5 +414,6 @@ const stylesheet = createStyleSheet(theme => ({
         lineHeight: 14 * 1.5,
         color: theme.colorTokens.foreground,
         opacity: 0.8,
+        paddingBottom: 8,
     },
 }));
