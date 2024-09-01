@@ -50,6 +50,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                 imgUrl: meta.pic ?? "",
                 id: 0,
                 playlistId: 0,
+                extendedData: null,
             })),
         );
         setName(meta.title);

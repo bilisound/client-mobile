@@ -111,5 +111,6 @@ export function tracksToPlaylist(input: Track[]): PlaylistDetail[] {
         // 注意，这里的 id 和 playlistId 需要在事后填充
         id: 0,
         playlistId: 0,
+        extendedData: null,
     }));
 }

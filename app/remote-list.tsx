@@ -57,6 +57,7 @@ function Header({ data, mode }: HeaderProps) {
                     imgUrl: e.cover ?? "",
                     id: 0,
                     playlistId: 0,
+                    extendedData: null,
                 })),
             );
             setName(data.meta.name);

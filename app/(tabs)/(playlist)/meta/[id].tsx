@@ -150,15 +150,15 @@ export default function Page() {
                                 isReadOnly={false}
                                 isInvalid={false}
                                 isDisabled={false}
-                                className="h-64"
+                                className="h-48"
                             >
-                                {/* todo 解决文本垂直居中的问题 */}
                                 <TextareaInput
                                     onBlur={onBlur}
                                     onChangeText={onChange}
                                     value={value ?? ""}
                                     placeholder="可以在这里设置歌单的备注"
                                     className="text-sm"
+                                    textAlignVertical="top"
                                 />
                             </Textarea>
                         )}
