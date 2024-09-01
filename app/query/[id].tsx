@@ -103,7 +103,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
     );
 }
 
-const QueryIdScreen: React.FC = () => {
+export default function QueryIdScreen() {
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
     const edgeInsets = useSafeAreaInsets();
     const { theme } = useStyles();
@@ -187,6 +187,7 @@ const QueryIdScreen: React.FC = () => {
                         imgUrl: data!.data.pic,
                         id: 0,
                         playlistId: 0,
+                        extendedData: null,
                     }}
                 />
             );
@@ -235,7 +236,13 @@ const QueryIdScreen: React.FC = () => {
             {data ? (
                 <Box style={{ flex: 1, flexDirection: "row" }}>
                     {width >= SCREEN_BREAKPOINTS.md ? (
-                        <Box style={{ flex: 0, flexBasis: "auto", width: 384 }}>
+                        <Box
+                            style={
+                                width >= SCREEN_BREAKPOINTS.lg
+                                    ? { flex: 0, flexBasis: "auto", width: 384 }
+                                    : { flex: 1, flexBasis: "auto" }
+                            }
+                        >
                             <ScrollView>
                                 <VideoMeta meta={data.data} />
                                 <Box style={{ height: edgeInsets.bottom }} />
@@ -248,11 +255,7 @@ const QueryIdScreen: React.FC = () => {
                             extraData={updateTriggerString}
                             keyExtractor={item => `${item.page}`}
                             ListHeaderComponent={
-                                width < SCREEN_BREAKPOINTS.md ? (
-                                    <VideoMeta meta={data.data} />
-                                ) : (
-                                    <Box className="h-12" />
-                                )
+                                width < SCREEN_BREAKPOINTS.md ? <VideoMeta meta={data.data} /> : <Box className="h-3" />
                             }
                             ListFooterComponent={
                                 <View style={{ height: edgeInsets.bottom + (activeTrack ? 58 + 36 : 12) }} />
@@ -301,6 +304,7 @@ const QueryIdScreen: React.FC = () => {
                                     imgUrl: data?.data.pic ?? "",
                                     id: 0,
                                     playlistId: 0,
+                                    extendedData: null,
                                 },
                             ]);
                             break;
@@ -312,6 +316,4 @@ const QueryIdScreen: React.FC = () => {
             />
         </CommonLayout>
     );
-};
-
-export default QueryIdScreen;
+}
