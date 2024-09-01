@@ -107,8 +107,8 @@ const styleSheet = createStyleSheet(theme => ({
         flexBasis: "auto",
     },
     titleBar: {
-        height: 56,
-        padding: 8,
+        height: 64,
+        padding: 10,
         alignItems: "center",
         justifyContent: "center",
     },
@@ -118,7 +118,7 @@ const styleSheet = createStyleSheet(theme => ({
     },
     leftAccessories: {
         position: "absolute",
-        padding: 8,
+        padding: 10,
         left: 0,
         flexDirection: "row",
         alignItems: "center",
@@ -126,7 +126,7 @@ const styleSheet = createStyleSheet(theme => ({
     },
     rightAccessories: {
         position: "absolute",
-        padding: 8,
+        padding: 10,
         right: 0,
         flexDirection: "row",
         alignItems: "center",

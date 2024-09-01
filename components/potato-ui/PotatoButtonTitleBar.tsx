@@ -52,8 +52,8 @@ const styleSheet = createStyleSheet(theme => ({
     button: {
         alignItems: "center",
         justifyContent: "center",
-        width: 40,
-        height: 40,
+        width: 44,
+        height: 44,
     },
     buttonOuter: {
         borderRadius: 6,

@@ -73,7 +73,7 @@ const ScannerPage: React.FC = () => {
     return (
         <View style={styles.container}>
             <StatusBar barStyle="light-content" showHideTransition="none" />
-            <View style={[styles.header, { height: safeAreaInsets.top + 56, paddingTop: safeAreaInsets.top }]}>
+            <View style={[styles.header, { height: safeAreaInsets.top + 64, paddingTop: safeAreaInsets.top }]}>
                 <Pressable
                     onPress={() => {
                         router.back();
@@ -125,16 +125,16 @@ const styles = StyleSheet.create({
     },
     backButton: {
         position: "absolute",
-        width: 40,
-        height: 40,
-        borderRadius: 8,
+        width: 44,
+        height: 44,
+        borderRadius: 6,
         alignItems: "center",
         justifyContent: "center",
-        left: 8,
+        left: 10,
     },
     headerText: {
         color: "#fff",
-        fontWeight: "700",
+        fontWeight: "600",
         fontSize: 14,
     },
     centeredContainer: {
