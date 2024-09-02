@@ -39,7 +39,7 @@ function ThemeButton({ selected = false, name, onPress, yuruChara }: ThemeButton
         <Pressable
             onPress={onPress}
             className={twMerge(
-                "flex px-5 py-5 h-24 justify-between rounded-lg cursor-pointer overflow-hidden focus:ring-0.125rem focus:ring-primary-500 dark:focus:ring-primary-900",
+                "md:flex-1 flex px-5 py-5 h-24 justify-between rounded-lg cursor-pointer overflow-hidden focus:ring-0.125rem focus:ring-primary-500 dark:focus:ring-primary-900",
                 selected ? "bg-primary-700 shadow-md" : "bg-background-50",
             )}
         >
@@ -72,7 +72,7 @@ export default function Page() {
                     </Center>
                     <Text className="text-[15px] font-semibold">App 界面主题</Text>
                 </HStack>
-                <VStack space="lg">
+                <VStack space="lg" className="md:flex-row">
                     <ThemeButton
                         name="默认主题"
                         yuruChara={require("../assets/images/bg-corner-classic.svg")}
