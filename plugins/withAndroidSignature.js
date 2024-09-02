@@ -25,7 +25,7 @@ function setAndroidSignature(appBuildGradle) {
         /(signingConfigs\s*\{)/,
         `$1
         release {
-            storeFile file(${JSON.stringify(path.resolve(__dirname, "../credentials/android-release.keystore"))})
+            storeFile file(${JSON.stringify(path.resolve(__dirname, "../credentials/bilisound-release.keystore"))})
             storePassword ${JSON.stringify(info.android.keystore.keystorePassword)}
             keyAlias ${JSON.stringify(info.android.keystore.keyAlias)}
             keyPassword ${JSON.stringify(info.android.keystore.keyPassword)}
