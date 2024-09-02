@@ -70,6 +70,7 @@
     "color": "^4.2.3",
     "core-js": "^3.37.1",
     "drizzle-orm": "^0.33.0",
+    "drizzle-zod": "^0.5.1",
     "expo": "^51.0.31",
     "expo-asset": "~10.0.10",
     "expo-build-properties": "~0.12.5",
@@ -123,9 +124,11 @@
     "semver": "^7.6.3",
     "shaka-player": "^4.10.9",
     "sleep-promise": "^9.1.0",
+    "smol-toml": "^1.3.0",
     "superjson": "^2.2.1",
     "tailwindcss": "^3.4.10",
     "uuid": "^9.0.1",
+    "zod": "^3.23.8",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

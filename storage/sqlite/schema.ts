@@ -1,5 +1,7 @@
 import { InferSelectModel } from "drizzle-orm";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
 // 定义 playlist_meta 表
 export const playlistMeta = sqliteTable("playlist_meta", {
@@ -28,6 +30,19 @@ export const playlistDetail = sqliteTable("playlist_detail", {
     extendedData: text("extended_data"),
 });
 
+export const playlistMetaInsertSchema = createInsertSchema(playlistMeta);
+
+export const playlistDetailInsertSchema = createInsertSchema(playlistDetail);
+
+export const playlistImportSchema = z.object({
+    kind: z.literal("moe.bilisound.app.exportedPlaylist"),
+    version: z.literal(1),
+    meta: z.array(playlistMetaInsertSchema),
+    detail: z.array(playlistDetailInsertSchema),
+});
+
 export type PlaylistMeta = InferSelectModel<typeof playlistMeta>;
 
 export type PlaylistDetail = InferSelectModel<typeof playlistDetail>;
+
+export type PlaylistImport = z.infer<typeof playlistImportSchema>;

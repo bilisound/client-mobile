@@ -1,8 +1,9 @@
 import { eq, count as countFunc, InferInsertModel } from "drizzle-orm";
 import omit from "lodash/omit";
+import { parse, stringify } from "smol-toml";
 
 import { db } from "~/storage/sqlite/main";
-import { PlaylistDetail, playlistDetail, playlistMeta } from "~/storage/sqlite/schema";
+import { PlaylistDetail, playlistDetail, PlaylistImport, playlistMeta } from "~/storage/sqlite/schema";
 
 // ============================================================================
 // 歌单元数据部分
@@ -142,5 +143,11 @@ export async function quickCreatePlaylist(title: string, description: string, li
 export async function exportPlaylist(id: number) {
     const meta = await db.select().from(playlistMeta).where(eq(playlistMeta.id, id));
     const detail = await db.select().from(playlistDetail).where(eq(playlistDetail.playlistId, id));
-    console.log({ meta, detail });
+    const output: PlaylistImport = {
+        meta,
+        detail,
+        kind: "moe.bilisound.app.exportedPlaylist",
+        version: 1,
+    };
+    const doc = stringify(output);
 }
