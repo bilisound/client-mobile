@@ -140,7 +140,14 @@ function AudioPlayButtonIcon() {
     return playbackState.state === State.Playing ? (
         <FontAwesome5 name="pause" size={28} color={theme.colorTokens.buttonForeground("primary", "default")} />
     ) : (
-        <FontAwesome5 name="play" size={28} color={theme.colorTokens.buttonForeground("primary", "default")} />
+        <FontAwesome5
+            name="play"
+            size={28}
+            color={theme.colorTokens.buttonForeground("primary", "default")}
+            style={{
+                transform: [{ translateX: 3 }],
+            }}
+        />
     );
 }
 

@@ -113,7 +113,7 @@ const TabIndexScreen: React.FC = () => {
                 </FormControl>
             </Box>
             <Box
-                className="absolute p-2 right-0 flex-row items-center gap-1"
+                className="absolute p-2.5 right-0 flex-row items-center gap-1"
                 style={{
                     top: insets.top,
                 }}
