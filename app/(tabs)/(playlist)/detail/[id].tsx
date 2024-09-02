@@ -1,4 +1,4 @@
-import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Color from "color";
@@ -6,7 +6,7 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
-import { Alert, useColorScheme, View, Text } from "react-native";
+import { Alert, useColorScheme, View } from "react-native";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { useStyles, createStyleSheet } from "react-native-unistyles";
 
@@ -17,10 +17,22 @@ import SongItem from "~/components/SongItem";
 import PotatoButton from "~/components/potato-ui/PotatoButton";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import {
+    Actionsheet,
+    ActionsheetBackdrop,
+    ActionsheetContent,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper,
+    ActionsheetItem,
+    ActionsheetItemText,
+} from "~/components/ui/actionsheet";
+import { Box } from "~/components/ui/box";
+import { Text } from "~/components/ui/text";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import { usePlaylistOnQueue } from "~/storage/playlist";
 import {
     deletePlaylistDetail,
+    exportPlaylist,
     getPlaylistDetail,
     getPlaylistMeta,
     syncPlaylistAmount,
@@ -31,6 +43,7 @@ import log from "~/utils/logger";
 import { playlistToTracks } from "~/utils/track-data";
 
 const IconPlay = createIcon(Ionicons, "play");
+const IconMenu = createIcon(Entypo, "dots-three-vertical");
 
 function extractAndProcessImgUrls(playlistDetails: PlaylistDetail[]) {
     const imgUrls = playlistDetails.map(detail => detail.imgUrl);
@@ -112,6 +125,7 @@ export default function Page() {
     const bgColor = theme.colorTokens.background;
     const colorMode = useColorScheme();
     const { id } = useLocalSearchParams<{ id: string }>();
+    const textBasicColor = theme.colorTokens.foreground;
 
     const [playlistOnQueue = {}, setPlaylistOnQueue] = usePlaylistOnQueue();
 
@@ -238,6 +252,11 @@ export default function Page() {
         };
     }, [editing, navigation]);
 
+    // 菜单
+    const [showActionMenu, setShowActionMenu] = useState(false);
+
+    // ！！Hook 部分结束！！
+
     if (!meta) {
         return null;
     }
@@ -260,15 +279,6 @@ export default function Page() {
             leftAccessories="backButton"
             rightAccessories={
                 <>
-                    <PotatoButtonTitleBar
-                        label="编辑歌单信息"
-                        onPress={() => {
-                            router.push(`../meta/${id}`);
-                        }}
-                        Icon={IconEditMeta}
-                        iconSize={20}
-                        theme="transparentAlt"
-                    />
                     {playlistDetail.length > 0 ? (
                         <PotatoButtonTitleBar
                             label={editing ? "完成" : "编辑"}
@@ -284,6 +294,15 @@ export default function Page() {
                             theme="transparentAlt"
                         />
                     ) : null}
+                    <PotatoButtonTitleBar
+                        label="操作"
+                        onPress={() => {
+                            setShowActionMenu(true);
+                        }}
+                        Icon={IconMenu}
+                        iconSize={18}
+                        theme="transparentAlt"
+                    />
                 </>
             }
             extendToBottom
@@ -361,6 +380,69 @@ export default function Page() {
                     amount={selected.size}
                 />
             ) : null}
+            <Actionsheet isOpen={showActionMenu} onClose={() => setShowActionMenu(false)}>
+                <ActionsheetBackdrop />
+                <ActionsheetContent className="z-50">
+                    <ActionsheetDragIndicatorWrapper>
+                        <ActionsheetDragIndicator />
+                    </ActionsheetDragIndicatorWrapper>
+                    <Box className="items-start w-full px-4 py-4 gap-1">
+                        <Text className="font-bold">{meta.title}</Text>
+                        <Text className="text-sm opacity-60">{`${meta.amount} 首歌曲`}</Text>
+                    </Box>
+                    <ActionsheetItem
+                        onPress={() => {
+                            router.push(`../meta/${id}`);
+                        }}
+                    >
+                        <Box
+                            style={{
+                                width: 24,
+                                height: 24,
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <MaterialIcons name="edit" size={24} color={textBasicColor} />
+                        </Box>
+                        <ActionsheetItemText>重命名</ActionsheetItemText>
+                    </ActionsheetItem>
+                    <ActionsheetItem
+                        onPress={() => {
+                            exportPlaylist(Number(id));
+                        }}
+                    >
+                        <Box
+                            style={{
+                                width: 24,
+                                height: 24,
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <Ionicons name="save" size={20} color={textBasicColor} />
+                        </Box>
+                        <ActionsheetItemText>导出</ActionsheetItemText>
+                    </ActionsheetItem>
+                    <ActionsheetItem
+                        onPress={() => {
+                            setShowActionMenu(false);
+                        }}
+                    >
+                        <Box
+                            style={{
+                                width: 24,
+                                height: 24,
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <MaterialIcons name="cancel" size={22} color={textBasicColor} />
+                        </Box>
+                        <ActionsheetItemText>取消</ActionsheetItemText>
+                    </ActionsheetItem>
+                </ActionsheetContent>
+            </Actionsheet>
         </CommonLayout>
     );
 }

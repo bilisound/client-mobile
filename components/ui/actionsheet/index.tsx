@@ -120,7 +120,7 @@ const actionsheetStyle = tva({ base: "w-full h-full web:pointer-events-none" });
 
 // 样式调整
 const actionsheetContentStyle = tva({
-    base: "items-center rounded-tl-3xl rounded-tr-3xl px-2 py-2 pt-2 bg-background-0 web:pointer-events-auto web:select-none shadow-hard-5 border border-b-0 border-outline-100",
+    base: "items-center rounded-tl-3xl rounded-tr-3xl px-2 py-2 pt-2 bg-background-0 web:pointer-events-auto web:select-none shadow-hard-5",
 });
 
 const actionsheetItemStyle = tva({
@@ -166,8 +166,9 @@ const actionsheetDragIndicatorWrapperStyle = tva({
     base: "w-full py-1 items-center",
 });
 
+// 底色修改
 const actionsheetBackdropStyle = tva({
-    base: "absolute left-0 top-0 right-0 bottom-0 bg-background-dark web:cursor-default web:pointer-events-auto",
+    base: "absolute left-0 top-0 right-0 bottom-0 bg-black web:cursor-default web:pointer-events-auto",
 });
 
 const actionsheetScrollViewStyle = tva({
@@ -389,7 +390,7 @@ const ActionsheetBackdrop = React.forwardRef<
                 opacity: 0,
             }}
             animate={{
-                opacity: 0.5,
+                opacity: 0.6,
             }}
             exit={{
                 opacity: 0,

@@ -138,3 +138,9 @@ export async function quickCreatePlaylist(title: string, description: string, li
 
     return playlistId;
 }
+
+export async function exportPlaylist(id: number) {
+    const meta = await db.select().from(playlistMeta).where(eq(playlistMeta.id, id));
+    const detail = await db.select().from(playlistDetail).where(eq(playlistDetail.playlistId, id));
+    console.log({ meta, detail });
+}
