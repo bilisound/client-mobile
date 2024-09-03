@@ -1,5 +1,5 @@
 import omit from "lodash/omit";
-import { useState } from "react";
+import { useState, forwardRef } from "react";
 import {
     Pressable as NativePressable,
     StyleProp,
@@ -10,7 +10,7 @@ import {
     View,
 } from "react-native";
 
-interface PressableProps extends NativePressableProps {
+export interface PressableProps extends NativePressableProps {
     style?: StyleProp<ViewStyle>;
     outerStyle?: StyleProp<ViewStyle>;
     pressedBackgroundColor?: string;
@@ -18,7 +18,7 @@ interface PressableProps extends NativePressableProps {
 
 const isAndroid = Platform.OS === "android";
 
-export default function PotatoPressable(props: PressableProps) {
+const PotatoPressable = forwardRef<View, PressableProps>((props, ref) => {
     const [pressed, setPressed] = useState(false);
     const colorMode = useColorScheme();
     const pressedBackgroundColor = colorMode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
@@ -26,6 +26,7 @@ export default function PotatoPressable(props: PressableProps) {
 
     return (
         <View
+            ref={ref}
             style={[
                 props.outerStyle,
                 {
@@ -55,4 +56,6 @@ export default function PotatoPressable(props: PressableProps) {
             </NativePressable>
         </View>
     );
-}
+});
+
+export default PotatoPressable;

@@ -22,12 +22,14 @@ import {
     ActionsheetItemText,
 } from "~/components/ui/actionsheet";
 import { Box } from "~/components/ui/box";
+import { Button, ButtonText } from "~/components/ui/button";
+import { AddIcon, GlobeIcon, Icon, PlayIcon, SettingsIcon } from "~/components/ui/icon";
+import { Menu, MenuItem, MenuItemLabel, MenuSeparator } from "~/components/ui/menu";
 import { Text } from "~/components/ui/text";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
 import { deletePlaylistMeta, exportPlaylist, getPlaylistMetas } from "~/storage/sqlite/playlist";
 import { PlaylistMeta } from "~/storage/sqlite/schema";
 import log from "~/utils/logger";
-
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
 }
@@ -154,6 +156,14 @@ export default function Page() {
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PlaylistMeta | undefined>();
 
+    const [isOpen, setIsOpen] = React.useState(false);
+    const handlePopoverOpen = () => {
+        setIsOpen(true);
+    };
+    const handlePopoverClose = () => {
+        setIsOpen(false);
+    };
+
     const handleClose = () => setShowActionSheet(prevState => !prevState);
 
     const handleLongPress = (id: number) => {
@@ -204,14 +214,50 @@ export default function Page() {
                                 onPress={() => router.push("/barcode")}
                             />
                         )}
-                        <PotatoButtonTitleBar
+                        {/*<PotatoButtonTitleBar
                             label="新建歌单"
                             Icon={IconAdd}
                             theme="transparent"
                             onPress={() => {
                                 router.push(`/(tabs)/(playlist)/meta/new`);
                             }}
-                        />
+                        />*/}
+
+                        <Menu
+                            placement="bottom right"
+                            offset={5}
+                            disabledKeys={["Settings"]}
+                            trigger={({ ...triggerProps }) => {
+                                return (
+                                    /*<Button {...triggerProps}>
+                                        <ButtonText>Menu</ButtonText>
+                                    </Button>*/
+                                    <PotatoButtonTitleBar
+                                        label="新建歌单"
+                                        Icon={IconAdd}
+                                        theme="transparent"
+                                        {...triggerProps}
+                                    />
+                                );
+                            }}
+                        >
+                            <MenuItem key="Add account" textValue="Add account">
+                                <Icon as={AddIcon} size="sm" className="mr-2" />
+                                <MenuItemLabel size="sm">Add account</MenuItemLabel>
+                            </MenuItem>
+                            <MenuItem key="Community" textValue="Community">
+                                <Icon as={GlobeIcon} size="sm" className="mr-2" />
+                                <MenuItemLabel size="sm">Community</MenuItemLabel>
+                            </MenuItem>
+                            <MenuItem key="Plugins" textValue="Plugins">
+                                <Icon as={PlayIcon} size="sm" className="mr-2" />
+                                <MenuItemLabel size="sm">Plugins</MenuItemLabel>
+                            </MenuItem>
+                            <MenuItem key="Settings" textValue="Settings">
+                                <Icon as={SettingsIcon} size="sm" className="mr-2" />
+                                <MenuItemLabel size="sm">Settings</MenuItemLabel>
+                            </MenuItem>
+                        </Menu>
                     </>
                 }
             >
