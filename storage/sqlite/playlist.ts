@@ -141,15 +141,13 @@ export async function quickCreatePlaylist(title: string, description: string, li
     return playlistId;
 }
 
-export async function exportPlaylist(id: number) {
+export async function exportPlaylist(id: number): Promise<PlaylistImport> {
     const meta = await db.select().from(playlistMeta).where(eq(playlistMeta.id, id));
     const detail = await db.select().from(playlistDetail).where(eq(playlistDetail.playlistId, id));
-    const output: PlaylistImport = {
+    return {
         meta,
         detail,
         kind: "moe.bilisound.app.exportedPlaylist",
         version: 1,
     };
-    const doc = stringify(output);
-    await saveTextFile("[Bilisound 歌单] " + meta[0].title + ".toml", doc, "application/toml");
 }

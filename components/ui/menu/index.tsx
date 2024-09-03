@@ -8,8 +8,9 @@ import { cssInterop } from "nativewind";
 import React from "react";
 import { Pressable, Text, Platform, View } from "react-native";
 
+// 样式修改
 const menuStyle = tva({
-    base: "rounded-md bg-background-0 border border-outline-100 p-1 shadow-hard-5",
+    base: "rounded-md bg-background-0 border border-outline-50 p-1 shadow-xl",
 });
 
 const menuItemStyle = tva({

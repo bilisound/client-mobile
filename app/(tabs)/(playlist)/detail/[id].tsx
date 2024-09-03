@@ -33,13 +33,13 @@ import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage, usePlaylis
 import {
     deletePlaylistDetail,
     deletePlaylistMeta,
-    exportPlaylist,
     getPlaylistDetail,
     getPlaylistMeta,
     syncPlaylistAmount,
 } from "~/storage/sqlite/playlist";
 import { PlaylistDetail, PlaylistMeta } from "~/storage/sqlite/schema";
 import { getImageProxyUrl } from "~/utils/constant-helper";
+import { exportPlaylistToFile } from "~/utils/exchange/playlist";
 import log from "~/utils/logger";
 import { playlistToTracks } from "~/utils/track-data";
 
@@ -458,7 +458,7 @@ export default function Page() {
                     <ActionsheetItem
                         onPress={() => {
                             setShowActionMenu(false);
-                            exportPlaylist(Number(id));
+                            exportPlaylistToFile(Number(id));
                         }}
                     >
                         <Box

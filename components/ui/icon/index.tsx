@@ -15,10 +15,12 @@ type IPrimitiveIcon = {
     stroke?: string;
     as?: React.ElementType;
     className?: string;
+    classNameColor?: string;
 };
 
 const PrimitiveIcon = React.forwardRef<React.ElementRef<typeof Svg>, IPrimitiveIcon>(
-    ({ height, width, fill, color, size, stroke, as: AsComp, ...props }, ref) => {
+    ({ height, width, fill, color, classNameColor, size, stroke, as: AsComp, ...props }, ref) => {
+        color = color ?? classNameColor;
         const sizeProps = useMemo(() => {
             if (size) return { size };
             if (height && width) return { height, width };
@@ -28,17 +30,17 @@ const PrimitiveIcon = React.forwardRef<React.ElementRef<typeof Svg>, IPrimitiveI
         }, [size, height, width]);
 
         let colorProps = {};
-        if (color) {
-            colorProps = { ...colorProps, color };
-        }
-        if (stroke) {
-            colorProps = { ...colorProps, stroke };
-        }
         if (fill) {
             colorProps = { ...colorProps, fill };
         }
+        if (stroke !== "currentColor") {
+            colorProps = { ...colorProps, stroke };
+        } else if (stroke === "currentColor" && color !== undefined) {
+            colorProps = { ...colorProps, stroke: color };
+        }
+
         if (AsComp) {
-            return <AsComp ref={ref} {...sizeProps} {...colorProps} {...props} />;
+            return <AsComp ref={ref} {...props} {...sizeProps} {...colorProps} />;
         }
         return <Svg ref={ref} height={height} width={width} {...colorProps} {...props} />;
     },
@@ -62,6 +64,7 @@ const iconStyle = tva({
     },
 });
 
+// @ts-ignore
 cssInterop(UIIcon, {
     className: {
         target: "style",
@@ -69,7 +72,7 @@ cssInterop(UIIcon, {
             height: true,
             width: true,
             fill: true,
-            color: true,
+            color: "classNameColor",
             stroke: true,
         },
     },

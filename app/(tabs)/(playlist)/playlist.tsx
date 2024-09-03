@@ -2,6 +2,7 @@ import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-ic
 import { FlashList } from "@shopify/flash-list";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
+import { FolderOpen, ListPlus } from "lucide-react-native";
 import React, { createContext, useContext, useState } from "react";
 import { Alert, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,14 +23,15 @@ import {
     ActionsheetItemText,
 } from "~/components/ui/actionsheet";
 import { Box } from "~/components/ui/box";
-import { Button, ButtonText } from "~/components/ui/button";
-import { AddIcon, GlobeIcon, Icon, PlayIcon, SettingsIcon } from "~/components/ui/icon";
-import { Menu, MenuItem, MenuItemLabel, MenuSeparator } from "~/components/ui/menu";
+import { Icon } from "~/components/ui/icon";
+import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
 import { Text } from "~/components/ui/text";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
-import { deletePlaylistMeta, exportPlaylist, getPlaylistMetas } from "~/storage/sqlite/playlist";
+import { deletePlaylistMeta, getPlaylistMetas } from "~/storage/sqlite/playlist";
 import { PlaylistMeta } from "~/storage/sqlite/schema";
+import { exportPlaylistToFile, importPlaylistFromFile } from "~/utils/exchange/playlist";
 import log from "~/utils/logger";
+
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
 }
@@ -214,24 +216,12 @@ export default function Page() {
                                 onPress={() => router.push("/barcode")}
                             />
                         )}
-                        {/*<PotatoButtonTitleBar
-                            label="新建歌单"
-                            Icon={IconAdd}
-                            theme="transparent"
-                            onPress={() => {
-                                router.push(`/(tabs)/(playlist)/meta/new`);
-                            }}
-                        />*/}
-
                         <Menu
                             placement="bottom right"
                             offset={5}
                             disabledKeys={["Settings"]}
                             trigger={({ ...triggerProps }) => {
                                 return (
-                                    /*<Button {...triggerProps}>
-                                        <ButtonText>Menu</ButtonText>
-                                    </Button>*/
                                     <PotatoButtonTitleBar
                                         label="新建歌单"
                                         Icon={IconAdd}
@@ -241,21 +231,13 @@ export default function Page() {
                                 );
                             }}
                         >
-                            <MenuItem key="Add account" textValue="Add account">
-                                <Icon as={AddIcon} size="sm" className="mr-2" />
-                                <MenuItemLabel size="sm">Add account</MenuItemLabel>
+                            <MenuItem textValue="新建歌单" onPress={() => router.push(`/(tabs)/(playlist)/meta/new`)}>
+                                <Icon as={ListPlus} size="lg" className="mr-3 text-typography-500" />
+                                <MenuItemLabel size="md">新建歌单</MenuItemLabel>
                             </MenuItem>
-                            <MenuItem key="Community" textValue="Community">
-                                <Icon as={GlobeIcon} size="sm" className="mr-2" />
-                                <MenuItemLabel size="sm">Community</MenuItemLabel>
-                            </MenuItem>
-                            <MenuItem key="Plugins" textValue="Plugins">
-                                <Icon as={PlayIcon} size="sm" className="mr-2" />
-                                <MenuItemLabel size="sm">Plugins</MenuItemLabel>
-                            </MenuItem>
-                            <MenuItem key="Settings" textValue="Settings">
-                                <Icon as={SettingsIcon} size="sm" className="mr-2" />
-                                <MenuItemLabel size="sm">Settings</MenuItemLabel>
+                            <MenuItem textValue="导入歌单" onPress={() => importPlaylistFromFile()}>
+                                <Icon as={FolderOpen} size="lg" className="mr-3 text-typography-500" />
+                                <MenuItemLabel size="md">导入歌单</MenuItemLabel>
                             </MenuItem>
                         </Menu>
                     </>
@@ -295,7 +277,7 @@ export default function Page() {
                             break;
                         case "export":
                             if (displayTrack?.id) {
-                                exportPlaylist(displayTrack.id);
+                                exportPlaylistToFile(displayTrack.id);
                             }
                             break;
                         default:
