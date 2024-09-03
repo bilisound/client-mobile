@@ -29,9 +29,10 @@ import {
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 import useMultiSelect from "~/hooks/useMultiSelect";
-import { usePlaylistOnQueue } from "~/storage/playlist";
+import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
 import {
     deletePlaylistDetail,
+    deletePlaylistMeta,
     exportPlaylist,
     getPlaylistDetail,
     getPlaylistMeta,
@@ -255,6 +256,34 @@ export default function Page() {
     // 菜单
     const [showActionMenu, setShowActionMenu] = useState(false);
 
+    // 删除操作
+    function handleWholeDelete() {
+        Alert.alert("删除歌单确认", `确定要删除歌单「${meta?.title}」吗？`, [
+            {
+                text: "取消",
+                style: "cancel",
+            },
+            {
+                text: "确定",
+                style: "default",
+                onPress: async () => {
+                    log.info(`用户删除歌单「${meta?.title}」`);
+                    router.replace("..");
+                    await deletePlaylistMeta(Number(id));
+                    await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+
+                    // 清空当前播放队列隶属歌单的状态机
+                    const got: { value?: PlaylistMeta } = JSON.parse(
+                        playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}",
+                    );
+                    if (got?.value?.id === Number(id)) {
+                        invalidateOnQueueStatus();
+                    }
+                },
+            },
+        ]);
+    }
+
     // ！！Hook 部分结束！！
 
     if (!meta) {
@@ -392,6 +421,7 @@ export default function Page() {
                     </Box>
                     <ActionsheetItem
                         onPress={() => {
+                            setShowActionMenu(false);
                             router.push(`../meta/${id}`);
                         }}
                     >
@@ -405,10 +435,29 @@ export default function Page() {
                         >
                             <MaterialIcons name="edit" size={24} color={textBasicColor} />
                         </Box>
-                        <ActionsheetItemText>重命名</ActionsheetItemText>
+                        <ActionsheetItemText>修改信息</ActionsheetItemText>
                     </ActionsheetItem>
                     <ActionsheetItem
                         onPress={() => {
+                            setShowActionMenu(false);
+                            handleWholeDelete();
+                        }}
+                    >
+                        <Box
+                            style={{
+                                width: 24,
+                                height: 24,
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <MaterialIcons name="delete" size={24} color={textBasicColor} />
+                        </Box>
+                        <ActionsheetItemText>删除</ActionsheetItemText>
+                    </ActionsheetItem>
+                    <ActionsheetItem
+                        onPress={() => {
+                            setShowActionMenu(false);
                             exportPlaylist(Number(id));
                         }}
                     >

@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
@@ -24,7 +24,7 @@ import {
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
-import { deletePlaylistMeta, getPlaylistMetas } from "~/storage/sqlite/playlist";
+import { deletePlaylistMeta, exportPlaylist, getPlaylistMetas } from "~/storage/sqlite/playlist";
 import { PlaylistMeta } from "~/storage/sqlite/schema";
 import log from "~/utils/logger";
 
@@ -59,7 +59,7 @@ interface LongPressActionsProps {
     showActionSheet: boolean;
     displayTrack?: PlaylistMeta;
     onClose: () => void;
-    onAction: (action: "delete" | "close" | "edit") => void;
+    onAction: (action: "delete" | "close" | "edit" | "export") => void;
 }
 
 /**
@@ -94,7 +94,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                     >
                         <MaterialIcons name="edit" size={24} color={textBasicColor} />
                     </Box>
-                    <ActionsheetItemText>重命名</ActionsheetItemText>
+                    <ActionsheetItemText>修改信息</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("delete")}>
                     <Box
@@ -108,6 +108,23 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         <MaterialIcons name="delete" size={24} color={textBasicColor} />
                     </Box>
                     <ActionsheetItemText>删除</ActionsheetItemText>
+                </ActionsheetItem>
+                <ActionsheetItem
+                    onPress={() => {
+                        onAction("export");
+                    }}
+                >
+                    <Box
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Ionicons name="save" size={20} color={textBasicColor} />
+                    </Box>
+                    <ActionsheetItemText>导出</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("close")}>
                     <Box
@@ -145,15 +162,29 @@ export default function Page() {
     };
 
     const handleDelete = async () => {
-        log.info("用户删除歌单");
-        await deletePlaylistMeta(displayTrack!.id);
-        await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+        Alert.alert("删除歌单确认", `确定要删除歌单「${displayTrack?.title}」吗？`, [
+            {
+                text: "取消",
+                style: "cancel",
+            },
+            {
+                text: "确定",
+                style: "default",
+                onPress: async () => {
+                    log.info("用户删除歌单");
+                    await deletePlaylistMeta(displayTrack!.id);
+                    await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
 
-        // 清空当前播放队列隶属歌单的状态机
-        const got: { value?: PlaylistMeta } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");
-        if (got?.value?.id === displayTrack?.id) {
-            invalidateOnQueueStatus();
-        }
+                    // 清空当前播放队列隶属歌单的状态机
+                    const got: { value?: PlaylistMeta } = JSON.parse(
+                        playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}",
+                    );
+                    if (got?.value?.id === displayTrack?.id) {
+                        invalidateOnQueueStatus();
+                    }
+                },
+            },
+        ]);
     };
 
     return (
@@ -209,24 +240,17 @@ export default function Page() {
                     setShowActionSheet(false);
                     switch (action) {
                         case "delete":
-                            Alert.alert("删除歌单确认", `确定要删除歌单「${displayTrack?.title}」吗？`, [
-                                {
-                                    text: "取消",
-                                    style: "cancel",
-                                },
-                                {
-                                    text: "确定",
-                                    style: "default",
-                                    onPress: () => {
-                                        handleDelete();
-                                    },
-                                },
-                            ]);
+                            handleDelete();
                             break;
                         case "close":
                             break;
                         case "edit":
                             router.push(`./meta/${displayTrack?.id}`);
+                            break;
+                        case "export":
+                            if (displayTrack?.id) {
+                                exportPlaylist(displayTrack.id);
+                            }
                             break;
                         default:
                             break;
