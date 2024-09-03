@@ -4,6 +4,7 @@ import { parse, stringify } from "smol-toml";
 
 import { db } from "~/storage/sqlite/main";
 import { PlaylistDetail, playlistDetail, PlaylistImport, playlistMeta } from "~/storage/sqlite/schema";
+import { saveTextFile } from "~/utils/file";
 
 // ============================================================================
 // 歌单元数据部分
@@ -150,4 +151,5 @@ export async function exportPlaylist(id: number) {
         version: 1,
     };
     const doc = stringify(output);
+    await saveTextFile("[Bilisound 歌单] " + meta[0].title + ".toml", doc, "application/toml");
 }
