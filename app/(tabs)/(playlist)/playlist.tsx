@@ -199,6 +199,13 @@ export default function Page() {
         ]);
     };
 
+    const handleImport = async () => {
+        const result = await importPlaylistFromFile();
+        if (result) {
+            await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+        }
+    };
+
     return (
         <PlaylistContext.Provider value={{ onLongPress: handleLongPress }}>
             <CommonLayout
@@ -235,7 +242,7 @@ export default function Page() {
                                 <Icon as={ListPlus} size="lg" className="mr-3 text-typography-500" />
                                 <MenuItemLabel size="md">新建歌单</MenuItemLabel>
                             </MenuItem>
-                            <MenuItem textValue="导入歌单" onPress={() => importPlaylistFromFile()}>
+                            <MenuItem textValue="导入歌单" onPress={() => handleImport()}>
                                 <Icon as={FolderOpen} size="lg" className="mr-3 text-typography-500" />
                                 <MenuItemLabel size="md">导入歌单</MenuItemLabel>
                             </MenuItem>
