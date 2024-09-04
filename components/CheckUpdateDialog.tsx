@@ -1,5 +1,4 @@
 import React from "react";
-import { Text } from "react-native";
 
 import PotatoButton from "~/components/potato-ui/PotatoButton";
 import {
@@ -11,6 +10,7 @@ import {
     AlertDialogHeader,
 } from "~/components/ui/alert-dialog";
 import { Heading } from "~/components/ui/heading";
+import { Text } from "~/components/ui/text";
 import { CheckLatestVersionReturns } from "~/utils/check-release";
 
 export interface CheckUpdateDialogProps {
