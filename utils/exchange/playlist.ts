@@ -38,7 +38,7 @@ export async function importPlaylistFromFile() {
         for (let i = 0; i < validationResult.meta.length; i++) {
             const meta = validationResult.meta[i];
             const detail = validationResult.detail
-                .filter(e => String(e.playlistId) === String(meta.id))
+                .filter(e => String(e.playlistId) === String(meta.id)) // 存量数据兼容处理
                 .map(e => ({ ...e, playlistId: -1 }));
             migratePlan.push({
                 meta,
