@@ -64,8 +64,14 @@ export const getVideo = async ({
     } else {
         // 提取视频播放信息
         log.debug(`按照常规视频处理该查询`);
-        const initialState: InitialStateResponse = extractJSON(/window\.__INITIAL_STATE__=(\{.+});/, response);
-        const playInfo: WebPlayInfo = extractJSON(/window\.__playinfo__=(\{.+})<\/script><script>/, response);
+        const initialState: InitialStateResponse = extractJSON(
+            /window\.__INITIAL_STATE__=(\{.+});\(function\(\){/,
+            response,
+        );
+        const playInfo: WebPlayInfo = extractJSON(
+            /window\.__playinfo__=(\{.+})<\/script><script>window.__INITIAL_STATE__=/,
+            response,
+        );
         return { type: "regular", initialState, playInfo };
     }
 };
