@@ -37,7 +37,9 @@ export async function importPlaylistFromFile() {
         const migratePlan: MigratePlan[] = [];
         for (let i = 0; i < validationResult.meta.length; i++) {
             const meta = validationResult.meta[i];
-            const detail = validationResult.detail.filter(e => e.playlistId === meta.id);
+            const detail = validationResult.detail
+                .filter(e => String(e.playlistId) === String(meta.id))
+                .map(e => ({ ...e, playlistId: -1 }));
             migratePlan.push({
                 meta,
                 detail,

@@ -32,7 +32,10 @@ export const playlistDetail = sqliteTable("playlist_detail", {
 
 export const playlistMetaInsertSchema = createInsertSchema(playlistMeta);
 
-export const playlistDetailInsertSchema = createInsertSchema(playlistDetail);
+export const playlistDetailInsertSchema = createInsertSchema(playlistDetail, {
+    // 存量数据兼容处理
+    playlistId: z.union([z.string(), z.number()]),
+});
 
 export const playlistImportSchema = z.object({
     kind: z.literal("moe.bilisound.app.exportedPlaylist"),
