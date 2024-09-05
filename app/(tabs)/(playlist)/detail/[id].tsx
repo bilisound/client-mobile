@@ -6,7 +6,7 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
-import { Alert, useColorScheme, View } from "react-native";
+import { Alert, useColorScheme, Vibration, View } from "react-native";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { useStyles, createStyleSheet } from "react-native-unistyles";
 
@@ -347,6 +347,13 @@ export default function Page() {
                             }}
                             onToggle={() => {
                                 toggle(item.index);
+                            }}
+                            onLongPress={() => {
+                                if (!editing) {
+                                    Vibration.vibrate(25);
+                                    setEditing(true);
+                                    toggle(item.index);
+                                }
                             }}
                             isChecking={editing}
                             isChecked={selected.has(item.index)}
