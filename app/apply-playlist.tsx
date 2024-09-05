@@ -12,6 +12,7 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 import CommonLayout from "~/components/CommonLayout";
 import PlaylistItem from "~/components/PlaylistItem";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
+import useTracks from "~/hooks/useTracks";
 import { usePlaylistOnQueue } from "~/storage/playlist";
 import { addToPlaylist, getPlaylistMetas, quickCreatePlaylist, syncPlaylistAmount } from "~/storage/sqlite/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
@@ -22,6 +23,7 @@ export default function Page() {
     const { styles } = useStyles(styleSheet);
 
     const [playlistOnQueue = {}] = usePlaylistOnQueue();
+    const { update } = useTracks();
 
     // 添加歌单
     const { playlistDetail, name, description } = useApplyPlaylistStore(state => ({
@@ -96,6 +98,7 @@ export default function Page() {
                                 // 如果当前的 queue 来自试图被添加的播放列表，给 queue 也添加这些曲目
                                 if (playlistOnQueue) {
                                     await TrackPlayer.add(await playlistToTracks(playlistDetail ?? []));
+                                    await update();
                                 }
 
                                 await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });

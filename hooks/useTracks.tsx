@@ -1,31 +1,47 @@
-import { useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect } from "react";
-import TrackPlayer, { useActiveTrack } from "react-native-track-player";
+import { useSyncExternalStore } from "react";
+import TrackPlayer, { Event, Track } from "react-native-track-player";
 
 import log from "~/utils/logger";
 import { saveTrackData } from "~/utils/track-data";
 
-const useTracks = () => {
-    const { data, refetch } = useQuery({
-        queryKey: ["tracks"],
-        queryFn: TrackPlayer.getQueue,
-    });
-    const activeTrack = useActiveTrack();
-    const update = useCallback(async () => {
-        await refetch();
-        try {
-            await saveTrackData();
-            log.debug("歌单保存成功");
-        } catch (e) {
-            log.error(`歌单保存失败。错误信息：${e}`);
-        }
-    }, [refetch]);
-    useEffect(() => {
-        update();
-    }, [activeTrack, update]);
-    return {
-        tracks: data || [],
-        update,
-    };
+const state = {
+    callbackCount: 1,
+    snapshot: {
+        tracks: [] as Track[],
+        async update() {
+            state.snapshot = {
+                ...state.snapshot,
+                tracks: await TrackPlayer.getQueue(),
+            };
+            try {
+                await saveTrackData();
+                log.debug("队列保存成功");
+            } catch (e) {
+                log.error(`队列保存失败。错误信息：${e}`);
+            }
+            callbackMap.forEach(value => value());
+        },
+    },
 };
-export default useTracks;
+const callbackMap = new Map<number, () => void>();
+
+// 事件绑定（但是目前没有队列变化的事件……）
+TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, event => {
+    state.snapshot.update();
+});
+
+state.snapshot.update();
+
+export default function useTracks() {
+    return useSyncExternalStore(
+        onStoreChange => {
+            const selfId = state.callbackCount;
+            callbackMap.set(selfId, onStoreChange);
+            state.callbackCount += 1;
+            return () => {
+                callbackMap.delete(selfId);
+            };
+        },
+        () => state.snapshot,
+    );
+}
