@@ -5,7 +5,7 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Linking, Platform, StatusBar, useColorScheme, View, Text } from "react-native";
+import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import Animated, {
     ReduceMotion,
@@ -20,6 +20,8 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 import SongItem from "./SongItem";
 
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
+import { Box } from "~/components/ui/box";
+import { Text } from "~/components/ui/text";
 import useTracks from "~/hooks/useTracks";
 import useSettingsStore from "~/store/settings";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -209,6 +211,8 @@ function MusicList() {
                             />
                         );
                     }}
+                    ListHeaderComponent={<Box className="h-2" />}
+                    ListFooterComponent={<Box className="h-2" />}
                     data={convertedTrack}
                     estimatedItemSize={64}
                     extraData={[]}
