@@ -5,8 +5,8 @@ import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
-import { Alert, useColorScheme, Vibration, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useColorScheme, Vibration, View } from "react-native";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { useStyles, createStyleSheet } from "react-native-unistyles";
 
@@ -26,7 +26,16 @@ import {
     ActionsheetItem,
     ActionsheetItemText,
 } from "~/components/ui/actionsheet";
+import {
+    AlertDialog,
+    AlertDialogBackdrop,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+} from "~/components/ui/alert-dialog";
 import { Box } from "~/components/ui/box";
+import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
@@ -149,6 +158,23 @@ export default function Page() {
     const [viewHeight, setViewHeight] = useState(0);
     const enableUnderLayerColor = contentHeight > viewHeight;
 
+    // 模态框管理
+    const [dialogInfo, setDialogInfo] = useState({
+        title: "",
+        description: "",
+        ok: "确定",
+        cancel: "取消",
+    });
+    const dialogCallback = useRef<() => void>();
+    const [modalVisible, setModalVisible] = useState(false);
+
+    function handleClose(ok: boolean) {
+        setModalVisible(false);
+        if (ok) {
+            dialogCallback.current?.();
+        }
+    }
+
     // 多选管理
     const { clear, toggle, selected, setAll, reverse } = useMultiSelect<number>();
     const [editing, setEditing] = useState(false);
@@ -173,26 +199,15 @@ export default function Page() {
         if (playlistOnQueue.value || (await TrackPlayer.getQueue()).length <= 0) {
             return handleRequestPlayConfirm(index);
         }
-        Alert.alert(
-            "替换播放队列确认",
-            "播放本歌单中的歌曲，将会把当前播放队列替换为本歌单。确定要继续吗？",
-            [
-                {
-                    text: "取消",
-                    style: "cancel",
-                },
-                {
-                    text: "确定",
-                    isPreferred: true,
-                    onPress() {
-                        return handleRequestPlayConfirm(index);
-                    },
-                },
-            ],
-            {
-                onDismiss() {},
-            },
-        );
+        dialogCallback.current = () => {
+            return handleRequestPlayConfirm(index);
+        };
+        setDialogInfo(prevState => ({
+            ...prevState,
+            title: "替换播放队列确认",
+            description: "播放本歌单中的歌曲，将会把当前播放队列替换为本歌单。确定要继续吗？",
+        }));
+        setModalVisible(true);
     }
 
     async function handleRequestPlayConfirm(index: number) {
@@ -206,32 +221,28 @@ export default function Page() {
     }
 
     const handleDelete = useCallback(() => {
-        Alert.alert("删除曲目确认", `确定要从本歌单中删除 ${selected.size} 首曲目吗？`, [
-            {
-                text: "取消",
-                style: "cancel",
-            },
-            {
-                text: "确定",
-                style: "default",
-                onPress: async () => {
-                    // 注意，这里的 selected 是数组的 index，不是项目在数据库中的 id！！
-                    for (const e of selected) {
-                        await deletePlaylistDetail(playlistDetail[e].id);
-                    }
-                    await syncPlaylistAmount(Number(id));
-                    await Promise.all([
-                        queryClient.invalidateQueries({ queryKey: ["playlist_meta"] }),
-                        queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] }),
-                        queryClient.invalidateQueries({ queryKey: [`playlist_detail_${id}`] }),
-                    ]);
-                    if (playlistOnQueue.value?.id === Number(id)) {
-                        setPlaylistOnQueue(undefined);
-                    }
-                    clear();
-                },
-            },
-        ]);
+        dialogCallback.current = async () => {
+            // 注意，这里的 selected 是数组的 index，不是项目在数据库中的 id！！
+            for (const e of selected) {
+                await deletePlaylistDetail(playlistDetail[e].id);
+            }
+            await syncPlaylistAmount(Number(id));
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["playlist_meta"] }),
+                queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] }),
+                queryClient.invalidateQueries({ queryKey: [`playlist_detail_${id}`] }),
+            ]);
+            if (playlistOnQueue.value?.id === Number(id)) {
+                setPlaylistOnQueue(undefined);
+            }
+            clear();
+        };
+        setDialogInfo(prevState => ({
+            ...prevState,
+            title: "删除曲目确认",
+            description: `确定要从本歌单中删除 ${selected.size} 首曲目吗？`,
+        }));
+        setModalVisible(true);
     }, [clear, id, playlistDetail, playlistOnQueue.value?.id, queryClient, selected, setPlaylistOnQueue]);
 
     // 返回时先关闭编辑模式
@@ -259,30 +270,24 @@ export default function Page() {
 
     // 删除操作
     function handleWholeDelete() {
-        Alert.alert("删除歌单确认", `确定要删除歌单「${meta?.title}」吗？`, [
-            {
-                text: "取消",
-                style: "cancel",
-            },
-            {
-                text: "确定",
-                style: "default",
-                onPress: async () => {
-                    log.info(`用户删除歌单「${meta?.title}」`);
-                    router.replace("..");
-                    await deletePlaylistMeta(Number(id));
-                    await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+        dialogCallback.current = async () => {
+            log.info(`用户删除歌单「${meta?.title}」`);
+            router.replace("..");
+            await deletePlaylistMeta(Number(id));
+            await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
 
-                    // 清空当前播放队列隶属歌单的状态机
-                    const got: { value?: PlaylistMeta } = JSON.parse(
-                        playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}",
-                    );
-                    if (got?.value?.id === Number(id)) {
-                        invalidateOnQueueStatus();
-                    }
-                },
-            },
-        ]);
+            // 清空当前播放队列隶属歌单的状态机
+            const got: { value?: PlaylistMeta } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");
+            if (got?.value?.id === Number(id)) {
+                invalidateOnQueueStatus();
+            }
+        };
+        setDialogInfo(prevState => ({
+            ...prevState,
+            title: "删除歌单确认",
+            description: `确定要删除歌单「${meta?.title}」吗？`,
+        }));
+        setModalVisible(true);
     }
 
     // ！！Hook 部分结束！！
@@ -417,6 +422,7 @@ export default function Page() {
                     amount={selected.size}
                 />
             ) : null}
+
             <Actionsheet isOpen={showActionMenu} onClose={() => setShowActionMenu(false)}>
                 <ActionsheetBackdrop />
                 <ActionsheetContent className="z-50">
@@ -500,6 +506,28 @@ export default function Page() {
                     </ActionsheetItem>
                 </ActionsheetContent>
             </Actionsheet>
+
+            <AlertDialog isOpen={modalVisible} onClose={() => handleClose(false)} size="md">
+                <AlertDialogBackdrop />
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <Heading className="text-typography-950 font-semibold" size="lg">
+                            {dialogInfo.title}
+                        </Heading>
+                    </AlertDialogHeader>
+                    <AlertDialogBody className="mt-4 mb-6">
+                        <Text size="sm" className="leading-normal">
+                            {dialogInfo.description}
+                        </Text>
+                    </AlertDialogBody>
+                    <AlertDialogFooter className="gap-2">
+                        <PotatoButton variant="ghost" onPress={() => handleClose(false)}>
+                            {dialogInfo.cancel}
+                        </PotatoButton>
+                        <PotatoButton onPress={() => handleClose(true)}>{dialogInfo.ok}</PotatoButton>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </CommonLayout>
     );
 }
