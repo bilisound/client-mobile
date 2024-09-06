@@ -76,7 +76,7 @@ export default function SongItem({
             <Box className="flex-row flex-1 gap-3 justify-start">
                 <Box
                     className={`items-center justify-center px-1.5 h-[22px] rounded-md ${
-                        isActiveTrack ? "bg-accent-500 shadow-md" : "bg-primary-500"
+                        isActiveTrack ? "bg-accent-500 shadow-md ios:shadow-hard-2" : "bg-primary-500"
                     }`}
                 >
                     <Text
