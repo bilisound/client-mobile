@@ -243,6 +243,7 @@ export default function Page() {
             }
             e.preventDefault();
             setEditing(false);
+            clear();
             navigation.removeListener("beforeRemove", handler);
         };
         if (editing) {
