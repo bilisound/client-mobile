@@ -183,7 +183,7 @@ export async function shuffle(): Promise<Track[]> {
  * the currentTrack is at the first element, and add the spliced tracks.
  * @param tracks
  */
-export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
+export async function setQueueUninterrupted(tracks: Track[], forRestore = false): Promise<void> {
     // if no currentTrack, its a simple setQueue
     const currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
     log.debug(`setQueueUninterrupted: currentTrackIndex is valid? ${JSON.stringify({ currentTrackIndex })}`);
@@ -199,13 +199,17 @@ export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
     log.debug(
         `setQueueUninterrupted: currentTrackIndex is present? ${JSON.stringify({ currentTrackNewIndex, tracks, currentTrack })}`,
     );
-    if (currentTrackNewIndex < 0) return await TrackPlayer.setQueue(tracks);
-    // else, splice that all others are removed, new track list spliced
-    // that the currentTrack becomes the first element.
-    const removeTrackIndices = [...Array(currentQueue.length).keys()];
-    removeTrackIndices.splice(currentTrackIndex, 1);
-    await TrackPlayer.remove(removeTrackIndices);
-    const splicedTracks = tracks.slice(currentTrackNewIndex + 1).concat(tracks.slice(0, currentTrackNewIndex));
-    log.debug(`edited tracks ${JSON.stringify({ splicedTracks })}`);
-    await TrackPlayer.add(splicedTracks);
+    if (currentTrackNewIndex < 0) return TrackPlayer.setQueue(tracks);
+    if (forRestore) {
+        // todo
+    } else {
+        // else, splice that all others are removed, new track list spliced
+        // that the currentTrack becomes the first element.
+        const removeTrackIndices = [...Array(currentQueue.length).keys()];
+        removeTrackIndices.splice(currentTrackIndex, 1);
+        await TrackPlayer.remove(removeTrackIndices);
+        const splicedTracks = tracks.slice(currentTrackNewIndex + 1).concat(tracks.slice(0, currentTrackNewIndex));
+        log.debug(`edited tracks ${JSON.stringify({ splicedTracks })}`);
+        await TrackPlayer.add(splicedTracks);
+    }
 }
