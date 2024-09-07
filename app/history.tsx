@@ -61,8 +61,8 @@ export default function Page() {
             data={historyList}
             extraData={theme}
             keyExtractor={item => `${item?.key}`}
-            ListHeaderComponent={<Box className="h-3" />}
-            ListFooterComponent={<View style={{ height: edgeInsets.bottom + 12 }} />}
+            ListHeaderComponent={<Box className="h-1" />}
+            ListFooterComponent={<View style={{ height: edgeInsets.bottom + 4 }} />}
             estimatedItemSize={historyList.length}
             renderItem={item => {
                 const data = item.item;

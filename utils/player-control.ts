@@ -1,5 +1,4 @@
 import TrackPlayer, { Event, State } from "react-native-track-player";
-import { getPlaybackState, getProgress } from "react-native-track-player/lib/src/trackPlayer";
 
 export async function handleTogglePlay() {
     if ((await TrackPlayer.getPlaybackState()).state === State.Playing) {
@@ -13,7 +12,10 @@ export async function handleTogglePlay() {
 }
 
 export async function handlePrev() {
-    if ((await getProgress()).position > 5 && (await getPlaybackState()).state === State.Playing) {
+    if (
+        (await TrackPlayer.getProgress()).position > 5 &&
+        (await TrackPlayer.getPlaybackState()).state === State.Playing
+    ) {
         await TrackPlayer.seekTo(0);
         return;
     }

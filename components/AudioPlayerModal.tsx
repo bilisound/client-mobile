@@ -19,6 +19,7 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import SongItem from "./SongItem";
 
+import PotatoButton from "~/components/potato-ui/PotatoButton";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
@@ -28,7 +29,7 @@ import { getImageProxyUrl } from "~/utils/constant-helper";
 import { getFileName } from "~/utils/format";
 import { formatSecond, saveFile } from "~/utils/misc";
 import { handlePrev, handleTogglePlay } from "~/utils/player-control";
-import { tracksToPlaylist } from "~/utils/track-data";
+import { shuffle, tracksToPlaylist } from "~/utils/track-data";
 
 function AudioProgressBar() {
     const colorScheme = useColorScheme();
@@ -186,7 +187,7 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
 }
 
 function MusicList() {
-    const { tracks } = useTracks();
+    const { tracks, update } = useTracks();
     const { styles } = useStyles(styleSheet);
 
     // 转换后的列表
@@ -196,6 +197,15 @@ function MusicList() {
         <View style={styles.musicListContainer}>
             <View style={styles.musicListHeader}>
                 <Text style={styles.musicListHeaderText}>{`当前队列 (${tracks.length})`}</Text>
+                {/* todo 删掉这个临时按钮 */}
+                <PotatoButton
+                    onPress={async () => {
+                        await shuffle();
+                        await update();
+                    }}
+                >
+                    摇色子！！
+                </PotatoButton>
             </View>
             <View style={styles.musicListContent}>
                 <FlashList

@@ -110,7 +110,7 @@ export default function Page() {
     }
 
     return (
-        <CommonLayout title={id === MAGIC_ID_NEW_ENTRY ? "创建歌单" : "修改歌单信息"} titleBarTheme="transparent">
+        <CommonLayout title={id === MAGIC_ID_NEW_ENTRY ? "新建歌单" : "修改歌单信息"} titleBarTheme="transparent">
             <Box className="p-4 gap-4">
                 <FormControl isRequired isInvalid={"title" in errors}>
                     <FormControlLabel>
