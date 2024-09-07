@@ -39,6 +39,7 @@ import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
+import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
 import {
     deletePlaylistDetail,
     deletePlaylistMeta,
@@ -215,6 +216,8 @@ export default function Page() {
         const tracks = await playlistToTracks(playlistDetail);
         await TrackPlayer.pause();
         await TrackPlayer.setQueue(tracks);
+        queueStorage.set(QUEUE_IS_RANDOMIZED, false);
+        queueStorage.set(QUEUE_PLAYING_MODE, "normal");
         await TrackPlayer.skip(index);
         await TrackPlayer.play();
         setPlaylistOnQueue({ value: meta });
