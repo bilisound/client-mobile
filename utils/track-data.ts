@@ -9,7 +9,15 @@ import { runTasksLimit } from "./promise";
 import { convertToHTTPS } from "./string";
 
 import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
-import { QUEUE_CURRENT_INDEX, QUEUE_LIST, queueStorage } from "~/storage/queue";
+import {
+    QUEUE_CURRENT_INDEX,
+    QUEUE_IS_RANDOMIZED,
+    QUEUE_LIST,
+    QUEUE_LIST_BACKUP,
+    QUEUE_PLAYING_MODE,
+    QueuePlayingMode,
+    queueStorage,
+} from "~/storage/queue";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { handleLegacyQueue } from "~/utils/migration/legacy-queue";
 
@@ -26,6 +34,17 @@ export async function saveTrackData() {
                     return value;
                 }),
             );
+            if (!queueStorage.getBoolean(QUEUE_IS_RANDOMIZED)) {
+                queueStorage.set(
+                    QUEUE_LIST_BACKUP,
+                    JSON.stringify(tracks, (key, value) => {
+                        if (key === "url") {
+                            return undefined;
+                        }
+                        return value;
+                    }),
+                );
+            }
         })(),
         (async () => {
             const current = await TrackPlayer.getActiveTrackIndex();
@@ -34,12 +53,12 @@ export async function saveTrackData() {
     ]);
 }
 
-export async function loadTrackData() {
+export async function loadTrackData(fromBackup = false) {
     let tracks: AddTrack[] = [];
     let current = 0;
 
-    if (queueStorage.contains(QUEUE_LIST)) {
-        tracks = JSON.parse(queueStorage.getString(QUEUE_LIST) ?? "[]");
+    if (queueStorage.contains(fromBackup ? QUEUE_LIST_BACKUP : QUEUE_LIST)) {
+        tracks = JSON.parse(queueStorage.getString(fromBackup ? QUEUE_LIST_BACKUP : QUEUE_LIST) ?? "[]");
         current = queueStorage.getNumber(QUEUE_CURRENT_INDEX) || 0;
     }
 
@@ -61,11 +80,7 @@ export async function loadTrackData() {
             e.url = Asset.fromModule(require("../assets/placeholder.mp3")) as any;
         }
     });
-    await TrackPlayer.setQueue(tracks);
-    if (current) {
-        await TrackPlayer.skip(current);
-    }
-    await TrackPlayer.stop();
+    return { tracks, current };
 }
 
 export async function playlistToTracks(input: PlaylistDetail[]) {
@@ -122,7 +137,32 @@ function shuffleInPlace<T>(array: T[]) {
     }
 }
 
-// https://github.com/doublesymmetry/react-native-track-player/issues/1711#issuecomment-1529325813
+/**
+ * 切换播放模式
+ */
+export async function setMode() {
+    const mode = queueStorage.getString(QUEUE_PLAYING_MODE) as QueuePlayingMode | undefined;
+
+    switch (mode) {
+        case "shuffle": {
+            const { tracks } = await loadTrackData(true);
+            // todo 此函数切换回普通模式时会出问题
+            await setQueueUninterrupted(tracks);
+            queueStorage.set(QUEUE_PLAYING_MODE, "normal");
+            queueStorage.set(QUEUE_IS_RANDOMIZED, false);
+            break;
+        }
+        case "normal":
+        default: {
+            await shuffle();
+            queueStorage.set(QUEUE_PLAYING_MODE, "shuffle");
+            queueStorage.set(QUEUE_IS_RANDOMIZED, true);
+            break;
+        }
+    }
+}
+
+// 修改自 https://github.com/doublesymmetry/react-native-track-player/issues/1711#issuecomment-1529325813
 /**
  * shuffles the current Queue. The method returns a pre-shuffled Queue,
  * to revert shuffling, use setQueueUninterrupted().
@@ -153,7 +193,8 @@ export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
     const currentTrack = currentQueue[currentTrackIndex];
     const currentTrackNewIndex = tracks.findIndex(
         // define conditions to find the currentTrack in tracks
-        track => track.url === currentTrack.url,
+        track =>
+            track.bilisoundId === currentTrack.bilisoundId && track.bilisoundEpisode === currentTrack.bilisoundEpisode,
     );
     log.debug(
         `setQueueUninterrupted: currentTrackIndex is present? ${JSON.stringify({ currentTrackNewIndex, tracks, currentTrack })}`,

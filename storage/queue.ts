@@ -12,4 +12,9 @@ export const QUEUE_CURRENT_INDEX = "queue_current_index";
 // 当前队列是否已经随机化
 export const QUEUE_IS_RANDOMIZED = "queue_is_randomized";
 
+// 播放模式
+export const QUEUE_PLAYING_MODE = "queue_playing_mode";
+
+export type QueuePlayingMode = "normal" | "shuffle";
+
 export const queueStorage = new MMKV({ id: "storage-queue" });

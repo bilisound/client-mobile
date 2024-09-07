@@ -62,7 +62,12 @@ export default async function init() {
 
         // 还原歌单
         try {
-            await loadTrackData();
+            const { tracks, current } = await loadTrackData();
+            await TrackPlayer.setQueue(tracks);
+            if (current) {
+                await TrackPlayer.skip(current);
+            }
+            await TrackPlayer.stop();
         } catch (e) {
             log.error(`歌单初始化失败。原因：${e}`);
         }
