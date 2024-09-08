@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { PropsWithChildren } from "react";
 import { View, Text, StatusBar, StyleProp, ViewStyle } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
@@ -11,11 +11,18 @@ import { createIcon } from "~/components/potato-ui/utils/icon";
 export interface CommonFrameNewProps {
     title?: string;
     titleBarTheme?: "transparent" | "transparentAlt" | "solid";
+    /**
+     * @deprecated 改用 `paddingBottom={0}` 谢谢喵
+     */
     extendToBottom?: boolean;
     leftAccessories?: React.ReactNode | "backButton";
     rightAccessories?: React.ReactNode;
     containerStyle?: StyleProp<ViewStyle>;
     titleBarStyle?: StyleProp<ViewStyle>;
+    paddingTop?: number;
+    paddingBottom?: number;
+    paddingLeft?: number;
+    paddingRight?: number;
 }
 
 const IconArrowBack = createIcon(Ionicons, "arrow-back");
@@ -29,9 +36,19 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     rightAccessories,
     containerStyle,
     titleBarStyle,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
 }) => {
     const { styles, theme } = useStyles(styleSheet);
-    const edgeInsets = useSafeAreaInsets();
+    const edgeInsetsRaw = useSafeAreaInsets();
+    const edgeInsets: EdgeInsets = {
+        top: paddingTop ?? edgeInsetsRaw.top,
+        bottom: paddingBottom ?? edgeInsetsRaw.bottom,
+        left: paddingLeft ?? edgeInsetsRaw.left,
+        right: paddingRight ?? edgeInsetsRaw.right,
+    };
 
     const computedSolidColor = theme.colorTokens.topBarSolidBackground;
     let textColor = theme.colorTokens.topBarSolidForeground;

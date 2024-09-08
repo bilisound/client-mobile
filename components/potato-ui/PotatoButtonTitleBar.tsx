@@ -1,4 +1,3 @@
-import omit from "lodash/omit";
 import React, { PropsWithChildren, forwardRef } from "react";
 import { View } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
