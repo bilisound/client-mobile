@@ -202,7 +202,7 @@ function MusicList() {
 
     return (
         <Box className="flex-1 mb-6">
-            <Box className="flex-row items-center justify-start px-4 h-14 gap-3">
+            <Box className="flex-row items-center justify-start px-4 h-12 gap-3">
                 <Text className="font-semibold text-base">{`当前队列 (${tracks.length})`}</Text>
                 {queuePlayingMode === "shuffle" && (
                     <Text className="rounded-full px-3 py-1 bg-primary-500 text-white text-sm">随机</Text>
