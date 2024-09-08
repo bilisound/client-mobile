@@ -1,4 +1,5 @@
 import { Asset } from "expo-asset";
+import { Alert } from "react-native";
 import RNFS from "react-native-fs";
 import TrackPlayer, { AddTrack, Track } from "react-native-track-player";
 import { v4 as uuidv4 } from "uuid";
@@ -146,8 +147,7 @@ export async function setMode() {
     switch (mode) {
         case "shuffle": {
             const { tracks } = await loadTrackData(true);
-            // todo 此函数切换回普通模式时会出问题
-            await setQueueUninterrupted(tracks);
+            await restoreQueue(tracks);
             queueStorage.set(QUEUE_PLAYING_MODE, "normal");
             queueStorage.set(QUEUE_IS_RANDOMIZED, false);
             break;
@@ -160,6 +160,41 @@ export async function setMode() {
             break;
         }
     }
+}
+
+/**
+ * Generates two arrays of indices before and after a given index in an array.
+ * @param {number} length The length of the original array
+ * @param {number} index The index to split at
+ * @returns A tuple containing two arrays of indices
+ */
+function generateIndicesArrays(length: number, index: number) {
+    if (index < 0 || index >= length) {
+        throw new Error("Index out of bounds");
+    }
+
+    const beforeIndices = Array.from({ length: index }, (_, i) => i);
+    const afterIndices = Array.from({ length: length - index - 1 }, (_, i) => i + index + 1);
+
+    return [beforeIndices, afterIndices];
+}
+
+/**
+ * Splits an array into two parts based on a given index.
+ * @template T The type of elements in the array
+ * @param {T[]} array The input array
+ * @param {number} index The index to split at
+ * @returns {[T[], T[]]} A tuple containing two arrays: elements before the index and elements after the index
+ */
+function splitArrayAtIndex<T>(array: T[], index: number): [T[], T[]] {
+    if (index < 0 || index >= array.length) {
+        throw new Error("Index out of bounds");
+    }
+
+    const beforeElements = array.slice(0, index);
+    const afterElements = array.slice(index + 1);
+
+    return [beforeElements, afterElements];
 }
 
 // 修改自 https://github.com/doublesymmetry/react-native-track-player/issues/1711#issuecomment-1529325813
@@ -183,7 +218,7 @@ export async function shuffle(): Promise<Track[]> {
  * the currentTrack is at the first element, and add the spliced tracks.
  * @param tracks
  */
-export async function setQueueUninterrupted(tracks: Track[], forRestore = false): Promise<void> {
+export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
     // if no currentTrack, its a simple setQueue
     const currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
     log.debug(`setQueueUninterrupted: currentTrackIndex is valid? ${JSON.stringify({ currentTrackIndex })}`);
@@ -200,16 +235,54 @@ export async function setQueueUninterrupted(tracks: Track[], forRestore = false)
         `setQueueUninterrupted: currentTrackIndex is present? ${JSON.stringify({ currentTrackNewIndex, tracks, currentTrack })}`,
     );
     if (currentTrackNewIndex < 0) return TrackPlayer.setQueue(tracks);
-    if (forRestore) {
-        // todo
-    } else {
-        // else, splice that all others are removed, new track list spliced
-        // that the currentTrack becomes the first element.
-        const removeTrackIndices = [...Array(currentQueue.length).keys()];
-        removeTrackIndices.splice(currentTrackIndex, 1);
-        await TrackPlayer.remove(removeTrackIndices);
-        const splicedTracks = tracks.slice(currentTrackNewIndex + 1).concat(tracks.slice(0, currentTrackNewIndex));
-        log.debug(`edited tracks ${JSON.stringify({ splicedTracks })}`);
-        await TrackPlayer.add(splicedTracks);
+    // else, splice that all others are removed, new track list spliced
+    // that the currentTrack becomes the first element.
+    const removeTrackIndices = [...Array(currentQueue.length).keys()];
+    removeTrackIndices.splice(currentTrackIndex, 1);
+    await TrackPlayer.remove(removeTrackIndices);
+    const splicedTracks = tracks.slice(currentTrackNewIndex + 1).concat(tracks.slice(0, currentTrackNewIndex));
+    log.debug(`edited tracks ${JSON.stringify({ splicedTracks })}`);
+    await TrackPlayer.add(splicedTracks);
+}
+
+/**
+ * Restores the queue to its original state before shuffling.
+ * @param originalTracks The original, unshuffled list of tracks
+ */
+export async function restoreQueue(originalTracks: Track[]): Promise<void> {
+    const currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
+    if (currentTrackIndex === undefined) {
+        // If no track is currently playing, simply set the queue to the original tracks
+        return TrackPlayer.setQueue(originalTracks);
     }
+
+    const currentQueue = await TrackPlayer.getQueue();
+    const currentTrack = currentQueue[currentTrackIndex];
+
+    // Find the index of the current track in the original list
+    const originalIndex = originalTracks.findIndex(
+        track =>
+            track.bilisoundId === currentTrack.bilisoundId && track.bilisoundEpisode === currentTrack.bilisoundEpisode,
+    );
+
+    if (originalIndex < 0) {
+        // If the current track is not in the original list, just set the queue to the original tracks
+        return TrackPlayer.setQueue(originalTracks);
+    }
+
+    const [removeLeft, removeRight] = generateIndicesArrays(currentQueue.length, currentTrackIndex);
+
+    // 移除当前播放的曲目后面的所有曲目
+    await TrackPlayer.remove(removeRight);
+
+    // 移除当前播放的曲目前面的所有曲目
+    await TrackPlayer.remove(removeLeft);
+
+    const [insertLeft, insertRight] = splitArrayAtIndex(originalTracks, originalIndex);
+
+    // 在前面插入新列表的曲目
+    await TrackPlayer.add(insertLeft, 0);
+
+    // 在后面插入新列表的曲目
+    await TrackPlayer.add(insertRight);
 }
