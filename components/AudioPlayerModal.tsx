@@ -7,7 +7,6 @@ import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
-import { useMMKVString } from "react-native-mmkv";
 import Animated, {
     ReduceMotion,
     useAnimatedStyle,
@@ -20,18 +19,16 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import SongItem from "./SongItem";
 
-import PotatoButton from "~/components/potato-ui/PotatoButton";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 import useTracks from "~/hooks/useTracks";
-import { QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
 import useSettingsStore from "~/store/settings";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { getFileName } from "~/utils/format";
 import { formatSecond, saveFile } from "~/utils/misc";
 import { handlePrev, handleTogglePlay } from "~/utils/player-control";
-import { setMode, shuffle, tracksToPlaylist } from "~/utils/track-data";
+import { tracksToPlaylist } from "~/utils/track-data";
 
 function AudioProgressBar() {
     const colorScheme = useColorScheme();
@@ -189,9 +186,9 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
 }
 
 function MusicList() {
-    const { tracks, update } = useTracks();
+    const { tracks } = useTracks();
     const { styles } = useStyles(styleSheet);
-    const [aaa] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
+    // const [aaa] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
 
     // 转换后的列表
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
@@ -200,15 +197,14 @@ function MusicList() {
         <View style={styles.musicListContainer}>
             <View style={styles.musicListHeader}>
                 <Text style={styles.musicListHeaderText}>{`当前队列 (${tracks.length})`}</Text>
-                {/* todo 删掉这个临时按钮 */}
-                <PotatoButton
+                {/*<PotatoButton
                     onPress={async () => {
                         await setMode();
                         await update();
                     }}
                 >
                     {`当前：${aaa}`}
-                </PotatoButton>
+                </PotatoButton>*/}
             </View>
             <View style={styles.musicListContent}>
                 <FlashList

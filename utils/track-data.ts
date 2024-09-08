@@ -1,5 +1,4 @@
 import { Asset } from "expo-asset";
-import { Alert } from "react-native";
 import RNFS from "react-native-fs";
 import TrackPlayer, { AddTrack, Track } from "react-native-track-player";
 import { v4 as uuidv4 } from "uuid";
@@ -131,13 +130,6 @@ export function tracksToPlaylist(input: Track[]): PlaylistDetail[] {
     }));
 }
 
-function shuffleInPlace<T>(array: T[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
-
 /**
  * 切换播放模式
  */
@@ -154,7 +146,7 @@ export async function setMode() {
         }
         case "normal":
         default: {
-            await shuffle();
+            await shuffleQueue();
             queueStorage.set(QUEUE_PLAYING_MODE, "shuffle");
             queueStorage.set(QUEUE_IS_RANDOMIZED, true);
             break;
@@ -197,34 +189,35 @@ function splitArrayAtIndex<T>(array: T[], index: number): [T[], T[]] {
     return [beforeElements, afterElements];
 }
 
+/**
+ * 原地打乱数组（Fisher-Yates Shuffle 算法）
+ * @param array
+ */
+function shuffleInPlace<T>(array: T[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
 // 修改自 https://github.com/doublesymmetry/react-native-track-player/issues/1711#issuecomment-1529325813
 /**
  * shuffles the current Queue. The method returns a pre-shuffled Queue,
  * to revert shuffling, use setQueueUninterrupted().
  */
-export async function shuffle(): Promise<Track[]> {
+export async function shuffleQueue() {
     const currentQueue = await TrackPlayer.getQueue();
-    const shuffledQueue = currentQueue.concat();
-    shuffleInPlace(shuffledQueue);
-    await setQueueUninterrupted(shuffledQueue);
-    return currentQueue;
-}
+    const tracks = currentQueue.concat();
+    shuffleInPlace(tracks);
 
-/**
- * This is a combination of removePreviousTracks() and removeUpcomingTracks().
- * To set the player's queue without playback interruption, remove
- * all tracks with remove() that are not the activeTrackIndex. The current
- * track will be automatically shifted to the first element. Then, splice tracks that
- * the currentTrack is at the first element, and add the spliced tracks.
- * @param tracks
- */
-export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
     // if no currentTrack, its a simple setQueue
     const currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
     log.debug(`setQueueUninterrupted: currentTrackIndex is valid? ${JSON.stringify({ currentTrackIndex })}`);
-    if (currentTrackIndex === undefined) return await TrackPlayer.setQueue(tracks);
+    if (currentTrackIndex === undefined) {
+        return TrackPlayer.setQueue(tracks);
+    }
+
     // if currentTrack is not in tracks, its a simple setQueue
-    const currentQueue = await TrackPlayer.getQueue();
     const currentTrack = currentQueue[currentTrackIndex];
     const currentTrackNewIndex = tracks.findIndex(
         // define conditions to find the currentTrack in tracks
@@ -234,15 +227,21 @@ export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
     log.debug(
         `setQueueUninterrupted: currentTrackIndex is present? ${JSON.stringify({ currentTrackNewIndex, tracks, currentTrack })}`,
     );
-    if (currentTrackNewIndex < 0) return TrackPlayer.setQueue(tracks);
+
+    if (currentTrackNewIndex < 0) {
+        return TrackPlayer.setQueue(tracks);
+    }
+
     // else, splice that all others are removed, new track list spliced
     // that the currentTrack becomes the first element.
     const removeTrackIndices = [...Array(currentQueue.length).keys()];
     removeTrackIndices.splice(currentTrackIndex, 1);
     await TrackPlayer.remove(removeTrackIndices);
     const splicedTracks = tracks.slice(currentTrackNewIndex + 1).concat(tracks.slice(0, currentTrackNewIndex));
+
     log.debug(`edited tracks ${JSON.stringify({ splicedTracks })}`);
     await TrackPlayer.add(splicedTracks);
+    return currentQueue;
 }
 
 /**
