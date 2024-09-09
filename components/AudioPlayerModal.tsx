@@ -203,12 +203,6 @@ function MusicList() {
 
     return (
         <Box className="flex-1 mb-6">
-            <Box className="flex-row items-center justify-start px-4 h-12 gap-3">
-                <Text className="font-semibold text-base">{`当前队列 (${tracks.length})`}</Text>
-                {queuePlayingMode === "shuffle" && (
-                    <Text className="rounded-full px-3 py-1 bg-primary-500 text-white text-sm">随机</Text>
-                )}
-            </Box>
             <View className="flex-1 border border-l-0 border-r-0 border-outline-50">
                 <FlashList
                     renderItem={item => {
@@ -245,7 +239,7 @@ function TopTabButton({ active, children, onPress }: TopTabButtonProps) {
         <Pressable
             onPress={onPress}
             className={
-                "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" +
+                "h-full items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" +
                 (active ? " bg-background-0 shadow-sm" : "")
             }
         >
@@ -301,9 +295,6 @@ export default function AudioPlayerModal() {
                         showHideTransition="none"
                     />
                 )}
-                {/*<View style={styles.handleContainer} aria-hidden>
-                <View style={styles.handle} />
-            </View>*/}
                 {showList ? (
                     <MusicList />
                 ) : (
