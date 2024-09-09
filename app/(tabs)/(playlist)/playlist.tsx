@@ -158,14 +158,6 @@ export default function Page() {
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PlaylistMeta | undefined>();
 
-    const [isOpen, setIsOpen] = React.useState(false);
-    const handlePopoverOpen = () => {
-        setIsOpen(true);
-    };
-    const handlePopoverClose = () => {
-        setIsOpen(false);
-    };
-
     const handleClose = () => setShowActionSheet(prevState => !prevState);
 
     const handleLongPress = (id: number) => {

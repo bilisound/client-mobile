@@ -1,6 +1,7 @@
 import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
 import "core-js/actual/array/to-spliced";
+import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { PortalProvider } from "@gorhom/portal";
 import { ThemeProvider } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
@@ -24,7 +25,6 @@ import { checkLatestVersion } from "~/utils/check-release";
 import init from "~/utils/init";
 import "~/global.css";
 import "~/unistyles";
-import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 
 export {
     // Catch any errors thrown by the Layout component.

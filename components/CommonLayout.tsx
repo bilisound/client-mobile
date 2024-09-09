@@ -9,7 +9,7 @@ import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 
 export interface CommonFrameNewProps {
-    title?: string;
+    title?: string | React.ReactNode;
     titleBarTheme?: "transparent" | "transparentAlt" | "solid";
     /**
      * @deprecated 改用 `paddingBottom={0}` 谢谢喵
@@ -73,14 +73,21 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                 ]}
             >
                 <View style={styles.titleBar}>
-                    <Text
-                        style={[
-                            styles.titleText,
-                            { color: titleBarTheme === "solid" ? theme.colors.white : theme.colorTokens.foreground },
-                        ]}
-                    >
-                        {title}
-                    </Text>
+                    {typeof title === "string" ? (
+                        <Text
+                            style={[
+                                styles.titleText,
+                                {
+                                    color:
+                                        titleBarTheme === "solid" ? theme.colors.white : theme.colorTokens.foreground,
+                                },
+                            ]}
+                        >
+                            {title}
+                        </Text>
+                    ) : (
+                        title
+                    )}
                     {leftAccessories && (
                         <View style={styles.leftAccessories}>
                             {leftAccessories === "backButton" ? (

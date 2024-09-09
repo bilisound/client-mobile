@@ -35,7 +35,7 @@ const History: React.FC = () => {
             ${getSetMarginJavaScript()}
         `);
         },
-        [colorScheme, safeAreaInsets],
+        [getSetColorSchemeJavaScript, getSetMarginJavaScript],
     );
 
     return (

@@ -266,7 +266,7 @@ export default function Page() {
         return () => {
             navigation.removeListener("beforeRemove", handler);
         };
-    }, [editing, navigation]);
+    }, [clear, editing, navigation]);
 
     // 菜单
     const [showActionMenu, setShowActionMenu] = useState(false);
