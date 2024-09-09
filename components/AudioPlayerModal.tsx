@@ -335,6 +335,11 @@ export default function AudioPlayerModal() {
                                 await setMode();
                                 await update();
                             }}
+                            aria-label={
+                                queuePlayingMode === "shuffle"
+                                    ? "随机模式开启（点击以关闭）"
+                                    : "随机模式关闭（点击以开启）"
+                            }
                         >
                             <Entypo
                                 name="shuffle"
@@ -351,6 +356,7 @@ export default function AudioPlayerModal() {
                                 onPress={async () => {
                                     await handlePrev();
                                 }}
+                                aria-label="上一首"
                             >
                                 <FontAwesome5
                                     name="step-backward"
@@ -368,6 +374,7 @@ export default function AudioPlayerModal() {
                                 onPress={async () => {
                                     await handleTogglePlay();
                                 }}
+                                aria-label="播放/暂停"
                             >
                                 <AudioPlayButtonIcon />
                             </PotatoPressable>
@@ -379,6 +386,7 @@ export default function AudioPlayerModal() {
                                 onPress={async () => {
                                     await TrackPlayer.skipToNext();
                                 }}
+                                aria-label="下一首"
                             >
                                 <FontAwesome5
                                     name="step-forward"
@@ -410,6 +418,7 @@ export default function AudioPlayerModal() {
                                     }),
                                 );
                             }}
+                            aria-label="导出"
                         >
                             <Ionicons name="save" size={20} color={textBasicColor} />
                         </PotatoPressable>
