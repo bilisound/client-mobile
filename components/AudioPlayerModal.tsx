@@ -26,6 +26,7 @@ import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import { Box } from "~/components/ui/box";
+import { Pressable } from "~/components/ui/pressable";
 import { Text } from "~/components/ui/text";
 import useTracks from "~/hooks/useTracks";
 import { QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
@@ -233,6 +234,28 @@ function MusicList() {
     );
 }
 
+interface TopTabButtonProps {
+    active: boolean;
+    children: string;
+    onPress: () => void;
+}
+
+function TopTabButton({ active, children, onPress }: TopTabButtonProps) {
+    return (
+        <Pressable
+            onPress={onPress}
+            className={
+                "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" +
+                (active ? " bg-background-0 shadow-sm" : "")
+            }
+        >
+            <Text className={"text-sm font-medium " + (active ? "text-typography-700" : "text-typography-500")}>
+                {children}
+            </Text>
+        </Pressable>
+    );
+}
+
 export default function AudioPlayerModal() {
     const { styles, theme } = useStyles(styleSheet);
     const colorScheme = useColorScheme();
@@ -247,7 +270,16 @@ export default function AudioPlayerModal() {
         <View style={styles.container}>
             <CommonLayout
                 titleBarTheme="transparent"
-                title="正在播放"
+                title={
+                    <Box className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
+                        <TopTabButton active={!showList} onPress={() => setShowList(false)}>
+                            正在播放
+                        </TopTabButton>
+                        <TopTabButton active={showList} onPress={() => setShowList(true)}>
+                            播放队列
+                        </TopTabButton>
+                    </Box>
+                }
                 leftAccessories={
                     <PotatoButtonTitleBar
                         label="返回"
