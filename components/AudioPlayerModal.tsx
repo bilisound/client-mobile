@@ -35,7 +35,7 @@ import { getImageProxyUrl } from "~/utils/constant-helper";
 import { getFileName } from "~/utils/format";
 import { formatSecond, saveFile } from "~/utils/misc";
 import { handlePrev, handleTogglePlay } from "~/utils/player-control";
-import { tracksToPlaylist } from "~/utils/track-data";
+import { setMode, tracksToPlaylist } from "~/utils/track-data";
 
 const IconDown = createIcon(Entypo, "chevron-down");
 
@@ -196,7 +196,6 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
 
 function MusicList() {
     const { tracks } = useTracks();
-    const [queuePlayingMode] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
 
     // 转换后的列表
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
@@ -259,10 +258,13 @@ export default function AudioPlayerModal() {
     const { useLegacyID } = useSettingsStore(state => ({
         useLegacyID: state.useLegacyID,
     }));
+    const [queuePlayingMode] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
+    const { update } = useTracks();
 
     return (
         <View style={styles.container}>
             <CommonLayout
+                titleBarClassName="h-20 px-[18px]"
                 titleBarTheme="transparent"
                 title={
                     <Box className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
@@ -329,17 +331,15 @@ export default function AudioPlayerModal() {
                         <PotatoPressable
                             style={styles.controlButtonSmall}
                             outerStyle={styles.controlButtonOuter}
-                            onPress={() => {
-                                setShowList(prevState => !prevState);
+                            onPress={async () => {
+                                await setMode();
+                                await update();
                             }}
                         >
-                            <MaterialIcons
-                                name="playlist-play"
-                                size={32}
-                                color={textBasicColor}
-                                style={{
-                                    transform: [{ translateX: 2 }],
-                                }}
+                            <Entypo
+                                name="shuffle"
+                                size={22}
+                                color={queuePlayingMode === "shuffle" ? theme.colors.primary[500] : textBasicColor}
                             />
                         </PotatoPressable>
 

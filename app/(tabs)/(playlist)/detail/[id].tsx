@@ -308,10 +308,10 @@ export default function Page() {
         <CommonLayout
             title="查看详情"
             titleBarTheme="transparentAlt"
-            containerStyle={{
+            style={{
                 backgroundColor: enableUnderLayerColor ? fromColor : bgColor,
             }}
-            titleBarStyle={{
+            titleBarContainerStyle={{
                 backgroundColor: fromColor,
             }}
             leftAccessories="backButton"

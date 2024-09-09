@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { remapProps } from "nativewind";
 import React, { PropsWithChildren } from "react";
 import { View, Text, StatusBar, StyleProp, ViewStyle } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -17,7 +18,8 @@ export interface CommonFrameNewProps {
     extendToBottom?: boolean;
     leftAccessories?: React.ReactNode | "backButton";
     rightAccessories?: React.ReactNode;
-    containerStyle?: StyleProp<ViewStyle>;
+    style?: StyleProp<ViewStyle>;
+    titleBarContainerStyle?: StyleProp<ViewStyle>;
     titleBarStyle?: StyleProp<ViewStyle>;
     paddingTop?: number;
     paddingBottom?: number;
@@ -27,15 +29,18 @@ export interface CommonFrameNewProps {
 
 const IconArrowBack = createIcon(Ionicons, "arrow-back");
 
-const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
+const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     children,
     title,
     titleBarTheme = "solid",
     extendToBottom,
     leftAccessories,
     rightAccessories,
-    containerStyle,
+
+    style,
+    titleBarContainerStyle,
     titleBarStyle,
+
     paddingTop,
     paddingRight,
     paddingBottom,
@@ -60,7 +65,7 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
     }
 
     return (
-        <View style={[styles.container, containerStyle]}>
+        <View style={[styles.container, style]}>
             {titleBarTheme === "solid" && <StatusBar barStyle="light-content" showHideTransition="none" />}
             <View
                 style={[
@@ -69,10 +74,10 @@ const CommonLayout: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
                         paddingTop: edgeInsets.top,
                         backgroundColor: titleBarTheme === "solid" ? computedSolidColor : "transparent",
                     },
-                    titleBarStyle,
+                    titleBarContainerStyle,
                 ]}
             >
-                <View style={styles.titleBar}>
+                <View style={[styles.titleBar, titleBarStyle]}>
                     {typeof title === "string" ? (
                         <Text
                             style={[
@@ -160,5 +165,11 @@ const styleSheet = createStyleSheet(theme => ({
         flex: 1,
     },
 }));
+
+const CommonLayout = remapProps(CommonLayoutOriginal, {
+    className: "style",
+    titleBarContainerClassName: "titleBarContainerStyle",
+    titleBarClassName: "titleBarStyle",
+});
 
 export default CommonLayout;
