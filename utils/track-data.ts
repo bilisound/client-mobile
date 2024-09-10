@@ -133,7 +133,7 @@ export function tracksToPlaylist(input: Track[]): PlaylistDetail[] {
 /**
  * 切换播放模式
  */
-export async function setMode() {
+export async function setMode(): Promise<QueuePlayingMode> {
     const mode = queueStorage.getString(QUEUE_PLAYING_MODE) as QueuePlayingMode | undefined;
 
     switch (mode) {
@@ -142,14 +142,14 @@ export async function setMode() {
             await restoreQueue(tracks);
             queueStorage.set(QUEUE_PLAYING_MODE, "normal");
             queueStorage.set(QUEUE_IS_RANDOMIZED, false);
-            break;
+            return "normal";
         }
         case "normal":
         default: {
             await shuffleQueue();
             queueStorage.set(QUEUE_PLAYING_MODE, "shuffle");
             queueStorage.set(QUEUE_IS_RANDOMIZED, true);
-            break;
+            return "shuffle";
         }
     }
 }

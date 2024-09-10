@@ -16,6 +16,7 @@ import Animated, {
     withRepeat,
     withTiming,
 } from "react-native-reanimated";
+import Toast from "react-native-toast-message";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
@@ -337,8 +338,19 @@ export default function AudioPlayerModal() {
                             style={styles.controlButtonSmall}
                             outerStyle={styles.controlButtonOuter}
                             onPress={async () => {
-                                await setMode();
+                                const result = await setMode();
                                 await update();
+                                if (result === "normal") {
+                                    Toast.show({
+                                        type: "info",
+                                        text1: "随机模式关闭",
+                                    });
+                                } else {
+                                    Toast.show({
+                                        type: "info",
+                                        text1: "随机模式开启",
+                                    });
+                                }
                             }}
                             aria-label={
                                 queuePlayingMode === "shuffle"
@@ -349,7 +361,7 @@ export default function AudioPlayerModal() {
                             <Entypo
                                 name="shuffle"
                                 size={22}
-                                color={queuePlayingMode === "shuffle" ? theme.colors.primary[500] : textBasicColor}
+                                color={queuePlayingMode === "shuffle" ? theme.colors.accent[500] : textBasicColor}
                             />
                         </PotatoPressable>
 
