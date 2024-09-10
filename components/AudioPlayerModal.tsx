@@ -268,10 +268,14 @@ export default function AudioPlayerModal() {
                 titleBarTheme="transparent"
                 title={
                     <Box className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
-                        <TopTabButton active={!showList} onPress={() => setShowList(false)}>
+                        <TopTabButton
+                            key={`${showList}_正在播放`}
+                            active={!showList}
+                            onPress={() => setShowList(false)}
+                        >
                             正在播放
                         </TopTabButton>
-                        <TopTabButton active={showList} onPress={() => setShowList(true)}>
+                        <TopTabButton key={`${showList}_播放队列`} active={showList} onPress={() => setShowList(true)}>
                             播放队列
                         </TopTabButton>
                     </Box>
