@@ -149,3 +149,14 @@ export async function exportPlaylist(id: number): Promise<PlaylistImport> {
         version: 1,
     };
 }
+
+export async function exportAllPlaylist(): Promise<PlaylistImport> {
+    const meta = await db.select().from(playlistMeta);
+    const detail = await db.select().from(playlistDetail);
+    return {
+        meta,
+        detail,
+        kind: "moe.bilisound.app.exportedPlaylist",
+        version: 1,
+    };
+}

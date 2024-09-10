@@ -11,7 +11,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import React, { useEffect, useRef, useState } from "react";
-import { Linking, Platform, useColorScheme } from "react-native";
+import { Linking, LogBox, Platform, useColorScheme } from "react-native";
 import Toast from "react-native-toast-message";
 import { UnistylesRuntime, useInitialTheme, useStyles } from "react-native-unistyles";
 
@@ -39,6 +39,8 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+LogBox.ignoreAllLogs(true);
 
 // Query Client
 const queryClient = new QueryClient();

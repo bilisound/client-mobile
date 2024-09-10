@@ -1,4 +1,4 @@
-import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
@@ -243,7 +243,11 @@ function TopTabButton({ active, children, onPress }: TopTabButtonProps) {
                 (active ? " bg-background-0 shadow-sm" : "")
             }
         >
-            <Text className={"text-sm font-medium " + (active ? "text-typography-700" : "text-typography-500")}>
+            <Text
+                className={
+                    "text-sm font-medium " + (active ? "font-semibold text-typography-700" : "text-typography-500")
+                }
+            >
                 {children}
             </Text>
         </Pressable>
@@ -265,7 +269,7 @@ export default function AudioPlayerModal() {
     return (
         <View style={styles.container}>
             <CommonLayout
-                titleBarClassName="h-20 px-[18px]"
+                titleBarClassName="h-[72px] px-[14px]"
                 titleBarTheme="transparent"
                 title={
                     <Box className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
