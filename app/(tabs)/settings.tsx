@@ -1,25 +1,19 @@
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { filesize } from "filesize";
-import path from "path-browserify";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Platform, ScrollView } from "react-native";
-import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import { Switch } from "~/components/ui/switch";
-import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
 import { VERSION } from "~/constants/releasing";
 import useSettingsStore from "~/store/settings";
 import log from "~/utils/logger";
-import { checkDirectorySize, cleanAudioCache } from "~/utils/misc";
 
 const LinkIcon = createIcon(Entypo, "link");
 const DownloadNextIcon = createIcon(MaterialIcons, "downloading");
 const CDNIcon = createIcon(Entypo, "cloud");
-const DeleteIcon = createIcon(MaterialIcons, "delete");
 const InfoIcon = createIcon(FontAwesome5, "info-circle");
 // const ReadmeIcon = createIcon(Entypo, "help-with-circle");
 const DeveloperIcon = createIcon(Entypo, "code");
@@ -36,33 +30,6 @@ const Settings: React.FC = () => {
         // update: state.update,
         toggle: state.toggle,
     }));
-
-    // 离线缓存大小
-    const [cacheSize, setCacheSize] = useState(-1);
-    const [cacheSizeFree, setCacheSizeFree] = useState(-1);
-    const [cacheRefreshFlag, setCacheRefreshFlag] = useState(false);
-
-    useEffect(() => {
-        let died = false;
-        (async () => {
-            const tracks = await TrackPlayer.getQueue();
-            const cacheSizeRaw = await checkDirectorySize(BILISOUND_OFFLINE_PATH);
-            const cacheFreeSizeRaw = await checkDirectorySize(BILISOUND_OFFLINE_PATH, {
-                fileFilter(fileName) {
-                    const name = path.parse(fileName).name;
-                    return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
-                },
-            });
-            if (died) {
-                return;
-            }
-            setCacheSize(cacheSizeRaw);
-            setCacheSizeFree(cacheFreeSizeRaw);
-        })();
-        return () => {
-            died = true;
-        };
-    }, [cacheRefreshFlag]);
 
     const developerOptions = (
         <>
@@ -130,16 +97,14 @@ const Settings: React.FC = () => {
                         router.push("/settings/theme");
                     }}
                 />
-                {process.env.NODE_ENV !== "production" && (
-                    <SettingMenuItem
-                        icon={DatabaseIcon}
-                        title="数据管理"
-                        subTitle="管理离线缓存和数据备份"
-                        onPress={async () => {
-                            router.push("/settings/data");
-                        }}
-                    />
-                )}
+                <SettingMenuItem
+                    icon={DatabaseIcon}
+                    title="数据管理"
+                    subTitle="管理离线缓存和数据备份"
+                    onPress={async () => {
+                        router.push("/settings/data");
+                    }}
+                />
                 {Platform.OS === "web" ? null : (
                     <>
                         <SettingMenuItem
@@ -155,20 +120,6 @@ const Settings: React.FC = () => {
                                 />
                             }
                             onPress={() => toggle("downloadNextTrack")}
-                        />
-                        <SettingMenuItem
-                            icon={DeleteIcon}
-                            title="清除离线缓存"
-                            subTitle={
-                                cacheSize < 0 || cacheSizeFree < 0
-                                    ? "占用空间统计中……"
-                                    : `共占用 ${filesize(cacheSize)} (${filesize(cacheSizeFree)} 可清除)`
-                            }
-                            onPress={async () => {
-                                await cleanAudioCache();
-                                setCacheRefreshFlag(prevState => !prevState);
-                            }}
-                            disabled={cacheSizeFree <= 0}
                         />
                     </>
                 )}
