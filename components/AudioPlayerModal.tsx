@@ -268,6 +268,7 @@ export default function AudioPlayerModal() {
                 titleBarTheme="transparent"
                 title={
                     <Box className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
+                        {/* key 是切换选项卡后阴影停滞问题的 workaround */}
                         <TopTabButton
                             key={`${showList}_正在播放`}
                             active={!showList}
