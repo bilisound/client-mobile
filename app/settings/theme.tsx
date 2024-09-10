@@ -75,13 +75,13 @@ export default function Page() {
                 <VStack space="lg" className="md:flex-row">
                     <ThemeButton
                         name="默认主题"
-                        yuruChara={require("../assets/images/bg-corner-classic.svg")}
+                        yuruChara={require("../../assets/images/bg-corner-classic.svg")}
                         onPress={() => update("theme", "classic")}
                         selected={theme === "classic"}
                     />
                     <ThemeButton
                         name="红色主题"
-                        yuruChara={require("../assets/images/bg-corner-red.webp")}
+                        yuruChara={require("../../assets/images/bg-corner-red.webp")}
                         onPress={() => update("theme", "red")}
                         selected={theme === "red"}
                     />

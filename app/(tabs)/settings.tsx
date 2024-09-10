@@ -25,6 +25,7 @@ const InfoIcon = createIcon(FontAwesome5, "info-circle");
 const DeveloperIcon = createIcon(Entypo, "code");
 const BugIcon = createIcon(FontAwesome5, "bug");
 const PaintBrushIcon = createIcon(FontAwesome5, "paint-brush");
+const DatabaseIcon = createIcon(Entypo, "database");
 
 const Settings: React.FC = () => {
     const { useLegacyID, downloadNextTrack, filterResourceURL, debugMode, toggle } = useSettingsStore(state => ({
@@ -125,6 +126,14 @@ const Settings: React.FC = () => {
                     iconSize={20}
                     title="外观设置"
                     subTitle="切换应用主题和看板娘显示"
+                    onPress={async () => {
+                        router.push("/theme");
+                    }}
+                />
+                <SettingMenuItem
+                    icon={DatabaseIcon}
+                    title="数据管理"
+                    subTitle="管理离线缓存和数据备份"
                     onPress={async () => {
                         router.push("/theme");
                     }}

@@ -6,7 +6,7 @@ import WebView from "react-native-webview";
 
 import CommonLayout from "~/components/CommonLayout";
 
-const indexHtml = require("../assets/web/index.html");
+const indexHtml = require("../../assets/web/index.html");
 
 const History: React.FC = () => {
     const [html] = useAssets(indexHtml);

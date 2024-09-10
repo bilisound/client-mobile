@@ -52,7 +52,7 @@ export default function Page() {
         <CommonLayout title="关于" extendToBottom leftAccessories="backButton">
             <ScrollView>
                 <View style={styles.container}>
-                    <Image style={styles.logoImage} source={require("../assets/images/icon.png")} />
+                    <Image style={styles.logoImage} source={require("../../assets/images/icon.png")} />
                     <Text style={styles.logoTitle}>Bilisound</Text>
                     <Text style={styles.version}>{`版本 ${VERSION}`}</Text>
                 </View>

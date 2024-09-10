@@ -134,15 +134,15 @@ const RootLayoutNav = () => {
                     headerShown: false,
                 }}
             />
-            <Stack.Screen name="about" options={{ headerShown: false }} />
-            <Stack.Screen name="readme" options={{ headerShown: false }} />
             <Stack.Screen name="barcode" options={{ headerShown: false, animation: "fade" }} />
             <Stack.Screen name="notification.click" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={modalSettings} />
-            <Stack.Screen name="log-show" options={{ headerShown: false }} />
             <Stack.Screen name="apply-playlist" options={{ headerShown: false }} />
             <Stack.Screen name="remote-list" options={{ headerShown: false }} />
-            <Stack.Screen name="theme" options={{ headerShown: false }} />
+            <Stack.Screen name="settings/about" options={{ title: "关于", headerShown: false }} />
+            <Stack.Screen name="settings/readme" options={{ title: "用户说明", headerShown: false }} />
+            <Stack.Screen name="settings/log-show" options={{ title: "导出日志", headerShown: false }} />
+            <Stack.Screen name="settings/theme" options={{ title: "外观设置", headerShown: false }} />
             <Stack.Screen name="test" options={{ title: "测试页面" }} />
         </Stack>
     );
