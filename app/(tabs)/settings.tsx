@@ -96,7 +96,7 @@ const Settings: React.FC = () => {
                         title="导出日志"
                         subTitle="对开发者真的太有用了"
                         onPress={async () => {
-                            router.push("/log-show");
+                            router.push("/settings/log-show");
                         }}
                     />
                 </>
@@ -127,17 +127,19 @@ const Settings: React.FC = () => {
                     title="外观设置"
                     subTitle="切换应用主题和看板娘显示"
                     onPress={async () => {
-                        router.push("/theme");
+                        router.push("/settings/theme");
                     }}
                 />
-                <SettingMenuItem
-                    icon={DatabaseIcon}
-                    title="数据管理"
-                    subTitle="管理离线缓存和数据备份"
-                    onPress={async () => {
-                        router.push("/theme");
-                    }}
-                />
+                {process.env.NODE_ENV !== "production" && (
+                    <SettingMenuItem
+                        icon={DatabaseIcon}
+                        title="数据管理"
+                        subTitle="管理离线缓存和数据备份"
+                        onPress={async () => {
+                            router.push("/settings/data");
+                        }}
+                    />
+                )}
                 {Platform.OS === "web" ? null : (
                     <>
                         <SettingMenuItem
@@ -175,7 +177,7 @@ const Settings: React.FC = () => {
                     title="关于 Bilisound"
                     subTitle={`版本 ${VERSION}`}
                     onPress={async () => {
-                        router.push("/about");
+                        router.push("/settings/about");
                     }}
                 />
                 <SettingMenuItem

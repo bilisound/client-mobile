@@ -143,6 +143,7 @@ const RootLayoutNav = () => {
             <Stack.Screen name="settings/readme" options={{ title: "用户说明", headerShown: false }} />
             <Stack.Screen name="settings/log-show" options={{ title: "导出日志", headerShown: false }} />
             <Stack.Screen name="settings/theme" options={{ title: "外观设置", headerShown: false }} />
+            <Stack.Screen name="settings/data" options={{ title: "数据管理", headerShown: false }} />
             <Stack.Screen name="test" options={{ title: "测试页面" }} />
         </Stack>
     );
