@@ -5,15 +5,33 @@ import Toast from "react-native-toast-message";
 import { parse, stringify } from "smol-toml";
 
 import { db } from "~/storage/sqlite/main";
-import { exportPlaylist } from "~/storage/sqlite/playlist";
+import { exportAllPlaylist, exportPlaylist } from "~/storage/sqlite/playlist";
 import { playlistDetail, playlistImportSchema, playlistMeta } from "~/storage/sqlite/schema";
 import { saveTextFile } from "~/utils/file";
 import log from "~/utils/logger";
 
-export async function exportPlaylistToFile(id: number) {
-    const output = await exportPlaylist(id);
+export async function exportPlaylistToFile(id?: number) {
+    let output;
+    let name;
+    if (typeof id === "number") {
+        output = await exportPlaylist(id);
+    } else {
+        output = await exportAllPlaylist();
+    }
     const doc = stringify(output);
-    await saveTextFile("[Bilisound 歌单] " + output.meta[0].title + ".toml", doc, "application/toml");
+    if (output.meta.length > 1) {
+        name = output.meta.length + " 个歌单导出";
+    } else {
+        name = output.meta[0].title;
+    }
+    const ok = await saveTextFile("[Bilisound 歌单] " + name + ".toml", doc, "application/toml");
+    if (ok) {
+        Toast.show({
+            type: "success",
+            text1: "操作成功",
+            text2: `成功导出 ${output.meta.length} 个歌单`,
+        });
+    }
 }
 
 interface MigratePlan {

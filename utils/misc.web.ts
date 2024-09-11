@@ -48,11 +48,7 @@ export async function saveFile(location: string, replaceFileName?: string) {
     console.warn("saveFile 未实现");
 }
 
-export interface CheckDirectorySizeOptions {
-    fileFilter?: (fileName: string, index: number, fileList: string[]) => boolean;
-}
-
-export async function checkDirectorySize(checkPath: string, options: CheckDirectorySizeOptions = {}) {
+export async function countSize() {
     return 0;
 }
 

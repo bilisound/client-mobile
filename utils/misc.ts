@@ -97,11 +97,11 @@ export async function saveFile(location: string, replaceFileName?: string) {
     return true;
 }
 
-export interface CheckDirectorySizeOptions {
+interface CheckDirectorySizeOptions {
     fileFilter?: (fileName: string, index: number, fileList: string[]) => boolean;
 }
 
-export async function checkDirectorySize(checkPath: string, options: CheckDirectorySizeOptions = {}) {
+async function checkDirectorySize(checkPath: string, options: CheckDirectorySizeOptions = {}) {
     let items = (await RNFS.readdir(checkPath)).map(e => path.join(checkPath, e));
     if (options.fileFilter) {
         items = items.filter(options.fileFilter);
@@ -112,6 +112,18 @@ export async function checkDirectorySize(checkPath: string, options: CheckDirect
         totalSize += meta.size;
     }
     return totalSize;
+}
+
+export async function countSize() {
+    const tracks = await TrackPlayer.getQueue();
+    const cacheSize = await checkDirectorySize(BILISOUND_OFFLINE_PATH);
+    const cacheFreeSize = await checkDirectorySize(BILISOUND_OFFLINE_PATH, {
+        fileFilter(fileName) {
+            const name = path.parse(fileName).name;
+            return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
+        },
+    });
+    return { cacheSize, cacheFreeSize };
 }
 
 export async function cleanAudioCache() {
