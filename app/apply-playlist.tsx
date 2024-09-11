@@ -14,6 +14,7 @@ import PlaylistItem from "~/components/PlaylistItem";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import useTracks from "~/hooks/useTracks";
 import { usePlaylistOnQueue } from "~/storage/playlist";
+import { addToQueueListBackup, getQueuePlayingMode } from "~/storage/queue";
 import { addToPlaylist, getPlaylistMetas, quickCreatePlaylist, syncPlaylistAmount } from "~/storage/sqlite/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -37,6 +38,33 @@ export default function Page() {
         queryKey: ["playlist_meta"],
         queryFn: getPlaylistMetas,
     });
+
+    async function handleAddToPlaylist(id: number) {
+        await addToPlaylist(id, playlistDetail ?? []);
+        await syncPlaylistAmount(id);
+
+        // 如果当前的 queue 来自试图被添加的播放列表，给 queue 也添加这些曲目
+        if (playlistOnQueue) {
+            const convertedList = await playlistToTracks(playlistDetail ?? []);
+            await TrackPlayer.add(convertedList);
+            await update();
+
+            // 随机状态下还要加到备份队列中
+            if (getQueuePlayingMode() === "shuffle") {
+                addToQueueListBackup(convertedList);
+            }
+        }
+
+        await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+        await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] });
+        await queryClient.invalidateQueries({ queryKey: [`playlist_detail_${id}`] });
+        Toast.show({
+            type: "success",
+            text1: "曲目添加成功",
+            text2: `已添加 ${playlistDetail?.length ?? 0} 首曲目到歌单`,
+        });
+        router.back();
+    }
 
     return (
         <CommonLayout title="添加到歌单" leftAccessories="backButton">
@@ -88,31 +116,7 @@ export default function Page() {
                     </PotatoPressable>
                 }
                 renderItem={item => {
-                    return (
-                        <PlaylistItem
-                            item={item.item}
-                            onPress={async () => {
-                                await addToPlaylist(item.item.id, playlistDetail ?? []);
-                                await syncPlaylistAmount(item.item.id);
-
-                                // 如果当前的 queue 来自试图被添加的播放列表，给 queue 也添加这些曲目
-                                if (playlistOnQueue) {
-                                    await TrackPlayer.add(await playlistToTracks(playlistDetail ?? []));
-                                    await update();
-                                }
-
-                                await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
-                                await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${item.item.id}`] });
-                                await queryClient.invalidateQueries({ queryKey: [`playlist_detail_${item.item.id}`] });
-                                Toast.show({
-                                    type: "success",
-                                    text1: "曲目添加成功",
-                                    text2: `已添加 ${playlistDetail?.length ?? 0} 首曲目到歌单`,
-                                });
-                                router.back();
-                            }}
-                        />
-                    );
+                    return <PlaylistItem item={item.item} onPress={() => handleAddToPlaylist(item.item.id)} />;
                 }}
                 data={data}
                 estimatedItemSize={86}

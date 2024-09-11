@@ -14,6 +14,7 @@ import { saveTrackData } from "./track-data";
 import { getBilisoundResourceUrl, getVideoUrl } from "~/api/bilisound";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { invalidateOnQueueStatus } from "~/storage/playlist";
+import { addToQueueListBackup, getQueuePlayingMode } from "~/storage/queue";
 import useDownloadStore from "~/store/download";
 import useSettingsStore from "~/store/settings";
 
@@ -222,31 +223,26 @@ export async function addTrackToQueue(playingRequest: PlayingInformation) {
 
         // 清除当前播放队列隶属的歌单
         invalidateOnQueueStatus();
-        const addResult = await TrackPlayer.add([
-            {
-                url,
-                title: playingRequest.title,
-                artist: playingRequest.artist,
-                artwork: convertToHTTPS(playingRequest.artwork),
-                duration: playingRequest.duration,
-                bilisoundId: playingRequest.id,
-                bilisoundEpisode: playingRequest.episode,
-                bilisoundUniqueId: uuidv4(),
-                bilisoundIsLoaded: isLoaded,
-            },
-        ]);
+        const addData = {
+            url,
+            title: playingRequest.title,
+            artist: playingRequest.artist,
+            artwork: convertToHTTPS(playingRequest.artwork),
+            duration: playingRequest.duration,
+            bilisoundId: playingRequest.id,
+            bilisoundEpisode: playingRequest.episode,
+            bilisoundUniqueId: uuidv4(),
+            bilisoundIsLoaded: isLoaded,
+        };
+        const addResult = await TrackPlayer.add(addData);
         log.debug("正在尝试播放刚添加的音频");
         await TrackPlayer.skip(addResult || 0);
         await TrackPlayer.play();
 
-        /*log.debug("正在等待播放服务准备就绪");
-        const eventHandler = TrackPlayer.addEventListener(Event.PlaybackState, async e => {
-            if (e.state === State.Ready) {
-                log.debug("播放服务准备就绪，开始播放");
-                await TrackPlayer.play();
-                eventHandler?.remove();
-            }
-        });*/
+        // 随机状态下还要加到备份队列中
+        if (getQueuePlayingMode() === "shuffle") {
+            addToQueueListBackup([addData]);
+        }
 
         log.debug("正在保存歌单");
         try {
