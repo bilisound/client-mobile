@@ -11,7 +11,7 @@ import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
-import { formatSecond } from "~/utils/misc";
+import { formatSecond } from "~/utils/datetime";
 import { handleTogglePlay } from "~/utils/player-control";
 
 const PotatoPressableWind = remapProps(PotatoPressable, { className: "style" });

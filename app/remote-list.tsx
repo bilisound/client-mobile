@@ -23,7 +23,7 @@ import { createIcon } from "~/components/potato-ui/utils/icon";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
-import { formatSecond } from "~/utils/misc";
+import { formatSecond } from "~/utils/datetime";
 
 const IconAdd = createIcon(MaterialIcons, "add");
 

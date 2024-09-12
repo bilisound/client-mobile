@@ -12,7 +12,7 @@ import PotatoButton from "~/components/potato-ui/PotatoButton";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
-import { formatDate } from "~/utils/misc";
+import { formatDate } from "~/utils/datetime";
 
 const detailMaxHeight = 192;
 
