@@ -124,3 +124,11 @@ export function getCacheAudioPath(id: string, episode: number, isAudio = true) {
     }
     return `${BILISOUND_OFFLINE_PATH}/${id}_${episode}.tmp`;
 }
+
+export function uriToPath(uri: string) {
+    return decodeURI(uri.slice(7));
+}
+
+export function pathToUri(path: string) {
+    return `file://${encodeURI(path)}`;
+}
