@@ -3,8 +3,8 @@ import RNFS from "react-native-fs";
 import TrackPlayer, { AddTrack, Track } from "react-native-track-player";
 import { v4 as uuidv4 } from "uuid";
 
+import { getCacheAudioPath } from "./file";
 import log from "./logger";
-import { getCacheAudioPath } from "./misc";
 import { runTasksLimit } from "./promise";
 import { convertToHTTPS } from "./string";
 

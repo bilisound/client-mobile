@@ -6,8 +6,8 @@ import TrackPlayer, { Track } from "react-native-track-player";
 import { getActiveTrack } from "react-native-track-player/lib/src/trackPlayer";
 import { v4 as uuidv4 } from "uuid";
 
+import { getCacheAudioPath } from "./file";
 import log from "./logger";
-import { getCacheAudioPath } from "./misc";
 import { convertToHTTPS } from "./string";
 import { saveTrackData } from "./track-data";
 

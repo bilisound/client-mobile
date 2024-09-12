@@ -7,7 +7,7 @@ import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import { exportPlaylistToFile } from "~/utils/exchange/playlist";
-import { cleanAudioCache, countSize } from "~/utils/misc";
+import { cleanAudioCache, countSize } from "~/utils/file";
 
 const DeleteIcon = createIcon(MaterialIcons, "delete");
 const ExportIcon = createIcon(Entypo, "export");
