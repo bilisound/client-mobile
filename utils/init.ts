@@ -1,5 +1,5 @@
+import * as FileSystem from "expo-file-system";
 import { SplashScreen } from "expo-router";
-import RNFS from "react-native-fs";
 import TrackPlayer, { Capability } from "react-native-track-player";
 
 import log from "./logger";
@@ -7,7 +7,7 @@ import { initPlaybackService } from "./player-control";
 import { loadTrackData } from "./track-data";
 import useSettingsStore from "../store/settings";
 
-import { BILISOUND_LOG_PATH, BILISOUND_OFFLINE_PATH } from "~/constants/file";
+import { BILISOUND_LOG_URI, BILISOUND_OFFLINE_URI } from "~/constants/file";
 import { handlePlaylist } from "~/utils/migration/playlist";
 
 export default async function init() {
@@ -18,8 +18,12 @@ export default async function init() {
 
     // 目录初始化
     try {
-        await RNFS.mkdir(BILISOUND_LOG_PATH);
-        await RNFS.mkdir(BILISOUND_OFFLINE_PATH);
+        if (!(await FileSystem.getInfoAsync(BILISOUND_LOG_URI)).exists) {
+            await FileSystem.makeDirectoryAsync(BILISOUND_LOG_URI);
+        }
+        if (!(await FileSystem.getInfoAsync(BILISOUND_OFFLINE_URI)).exists) {
+            await FileSystem.makeDirectoryAsync(BILISOUND_OFFLINE_URI);
+        }
         log.debug("目录初始化成功");
     } catch (e) {
         log.error(`目录初始化失败。原因：${e}`);

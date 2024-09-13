@@ -1,3 +1,4 @@
+import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import path from "path-browserify";
 import { Platform } from "react-native";
@@ -6,7 +7,7 @@ import { createDocument } from "react-native-saf-x";
 import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
 
-import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
+import { BILISOUND_OFFLINE_URI } from "~/constants/file";
 import log from "~/utils/logger";
 
 export async function saveTextFile(name: string, content: string, mimeType = "text/plain") {
@@ -80,25 +81,29 @@ interface CheckDirectorySizeOptions {
     fileFilter?: (fileName: string, index: number, fileList: string[]) => boolean;
 }
 
-async function checkDirectorySize(checkPath: string, options: CheckDirectorySizeOptions = {}) {
-    let items = (await RNFS.readdir(checkPath)).map(e => path.join(checkPath, e));
+async function checkDirectorySizeByUri(uri: string, options: CheckDirectorySizeOptions = {}) {
+    let items = (await FileSystem.readDirectoryAsync(uri)).map(e => {
+        return uri + "/" + encodeURI(e);
+    });
     if (options.fileFilter) {
         items = items.filter(options.fileFilter);
     }
     let totalSize = 0;
     for (let i = 0; i < items.length; i++) {
-        const meta = await RNFS.stat(items[i]);
-        totalSize += meta.size;
+        const meta = await FileSystem.getInfoAsync(items[i]);
+        if (meta.exists) {
+            totalSize += meta.size;
+        }
     }
     return totalSize;
 }
 
 export async function countSize() {
     const tracks = await TrackPlayer.getQueue();
-    const cacheSize = await checkDirectorySize(BILISOUND_OFFLINE_PATH);
-    const cacheFreeSize = await checkDirectorySize(BILISOUND_OFFLINE_PATH, {
+    const cacheSize = await checkDirectorySizeByUri(BILISOUND_OFFLINE_URI);
+    const cacheFreeSize = await checkDirectorySizeByUri(BILISOUND_OFFLINE_URI, {
         fileFilter(fileName) {
-            const name = path.parse(fileName).name;
+            const name = path.parse(uriToPath(fileName)).name;
             return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
         },
     });
@@ -107,10 +112,12 @@ export async function countSize() {
 
 export async function cleanAudioCache() {
     const tracks = await TrackPlayer.getQueue();
-    const items = (await RNFS.readdir(BILISOUND_OFFLINE_PATH))
-        .map(e => path.join(BILISOUND_OFFLINE_PATH, e))
+    const items = (await FileSystem.readDirectoryAsync(BILISOUND_OFFLINE_URI))
+        .map(e => {
+            return BILISOUND_OFFLINE_URI + "/" + encodeURI(e);
+        })
         .filter(fileName => {
-            const name = path.parse(fileName).name;
+            const name = path.parse(uriToPath(fileName)).name;
             return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
         });
     for (let i = 0; i < items.length; i++) {
@@ -120,9 +127,9 @@ export async function cleanAudioCache() {
 
 export function getCacheAudioPath(id: string, episode: number, isAudio = true) {
     if (isAudio) {
-        return pathToUri(`${BILISOUND_OFFLINE_PATH}/${id}_${episode}.m4a`);
+        return `${BILISOUND_OFFLINE_URI}/${id}_${episode}.m4a`;
     }
-    return pathToUri(`${BILISOUND_OFFLINE_PATH}/${id}_${episode}.tmp`);
+    return `${BILISOUND_OFFLINE_URI}/${id}_${episode}.tmp`;
 }
 
 export function uriToPath(uri: string) {

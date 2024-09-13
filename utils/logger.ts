@@ -1,19 +1,19 @@
 import * as Device from "expo-device";
+import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import path from "path-browserify";
 import { Platform } from "react-native";
-import RNFS from "react-native-fs";
 import { logger, fileAsyncTransport, consoleTransport, configLoggerType } from "react-native-logs";
 
-import { BILISOUND_LOG_PATH } from "~/constants/file";
+import { BILISOUND_LOG_URI } from "~/constants/file";
 import { VERSION } from "~/constants/releasing";
 
 const transport: Partial<configLoggerType> = {
     transport: [fileAsyncTransport, consoleTransport],
     transportOptions: {
-        FS: RNFS,
+        FS: FileSystem,
         fileName: `bilisound_log_${VERSION}_{date-today}.log`,
-        filePath: BILISOUND_LOG_PATH,
+        filePath: BILISOUND_LOG_URI,
     },
 };
 
@@ -61,31 +61,46 @@ export async function getLogContentForDisplay() {
     deviceInfo += `设备名称: ${Device.designName} (${Device.modelName})\n\n`;
 
     // 获取日志信息
-    const fileList = await RNFS.readDir(BILISOUND_LOG_PATH);
+    const fileList = await FileSystem.readDirectoryAsync(BILISOUND_LOG_URI);
     if (fileList.length <= 0) {
         return `${deviceInfo}还没有日志呢~使用一段时间再来看看吧！`;
     }
-    // desc
-    fileList.sort((a, b) => (+(a.mtime ?? 0) < +(b.mtime ?? 0) ? 1 : -1));
-    const filePath = fileList.map(e => e.path).filter(e => e.endsWith(".log"));
+
+    // 按照修改时间排序
+    const metadata: Exclude<
+        FileSystem.FileInfo,
+        {
+            exists: false;
+        }
+    >[] = [];
+    for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
+        const item = await FileSystem.getInfoAsync(BILISOUND_LOG_URI + "/" + file);
+        if (item.exists) {
+            metadata.push(item);
+        }
+    }
+
+    metadata.sort((a, b) => (+(a.modificationTime ?? 0) < +(b.modificationTime ?? 0) ? 1 : -1));
+    const filePath = fileList.filter(e => e.endsWith(".log"));
     let combined = "";
     for (let i = 0; i < Math.min(filePath.length, 3); i++) {
         const header = `=============================
 ${filePath[i]} 文件内容
 =============================
 `;
-        combined = `${header + (await RNFS.readFile(filePath[i], "utf8"))}\n${combined}`;
+        combined = `${header + (await FileSystem.readAsStringAsync(BILISOUND_LOG_URI + "/" + filePath[i]))}\n${combined}`;
     }
     return deviceInfo + combined;
 }
 
 export async function shareLogContent(content: string) {
     const targetLocation = `${
-        RNFS.CachesDirectoryPath
+        FileSystem.cacheDirectory
     }/sharing-${new Date().getTime()}/bilisound-log-export-${new Date().getTime()}.log`;
-    await RNFS.mkdir(path.parse(targetLocation).dir);
-    await RNFS.writeFile(targetLocation, content, "utf8");
-    await Sharing.shareAsync(`file://${encodeURI(targetLocation)}`, {
+    await FileSystem.makeDirectoryAsync(path.parse(targetLocation).dir, { intermediates: true });
+    await FileSystem.writeAsStringAsync(targetLocation, content, { encoding: FileSystem.EncodingType.UTF8 });
+    await Sharing.shareAsync(targetLocation, {
         mimeType: "text/plain",
     });
 }

@@ -1,6 +1,5 @@
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
-import RNFS from "react-native-fs";
 import TrackPlayer, { AddTrack, Track } from "react-native-track-player";
 import { v4 as uuidv4 } from "uuid";
 
@@ -9,7 +8,6 @@ import log from "./logger";
 import { runTasksLimit } from "./promise";
 import { convertToHTTPS } from "./string";
 
-import { BILISOUND_OFFLINE_PATH } from "~/constants/file";
 import {
     QUEUE_CURRENT_INDEX,
     QUEUE_IS_RANDOMIZED,
@@ -75,7 +73,7 @@ export async function loadTrackData(fromBackup = false) {
             e.bilisoundIsLoaded = true;
         }
         if (e.bilisoundIsLoaded) {
-            e.url = `file://${encodeURI(`${BILISOUND_OFFLINE_PATH}/${e.bilisoundId}_${e.bilisoundEpisode}.m4a`)}`;
+            e.url = getCacheAudioPath(e.bilisoundId, e.bilisoundEpisode);
         } else {
             // 使用 `setQueue()` 添加的曲目，url 需要手动转换成 `Asset` 对象。然而使用 `add()` 添加就不需要……
             e.url = Asset.fromModule(require("../assets/placeholder.mp3")) as any;
