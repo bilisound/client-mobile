@@ -20,12 +20,14 @@ export async function saveTextFile(name: string, content: string, mimeType = "te
         log.debug("保存文件流程结束");
         return !!response;
     }
-    const filePath = RNFS.CachesDirectoryPath + `/shared_text_file_${new Date().getTime()}`;
+    const filePath = FileSystem.cacheDirectory + `/shared_text_file_${new Date().getTime()}`;
     const fileFullPath = `${filePath}/${name}`;
-    await RNFS.mkdir(filePath);
-    await RNFS.writeFile(fileFullPath, content, "utf8");
+    await FileSystem.makeDirectoryAsync(filePath, {
+        intermediates: true,
+    });
+    await FileSystem.writeAsStringAsync(fileFullPath, content);
     log.debug("分享文件：" + fileFullPath);
-    await Sharing.shareAsync("file://" + encodeURI(fileFullPath), {
+    await Sharing.shareAsync(fileFullPath, {
         mimeType,
     });
     log.debug("分享文件流程结束");
