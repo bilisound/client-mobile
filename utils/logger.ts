@@ -1,7 +1,6 @@
 import * as Device from "expo-device";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-import path from "path-browserify";
 import { Platform } from "react-native";
 import { logger, fileAsyncTransport, consoleTransport, configLoggerType } from "react-native-logs";
 
@@ -76,20 +75,19 @@ export async function getLogContentForDisplay() {
     for (let i = 0; i < fileList.length; i++) {
         const file = fileList[i];
         const item = await FileSystem.getInfoAsync(BILISOUND_LOG_URI + "/" + file);
-        if (item.exists) {
+        if (item.exists && item.uri.endsWith(".log")) {
             metadata.push(item);
         }
     }
 
     metadata.sort((a, b) => (+(a.modificationTime ?? 0) < +(b.modificationTime ?? 0) ? 1 : -1));
-    const filePath = fileList.filter(e => e.endsWith(".log"));
     let combined = "";
-    for (let i = 0; i < Math.min(filePath.length, 3); i++) {
+    for (let i = 0; i < Math.min(metadata.length, 3); i++) {
         const header = `=============================
-${filePath[i]} 文件内容
+${metadata[i].uri} 文件内容
 =============================
 `;
-        combined = `${header + (await FileSystem.readAsStringAsync(BILISOUND_LOG_URI + "/" + filePath[i]))}\n${combined}`;
+        combined = `${header + (await FileSystem.readAsStringAsync(metadata[i].uri))}\n${combined}`;
     }
     return deviceInfo + combined;
 }
