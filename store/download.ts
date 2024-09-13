@@ -1,11 +1,11 @@
-import RNFS from "react-native-fs";
+import { DownloadProgressData } from "expo-file-system";
 import { create } from "zustand";
 
 export interface DownloadItem {
     id: string;
     episode: number;
     path: string;
-    progress: RNFS.DownloadProgressCallbackResult;
+    progress: DownloadProgressData;
 }
 
 export interface DownloadProps {

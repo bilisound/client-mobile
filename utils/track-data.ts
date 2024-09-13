@@ -1,4 +1,5 @@
 import { Asset } from "expo-asset";
+import * as FileSystem from "expo-file-system";
 import RNFS from "react-native-fs";
 import TrackPlayer, { AddTrack, Track } from "react-native-track-player";
 import { v4 as uuidv4 } from "uuid";
@@ -100,9 +101,8 @@ export async function playlistToTracks(input: PlaylistDetail[]) {
         tasks.push(async () => {
             const url = getCacheAudioPath(e.bilisoundId, e.bilisoundEpisode);
             try {
-                const found = await RNFS.exists(url);
-                // log.debug("检测 " + url + " 是否存在。结果：" + found);
-                if (found) {
+                const found = await FileSystem.getInfoAsync(url);
+                if (found.exists) {
                     e.url = url;
                     e.bilisoundIsLoaded = true;
                 }

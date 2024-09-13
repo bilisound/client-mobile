@@ -120,9 +120,9 @@ export async function cleanAudioCache() {
 
 export function getCacheAudioPath(id: string, episode: number, isAudio = true) {
     if (isAudio) {
-        return `${BILISOUND_OFFLINE_PATH}/${id}_${episode}.m4a`;
+        return pathToUri(`${BILISOUND_OFFLINE_PATH}/${id}_${episode}.m4a`);
     }
-    return `${BILISOUND_OFFLINE_PATH}/${id}_${episode}.tmp`;
+    return pathToUri(`${BILISOUND_OFFLINE_PATH}/${id}_${episode}.tmp`);
 }
 
 export function uriToPath(uri: string) {

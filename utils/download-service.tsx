@@ -1,6 +1,6 @@
+import * as FileSystem from "expo-file-system";
 import { FFmpegKit, FFprobeKit } from "ffmpeg-kit-react-native";
 import { filesize } from "filesize";
-import RNFS from "react-native-fs";
 import Toast from "react-native-toast-message";
 import TrackPlayer, { Track } from "react-native-track-player";
 import { getActiveTrack } from "react-native-track-player/lib/src/trackPlayer";
@@ -60,7 +60,7 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
         // 待检查的本地音频路径（包括从视频提取的音频）
         const checkUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode);
 
-        if (await RNFS.exists(checkUrl)) {
+        if ((await FileSystem.getInfoAsync(checkUrl)).exists) {
             log.debug("本地缓存有对应内容，直接使用");
         } else {
             log.debug("本地缓存无对应内容，开始请求网络资源");
@@ -71,9 +71,8 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
                 episode: playingRequest.episode,
                 path: checkUrl,
                 progress: {
-                    jobId: -1,
-                    contentLength: 0,
-                    bytesWritten: 0,
+                    totalBytesExpectedToWrite: 0,
+                    totalBytesWritten: 0,
                 },
             });
 
@@ -85,40 +84,36 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
             });
 
             // 待下载资源地址（可能是音频或视频）
-            const downloadUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, isAudio);
+            const downloadTargetFileUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, isAudio);
 
             // 下载处理
             const beginTime = global.performance.now();
-            const downloadTask = RNFS.downloadFile({
-                fromUrl: url,
-                toFile: downloadUrl,
-                headers: {
-                    referer: getVideoUrl(playingRequest.id, playingRequest.episode),
-                    "user-agent": USER_AGENT_BILIBILI,
+            const downloadResumable = FileSystem.createDownloadResumable(
+                url,
+                downloadTargetFileUrl,
+                {
+                    headers: {
+                        referer: getVideoUrl(playingRequest.id, playingRequest.episode),
+                        "user-agent": USER_AGENT_BILIBILI,
+                    },
+                    cache: true,
                 },
-                cacheable: true,
-                progressInterval: 100, // 过快的下载进度更新会导致 UI 跟不上
-                progress: res => {
+                cb => {
                     // 更新状态管理器中的内容
                     updateDownloadItem(id, {
                         id: playingRequest.id,
                         episode: playingRequest.episode,
-                        path: downloadUrl,
-                        progress: res,
+                        path: downloadTargetFileUrl,
+                        progress: cb,
                     });
                 },
-            });
-            log.debug(`下载任务 ${downloadTask.jobId} 开始`);
-
-            await downloadTask.promise;
-            const endTime = global.performance.now();
-            const fileSize = (await RNFS.stat(downloadUrl)).size;
-            const runTime = (endTime - beginTime) / 1000;
-            log.debug(
-                `下载任务 ${downloadTask.jobId} 结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(
-                    fileSize / runTime,
-                )}/s`,
             );
+            await downloadResumable.downloadAsync();
+            const endTime = global.performance.now();
+            const info = await FileSystem.getInfoAsync(downloadTargetFileUrl);
+            const fileSize = info?.exists ? info.size : 0;
+            const runTime = (endTime - beginTime) / 1000;
+            log.debug(`下载任务结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(fileSize / runTime)}/s`);
             removeDownloadItem(id);
 
             if (!isAudio) {
@@ -127,7 +122,7 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
 
                 // 格式判断
                 const probeSession = await FFprobeKit.execute(
-                    `-v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 ${JSON.stringify(downloadUrl)}`,
+                    `-v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 ${JSON.stringify(downloadTargetFileUrl)}`,
                 );
                 let returnCode = await probeSession.getReturnCode();
                 let result = await probeSession.getOutput();
@@ -143,14 +138,14 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
                 if (result.trim() === "aac") {
                     log.debug("进行提取音频流操作");
                     mpegSession = await FFmpegKit.execute(
-                        `-i ${JSON.stringify(downloadUrl)} -vn -acodec copy ${JSON.stringify(checkUrl)}`,
+                        `-i ${JSON.stringify(downloadTargetFileUrl)} -vn -acodec copy ${JSON.stringify(checkUrl)}`,
                     );
                 } else {
                     log.debug(`进行转码音频流操作。原因：音频编码是 ${result}`);
                     mpegSession = await FFmpegKit.execute(
                         // 别的编码（比如 mp3）通常音质不会特别好，所以先设置 256kbps 的动态码率了
                         // （叔叔会有上 opus 的一天吗？）
-                        `-i ${JSON.stringify(downloadUrl)} -vn -acodec aac -b:a 256k ${JSON.stringify(checkUrl)}`,
+                        `-i ${JSON.stringify(downloadTargetFileUrl)} -vn -acodec aac -b:a 256k ${JSON.stringify(checkUrl)}`,
                     );
                 }
                 returnCode = await mpegSession.getReturnCode();
@@ -164,7 +159,7 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
 
                 // 收尾
                 log.debug("删除不再需要的视频文件");
-                await RNFS.unlink(downloadUrl);
+                await FileSystem.deleteAsync(downloadTargetFileUrl);
             }
         }
 
@@ -210,7 +205,7 @@ export async function addTrackToQueue(playingRequest: PlayingInformation) {
         let isLoaded = false;
         const checkUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode);
 
-        if (await RNFS.exists(checkUrl)) {
+        if ((await FileSystem.getInfoAsync(checkUrl)).exists) {
             log.debug("本地缓存有对应内容，直接使用");
             url = `file://${encodeURI(checkUrl)}`;
             isLoaded = true;

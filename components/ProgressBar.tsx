@@ -17,7 +17,8 @@ export default function ProgressBar({ item }: { item: string }) {
     useEffect(() => {
         let progressWidth = 0;
         if (downloadEntry) {
-            progressWidth = (downloadEntry.progress.bytesWritten / downloadEntry.progress.contentLength) * 100;
+            progressWidth =
+                (downloadEntry.progress.totalBytesWritten / downloadEntry.progress.totalBytesExpectedToWrite) * 100;
         }
         // NaN 去除操作
         if (!progressWidth) {
