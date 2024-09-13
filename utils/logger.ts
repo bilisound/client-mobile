@@ -95,10 +95,9 @@ ${filePath[i]} 文件内容
 }
 
 export async function shareLogContent(content: string) {
-    const targetLocation = `${
-        FileSystem.cacheDirectory
-    }/sharing-${new Date().getTime()}/bilisound-log-export-${new Date().getTime()}.log`;
-    await FileSystem.makeDirectoryAsync(path.parse(targetLocation).dir, { intermediates: true });
+    const targetLocationBase = `${FileSystem.cacheDirectory}/sharing-${new Date().getTime()}`;
+    const targetLocation = `${targetLocationBase}/bilisound-log-export-${new Date().getTime()}.log`;
+    await FileSystem.makeDirectoryAsync(targetLocationBase, { intermediates: true });
     await FileSystem.writeAsStringAsync(targetLocation, content, { encoding: FileSystem.EncodingType.UTF8 });
     await Sharing.shareAsync(targetLocation, {
         mimeType: "text/plain",
