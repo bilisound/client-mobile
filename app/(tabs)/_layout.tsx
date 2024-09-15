@@ -80,7 +80,7 @@ const styleSheet = createStyleSheet(theme => ({
         shadowColor: "transparent",
     },
     tabBarStyle: {
-        backgroundColor: "transparent",
+        backgroundColor: theme.colorTokens.background,
         borderTopWidth: 0,
         shadowColor: "transparent",
     },
