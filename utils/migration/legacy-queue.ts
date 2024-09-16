@@ -5,7 +5,7 @@ import { QUEUE_CURRENT_INDEX, QUEUE_LIST, queueStorage } from "~/storage/queue";
 import log from "~/utils/logger";
 
 export async function handleLegacyQueue() {
-    if (await FileSystem.getInfoAsync(BILISOUND_LEGACY_PERSIST_QUEUE_URI)) {
+    if ((await FileSystem.getInfoAsync(BILISOUND_LEGACY_PERSIST_QUEUE_URI)).exists) {
         log.info("发现旧版播放队列缓存数据，正在升级……");
         const raw = await FileSystem.readAsStringAsync(BILISOUND_LEGACY_PERSIST_QUEUE_URI, { encoding: "utf8" });
         const data = JSON.parse(raw);
