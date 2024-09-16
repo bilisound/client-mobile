@@ -1,6 +1,6 @@
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { remapProps } from "nativewind";
+import { cssInterop, remapProps } from "nativewind";
 import React from "react";
 import { ActivityIndicator } from "react-native";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -18,6 +18,14 @@ import { formatSecond } from "~/utils/datetime";
 import { handleTogglePlay } from "~/utils/player-control";
 
 const PotatoPressableWind = remapProps(PotatoPressable, { className: "style" });
+const IoniconsWind = cssInterop(Ionicons, {
+    className: {
+        target: "style",
+        nativeStyleToProp: {
+            color: true,
+        },
+    },
+});
 
 // 播放状态图标
 function PlayingIcon() {
@@ -59,8 +67,6 @@ export default function SongItem({
 }: SongItemProps) {
     const activeTrack = useActiveTrack();
     const isActiveTrack = data.bvid === activeTrack?.bilisoundId && data.episode === activeTrack?.bilisoundEpisode;
-    const { theme } = useStyles();
-    const primaryColor = theme.colors.primary[500];
     const [exists] = useMMKVBoolean(data.bvid + "_" + data.episode, cacheStatusStorage);
 
     return (
@@ -103,7 +109,13 @@ export default function SongItem({
                         {data.title}
                     </Text>
                     <Box className="mt-1 flex-row items-center gap-1">
-                        {exists && <Ionicons name="checkmark-circle" size={16} color={primaryColor} />}
+                        {exists && (
+                            <IoniconsWind
+                                name="checkmark-circle"
+                                size={16}
+                                className="color-typography-700 opacity-50"
+                            />
+                        )}
                         <Text className="text-sm opacity-50">{formatSecond(data.duration)}</Text>
                     </Box>
                 </Box>
