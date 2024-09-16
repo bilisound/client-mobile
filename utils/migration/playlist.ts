@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import RNFS from "react-native-fs";
+import * as FileSystem from "expo-file-system";
 
 import log from "../logger";
 
@@ -14,7 +14,7 @@ import {
 import { db } from "~/storage/sqlite/main";
 import { playlistDetail, playlistMeta } from "~/storage/sqlite/schema";
 
-const PLAYLIST_V0_BACKUP_PATH = RNFS.DocumentDirectoryPath + "/migration_backup/playlist_v0";
+const PLAYLIST_V0_BACKUP_URI = FileSystem.documentDirectory + "migration_backup/playlist_v0";
 
 export async function handlePlaylist(forceVersion?: number) {
     const version = forceVersion ?? (playlistStorage.getNumber(PLAYLIST_DB_VERSION) || 0);
@@ -29,15 +29,15 @@ export async function handlePlaylist(forceVersion?: number) {
         const got = playlistStorage.getString(LEGACY_PLAYLIST_INDEX_KEY);
         if (got) {
             log.info("发现旧版数据，正在备份……");
-            await RNFS.mkdir(PLAYLIST_V0_BACKUP_PATH);
-            await RNFS.writeFile(`${PLAYLIST_V0_BACKUP_PATH}/index.json`, got);
+            await FileSystem.makeDirectoryAsync(PLAYLIST_V0_BACKUP_URI);
+            await FileSystem.writeAsStringAsync(`${PLAYLIST_V0_BACKUP_URI}/index.json`, got);
             const index: LegacyPlaylistMeta[] = JSON.parse(got);
 
             // 遍历歌单 index，备份单个歌单
             for (let i = 0; i < index.length; i++) {
                 const e = index[i];
-                await RNFS.writeFile(
-                    `${PLAYLIST_V0_BACKUP_PATH}/${e.id}.json`,
+                await FileSystem.writeAsStringAsync(
+                    `${PLAYLIST_V0_BACKUP_URI}/${e.id}.json`,
                     playlistStorage.getString(LEGACY_PLAYLIST_ITEM_KEY_PREFIX + e.id) || "[]",
                 );
             }

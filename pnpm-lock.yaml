@@ -174,8 +174,8 @@ importers:
         specifier: ~0.12.5
         version: 0.12.5(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
       expo-camera:
-        specifier: ~15.0.15
-        version: 15.0.15(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
+        specifier: ~15.0.16
+        version: 15.0.16(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
       expo-constants:
         specifier: ~16.0.2
         version: 16.0.2(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
@@ -189,8 +189,8 @@ importers:
         specifier: ~17.0.1
         version: 17.0.1(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
       expo-font:
-        specifier: ~12.0.9
-        version: 12.0.9(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
+        specifier: ~12.0.10
+        version: 12.0.10(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
       expo-image:
         specifier: ~1.12.15
         version: 1.12.15(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
@@ -269,9 +269,6 @@ importers:
       react-native-fast-shadow:
         specifier: ^0.1.0
         version: 0.1.0(react-native@0.74.5(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
-      react-native-fs:
-        specifier: ^2.20.0
-        version: 2.20.0(react-native@0.74.5(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))
       react-native-gesture-handler:
         specifier: ~2.16.2
         version: 2.16.2(react-native@0.74.5(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -3184,9 +3181,6 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  base-64@0.1.0:
-    resolution: {integrity: sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==}
-
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
@@ -4130,8 +4124,8 @@ packages:
     peerDependencies:
       expo: '*'
 
-  expo-camera@15.0.15:
-    resolution: {integrity: sha512-zJS0rfOwGfyDrccMsFaLH9s0mW0f6czw+W+RHvbyAdAmoAh6ZtzZRGbosKIYoRsn/8L7ajNp01seJUjsT0FtzA==}
+  expo-camera@15.0.16:
+    resolution: {integrity: sha512-FLE02DMqkjwsb7IugKAqQvBe6s+TCQeb5LupO1+r//wAhBwmHncOrc6zV95ZEC2f9PTPK34nFH/s8CDGiVzIAA==}
     peerDependencies:
       expo: '*'
 
@@ -4155,8 +4149,8 @@ packages:
     peerDependencies:
       expo: '*'
 
-  expo-font@12.0.9:
-    resolution: {integrity: sha512-seTCyf0tbgkAnp3ZI9ZfK9QVtURQUgFnuj+GuJ5TSnN0XsOtVe1s2RxTvmMgkfuvfkzcjJ69gyRpsZS1cC8hjw==}
+  expo-font@12.0.10:
+    resolution: {integrity: sha512-Q1i2NuYri3jy32zdnBaHHCya1wH1yMAsI+3CCmj9zlQzlhsS9Bdwcj2W3c5eU5FvH2hsNQy4O+O1NnM6o/pDaQ==}
     peerDependencies:
       expo: '*'
 
@@ -6145,15 +6139,6 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-fs@2.20.0:
-    resolution: {integrity: sha512-VkTBzs7fIDUiy/XajOSNk0XazFE9l+QlMAce7lGuebZcag5CnjszB+u4BdqzwaQOdcYb5wsJIsqq4kxInIRpJQ==}
-    peerDependencies:
-      react-native: '*'
-      react-native-windows: '*'
-    peerDependenciesMeta:
-      react-native-windows:
-        optional: true
-
   react-native-gesture-handler@2.16.2:
     resolution: {integrity: sha512-vGFlrDKlmyI+BT+FemqVxmvO7nqxU33cgXVsn6IKAFishvlG3oV2Ds67D5nPkHMea8T+s1IcuMm0bF8ntZtAyg==}
     peerDependencies:
@@ -7131,9 +7116,6 @@ packages:
 
   utf8-byte-length@1.0.4:
     resolution: {integrity: sha512-4+wkEYLBbWxqTahEsWrhxepcoVOJ+1z5PGIjPZxRkytcdSUaNjIjBM7Xn8E+pdSuV7SzvWovBFA54FO0JSoqhA==}
-
-  utf8@3.0.0:
-    resolution: {integrity: sha512-E8VjFIQ/TyQgp+TZfS6l8yp/xWppSAHzidGiRrqe4bK4XP9pTRyKFgGJpO3SN7zdX4DeomTrwaseCHovfpFcqQ==}
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -11361,8 +11343,6 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  base-64@0.1.0: {}
-
   base64-js@1.5.1: {}
 
   better-opn@3.0.2:
@@ -12380,7 +12360,7 @@ snapshots:
       expo: 51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))
       semver: 7.6.3
 
-  expo-camera@15.0.15(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))):
+  expo-camera@15.0.16(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))):
     dependencies:
       expo: 51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))
       invariant: 2.2.4
@@ -12406,7 +12386,7 @@ snapshots:
     dependencies:
       expo: 51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))
 
-  expo-font@12.0.9(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))):
+  expo-font@12.0.10(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))):
     dependencies:
       expo: 51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))
       fontfaceobserver: 2.3.0
@@ -12523,7 +12503,7 @@ snapshots:
       babel-preset-expo: 11.0.14(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))
       expo-asset: 10.0.10(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
       expo-file-system: 17.0.1(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
-      expo-font: 12.0.9(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
+      expo-font: 12.0.10(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
       expo-keep-awake: 13.0.2(expo@51.0.31(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7)))
       expo-modules-autolinking: 1.11.2
       expo-modules-core: 1.12.23
@@ -14754,12 +14734,6 @@ snapshots:
       react: 18.2.0
       react-native: 0.74.5(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0)
 
-  react-native-fs@2.20.0(react-native@0.74.5(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0)):
-    dependencies:
-      base-64: 0.1.0
-      react-native: 0.74.5(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0)
-      utf8: 3.0.0
-
   react-native-gesture-handler@2.16.2(react-native@0.74.5(@babel/core@7.24.7)(@babel/preset-env@7.24.4(@babel/core@7.24.7))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0):
     dependencies:
       '@egjs/hammerjs': 2.0.17
@@ -15844,8 +15818,6 @@ snapshots:
       react: 18.2.0
 
   utf8-byte-length@1.0.4: {}
-
-  utf8@3.0.0: {}
 
   util-deprecate@1.0.2: {}
 

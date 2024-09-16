@@ -80,7 +80,8 @@ export async function getLogContentForDisplay() {
         }
     }
 
-    metadata.sort((a, b) => (+(a.modificationTime ?? 0) < +(b.modificationTime ?? 0) ? 1 : -1));
+    metadata.sort((a, b) => (+(a.modificationTime ?? 0) < +(b.modificationTime ?? 0) ? -1 : 1));
+    console.log(metadata);
     let combined = "";
     for (let i = 0; i < Math.min(metadata.length, 3); i++) {
         const header = `=============================

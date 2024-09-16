@@ -2,7 +2,6 @@ import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import path from "path-browserify";
 import { Platform } from "react-native";
-import RNFS from "react-native-fs";
 import { createDocument } from "react-native-saf-x";
 import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
@@ -48,13 +47,10 @@ export async function saveFile(location: string, replaceFileName?: string) {
     const fileName = replaceFileName ?? `${parsed.name}${parsed.ext}`;
 
     if (Platform.OS === "android") {
-        const response = await createDocument(
-            await RNFS.readFile(decodeURI(location.slice(7)), { encoding: "base64" }),
-            {
-                initialName: fileName,
-                encoding: "base64",
-            },
-        );
+        const response = await createDocument(await FileSystem.readAsStringAsync(location, { encoding: "base64" }), {
+            initialName: fileName,
+            encoding: "base64",
+        });
         if (response) {
             Toast.show({
                 type: "success",
@@ -66,15 +62,19 @@ export async function saveFile(location: string, replaceFileName?: string) {
     let targetLocation = "";
 
     if (replaceFileName) {
-        targetLocation = `${RNFS.CachesDirectoryPath}/sharing-${new Date().getTime()}/${replaceFileName}`;
-        await RNFS.mkdir(path.parse(targetLocation).dir);
-        await RNFS.copyFile(decodeURI(location.slice(7)), targetLocation);
+        const targetDir = `${FileSystem.cacheDirectory}/sharing-${new Date().getTime()}`;
+        targetLocation = `${targetDir}/${replaceFileName}`;
+        await FileSystem.makeDirectoryAsync(targetDir, { intermediates: true });
+        await FileSystem.copyAsync({
+            from: location,
+            to: targetLocation,
+        });
     }
-    await Sharing.shareAsync(targetLocation ? `file://${encodeURI(targetLocation)}` : location, {
+    await Sharing.shareAsync(targetLocation || location, {
         mimeType: "application/octet-stream",
     });
     if (targetLocation) {
-        await RNFS.unlink(targetLocation);
+        await FileSystem.deleteAsync(targetLocation);
     }
     return true;
 }
@@ -123,7 +123,7 @@ export async function cleanAudioCache() {
             return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
         });
     for (let i = 0; i < items.length; i++) {
-        await RNFS.unlink(items[i]);
+        await FileSystem.deleteAsync(items[i]);
     }
 }
 
