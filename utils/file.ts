@@ -7,6 +7,7 @@ import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
 
 import { BILISOUND_OFFLINE_URI } from "~/constants/file";
+import { cacheStatusStorage } from "~/storage/cache-status";
 import log from "~/utils/logger";
 
 export async function saveTextFile(name: string, content: string, mimeType = "text/plain") {
@@ -123,7 +124,9 @@ export async function cleanAudioCache() {
             return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
         });
     for (let i = 0; i < items.length; i++) {
+        const name = path.parse(uriToPath(items[i])).name;
         await FileSystem.deleteAsync(items[i]);
+        cacheStatusStorage.delete(name);
     }
 }
 

@@ -1,7 +1,9 @@
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { remapProps } from "nativewind";
 import React from "react";
 import { ActivityIndicator } from "react-native";
+import { useMMKVBoolean } from "react-native-mmkv";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 import { useStyles } from "react-native-unistyles";
 
@@ -10,6 +12,7 @@ import ProgressBar from "./ProgressBar";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
+import { cacheStatusStorage } from "~/storage/cache-status";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { formatSecond } from "~/utils/datetime";
 import { handleTogglePlay } from "~/utils/player-control";
@@ -56,6 +59,9 @@ export default function SongItem({
 }: SongItemProps) {
     const activeTrack = useActiveTrack();
     const isActiveTrack = data.bvid === activeTrack?.bilisoundId && data.episode === activeTrack?.bilisoundEpisode;
+    const { theme } = useStyles();
+    const primaryColor = theme.colors.primary[500];
+    const [exists] = useMMKVBoolean(data.bvid + "_" + data.episode, cacheStatusStorage);
 
     return (
         <PotatoPressableWind
@@ -96,7 +102,10 @@ export default function SongItem({
                     >
                         {data.title}
                     </Text>
-                    <Text className="mt-1 text-sm opacity-50">{formatSecond(data.duration)}</Text>
+                    <Box className="mt-1 flex-row items-center gap-1">
+                        {exists && <Ionicons name="checkmark-circle" size={16} color={primaryColor} />}
+                        <Text className="text-sm opacity-50">{formatSecond(data.duration)}</Text>
+                    </Box>
                 </Box>
             </Box>
             {isChecking ? (

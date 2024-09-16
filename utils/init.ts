@@ -8,6 +8,7 @@ import { loadTrackData } from "./track-data";
 import useSettingsStore from "../store/settings";
 
 import { BILISOUND_LOG_URI, BILISOUND_OFFLINE_URI } from "~/constants/file";
+import { handleCacheStatus } from "~/utils/migration/cache-status";
 import { handlePlaylist } from "~/utils/migration/playlist";
 
 export default async function init() {
@@ -35,6 +36,14 @@ export default async function init() {
         log.debug("数据库初始化成功");
     } catch (e) {
         log.error(`数据库初始化失败。原因：${e}`);
+    }
+
+    // 缓存初始化
+    try {
+        await handleCacheStatus();
+        log.debug("缓存初始化成功");
+    } catch (e) {
+        log.error(`缓存初始化失败。原因：${e}`);
     }
 
     // 播放服务初始化

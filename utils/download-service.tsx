@@ -13,6 +13,7 @@ import { saveTrackData } from "./track-data";
 
 import { getBilisoundResourceUrl, getVideoUrl } from "~/api/bilisound";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
+import { cacheStatusStorage } from "~/storage/cache-status";
 import { invalidateOnQueueStatus } from "~/storage/playlist";
 import { addToQueueListBackup, getQueuePlayingMode } from "~/storage/queue";
 import useDownloadStore from "~/store/download";
@@ -115,6 +116,7 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
             const runTime = (endTime - beginTime) / 1000;
             log.debug(`下载任务结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(fileSize / runTime)}/s`);
             removeDownloadItem(id);
+            cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
 
             if (!isAudio) {
                 // 如果不是音频流，进行音视频分离操作
@@ -160,6 +162,7 @@ export async function handleReDownload(param: { activeTrack?: Track; activeTrack
                 // 收尾
                 log.debug("删除不再需要的视频文件");
                 await FileSystem.deleteAsync(downloadTargetFileUrl);
+                cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
             }
         }
 
