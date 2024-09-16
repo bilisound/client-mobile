@@ -17,6 +17,12 @@
 </tbody>
 </table>
 
+## 设备兼容性
+
+目前支持 Android 7.1 (64 位 ARM CPU) 及以上版本、iOS 15 及以上版本，适配手机屏幕。折叠屏手机、平板及 macOS 电脑可以使用，但是布局尚未对大屏设备做完整适配。
+
+暂不支持电视与手表设备。
+
 ## 技术栈
 
 | 名称                                                                    | 简介                                 |
@@ -27,7 +33,6 @@
 | [FFmpegKit for React Native](https://github.com/arthenica/ffmpeg-kit) | 音频提取和转码处理                          |
 | [Zustand](https://zustand-demo.pmnd.rs/)                              | React 全局状态管理                       |
 | [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv)    | 持久化键值对存储                           |
-| [react-native-fs](https://github.com/itinance/react-native-fs)        | 提供类似 Node.js 的 API，对 App 的数据目录进行操作 |
 | [react-native-saf-x](https://github.com/jd1378/react-native-saf-x)    | 在 Android 通过 SAF 实现文件导出功能          |
 
 ## 开发模式
