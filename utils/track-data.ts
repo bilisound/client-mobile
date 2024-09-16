@@ -237,7 +237,7 @@ export async function shuffleQueue() {
     await TrackPlayer.remove(removeTrackIndices);
     const splicedTracks = tracks.slice(currentTrackNewIndex + 1).concat(tracks.slice(0, currentTrackNewIndex));
 
-    log.debug(`edited tracks ${JSON.stringify({ splicedTracks })}`);
+    // log.debug(`edited tracks ${JSON.stringify({ splicedTracks })}`);
     await TrackPlayer.add(splicedTracks);
     return currentQueue;
 }
