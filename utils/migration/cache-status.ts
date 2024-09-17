@@ -16,4 +16,5 @@ export async function handleCacheStatus() {
         const e = fileName[i];
         cacheStatusStorage.set(e, true);
     }
+    cacheStatusStorage.set(CACHE_STATUS_VERSION, 1);
 }
