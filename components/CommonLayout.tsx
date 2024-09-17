@@ -2,12 +2,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { remapProps } from "nativewind";
 import React, { PropsWithChildren } from "react";
-import { View, Text, StatusBar, StyleProp, ViewStyle } from "react-native";
+import { View, StatusBar, StyleProp, ViewStyle } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { twMerge } from "tailwind-merge";
 
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Box } from "~/components/ui/box";
+import { Text } from "~/components/ui/text";
 
 export interface CommonFrameNewProps {
     title?: string | React.ReactNode;
@@ -18,9 +21,14 @@ export interface CommonFrameNewProps {
     extendToBottom?: boolean;
     leftAccessories?: React.ReactNode | "backButton";
     rightAccessories?: React.ReactNode;
+
+    className?: string;
+    titleBarContainerClassName?: string;
+
     style?: StyleProp<ViewStyle>;
     titleBarContainerStyle?: StyleProp<ViewStyle>;
     titleBarStyle?: StyleProp<ViewStyle>;
+
     paddingTop?: number;
     paddingBottom?: number;
     paddingLeft?: number;
@@ -36,6 +44,9 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
     extendToBottom,
     leftAccessories,
     rightAccessories,
+
+    className,
+    titleBarContainerClassName,
 
     style,
     titleBarContainerStyle,
@@ -55,7 +66,6 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
         right: paddingRight ?? edgeInsetsRaw.right,
     };
 
-    const computedSolidColor = theme.colorTokens.topBarSolidBackground;
     let textColor = theme.colorTokens.topBarSolidForeground;
     if (titleBarTheme === "transparent") {
         textColor = theme.colorTokens.topBarTransparentForeground;
@@ -65,28 +75,27 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
     }
 
     return (
-        <View style={[styles.container, style]}>
+        <Box className={twMerge("h-full", className)} style={style}>
             {titleBarTheme === "solid" && <StatusBar barStyle="light-content" showHideTransition="none" />}
-            <View
+            <Box
+                className={"flex-0 basis-auto " + (titleBarTheme === "solid" ? "bg-primary-500" : "bg-transparent")}
                 style={[
-                    styles.titleBarContainer,
                     {
                         paddingTop: edgeInsets.top,
-                        backgroundColor: titleBarTheme === "solid" ? computedSolidColor : "transparent",
                     },
                     titleBarContainerStyle,
                 ]}
             >
-                <View style={[styles.titleBar, titleBarStyle]}>
+                <Box
+                    className={twMerge("h-16 p-[10px] items-center justify-center", titleBarContainerClassName)}
+                    style={[titleBarStyle]}
+                >
                     {typeof title === "string" ? (
                         <Text
-                            style={[
-                                styles.titleText,
-                                {
-                                    color:
-                                        titleBarTheme === "solid" ? theme.colors.white : theme.colorTokens.foreground,
-                                },
-                            ]}
+                            className={
+                                "text-base font-semibold " +
+                                (titleBarTheme === "solid" ? "text-white" : "text-typography-700")
+                            }
                         >
                             {title}
                         </Text>
@@ -94,7 +103,7 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
                         title
                     )}
                     {leftAccessories && (
-                        <View style={styles.leftAccessories}>
+                        <Box className="absolute p-[10px] left-0 flex-row items-center gap-1">
                             {leftAccessories === "backButton" ? (
                                 <PotatoButtonTitleBar
                                     label="返回"
@@ -106,14 +115,18 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
                             ) : (
                                 leftAccessories
                             )}
+                        </Box>
+                    )}
+                    {rightAccessories && (
+                        <View className="absolute p-[10px] right-0 flex-row items-center gap-1">
+                            {rightAccessories}
                         </View>
                     )}
-                    {rightAccessories && <View style={styles.rightAccessories}>{rightAccessories}</View>}
-                </View>
-            </View>
-            <View
+                </Box>
+            </Box>
+            <Box
+                className="flex-1"
                 style={[
-                    styles.content,
                     {
                         paddingLeft: edgeInsets.left,
                         paddingRight: edgeInsets.right,
@@ -122,53 +135,14 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
                 ]}
             >
                 {children}
-            </View>
-        </View>
+            </Box>
+        </Box>
     );
 };
 
-const styleSheet = createStyleSheet(theme => ({
-    container: {
-        height: "100%",
-    },
-    titleBarContainer: {
-        flex: 0,
-        flexBasis: "auto",
-    },
-    titleBar: {
-        height: 64,
-        padding: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    titleText: {
-        fontSize: 16,
-        fontWeight: "600",
-    },
-    leftAccessories: {
-        position: "absolute",
-        padding: 10,
-        left: 0,
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 4,
-    },
-    rightAccessories: {
-        position: "absolute",
-        padding: 10,
-        right: 0,
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 4,
-    },
-    content: {
-        flex: 1,
-    },
-}));
+const styleSheet = createStyleSheet(theme => ({}));
 
 const CommonLayout = remapProps(CommonLayoutOriginal, {
-    className: "style",
-    titleBarContainerClassName: "titleBarContainerStyle",
     titleBarClassName: "titleBarStyle",
 });
 
