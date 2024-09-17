@@ -213,7 +213,7 @@ export default function Page() {
 
     async function handleRequestPlayConfirm(index: number) {
         log.debug("将队列中的内容设置为本歌单");
-        const tracks = await playlistToTracks(playlistDetail);
+        const tracks = playlistToTracks(playlistDetail);
         await TrackPlayer.pause();
         await TrackPlayer.setQueue(tracks);
         queueStorage.set(QUEUE_IS_RANDOMIZED, false);

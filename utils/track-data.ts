@@ -1,13 +1,12 @@
 import { Asset } from "expo-asset";
-import * as FileSystem from "expo-file-system";
 import TrackPlayer, { AddTrack, Track } from "react-native-track-player";
 import { v4 as uuidv4 } from "uuid";
 
 import { getCacheAudioPath } from "./file";
 import log from "./logger";
-import { runTasksLimit } from "./promise";
 import { convertToHTTPS } from "./string";
 
+import { cacheStatusStorage } from "~/storage/cache-status";
 import {
     QUEUE_CURRENT_INDEX,
     QUEUE_IS_RANDOMIZED,
@@ -82,7 +81,7 @@ export async function loadTrackData(fromBackup = false) {
     return { tracks, current };
 }
 
-export async function playlistToTracks(input: PlaylistDetail[]) {
+export function playlistToTracks(input: PlaylistDetail[]) {
     const newTracks: Track[] = input.map(e => ({
         url: Asset.fromModule(require("../assets/placeholder.mp3")) as any,
         title: e.title,
@@ -94,22 +93,18 @@ export async function playlistToTracks(input: PlaylistDetail[]) {
         bilisoundUniqueId: uuidv4(),
         bilisoundIsLoaded: false,
     }));
-    const tasks: any[] = [];
-    newTracks.forEach((e, i) => {
-        tasks.push(async () => {
-            const url = getCacheAudioPath(e.bilisoundId, e.bilisoundEpisode);
-            try {
-                const found = await FileSystem.getInfoAsync(url);
-                if (found.exists) {
-                    e.url = url;
-                    e.bilisoundIsLoaded = true;
-                }
-            } catch (e) {
-                log.error(`检测 ${url} 的存在时发生了预期外的错误`, e);
+    newTracks.forEach(e => {
+        const url = getCacheAudioPath(e.bilisoundId, e.bilisoundEpisode);
+        try {
+            const found = cacheStatusStorage.getBoolean(`${e.bilisoundId}_${e.bilisoundEpisode}`);
+            if (found) {
+                e.url = url;
+                e.bilisoundIsLoaded = true;
             }
-        });
+        } catch (e) {
+            log.error(`检测 ${url} 的存在时发生了预期外的错误`, e);
+        }
     });
-    await runTasksLimit(tasks, 50);
     return newTracks;
 }
 

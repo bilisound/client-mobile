@@ -45,7 +45,7 @@ export default function Page() {
 
         // 如果当前的 queue 来自试图被添加的播放列表，给 queue 也添加这些曲目
         if (playlistOnQueue) {
-            const convertedList = await playlistToTracks(playlistDetail ?? []);
+            const convertedList = playlistToTracks(playlistDetail ?? []);
             await TrackPlayer.add(convertedList);
             await update();
 
