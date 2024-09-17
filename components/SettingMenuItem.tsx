@@ -1,9 +1,10 @@
 import React from "react";
-import { View, Text, GestureResponderEvent } from "react-native";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { GestureResponderEvent } from "react-native";
 
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { IconComponent } from "~/components/potato-ui/utils/icon";
+import { Box } from "~/components/ui/box";
+import { Text } from "~/components/ui/text";
 
 export interface SettingMenuItemProps {
     title: string;
@@ -15,7 +16,7 @@ export interface SettingMenuItemProps {
     disabled?: boolean;
 }
 
-const SettingMenuItem: React.FC<SettingMenuItemProps> = ({
+export default function SettingMenuItem({
     title,
     subTitle,
     icon,
@@ -23,24 +24,22 @@ const SettingMenuItem: React.FC<SettingMenuItemProps> = ({
     rightAccessories,
     onPress,
     disabled,
-}) => {
-    const { styles, theme } = useStyles(stylesheet);
-    const textBasicColor = theme.colorTokens.foreground;
+}: SettingMenuItemProps) {
     const Icon = icon;
 
     const inner = (
-        <View style={[styles.container, disabled && styles.disabled]}>
-            <View style={styles.flex}>
-                <View style={styles.titleContainer}>
-                    <View style={styles.iconContainer}>
-                        <Icon size={iconSize} color={textBasicColor} />
-                    </View>
-                    <Text style={styles.title}>{title}</Text>
-                </View>
-                {subTitle ? <Text style={styles.subtitle}>{subTitle}</Text> : null}
-            </View>
-            {rightAccessories ? <View style={styles.accessoriesContainer}>{rightAccessories}</View> : null}
-        </View>
+        <Box className={`flex-row p-4 gap-3 items-start ${disabled ? "opacity-60" : ""}`}>
+            <Box className="flex-1">
+                <Box className="flex-row items-center gap-3">
+                    <Box className="size-6 items-center justify-center">
+                        <Icon size={iconSize} className="color-typography-700" />
+                    </Box>
+                    <Text className="font-semibold text-[15px]">{title}</Text>
+                </Box>
+                {subTitle ? <Text className="mt-1 ml-9 opacity-60 text-[15px] leading-normal">{subTitle}</Text> : null}
+            </Box>
+            {rightAccessories ? <Box className="flex-0 basis-auto">{rightAccessories}</Box> : null}
+        </Box>
     );
 
     if (!onPress || disabled) {
@@ -48,49 +47,4 @@ const SettingMenuItem: React.FC<SettingMenuItemProps> = ({
     }
 
     return <PotatoPressable onPress={onPress}>{inner}</PotatoPressable>;
-};
-
-const stylesheet = createStyleSheet(theme => ({
-    container: {
-        flexDirection: "row",
-        padding: 16,
-        gap: 12,
-        alignItems: "flex-start",
-    },
-    disabled: {
-        opacity: 0.6,
-    },
-    flex: {
-        flex: 1,
-    },
-    titleContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 12,
-    },
-    iconContainer: {
-        width: 24,
-        height: 24,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    title: {
-        fontWeight: "600",
-        fontSize: 15,
-        color: theme.colorTokens.foreground,
-    },
-    subtitle: {
-        marginTop: 4,
-        marginLeft: 36,
-        opacity: 0.6,
-        fontSize: 15,
-        lineHeight: 15 * 1.5,
-        color: theme.colorTokens.foreground,
-    },
-    accessoriesContainer: {
-        flex: 0,
-        flexBasis: "auto",
-    },
-}));
-
-export default SettingMenuItem;
+}
