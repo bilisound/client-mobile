@@ -88,6 +88,22 @@ const Settings: React.FC = () => {
                     }
                     onPress={() => toggle("useLegacyID")}
                 />
+                {Platform.OS === "web" ? null : (
+                    <SettingMenuItem
+                        icon={DownloadNextIcon}
+                        title="自动下载队列中即将播放的曲目"
+                        subTitle="可以显著改善持续听歌的体验"
+                        rightAccessories={
+                            <Switch
+                                value={downloadNextTrack}
+                                onChange={() => {
+                                    toggle("downloadNextTrack");
+                                }}
+                            />
+                        }
+                        onPress={() => toggle("downloadNextTrack")}
+                    />
+                )}
                 <SettingMenuItem
                     icon={PaintBrushIcon}
                     iconSize={20}
@@ -97,31 +113,15 @@ const Settings: React.FC = () => {
                         router.push("/settings/theme");
                     }}
                 />
-                <SettingMenuItem
-                    icon={DatabaseIcon}
-                    title="数据管理"
-                    subTitle="管理离线缓存和数据备份"
-                    onPress={async () => {
-                        router.push("/settings/data");
-                    }}
-                />
                 {Platform.OS === "web" ? null : (
-                    <>
-                        <SettingMenuItem
-                            icon={DownloadNextIcon}
-                            title="自动下载队列中即将播放的曲目"
-                            subTitle="可以显著改善持续听歌的体验"
-                            rightAccessories={
-                                <Switch
-                                    value={downloadNextTrack}
-                                    onChange={() => {
-                                        toggle("downloadNextTrack");
-                                    }}
-                                />
-                            }
-                            onPress={() => toggle("downloadNextTrack")}
-                        />
-                    </>
+                    <SettingMenuItem
+                        icon={DatabaseIcon}
+                        title="数据管理"
+                        subTitle="管理离线缓存和数据备份"
+                        onPress={async () => {
+                            router.push("/settings/data");
+                        }}
+                    />
                 )}
                 <SettingMenuItem
                     icon={InfoIcon}
