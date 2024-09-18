@@ -116,7 +116,9 @@ export default function SongItem({
                                 className="color-typography-700 opacity-50"
                             />
                         )}
-                        <Text className="text-sm opacity-50">{formatSecond(data.duration)}</Text>
+                        <Text className="text-sm opacity-50" style={{ fontFamily: "Roboto_400Regular" }}>
+                            {formatSecond(data.duration)}
+                        </Text>
                     </Box>
                 </Box>
             </Box>
