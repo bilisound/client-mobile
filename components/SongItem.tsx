@@ -92,7 +92,7 @@ export default function SongItem({
                     }`}
                 >
                     <Text
-                        className="text-sm font-bold text-white"
+                        className="text-sm text-white tabular-nums"
                         style={{ fontFamily: isActiveTrack ? "Roboto_700Bold" : "Roboto_400Regular" }}
                     >
                         {typeof index === "number" ? index : data.episode}
