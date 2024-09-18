@@ -1,10 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { remapProps } from "nativewind";
 import React, { PropsWithChildren } from "react";
 import { View, StatusBar, StyleProp, ViewStyle } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { useStyles } from "react-native-unistyles";
 import { twMerge } from "tailwind-merge";
 
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
@@ -24,6 +23,7 @@ export interface CommonFrameNewProps {
 
     className?: string;
     titleBarContainerClassName?: string;
+    titleBarClassName?: string;
 
     style?: StyleProp<ViewStyle>;
     titleBarContainerStyle?: StyleProp<ViewStyle>;
@@ -37,7 +37,7 @@ export interface CommonFrameNewProps {
 
 const IconArrowBack = createIcon(Ionicons, "arrow-back");
 
-const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = ({
+export default function CommonLayoutOriginal({
     children,
     title,
     titleBarTheme = "solid",
@@ -47,6 +47,7 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
 
     className,
     titleBarContainerClassName,
+    titleBarClassName,
 
     style,
     titleBarContainerStyle,
@@ -56,8 +57,8 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
     paddingRight,
     paddingBottom,
     paddingLeft,
-}) => {
-    const { styles, theme } = useStyles(styleSheet);
+}: PropsWithChildren<CommonFrameNewProps>) {
+    const { theme } = useStyles();
     const edgeInsetsRaw = useSafeAreaInsets();
     const edgeInsets: EdgeInsets = {
         top: paddingTop ?? edgeInsetsRaw.top,
@@ -78,7 +79,10 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
         <Box className={twMerge("h-full", className)} style={style}>
             {titleBarTheme === "solid" && <StatusBar barStyle="light-content" showHideTransition="none" />}
             <Box
-                className={"flex-0 basis-auto " + (titleBarTheme === "solid" ? "bg-primary-500" : "bg-transparent")}
+                className={twMerge(
+                    "flex-0 basis-auto " + (titleBarTheme === "solid" ? "bg-primary-500" : "bg-transparent"),
+                    titleBarContainerClassName,
+                )}
                 style={[
                     {
                         paddingTop: edgeInsets.top,
@@ -87,7 +91,7 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
                 ]}
             >
                 <Box
-                    className={twMerge("h-16 p-[10px] items-center justify-center", titleBarContainerClassName)}
+                    className={twMerge("h-16 p-[10px] items-center justify-center", titleBarClassName)}
                     style={[titleBarStyle]}
                 >
                     {typeof title === "string" ? (
@@ -138,12 +142,4 @@ const CommonLayoutOriginal: React.FC<PropsWithChildren<CommonFrameNewProps>> = (
             </Box>
         </Box>
     );
-};
-
-const styleSheet = createStyleSheet(theme => ({}));
-
-const CommonLayout = remapProps(CommonLayoutOriginal, {
-    titleBarClassName: "titleBarStyle",
-});
-
-export default CommonLayout;
+}
