@@ -115,10 +115,11 @@ export default function QueryIdScreen() {
     const { width } = useWindowDimensions();
 
     // 添加歌单
-    const { setPlaylistDetail, setName, setDescription } = useApplyPlaylistStore(state => ({
+    const { setPlaylistDetail, setName, setDescription, setSource } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
         setDescription: state.setDescription,
+        setSource: state.setSource,
     }));
 
     // 数据请求
@@ -235,22 +236,16 @@ export default function QueryIdScreen() {
                 </Box>
             ) : null}
             {data ? (
-                <Box style={{ flex: 1, flexDirection: "row" }}>
+                <Box className="flex-1 flex-row">
                     {width >= SCREEN_BREAKPOINTS.md ? (
-                        <Box
-                            style={
-                                width >= SCREEN_BREAKPOINTS.lg
-                                    ? { flex: 0, flexBasis: "auto", width: 384 }
-                                    : { flex: 1, flexBasis: "auto" }
-                            }
-                        >
+                        <Box className="flex-1 lg:flex-0 basis-auto lg:w-[384px]">
                             <ScrollView>
                                 <VideoMeta meta={data.data} />
                                 <Box style={{ height: edgeInsets.bottom }} />
                             </ScrollView>
                         </Box>
                     ) : null}
-                    <Box style={{ flex: 1 }}>
+                    <Box className="flex-1">
                         <FlashList
                             data={dataList}
                             extraData={updateTriggerString}
@@ -293,7 +288,6 @@ export default function QueryIdScreen() {
                     }
                     switch (action) {
                         case "addPlaylist":
-                            router.push(`/apply-playlist`);
                             setName(data?.data.title ?? "");
                             setDescription(data?.data.desc ?? "");
                             setPlaylistDetail([
@@ -309,6 +303,8 @@ export default function QueryIdScreen() {
                                     extendedData: null,
                                 },
                             ]);
+                            setSource();
+                            router.push(`/apply-playlist`);
                             break;
                         case "close":
                             break;

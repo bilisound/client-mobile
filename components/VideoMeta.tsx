@@ -33,10 +33,11 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
     const [showMore, setShowMore] = useState(false);
 
     // 添加歌单
-    const { setPlaylistDetail, setName, setDescription } = useApplyPlaylistStore(state => ({
+    const { setPlaylistDetail, setName, setDescription, setSource } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
         setDescription: state.setDescription,
+        setSource: state.setSource,
     }));
 
     // 批量添加操作
@@ -56,6 +57,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
         );
         setName(meta.title);
         setDescription(meta.desc);
+        setSource({ type: "video", bvid: meta.bvid });
         router.push(`/apply-playlist`);
     }
 
