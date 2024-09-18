@@ -1,36 +1,36 @@
-import { Image } from "expo-image";
+import { Image as ExpoImage } from "expo-image";
+import { cssInterop } from "nativewind";
 import React from "react";
-import { StyleSheet, View } from "react-native";
 
+import { Box } from "~/components/ui/box";
 import useSettingsStore from "~/store/settings";
 
-const styles = StyleSheet.create({
-    image: {
-        width: 240,
-        aspectRatio: "1/1",
-        position: "absolute",
-        right: 0,
-        bottom: 100,
-        zIndex: 1,
-    },
-    imageInner: {
-        width: 240,
-        aspectRatio: "1/1",
-        opacity: 0.2,
+const Image = cssInterop(ExpoImage, {
+    className: {
+        target: "style",
     },
 });
 
 export default function YuruChara() {
     const { theme } = useSettingsStore(state => ({ theme: state.theme }));
 
+    let source;
+
+    switch (theme) {
+        case "red": {
+            source = require("../assets/images/bg-corner-red.webp");
+            break;
+        }
+        case "classic":
+        default: {
+            source = require("../assets/images/bg-corner-classic.svg");
+            break;
+        }
+    }
+
     return (
-        <View style={styles.image} pointerEvents="none">
-            {theme === "classic" && (
-                <Image source={require("../assets/images/bg-corner-classic.svg")} style={styles.imageInner} />
-            )}
-            {theme === "red" && (
-                <Image source={require("../assets/images/bg-corner-red.webp")} style={styles.imageInner} />
-            )}
-        </View>
+        <Box className="w-[240px] aspect-square absolute right-0 bottom-[100px] z-10" pointerEvents="none">
+            <Image source={source} className="w-[240px] aspect-square opacity-20" />
+        </Box>
     );
 }
