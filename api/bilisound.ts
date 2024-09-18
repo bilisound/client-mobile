@@ -249,7 +249,7 @@ export interface GetEpisodeUserResponse {
     };
 }
 
-export type UserListMode = "episode" | "series";
+export type UserListMode = "season" | "series";
 
 export async function getUserList(mode: UserListMode, userId: Numberish, listId: Numberish, page = 1) {
     let response;
@@ -259,7 +259,7 @@ export async function getUserList(mode: UserListMode, userId: Numberish, listId:
     let name = "";
     let description = "";
     let cover = "";
-    if (mode === "episode") {
+    if (mode === "season") {
         response = await getUserSeason(userId, listId, page);
         const data = response.data;
         pageSize = data.page.page_size;
