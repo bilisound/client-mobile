@@ -539,10 +539,11 @@ const styleSheet = createStyleSheet(theme => ({
         paddingTop: 8,
     },
     timerText: {
-        fontSize: 14,
-        opacity: 0.65,
+        fontSize: 15,
+        opacity: 0.6,
         color: theme.colorTokens.foreground,
         flex: 1,
+        fontFamily: "Roboto_400Regular",
     },
     // MusicPicture
     musicPictureContainer: {
