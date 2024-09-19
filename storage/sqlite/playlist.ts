@@ -3,6 +3,7 @@ import omit from "lodash/omit";
 
 import { db } from "~/storage/sqlite/main";
 import { PlaylistDetail, playlistDetail, PlaylistImport, playlistMeta } from "~/storage/sqlite/schema";
+import { PlaylistSource } from "~/typings/playlist";
 
 // ============================================================================
 // 歌单元数据部分
@@ -113,8 +114,14 @@ export async function syncPlaylistAmount(playlistId: number) {
  * @param title
  * @param description
  * @param list
+ * @param source
  */
-export async function quickCreatePlaylist(title: string, description: string, list: PlaylistDetail[]) {
+export async function quickCreatePlaylist(
+    title: string,
+    description: string,
+    list: PlaylistDetail[],
+    source?: PlaylistSource,
+) {
     // 在 playlistMeta 表中创建新的播放列表
     const newPlaylist = await db
         .insert(playlistMeta)
@@ -127,6 +134,7 @@ export async function quickCreatePlaylist(title: string, description: string, li
                     .toString(16)
                     .padStart(6, "0"), // 生成随机颜色
             amount: list.length,
+            source: source ? JSON.stringify(source) : null,
         })
         .returning();
 

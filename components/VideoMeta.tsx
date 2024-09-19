@@ -186,7 +186,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                             variant="outline"
                             onPress={() => {
                                 router.push(
-                                    `/remote-list?mode=episode&userId=${meta.owner.mid}&listId=${meta.seasonId}`,
+                                    `/remote-list?mode=season&userId=${meta.owner.mid}&listId=${meta.seasonId}`,
                                 );
                             }}
                             Icon={PlaylistIcon}
