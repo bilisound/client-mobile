@@ -7,6 +7,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useColorScheme, Vibration, View } from "react-native";
+import Toast from "react-native-toast-message";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { useStyles, createStyleSheet } from "react-native-unistyles";
 
@@ -359,6 +360,11 @@ export default function Page() {
                             }}
                             onLongPress={() => {
                                 if (isEditLocked) {
+                                    Toast.show({
+                                        type: "info",
+                                        text1: "当前歌单已绑定在线播放列表",
+                                        text2: "如需进行本地编辑，请先进入「修改信息」页面进行解绑操作",
+                                    });
                                     return;
                                 }
                                 if (!editing) {
