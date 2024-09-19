@@ -1,4 +1,4 @@
-import { Entypo, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Color from "color";
@@ -63,7 +63,6 @@ function extractAndProcessImgUrls(playlistDetails: PlaylistDetail[]) {
 
 const HEADER_BASE_SIZE = 120;
 
-const IconEditMeta = createIcon(Feather, "edit");
 const IconEditingDone = createIcon(Entypo, "check");
 const IconEditing = createIcon(MaterialCommunityIcons, "format-list-checks");
 
@@ -177,6 +176,7 @@ export default function Page() {
     }
 
     // 多选管理
+    const isEditLocked = !meta || !!meta?.source;
     const { clear, toggle, selected, setAll, reverse } = useMultiSelect<number>();
     const [editing, setEditing] = useState(false);
 
@@ -317,7 +317,7 @@ export default function Page() {
             leftAccessories="backButton"
             rightAccessories={
                 <>
-                    {playlistDetail.length > 0 ? (
+                    {playlistDetail.length > 0 && !isEditLocked ? (
                         <PotatoButtonTitleBar
                             label={editing ? "完成" : "编辑"}
                             onPress={() =>
@@ -343,7 +343,7 @@ export default function Page() {
                     />
                 </>
             }
-            extendToBottom
+            paddingBottom={0}
         >
             <FlashList
                 renderItem={item => {
@@ -351,13 +351,16 @@ export default function Page() {
                         <SongItem
                             data={item.item}
                             index={item.index + 1}
-                            onRequestPlay={() => {
-                                handleRequestPlay(item.index);
+                            onRequestPlay={async () => {
+                                await handleRequestPlay(item.index);
                             }}
                             onToggle={() => {
                                 toggle(item.index);
                             }}
                             onLongPress={() => {
+                                if (isEditLocked) {
+                                    return;
+                                }
                                 if (!editing) {
                                     Vibration.vibrate(25);
                                     setEditing(true);
@@ -371,7 +374,7 @@ export default function Page() {
                 }}
                 data={playlistDetail}
                 estimatedItemSize={68}
-                onContentSizeChange={(contentWidth, contentHeight) => {
+                onContentSizeChange={(_, contentHeight) => {
                     setContentHeight(contentHeight);
                 }}
                 onLayout={({
@@ -399,8 +402,8 @@ export default function Page() {
                             meta={meta}
                             images={extractAndProcessImgUrls(playlistDetail)}
                             showPlayButton={playlistDetail.length > 0}
-                            onPlay={() => {
-                                handleRequestPlay(0);
+                            onPlay={async () => {
+                                await handleRequestPlay(0);
                             }}
                         />
                     </LinearGradient>
@@ -473,9 +476,9 @@ export default function Page() {
                         <ActionsheetItemText>删除</ActionsheetItemText>
                     </ActionsheetItem>
                     <ActionsheetItem
-                        onPress={() => {
+                        onPress={async () => {
                             setShowActionMenu(false);
-                            exportPlaylistToFile(Number(id));
+                            await exportPlaylistToFile(Number(id));
                         }}
                     >
                         <Box
