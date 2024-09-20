@@ -1,4 +1,5 @@
 import omit from "lodash/omit";
+import { remapProps } from "nativewind";
 import { useState, forwardRef } from "react";
 import {
     Pressable as NativePressable,
@@ -18,7 +19,7 @@ export interface PressableProps extends NativePressableProps {
 
 const isAndroid = Platform.OS === "android";
 
-const PotatoPressable = forwardRef<View, PressableProps>((props, ref) => {
+const PotatoPressableRaw = forwardRef<View, PressableProps>((props, ref) => {
     const [pressed, setPressed] = useState(false);
     const colorMode = useColorScheme();
     const pressedBackgroundColor = colorMode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
@@ -56,6 +57,11 @@ const PotatoPressable = forwardRef<View, PressableProps>((props, ref) => {
             </NativePressable>
         </View>
     );
+});
+
+const PotatoPressable = remapProps(PotatoPressableRaw, {
+    className: "style",
+    outerClassName: "outerStyle",
 });
 
 export default PotatoPressable;

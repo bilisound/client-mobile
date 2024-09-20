@@ -120,14 +120,16 @@ function Header({
                             <PotatoButton Icon={IconPlay} rounded onPress={onPlay}>
                                 播放
                             </PotatoButton>
-                            <PotatoButton
-                                Icon={IconSync}
-                                iconSize={16}
-                                rounded
-                                onPress={onPlay}
-                                iconOnly
-                                aria-label="同步"
-                            />
+                            {meta.source ? (
+                                <PotatoButton
+                                    Icon={IconSync}
+                                    iconSize={16}
+                                    rounded
+                                    onPress={onPlay}
+                                    iconOnly
+                                    aria-label="同步"
+                                />
+                            ) : null}
                         </Box>
                     )}
                 </View>
