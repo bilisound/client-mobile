@@ -88,7 +88,9 @@ export default function SongItem({
             <Box className="flex-row flex-1 gap-3 justify-start">
                 <Box
                     className={`items-center justify-center px-1.5 h-[22px] rounded-md ${
-                        isActiveTrack ? "bg-accent-500 shadow-md ios:shadow-hard-2" : "bg-primary-500"
+                        isActiveTrack
+                            ? "bg-accent-500 shadow-md ios:shadow-hard-2"
+                            : "bg-primary-500 dark:bg-primary-400"
                     }`}
                 >
                     <Text
@@ -125,8 +127,8 @@ export default function SongItem({
             {isChecking ? (
                 <Box className="flex-basis-auto">
                     <Box
-                        className={`w-7 h-7 rounded-full border-2 border-primary-500 items-center justify-center ${
-                            isChecked ? "bg-primary-500" : "bg-transparent"
+                        className={`w-7 h-7 rounded-full border-2 border-primary-500 dark:border-primary-500 items-center justify-center ${
+                            isChecked ? "bg-primary-500 dark:bg-primary-400" : "bg-transparent"
                         }`}
                     >
                         <Entypo name="check" size={18} color={isChecked ? "white" : "transparent"} />

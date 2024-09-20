@@ -9,6 +9,7 @@ import useSettingsStore from "~/store/settings";
 
 const ThemeValueProvider = createContext<(typeof config)[string] | null>(null);
 
+// todo 坏的，取不到值
 export function useRawThemeValues() {
     const data = useContext(ThemeValueProvider);
     if (!data) {
@@ -23,6 +24,8 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
         theme: state.theme,
     }));
 
+    console.log(config);
+
     return (
         <View
             style={[
@@ -32,9 +35,11 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
                 props.style,
             ]}
         >
-            <OverlayProvider>
-                <ToastProvider>{props.children}</ToastProvider>
-            </OverlayProvider>
+            <ThemeValueProvider.Provider value={config[theme + "_" + mode]}>
+                <OverlayProvider>
+                    <ToastProvider>{props.children}</ToastProvider>
+                </OverlayProvider>
+            </ThemeValueProvider.Provider>
         </View>
     );
 }

@@ -62,7 +62,7 @@ const TabIndexScreen: React.FC = () => {
             <Box className="pt-24 pb-12 items-center">
                 {fontsLoaded ? (
                     <Text
-                        className="text-3xl text-primary-500 h-12 leading-12"
+                        className="text-3xl text-primary-500 dark:text-primary-400 h-12 leading-12"
                         style={{
                             fontFamily: "Poppins_700Bold",
                         }}

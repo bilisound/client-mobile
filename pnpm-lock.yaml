@@ -6554,7 +6554,6 @@ packages:
 
   shaka-player@4.11.3:
     resolution: {integrity: sha512-+DRSPWPf6mk/z0R8PEYStY58DghtQdOkdNKUVdhigctjyPxgeUGXHhMwUWGB56QVZEBF212Js/V1VJzZ4Ka74g==}
-    engines: {node: '>=14'}
 
   shallow-clone@3.0.1:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
@@ -7488,7 +7487,7 @@ snapshots:
 
   '@babel/helper-builder-binary-assignment-operator-visitor@7.22.15':
     dependencies:
-      '@babel/types': 7.24.7
+      '@babel/types': 7.25.6
 
   '@babel/helper-compilation-targets@7.24.7':
     dependencies:
@@ -8043,7 +8042,7 @@ snapshots:
   '@babel/plugin-transform-modules-amd@7.24.1(@babel/core@7.25.2)':
     dependencies:
       '@babel/core': 7.25.2
-      '@babel/helper-module-transforms': 7.24.7(@babel/core@7.25.2)
+      '@babel/helper-module-transforms': 7.25.2(@babel/core@7.25.2)
       '@babel/helper-plugin-utils': 7.24.0
     transitivePeerDependencies:
       - supports-color
@@ -8061,7 +8060,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.25.2
       '@babel/helper-hoist-variables': 7.24.7
-      '@babel/helper-module-transforms': 7.24.7(@babel/core@7.25.2)
+      '@babel/helper-module-transforms': 7.25.2(@babel/core@7.25.2)
       '@babel/helper-plugin-utils': 7.24.0
       '@babel/helper-validator-identifier': 7.24.7
     transitivePeerDependencies:
@@ -8070,7 +8069,7 @@ snapshots:
   '@babel/plugin-transform-modules-umd@7.24.1(@babel/core@7.25.2)':
     dependencies:
       '@babel/core': 7.25.2
-      '@babel/helper-module-transforms': 7.24.7(@babel/core@7.25.2)
+      '@babel/helper-module-transforms': 7.25.2(@babel/core@7.25.2)
       '@babel/helper-plugin-utils': 7.24.0
     transitivePeerDependencies:
       - supports-color
@@ -8270,11 +8269,11 @@ snapshots:
 
   '@babel/preset-env@7.24.4(@babel/core@7.25.2)':
     dependencies:
-      '@babel/compat-data': 7.24.7
+      '@babel/compat-data': 7.25.4
       '@babel/core': 7.25.2
-      '@babel/helper-compilation-targets': 7.24.7
+      '@babel/helper-compilation-targets': 7.25.2
       '@babel/helper-plugin-utils': 7.24.0
-      '@babel/helper-validator-option': 7.24.7
+      '@babel/helper-validator-option': 7.24.8
       '@babel/plugin-bugfix-firefox-class-in-computed-class-key': 7.24.4(@babel/core@7.25.2)
       '@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression': 7.24.1(@babel/core@7.25.2)
       '@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining': 7.24.1(@babel/core@7.25.2)
@@ -8366,7 +8365,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.25.2
       '@babel/helper-plugin-utils': 7.24.0
-      '@babel/types': 7.24.7
+      '@babel/types': 7.25.6
       esutils: 2.0.3
 
   '@babel/preset-react@7.24.1(@babel/core@7.25.2)':

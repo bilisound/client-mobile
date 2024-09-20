@@ -80,7 +80,8 @@ export default function CommonLayoutOriginal({
             {titleBarTheme === "solid" && <StatusBar barStyle="light-content" showHideTransition="none" />}
             <Box
                 className={twMerge(
-                    "flex-0 basis-auto " + (titleBarTheme === "solid" ? "bg-primary-500" : "bg-transparent"),
+                    "flex-0 basis-auto " +
+                        (titleBarTheme === "solid" ? "bg-primary-500 dark:bg-primary-100" : "bg-transparent"),
                     titleBarContainerClassName,
                 )}
                 style={[

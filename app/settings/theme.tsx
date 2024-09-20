@@ -40,7 +40,7 @@ function ThemeButton({ selected = false, name, onPress, yuruChara }: ThemeButton
             onPress={onPress}
             className={twMerge(
                 "md:flex-1 flex px-5 py-5 h-24 justify-between rounded-lg cursor-pointer overflow-hidden focus:ring-0.125rem focus:ring-primary-500 dark:focus:ring-primary-900",
-                selected ? "bg-primary-700 shadow-md" : "bg-background-50",
+                selected ? "bg-primary-700 dark:bg-primary-200 shadow-md" : "bg-background-50",
             )}
         >
             <Text className={`font-semibold text-lg ${selected ? "text-white" : ""}`}>{name}</Text>

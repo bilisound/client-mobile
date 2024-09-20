@@ -43,8 +43,10 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
     }
 
     return (
-        <OverlayProvider>
-            <ToastProvider>{props.children}</ToastProvider>
-        </OverlayProvider>
+        <ThemeValueProvider.Provider value={config[theme + "_" + mode]}>
+            <OverlayProvider>
+                <ToastProvider>{props.children}</ToastProvider>
+            </OverlayProvider>
+        </ThemeValueProvider.Provider>
     );
 }
