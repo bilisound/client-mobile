@@ -1,4 +1,5 @@
 import { Entypo, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Color from "color";
@@ -56,6 +57,7 @@ import { playlistToTracks } from "~/utils/track-data";
 
 const IconPlay = createIcon(Ionicons, "play");
 const IconMenu = createIcon(Entypo, "dots-three-vertical");
+const IconSync = createIcon(FontAwesome5, "sync-alt");
 
 function extractAndProcessImgUrls(playlistDetails: PlaylistDetail[]) {
     const imgUrls = playlistDetails.map(detail => detail.imgUrl);
@@ -114,11 +116,19 @@ function Header({
                     <Text style={styles.headerTitle}>{meta.title}</Text>
                     <Text style={styles.headerSubtitle}>{`${meta.amount} 首歌曲`}</Text>
                     {showPlayButton && (
-                        <View style={styles.playButtonContainer}>
+                        <Box className="flex-row mt-5 gap-2">
                             <PotatoButton Icon={IconPlay} rounded onPress={onPlay}>
                                 播放
                             </PotatoButton>
-                        </View>
+                            <PotatoButton
+                                Icon={IconSync}
+                                iconSize={16}
+                                rounded
+                                onPress={onPlay}
+                                iconOnly
+                                aria-label="同步"
+                            />
+                        </Box>
                     )}
                 </View>
             </View>

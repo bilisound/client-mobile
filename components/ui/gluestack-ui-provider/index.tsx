@@ -1,7 +1,7 @@
 import { OverlayProvider } from "@gluestack-ui/overlay";
 import { ToastProvider } from "@gluestack-ui/toast";
 import { colorScheme as colorSchemeNW } from "nativewind";
-import React from "react";
+import React, { createContext, useContext } from "react";
 import { ColorSchemeName, useColorScheme, View, ViewProps } from "react-native";
 
 import { config } from "./config";
@@ -16,6 +16,17 @@ const getColorSchemeName = (colorScheme: ColorSchemeName, mode: ModeType): "ligh
     }
     return mode;
 };
+
+const ThemeValueProvider = createContext<(typeof config)[string] | null>(null);
+
+export function useRawThemeValues() {
+    const data = useContext(ThemeValueProvider);
+    if (!data) {
+        throw new Error("useRawThemeValues must be used within ThemeValueProvider");
+    }
+
+    return data;
+}
 
 export function GluestackUIProvider({
     mode = "light",
@@ -37,9 +48,11 @@ export function GluestackUIProvider({
 
     return (
         <View style={[config[theme + "_" + colorSchemeName], { flex: 1, height: "100%", width: "100%" }, props.style]}>
-            <OverlayProvider>
-                <ToastProvider>{props.children}</ToastProvider>
-            </OverlayProvider>
+            <ThemeValueProvider.Provider value={config[theme + "_" + colorSchemeName]}>
+                <OverlayProvider>
+                    <ToastProvider>{props.children}</ToastProvider>
+                </OverlayProvider>
+            </ThemeValueProvider.Provider>
         </View>
     );
 }

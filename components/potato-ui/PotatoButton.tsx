@@ -1,4 +1,5 @@
 import omit from "lodash/omit";
+import { remapProps } from "nativewind";
 import React, { useState } from "react";
 import {
     ActivityIndicator,
@@ -36,6 +37,7 @@ export interface ButtonProps extends NativePressableProps {
     size?: keyof typeof sizes;
     disabled?: boolean;
     rounded?: boolean;
+    iconOnly?: boolean;
     variant?: "solid" | "outline" | "ghost";
     Icon?: IconComponent | "loading";
     iconSize?: number;
@@ -44,14 +46,15 @@ export interface ButtonProps extends NativePressableProps {
     outerStyle?: StyleProp<ViewStyle>;
 }
 
-export default function PotatoButton(props: ButtonProps) {
+function PotatoButtonRaw(props: ButtonProps) {
     const {
         color = "primary",
         disabled = false,
         rounded = false,
+        iconOnly = false,
         variant = "solid",
         Icon,
-        children = "按钮",
+        children = "",
         size = "md",
     } = props;
 
@@ -96,6 +99,17 @@ export default function PotatoButton(props: ButtonProps) {
         color: disabled ? disabledForeground : normalForeground,
     };
 
+    // 高度或左右内间距解析
+    let width: number | undefined = undefined;
+    const height = variant === "outline" ? sizes[size].h - 2 : sizes[size].h;
+    let paddingHorizontal: number | undefined = variant === "outline" ? sizes[size].px - 2 : sizes[size].px;
+
+    if (iconOnly) {
+        // noinspection JSSuspiciousNameCombination
+        width = height;
+        paddingHorizontal = undefined;
+    }
+
     return (
         <View
             style={[
@@ -135,8 +149,9 @@ export default function PotatoButton(props: ButtonProps) {
                 }
                 style={[
                     {
-                        height: variant === "outline" ? sizes[size].h - 2 : sizes[size].h,
-                        paddingHorizontal: variant === "outline" ? sizes[size].px - 2 : sizes[size].px,
+                        width,
+                        height,
+                        paddingHorizontal,
                         flexDirection: "row",
                         justifyContent: "center",
                         alignItems: "center",
@@ -154,8 +169,17 @@ export default function PotatoButton(props: ButtonProps) {
                         color={disabled ? disabledForeground : normalForeground}
                     />
                 ) : null}
-                <Text style={[animatedTextStyle, { fontWeight: "600" }]}>{handleTextEffect(children)}</Text>
+                {iconOnly ? null : (
+                    <Text style={[animatedTextStyle, { fontWeight: "600" }]}>{handleTextEffect(children)}</Text>
+                )}
             </Pressable>
         </View>
     );
 }
+
+const PotatoButton = remapProps(PotatoButtonRaw, {
+    className: "style",
+    outerClassName: "outerStyle",
+});
+
+export default PotatoButton;
