@@ -270,6 +270,9 @@ export default function AudioPlayerModal() {
     return (
         <View style={styles.container}>
             <CommonLayout
+                overrideEdgeInsets={{
+                    top: Platform.OS === "ios" ? 0 : undefined,
+                }}
                 titleBarClassName="h-[72px] px-[14px]"
                 titleBarTheme="transparent"
                 title={

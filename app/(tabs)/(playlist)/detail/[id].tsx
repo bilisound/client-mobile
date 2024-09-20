@@ -7,7 +7,7 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useColorScheme, Vibration, View } from "react-native";
+import { Platform, useColorScheme, Vibration, View } from "react-native";
 import Toast from "react-native-toast-message";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { useStyles, createStyleSheet } from "react-native-unistyles";
@@ -356,7 +356,9 @@ export default function Page() {
                     />
                 </>
             }
-            paddingBottom={0}
+            overrideEdgeInsets={{
+                top: Platform.OS === "ios" ? 0 : undefined,
+            }}
         >
             <FlashList
                 renderItem={item => {

@@ -57,7 +57,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
         );
         setName(meta.title);
         setDescription(meta.desc);
-        setSource({ type: "video", bvid: meta.bvid });
+        setSource({ type: "video", bvid: meta.bvid, originalTitle: meta.title, lastSyncAt: new Date().getTime() });
         router.push(`/apply-playlist`);
     }
 

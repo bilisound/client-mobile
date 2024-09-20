@@ -1,7 +1,7 @@
 import { defineWrap } from "./common";
 import { getVideo } from "./external/direct";
 
-import { getUserInfo, getUserSeason, getUserSeries, getUserSeriesMeta } from "~/api/external/json";
+import { getUserSeason, getUserSeries, getUserSeriesMeta } from "~/api/external/json";
 import {
     BILIBILI_GOOD_CDN_REGEX,
     BILIBILI_VIDEO_URL_PREFIX,

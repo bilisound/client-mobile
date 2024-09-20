@@ -15,7 +15,7 @@ export interface CommonFrameNewProps {
     title?: string | React.ReactNode;
     titleBarTheme?: "transparent" | "transparentAlt" | "solid";
     /**
-     * @deprecated 改用 `paddingBottom={0}` 谢谢喵
+     * @deprecated 改用 `overrideEdgeInsets` 谢谢喵
      */
     extendToBottom?: boolean;
     leftAccessories?: React.ReactNode | "backButton";
@@ -24,15 +24,14 @@ export interface CommonFrameNewProps {
     className?: string;
     titleBarContainerClassName?: string;
     titleBarClassName?: string;
+    containerClassName?: string;
 
     style?: StyleProp<ViewStyle>;
     titleBarContainerStyle?: StyleProp<ViewStyle>;
     titleBarStyle?: StyleProp<ViewStyle>;
+    containerStyle?: StyleProp<ViewStyle>;
 
-    paddingTop?: number;
-    paddingBottom?: number;
-    paddingLeft?: number;
-    paddingRight?: number;
+    overrideEdgeInsets?: Partial<EdgeInsets>;
 }
 
 const IconArrowBack = createIcon(Ionicons, "arrow-back");
@@ -48,23 +47,22 @@ export default function CommonLayoutOriginal({
     className,
     titleBarContainerClassName,
     titleBarClassName,
+    containerClassName,
 
     style,
     titleBarContainerStyle,
     titleBarStyle,
+    containerStyle,
 
-    paddingTop,
-    paddingRight,
-    paddingBottom,
-    paddingLeft,
+    overrideEdgeInsets = {},
 }: PropsWithChildren<CommonFrameNewProps>) {
     const { theme } = useStyles();
     const edgeInsetsRaw = useSafeAreaInsets();
     const edgeInsets: EdgeInsets = {
-        top: paddingTop ?? edgeInsetsRaw.top,
-        bottom: paddingBottom ?? edgeInsetsRaw.bottom,
-        left: paddingLeft ?? edgeInsetsRaw.left,
-        right: paddingRight ?? edgeInsetsRaw.right,
+        top: overrideEdgeInsets?.top ?? edgeInsetsRaw.top,
+        bottom: overrideEdgeInsets?.bottom ?? edgeInsetsRaw.bottom,
+        left: overrideEdgeInsets?.left ?? edgeInsetsRaw.left,
+        right: overrideEdgeInsets?.right ?? edgeInsetsRaw.right,
     };
 
     let textColor = theme.colorTokens.topBarSolidForeground;
@@ -130,13 +128,14 @@ export default function CommonLayoutOriginal({
                 </Box>
             </Box>
             <Box
-                className="flex-1"
+                className={twMerge("flex-1", containerClassName)}
                 style={[
                     {
                         paddingLeft: edgeInsets.left,
                         paddingRight: edgeInsets.right,
                         paddingBottom: extendToBottom ? 0 : edgeInsets.bottom,
                     },
+                    containerStyle,
                 ]}
             >
                 {children}

@@ -66,6 +66,8 @@ function Header({ data, mode }: HeaderProps) {
             setDescription(data.meta.description);
             setSource({
                 type: "playlist",
+                originalTitle: data.meta.name,
+                lastSyncAt: new Date().getTime(),
                 subType: mode,
                 userId: data.meta.userId,
                 listId: data.meta.seasonId,

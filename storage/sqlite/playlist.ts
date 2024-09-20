@@ -29,7 +29,8 @@ export async function getPlaylistMeta(id: number) {
  * @param id
  */
 export async function deletePlaylistMeta(id: number) {
-    return db.delete(playlistMeta).where(eq(playlistMeta.id, id));
+    await db.delete(playlistMeta).where(eq(playlistMeta.id, id));
+    await db.delete(playlistDetail).where(eq(playlistDetail.playlistId, id));
 }
 
 /**
@@ -91,6 +92,16 @@ export async function deletePlaylistDetail(id: number) {
 export async function addToPlaylist(playlistId: number, playlist: InferInsertModel<typeof playlistDetail>[]) {
     const parsedPlaylist = playlist.map(e => omit({ ...e, playlistId }, "id"));
     await db.insert(playlistDetail).values(parsedPlaylist);
+}
+
+/**
+ * 用另一个列表替换已有列表中的内容
+ * @param playlistId
+ * @param playlist
+ */
+export async function replacePlaylist(playlistId: number, playlist: InferInsertModel<typeof playlistDetail>[]) {
+    await db.delete(playlistDetail).where(eq(playlistDetail.playlistId, playlistId));
+    await addToPlaylist(playlistId, playlist);
 }
 
 /**
