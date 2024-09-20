@@ -149,7 +149,7 @@ const RootLayoutNav = () => {
     );
 
     return (
-        <GluestackUIProvider mode="system">
+        <GluestackUIProvider mode={colorScheme || "light"}>
             <QueryClientProvider client={queryClient}>
                 <ThemeProvider value={reactNavigationTheme}>
                     <PortalProvider>
