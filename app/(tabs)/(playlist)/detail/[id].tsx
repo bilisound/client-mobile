@@ -357,7 +357,7 @@ export default function Page() {
                 </>
             }
             overrideEdgeInsets={{
-                top: Platform.OS === "ios" ? 0 : undefined,
+                bottom: 0,
             }}
         >
             <FlashList
