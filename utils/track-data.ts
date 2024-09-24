@@ -67,7 +67,8 @@ export async function loadTrackData(fromBackup = false) {
     }
 
     // 载入 tracks 和 current
-    tracks.forEach(e => {
+    for (let i = 0; i < tracks.length; i++) {
+        const e = tracks[i];
         if (typeof e.bilisoundIsLoaded === "undefined") {
             e.bilisoundIsLoaded = true;
         }
@@ -77,7 +78,7 @@ export async function loadTrackData(fromBackup = false) {
             // 使用 `setQueue()` 添加的曲目，url 需要手动转换成 `Asset` 对象。然而使用 `add()` 添加就不需要……
             e.url = Asset.fromModule(require("../assets/placeholder.mp3")) as any;
         }
-    });
+    }
     return { tracks, current };
 }
 
@@ -93,7 +94,8 @@ export function playlistToTracks(input: PlaylistDetail[]) {
         bilisoundUniqueId: uuidv4(),
         bilisoundIsLoaded: false,
     }));
-    newTracks.forEach(e => {
+    for (let i = 0; i < newTracks.length; i++) {
+        const e = newTracks[i];
         const url = getCacheAudioPath(e.bilisoundId, e.bilisoundEpisode);
         try {
             const found = cacheStatusStorage.getBoolean(`${e.bilisoundId}_${e.bilisoundEpisode}`);
@@ -104,7 +106,7 @@ export function playlistToTracks(input: PlaylistDetail[]) {
         } catch (e) {
             log.error(`检测 ${url} 的存在时发生了预期外的错误`, e);
         }
-    });
+    }
     return newTracks;
 }
 

@@ -303,14 +303,19 @@ export async function getUserListFull(
     mode: UserListMode,
     userId: Numberish,
     listId: Numberish,
+    progressCallback?: (progress: number) => void,
 ): Promise<EpisodeItem[]> {
+    progressCallback?.(0);
     const firstResponse = await getUserList(mode, userId, listId, 1);
+    const totalPages = Math.ceil(firstResponse.total / firstResponse.pageSize);
+    progressCallback?.(1 / totalPages);
     let results: EpisodeItem[] = firstResponse.rows;
     if (firstResponse.total <= firstResponse.pageSize) {
         return results;
     }
-    for (let i = 1; i < Math.ceil(firstResponse.total / firstResponse.pageSize); i++) {
+    for (let i = 1; i < totalPages; i++) {
         const newResults = (await getUserList(mode, userId, listId, i + 1)).rows;
+        progressCallback?.((i + 1) / totalPages);
         results = results.concat(newResults);
     }
     return results;
