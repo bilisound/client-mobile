@@ -1,4 +1,4 @@
-import { InferSelectModel } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -47,5 +47,9 @@ export const playlistImportSchema = z.object({
 export type PlaylistMeta = InferSelectModel<typeof playlistMeta>;
 
 export type PlaylistDetail = InferSelectModel<typeof playlistDetail>;
+
+export type PlaylistMetaInsert = InferInsertModel<typeof playlistMeta>;
+
+export type PlaylistDetailInsert = InferInsertModel<typeof playlistDetail>;
 
 export type PlaylistImport = z.infer<typeof playlistImportSchema>;
