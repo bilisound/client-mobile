@@ -6,8 +6,11 @@ import Color from "color";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { cssInterop } from "nativewind";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Platform, useColorScheme, Vibration, View } from "react-native";
+import { useColorScheme, Vibration, View } from "react-native";
+import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
+import { Circle as OrigCircle, Svg } from "react-native-svg";
 import Toast from "react-native-toast-message";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { useStyles, createStyleSheet } from "react-native-unistyles";
@@ -39,6 +42,7 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Box } from "~/components/ui/box";
 import { Heading } from "~/components/ui/heading";
+import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalBody } from "~/components/ui/modal";
 import { Text } from "~/components/ui/text";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
@@ -64,6 +68,19 @@ function extractAndProcessImgUrls(playlistDetails: PlaylistDetail[]) {
     const imgUrls = playlistDetails.map(detail => detail.imgUrl);
     return Array.from(new Set(imgUrls));
 }
+
+const Circle = Animated.createAnimatedComponent(
+    cssInterop(OrigCircle, {
+        className: {
+            target: "style",
+            nativeStyleToProp: {
+                // @ts-ignore workaround
+                stroke: true,
+                fill: true,
+            },
+        },
+    }),
+);
 
 const HEADER_BASE_SIZE = 120;
 
@@ -111,15 +128,30 @@ function Header({
     const { styles } = useStyles(stylesheet);
     const queryClient = useQueryClient();
     const [syncing, setSyncing] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const displayProgress = useSharedValue(0);
+    const animatedProps = useAnimatedProps(() => {
+        const strokeDashoffset = (1 - displayProgress.value) * 138.16;
+        return {
+            strokeDashoffset,
+        };
+    });
+    useEffect(() => {
+        displayProgress.value = withTiming(progress);
+    }, [displayProgress, progress]);
 
     async function handleSync() {
+        setShowModal(true);
         setSyncing(true);
+        setProgress(0);
         try {
             const source = meta.source;
             if (!source) {
                 return;
             }
-            const total = await updatePlaylist(meta.id, JSON.parse(source), progress => {});
+            const total = await updatePlaylist(meta.id, JSON.parse(source), progress => {
+                setProgress(progress);
+            });
             await Promise.all([
                 queryClient.invalidateQueries({ queryKey: ["playlist_meta"] }),
                 queryClient.invalidateQueries({ queryKey: [`playlist_meta_${meta.id}`] }),
@@ -138,9 +170,13 @@ function Header({
             });
             log.error("列表同步失败：" + e);
         } finally {
+            setShowModal(false);
             setSyncing(false);
         }
     }
+
+    const [showModal, setShowModal] = React.useState(false);
+    const ref = React.useRef(null);
 
     return (
         <View style={styles.headerContainerOuter}>
@@ -174,6 +210,50 @@ function Header({
                     {meta.description}
                 </Text>
             )}
+            {/* 以后如果有更多的地方需要用这种 modal，考虑封装成一个组件 */}
+            <Modal isOpen={showModal} finalFocusRef={ref} size="md">
+                <ModalBackdrop />
+                <ModalContent className="p-3">
+                    <ModalHeader className="sr-only">
+                        <Heading size="md" className="text-typography-950">
+                            加载提示
+                        </Heading>
+                    </ModalHeader>
+                    <ModalBody>
+                        <Box className="w-full flex-row gap-3 items-center">
+                            <Box className="-rotate-90 w-16 h-16">
+                                <Svg width={64} height={64} viewBox="0 0 64 64">
+                                    <Circle
+                                        // @ts-ignore workaround
+                                        className="stroke-primary-100"
+                                        r={22}
+                                        cx={32}
+                                        cy={32}
+                                        fill="transparent"
+                                        strokeWidth={6}
+                                        strokeDasharray="138.16px"
+                                    />
+                                    <Circle
+                                        r={22}
+                                        cx={32}
+                                        cy={32}
+                                        // @ts-ignore workaround
+                                        className="stroke-primary-400"
+                                        strokeWidth={6}
+                                        strokeLinecap="round"
+                                        // 138.16 is 0%, 0 is 100%
+                                        // strokeDashoffset={(1 - progress) * 138.16}
+                                        animatedProps={animatedProps}
+                                        fill="transparent"
+                                        strokeDasharray="138.16px"
+                                    />
+                                </Svg>
+                            </Box>
+                            <Text className="text-typography-700 text-sm">正在同步在线播放列表……</Text>
+                        </Box>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
         </View>
     );
 }
