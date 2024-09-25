@@ -57,7 +57,7 @@ export default function Page() {
               amount: 0,
           };
 
-    const source = data?.[0].source ? (JSON.parse(data[0].source) as PlaylistSource) : null;
+    const source = data?.[0]?.source ? (JSON.parse(data[0].source) as PlaylistSource) : null;
 
     const {
         control,
@@ -115,7 +115,11 @@ export default function Page() {
     }
 
     return (
-        <CommonLayout title={id === MAGIC_ID_NEW_ENTRY ? "新建歌单" : "修改歌单信息"} titleBarTheme="transparent">
+        <CommonLayout
+            title={id === MAGIC_ID_NEW_ENTRY ? "新建歌单" : "修改歌单信息"}
+            titleBarTheme="transparent"
+            leftAccessories="backButton"
+        >
             <Box className="p-4 gap-4">
                 <FormControl isRequired isInvalid={"title" in errors}>
                     <FormControlLabel>
