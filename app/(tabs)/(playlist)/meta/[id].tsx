@@ -20,6 +20,7 @@ import {
 } from "~/components/ui/form-control";
 import { AlertCircleIcon, CheckIcon } from "~/components/ui/icon";
 import { Input, InputField } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
 import { Textarea, TextareaInput } from "~/components/ui/textarea";
 import {
     addToPlaylist,
@@ -29,6 +30,7 @@ import {
     syncPlaylistAmount,
 } from "~/storage/sqlite/playlist";
 import { PlaylistMeta } from "~/storage/sqlite/schema";
+import { PlaylistSource } from "~/typings/playlist";
 import log from "~/utils/logger";
 import { tracksToPlaylist } from "~/utils/track-data";
 
@@ -54,6 +56,9 @@ export default function Page() {
                       .padStart(6, "0"),
               amount: 0,
           };
+
+    const source = data?.[0].source ? (JSON.parse(data[0].source) as PlaylistSource) : null;
+
     const {
         control,
         handleSubmit,
@@ -119,15 +124,28 @@ export default function Page() {
                     <Controller
                         control={control}
                         render={({ field: { onChange, onBlur, value } }) => (
-                            <Input>
-                                <InputField
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    placeholder="请输入名称"
-                                    className="text-sm"
-                                />
-                            </Input>
+                            <Box className="flex-row w-full gap-3">
+                                <Input className="flex-1">
+                                    <InputField
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        value={value}
+                                        placeholder="请输入名称"
+                                        className="text-sm"
+                                    />
+                                </Input>
+                                {source ? (
+                                    <PotatoButton
+                                        className="flex-0 basis-auto"
+                                        onPress={() => {
+                                            onChange(source?.originalTitle);
+                                        }}
+                                        disabled={source?.originalTitle === value}
+                                    >
+                                        还原
+                                    </PotatoButton>
+                                ) : null}
+                            </Box>
                         )}
                         name="title"
                         rules={{ required: "请输入名称" }}
@@ -169,6 +187,20 @@ export default function Page() {
                         <FormControlErrorText size="sm">{errors.title?.message}</FormControlErrorText>
                     </FormControlError>
                 </FormControl>
+
+                {source ? (
+                    <FormControl>
+                        <FormControlLabel>
+                            <FormControlLabelText className="text-sm">绑定在线歌单</FormControlLabelText>
+                        </FormControlLabel>
+                        <Box className="gap-4">
+                            <Input isDisabled>
+                                <InputField value={source.originalTitle} className="text-sm text-typography-400" />
+                            </Input>
+                            <PotatoButton>创建解绑副本（未完工）</PotatoButton>
+                        </Box>
+                    </FormControl>
+                ) : null}
 
                 {id === MAGIC_ID_NEW_ENTRY && (
                     <FormControl>
