@@ -121,6 +121,24 @@ export async function syncPlaylistAmount(playlistId: number) {
 }
 
 /**
+ * 用另一个播放列表详情完全替换播放列表
+ * @param playlistId
+ * @param playlist
+ */
+export function replacePlaylistDetail(playlistId: number, playlist: InferInsertModel<typeof playlistDetail>[]) {
+    db.transaction(tx => {
+        tx.delete(playlistDetail).where(eq(playlistDetail.playlistId, playlistId)).run();
+        tx.insert(playlistDetail).values(playlist).run();
+        tx.update(playlistMeta)
+            .set({
+                amount: playlist.length,
+            })
+            .where(eq(playlistMeta.id, playlistId))
+            .run();
+    });
+}
+
+/**
  * 从多首曲目快速创建新的播放列表
  * @param title
  * @param description
@@ -158,6 +176,10 @@ export async function quickCreatePlaylist(
     return playlistId;
 }
 
+/**
+ * 导出播放列表
+ * @param id
+ */
 export async function exportPlaylist(id: number): Promise<PlaylistImport> {
     const meta = await db.select().from(playlistMeta).where(eq(playlistMeta.id, id));
     const detail = await db.select().from(playlistDetail).where(eq(playlistDetail.playlistId, id));
@@ -169,6 +191,9 @@ export async function exportPlaylist(id: number): Promise<PlaylistImport> {
     };
 }
 
+/**
+ * 导出全部播放列表
+ */
 export async function exportAllPlaylist(): Promise<PlaylistImport> {
     const meta = await db.select().from(playlistMeta);
     const detail = await db.select().from(playlistDetail);

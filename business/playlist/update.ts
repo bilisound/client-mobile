@@ -1,10 +1,14 @@
-import { eq } from "drizzle-orm";
-
 import { getBilisoundMetadata, getUserListFull } from "~/api/bilisound";
-import { db } from "~/storage/sqlite/main";
-import { playlistDetail, PlaylistDetailInsert } from "~/storage/sqlite/schema";
+import { replacePlaylistDetail } from "~/storage/sqlite/playlist";
+import { PlaylistDetailInsert } from "~/storage/sqlite/schema";
 import { PlaylistSource } from "~/typings/playlist";
 
+/**
+ * 更新上游播放列表
+ * @param id
+ * @param source
+ * @param progressCallback
+ */
 export async function updatePlaylist(id: number, source: PlaylistSource, progressCallback: (progress: number) => void) {
     switch (source.type) {
         case "playlist": {
@@ -22,18 +26,27 @@ export async function updatePlaylist(id: number, source: PlaylistSource, progres
                 playlistId: id,
                 extendedData: null,
             }));
-            db.transaction(tx => {
-                tx.delete(playlistDetail).where(eq(playlistDetail.playlistId, id)).run();
-                tx.insert(playlistDetail).values(builtList).run();
-            });
-            break;
+            replacePlaylistDetail(id, builtList);
+            return builtList.length;
         }
         case "video": {
-            const data = await getBilisoundMetadata({ id: source.bvid });
-            break;
+            progressCallback?.(0);
+            const { data } = await getBilisoundMetadata({ id: source.bvid });
+            const builtList: PlaylistDetailInsert[] = data.pages.map(e => ({
+                author: data.owner.name,
+                bvid: data.bvid,
+                duration: e.duration,
+                episode: 1,
+                title: e.part,
+                imgUrl: data.pic,
+                playlistId: id,
+                extendedData: null,
+            }));
+            replacePlaylistDetail(id, builtList);
+            return builtList.length;
         }
         default: {
-            break;
+            return 0;
         }
     }
 }

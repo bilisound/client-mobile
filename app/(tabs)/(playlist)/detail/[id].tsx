@@ -12,6 +12,7 @@ import Toast from "react-native-toast-message";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { useStyles, createStyleSheet } from "react-native-unistyles";
 
+import { updatePlaylist } from "~/business/playlist/update";
 import CommonLayout from "~/components/CommonLayout";
 import EditAction from "~/components/EditAction";
 import Empty from "~/components/Empty";
@@ -108,6 +109,39 @@ function Header({
     showPlayButton: boolean;
 }) {
     const { styles } = useStyles(stylesheet);
+    const queryClient = useQueryClient();
+    const [syncing, setSyncing] = useState(false);
+
+    async function handleSync() {
+        setSyncing(true);
+        try {
+            const source = meta.source;
+            if (!source) {
+                return;
+            }
+            const total = await updatePlaylist(meta.id, JSON.parse(source), progress => {});
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["playlist_meta"] }),
+                queryClient.invalidateQueries({ queryKey: [`playlist_meta_${meta.id}`] }),
+                queryClient.invalidateQueries({ queryKey: [`playlist_detail_${meta.id}`] }),
+            ]);
+            Toast.show({
+                type: "success",
+                text1: "歌单同步成功",
+                text2: `目前歌单中有 ${total} 首歌曲`,
+            });
+        } catch (e) {
+            Toast.show({
+                type: "error",
+                text1: "歌单同步失败",
+                text2: "可能是网络请求异常，请稍后再试",
+            });
+            log.error("列表同步失败：" + e);
+        } finally {
+            setSyncing(false);
+        }
+    }
+
     return (
         <View style={styles.headerContainerOuter}>
             <View style={styles.headerContainer}>
@@ -125,8 +159,9 @@ function Header({
                                     Icon={IconSync}
                                     iconSize={16}
                                     rounded
-                                    onPress={onPlay}
+                                    onPress={handleSync}
                                     iconOnly
+                                    disabled={syncing}
                                     aria-label="同步"
                                 />
                             ) : null}
