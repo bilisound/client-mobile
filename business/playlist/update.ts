@@ -36,7 +36,7 @@ export async function updatePlaylist(id: number, source: PlaylistSource, progres
                 author: data.owner.name,
                 bvid: data.bvid,
                 duration: e.duration,
-                episode: 1,
+                episode: e.page,
                 title: e.part,
                 imgUrl: data.pic,
                 playlistId: id,
