@@ -25,6 +25,7 @@ import { checkLatestVersion } from "~/utils/check-release";
 import init from "~/utils/init";
 import "~/global.css";
 import "~/unistyles";
+import log from "~/utils/logger";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -186,7 +187,12 @@ export default function RootLayout() {
 
     // Expo Router uses Error Boundaries to catch errors in the navigation tree.
     useEffect(() => {
-        if (error) throw error;
+        if (error) {
+            log.error("捕捉到未处理的错误：" + (error?.message || error) + " ，调用栈：" + error?.stack);
+        }
+        if (error && process.env.NODE_ENV !== "production") {
+            throw error;
+        }
     }, [error]);
 
     // 各种初始化操作（程序加载后）

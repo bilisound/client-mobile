@@ -207,7 +207,6 @@ export async function shuffleQueue() {
 
     // if no currentTrack, its a simple setQueue
     const currentTrackIndex = await TrackPlayer.getActiveTrackIndex();
-    log.debug(`setQueueUninterrupted: currentTrackIndex is valid? ${JSON.stringify({ currentTrackIndex })}`);
     if (currentTrackIndex === undefined) {
         return TrackPlayer.setQueue(tracks);
     }
@@ -218,9 +217,6 @@ export async function shuffleQueue() {
         // define conditions to find the currentTrack in tracks
         track =>
             track.bilisoundId === currentTrack.bilisoundId && track.bilisoundEpisode === currentTrack.bilisoundEpisode,
-    );
-    log.debug(
-        `setQueueUninterrupted: currentTrackIndex is present? ${JSON.stringify({ currentTrackNewIndex, tracks, currentTrack })}`,
     );
 
     if (currentTrackNewIndex < 0) {

@@ -24,8 +24,6 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
         theme: state.theme,
     }));
 
-    console.log(config);
-
     return (
         <View
             style={[

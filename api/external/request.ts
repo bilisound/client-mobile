@@ -47,7 +47,6 @@ instance.interceptors.request.use(
  */
 instance.interceptors.response.use(
     res => {
-        // console.log(JSON.stringify(res, null, 4));
         if (res.data.code !== 0) {
             log.error(`发生业务错误：${res.data.code}，详情信息：${res.data.message}`);
             throw new Error(res.data.message);
