@@ -56,6 +56,7 @@ import {
 } from "~/storage/sqlite/playlist";
 import { PlaylistDetail, PlaylistMeta } from "~/storage/sqlite/schema";
 import { getImageProxyUrl } from "~/utils/constant-helper";
+import { convertToRelativeTime } from "~/utils/datetime";
 import { exportPlaylistToFile } from "~/utils/exchange/playlist";
 import log from "~/utils/logger";
 import { playlistToTracks } from "~/utils/track-data";
@@ -128,6 +129,10 @@ function Header({
     const { styles } = useStyles(stylesheet);
     const queryClient = useQueryClient();
     const [syncing, setSyncing] = useState(false);
+
+    // 进度条处理
+    const [showModal, setShowModal] = useState(false);
+    const ref = useRef(null);
     const [progress, setProgress] = useState(0);
     const displayProgress = useSharedValue(0);
     const animatedProps = useAnimatedProps(() => {
@@ -140,6 +145,21 @@ function Header({
         displayProgress.value = withTiming(progress);
     }, [displayProgress, progress]);
 
+    // 同步时间处理
+    const [lastSyncString, setLastSyncString] = useState("");
+    useEffect(() => {
+        function action() {
+            if (!meta.source) {
+                return;
+            }
+            setLastSyncString(convertToRelativeTime(JSON.parse(meta.source).lastSyncAt));
+        }
+        const handle = setInterval(action, 5000);
+        action();
+        return () => clearInterval(handle);
+    }, [meta]);
+
+    // 同步操作
     async function handleSync() {
         setShowModal(true);
         setSyncing(true);
@@ -175,9 +195,6 @@ function Header({
         }
     }
 
-    const [showModal, setShowModal] = React.useState(false);
-    const ref = React.useRef(null);
-
     return (
         <View style={styles.headerContainerOuter}>
             <View style={styles.headerContainer}>
@@ -185,6 +202,7 @@ function Header({
                 <View style={styles.headerContent}>
                     <Text style={styles.headerTitle}>{meta.title}</Text>
                     <Text style={styles.headerSubtitle}>{`${meta.amount} 首歌曲`}</Text>
+                    {meta.source ? <Text style={styles.headerSubtitle}>{`上次同步：${lastSyncString}`}</Text> : null}
                     {showPlayButton && (
                         <Box className="flex-row mt-5 gap-2">
                             <PotatoButton Icon={IconPlay} rounded onPress={onPlay}>

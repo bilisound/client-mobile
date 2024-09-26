@@ -1,5 +1,5 @@
-import { getBilisoundMetadata, getUserListFull } from "~/api/bilisound";
-import { replacePlaylistDetail } from "~/storage/sqlite/playlist";
+import { getBilisoundMetadata, getUserList, getUserListFull } from "~/api/bilisound";
+import { replacePlaylistDetail, setPlaylistMeta } from "~/storage/sqlite/playlist";
 import { PlaylistDetailInsert } from "~/storage/sqlite/schema";
 import { PlaylistSource } from "~/typings/playlist";
 
@@ -12,6 +12,7 @@ import { PlaylistSource } from "~/typings/playlist";
 export async function updatePlaylist(id: number, source: PlaylistSource, progressCallback: (progress: number) => void) {
     switch (source.type) {
         case "playlist": {
+            const { meta } = await getUserList(source.subType, source.userId, source.listId, 1);
             const list = await getUserListFull(source.subType, source.userId, source.listId, progress => {
                 progressCallback?.(progress);
             });
@@ -27,6 +28,14 @@ export async function updatePlaylist(id: number, source: PlaylistSource, progres
                 extendedData: null,
             }));
             replacePlaylistDetail(id, builtList);
+            await setPlaylistMeta({
+                id,
+                source: JSON.stringify({
+                    ...source,
+                    originalTitle: meta.name,
+                    lastSyncAt: new Date().getTime(),
+                } as PlaylistSource),
+            });
             return builtList.length;
         }
         case "video": {
@@ -43,6 +52,14 @@ export async function updatePlaylist(id: number, source: PlaylistSource, progres
                 extendedData: null,
             }));
             replacePlaylistDetail(id, builtList);
+            await setPlaylistMeta({
+                id,
+                source: JSON.stringify({
+                    ...source,
+                    originalTitle: data.title,
+                    lastSyncAt: new Date().getTime(),
+                } as PlaylistSource),
+            });
             return builtList.length;
         }
         default: {
