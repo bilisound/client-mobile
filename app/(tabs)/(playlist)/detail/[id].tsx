@@ -232,11 +232,6 @@ function Header({
             <Modal isOpen={showModal} finalFocusRef={ref} size="md">
                 <ModalBackdrop />
                 <ModalContent className="p-3">
-                    <ModalHeader className="sr-only">
-                        <Heading size="md" className="text-typography-950">
-                            加载提示
-                        </Heading>
-                    </ModalHeader>
                     <ModalBody>
                         <Box className="w-full flex-row gap-3 items-center">
                             <Box className="-rotate-90 w-16 h-16">
