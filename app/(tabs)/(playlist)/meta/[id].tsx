@@ -24,6 +24,7 @@ import { Text } from "~/components/ui/text";
 import { Textarea, TextareaInput } from "~/components/ui/textarea";
 import {
     addToPlaylist,
+    clonePlaylist,
     getPlaylistMeta,
     insertPlaylistMeta,
     setPlaylistMeta,
@@ -66,6 +67,29 @@ export default function Page() {
     } = useForm<PlaylistMetaFrom>({
         defaultValues,
     });
+
+    async function handleClone() {
+        log.info("用户进行歌单克隆操作");
+        try {
+            const cloneId = await clonePlaylist(Number(id));
+            await setPlaylistMeta({
+                id: cloneId,
+                source: "", // 不能是 null，否则会被 ORM 无视
+            });
+            await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+            Toast.show({
+                type: "success",
+                text1: "歌单副本创建成功",
+            });
+            router.back();
+        } catch (err) {
+            Toast.show({
+                type: "error",
+                text1: "歌单副本创建失败",
+            });
+            log.error("歌单克隆失败：" + err);
+        }
+    }
 
     async function onSubmit(value: PlaylistMetaFrom) {
         const isCreate = !value.id;
@@ -201,7 +225,7 @@ export default function Page() {
                             <Input isDisabled>
                                 <InputField value={source.originalTitle} className="text-sm text-typography-400" />
                             </Input>
-                            <PotatoButton>创建解绑副本（未完工）</PotatoButton>
+                            <PotatoButton onPress={() => handleClone()}>创建解绑副本</PotatoButton>
                         </Box>
                     </FormControl>
                 ) : null}

@@ -1,8 +1,9 @@
-import { eq, count as countFunc, InferInsertModel } from "drizzle-orm";
+import { eq, count as countFunc, InferInsertModel, sql } from "drizzle-orm";
 import omit from "lodash/omit";
 
+import { PlaylistDetail, playlistDetail, PlaylistImport, playlistMeta } from "./schema";
+
 import { db } from "~/storage/sqlite/main";
-import { PlaylistDetail, playlistDetail, PlaylistImport, playlistMeta } from "~/storage/sqlite/schema";
 import { PlaylistSource } from "~/typings/playlist";
 
 // ============================================================================
@@ -203,4 +204,38 @@ export async function exportAllPlaylist(): Promise<PlaylistImport> {
         kind: "moe.bilisound.app.exportedPlaylist",
         version: 1,
     };
+}
+
+/**
+ * 克隆播放列表
+ */
+export async function clonePlaylist(playlistId: number) {
+    // 开始事务
+    return db.transaction(async tx => {
+        // 克隆 playlist_meta
+        const clonedMeta = tx.run(
+            sql`INSERT INTO playlist_meta (title, color, amount, img_url, description, source, extended_data)
+                SELECT title || '（副本）', color, amount, img_url, description, source, extended_data
+                FROM playlist_meta
+                WHERE id = ${playlistId}`,
+        );
+        const newPlaylistId = clonedMeta.lastInsertRowId;
+
+        // 克隆 playlist_detail
+        tx.run(
+            sql`INSERT INTO playlist_detail (playlist_id, author, bvid, duration, episode, title, img_url, extended_data)
+                SELECT ${newPlaylistId}, author, bvid, duration, episode, title, img_url, extended_data
+                FROM playlist_detail
+                WHERE playlist_id = ${playlistId}`,
+        );
+
+        // 更新新播放列表的 amount
+        tx.run(
+            sql`UPDATE playlist_meta
+                SET amount = (SELECT COUNT(*) FROM playlist_detail WHERE playlist_id = ${newPlaylistId})
+                WHERE id = ${newPlaylistId}`,
+        );
+
+        return newPlaylistId;
+    });
 }
