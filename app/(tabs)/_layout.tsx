@@ -1,9 +1,10 @@
 import { Ionicons, FontAwesome5, Entypo } from "@expo/vector-icons";
-import { BlurView } from "@react-native-community/blur";
+import { BlurView as OGBlurView } from "@react-native-community/blur";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
 import BottomTabBar from "@react-navigation/bottom-tabs/src/views/BottomTabBar";
 import { CommonActions, NavigationContext, NavigationRouteContext } from "@react-navigation/native";
 import { Tabs } from "expo-router";
+import { cssInterop } from "nativewind";
 import React from "react";
 import { useColorScheme, View } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
@@ -16,6 +17,10 @@ import { Pressable } from "~/components/ui/pressable";
 import { Text } from "~/components/ui/text";
 import useFeaturesStore from "~/store/features";
 import useSettingsStore from "~/store/settings";
+
+const BlurView = cssInterop(OGBlurView, {
+    className: "style",
+});
 
 const IconSearch = createIcon(FontAwesome5, "search");
 const IconSettings = createIcon(Ionicons, "settings-sharp");
@@ -63,15 +68,7 @@ function FloatTabBar(props: BottomTabBarProps) {
             }}
         >
             <Box className="m-3 h-16 rounded-full overflow-hidden shadow-lg relative">
-                <BlurView
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "absolute",
-                    }}
-                    blurAmount={8}
-                    blurType={colorScheme || "light"}
-                >
+                <BlurView className="w-full h-full" blurAmount={8} blurType={colorScheme || "light"}>
                     <Box className="w-full h-full flex-row bg-background-0/50">
                         {props.state.routes.map((route, i) => {
                             const metadata = props.descriptors[route.key];
