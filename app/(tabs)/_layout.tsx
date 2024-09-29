@@ -73,6 +73,9 @@ function FloatTabBar(props: BottomTabBarProps) {
                     className="rounded-full absolute w-full h-full"
                     blurAmount={8}
                     blurType={colorScheme || "light"}
+                    // tint={colorScheme || "light"}
+                    // intensity={32}
+                    // experimentalBlurMethod="dimezisBlurView"
                 >
                     <Box className="w-full h-full flex-row bg-background-0/50">
                         {props.state.routes.map((route, i) => {
