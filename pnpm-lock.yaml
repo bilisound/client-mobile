@@ -128,6 +128,9 @@ importers:
       '@miblanchard/react-native-slider':
         specifier: ^2.6.0
         version: 2.6.0(react-native@0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+      '@react-native-community/blur':
+        specifier: ^4.4.1
+        version: 4.4.1(react-native@0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       '@react-native-masked-view/masked-view':
         specifier: 0.3.1
         version: 0.3.1(react-native@0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -170,6 +173,9 @@ importers:
       expo-asset:
         specifier: ~10.0.10
         version: 10.0.10(expo@51.0.34(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2)))
+      expo-blur:
+        specifier: ~13.0.2
+        version: 13.0.2(expo@51.0.34(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2)))
       expo-build-properties:
         specifier: ~0.12.5
         version: 0.12.5(expo@51.0.34(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2)))
@@ -2252,6 +2258,12 @@ packages:
       react: '*'
       react-native: '*'
 
+  '@react-native-community/blur@4.4.1':
+    resolution: {integrity: sha512-XBSsRiYxE/MOEln2ayunShfJtWztHwUxLFcSL20o+HNNRnuUDv+GXkF6FmM2zE8ZUfrnhQ/zeTqvnuDPGw6O8A==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+
   '@react-native-community/cli-clean@13.6.9':
     resolution: {integrity: sha512-7Dj5+4p9JggxuVNOjPbduZBAP1SUgNhLKVw5noBUzT/3ZpUZkDM+RCSwyoyg8xKWoE4OrdUAXwAFlMcFDPKykA==}
 
@@ -4130,6 +4142,11 @@ packages:
 
   expo-asset@10.0.10:
     resolution: {integrity: sha512-0qoTIihB79k+wGus9wy0JMKq7DdenziVx3iUkGvMAy2azscSgWH6bd2gJ9CGnhC6JRd3qTMFBL0ou/fx7WZl7A==}
+    peerDependencies:
+      expo: '*'
+
+  expo-blur@13.0.2:
+    resolution: {integrity: sha512-t2p7BChO3Reykued++QJRMZ/og6J3aXtSQ+bU31YcBeXhZLkHwjWEhiPKPnJka7J2/yTs4+jOCNDY0kCZmcE3w==}
     peerDependencies:
       expo: '*'
 
@@ -6559,7 +6576,6 @@ packages:
 
   shaka-player@4.11.6:
     resolution: {integrity: sha512-IlzhTuRjOTnbnlcwLaUtm8SlTWOqZiLBSaimVDM6IZ3rM9Fn067/ZKg2AipMXAWciRV57ydBXyn8Psvx3aWxig==}
-    engines: {node: '>=14'}
 
   shallow-clone@3.0.1:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
@@ -9980,6 +9996,11 @@ snapshots:
       react: 18.2.0
       react-native: 0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0)
 
+  '@react-native-community/blur@4.4.1(react-native@0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      react: 18.2.0
+      react-native: 0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0)
+
   '@react-native-community/cli-clean@13.6.9':
     dependencies:
       '@react-native-community/cli-tools': 13.6.9
@@ -12393,6 +12414,10 @@ snapshots:
       md5-file: 3.2.3
     transitivePeerDependencies:
       - supports-color
+
+  expo-blur@13.0.2(expo@51.0.34(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2))):
+    dependencies:
+      expo: 51.0.34(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2))
 
   expo-build-properties@0.12.5(expo@51.0.34(@babel/core@7.25.2)(@babel/preset-env@7.24.4(@babel/core@7.25.2))):
     dependencies:

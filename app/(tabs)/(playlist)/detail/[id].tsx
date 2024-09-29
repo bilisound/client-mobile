@@ -45,6 +45,7 @@ import { Heading } from "~/components/ui/heading";
 import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalBody } from "~/components/ui/modal";
 import { Text } from "~/components/ui/text";
 import useMultiSelect from "~/hooks/useMultiSelect";
+import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
 import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
 import {
@@ -273,6 +274,7 @@ function Header({
 
 export default function Page() {
     const { theme } = useStyles();
+    const bottom = useTabPaddingBottom();
     const bgColor = theme.colorTokens.background;
     const colorMode = useColorScheme();
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -561,6 +563,7 @@ export default function Page() {
                         <Empty title="暂无内容" action={null} />
                     </View>
                 }
+                ListFooterComponent={<Box style={{ height: bottom }} aria-hidden />}
             />
             {editing ? (
                 <EditAction

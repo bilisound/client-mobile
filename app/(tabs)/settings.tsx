@@ -6,8 +6,10 @@ import { Platform, ScrollView } from "react-native";
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Box } from "~/components/ui/box";
 import { Switch } from "~/components/ui/switch";
 import { VERSION } from "~/constants/releasing";
+import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
 import useSettingsStore from "~/store/settings";
 import log from "~/utils/logger";
 
@@ -30,6 +32,7 @@ const Settings: React.FC = () => {
         // update: state.update,
         toggle: state.toggle,
     }));
+    const bottom = useTabPaddingBottom();
 
     const developerOptions = (
         <>
@@ -42,6 +45,13 @@ const Settings: React.FC = () => {
                     }}
                 />
             ) : null}
+            <SettingMenuItem
+                icon={DeveloperIcon}
+                title="实验功能"
+                onPress={() => {
+                    router.push("/settings/lab");
+                }}
+            />
             {Platform.OS === "web" ? null : (
                 <>
                     <SettingMenuItem
@@ -149,6 +159,7 @@ const Settings: React.FC = () => {
                     }}
                 />
                 {debugMode ? developerOptions : null}
+                <Box style={{ height: bottom }} aria-hidden />
             </ScrollView>
         </CommonLayout>
     );

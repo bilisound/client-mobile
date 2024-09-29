@@ -26,6 +26,7 @@ import { Box } from "~/components/ui/box";
 import { Icon } from "~/components/ui/icon";
 import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
 import { Text } from "~/components/ui/text";
+import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
 import { deletePlaylistMeta, getPlaylistMetas } from "~/storage/sqlite/playlist";
 import { PlaylistMeta } from "~/storage/sqlite/schema";
@@ -149,6 +150,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 }
 
 export default function Page() {
+    const bottom = useTabPaddingBottom();
     const queryClient = useQueryClient();
     const { data } = useQuery({
         queryKey: ["playlist_meta"],
@@ -254,6 +256,7 @@ export default function Page() {
                         renderItem={item => <PlaylistActionItem {...item.item} />}
                         data={data}
                         estimatedItemSize={73}
+                        ListFooterComponent={<Box style={{ height: bottom }} aria-hidden />}
                     />
                 )}
             </CommonLayout>
