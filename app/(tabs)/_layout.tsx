@@ -68,7 +68,11 @@ function FloatTabBar(props: BottomTabBarProps) {
             }}
         >
             <Box className="w-full md:w-[480px] rounded-[32px] md:rounded-[24px] overflow-hidden border border-typography-50 bg-background-0/95 shadow-xl ios:shadow-soft-2">
-                <AudioIndicator className="border-t-0 p-3 md:p-3" imageClassName="rounded-[24px] md:rounded-[12px]" />
+                <AudioIndicator
+                    className="border-t-0 p-3 md:p-3"
+                    imageClassName="rounded-[24px] md:rounded-[12px]"
+                    playButtonOuterClassName="rounded-full"
+                />
                 <Box className="w-full h-16 md:h-12 flex-row">
                     {props.state.routes.map((route, i) => {
                         const metadata = props.descriptors[route.key];

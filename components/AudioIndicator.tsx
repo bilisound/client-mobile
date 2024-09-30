@@ -20,9 +20,10 @@ const IconPause = createIcon(FontAwesome5, "pause");
 export interface AudioIndicatorProps {
     className?: string;
     imageClassName?: string;
+    playButtonOuterClassName?: string;
 }
 
-export default function AudioIndicator({ className, imageClassName }: AudioIndicatorProps) {
+export default function AudioIndicator({ className, imageClassName, playButtonOuterClassName }: AudioIndicatorProps) {
     const activeTrack = useActiveTrack();
     const playbackState = usePlaybackState();
 
@@ -51,7 +52,7 @@ export default function AudioIndicator({ className, imageClassName }: AudioIndic
                 </Box>
             </Pressable>
             <PotatoPressable
-                outerClassName="rounded-[6px] overflow-hidden"
+                outerClassName={twMerge("rounded-[6px] overflow-hidden", playButtonOuterClassName)}
                 className="w-10 h-10 items-center justify-center"
                 onPressOut={async () => {
                     await handleTogglePlay();
