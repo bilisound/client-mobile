@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import omit from "lodash/omit";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { ScrollView } from "react-native";
 import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
 
@@ -22,6 +23,7 @@ import { AlertCircleIcon, CheckIcon } from "~/components/ui/icon";
 import { Input, InputField } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { Textarea, TextareaInput } from "~/components/ui/textarea";
+import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
 import {
     addToPlaylist,
     clonePlaylist,
@@ -41,6 +43,7 @@ type PlaylistMetaFrom = PlaylistMeta & { createFromQueue: boolean };
 
 export default function Page() {
     const { id } = useLocalSearchParams<{ id: string }>();
+    const bottom = useTabPaddingBottom();
     const queryClient = useQueryClient();
     const { data } = useQuery({
         queryKey: [`playlist_meta_${id}`],
@@ -144,123 +147,125 @@ export default function Page() {
             titleBarTheme="transparent"
             leftAccessories="backButton"
         >
-            <Box className="p-4 gap-4">
-                <FormControl isRequired isInvalid={"title" in errors}>
-                    <FormControlLabel>
-                        <FormControlLabelText className="text-sm">歌单名称</FormControlLabelText>
-                    </FormControlLabel>
-                    <Controller
-                        control={control}
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <Box className="flex-row w-full gap-3">
-                                <Input className="flex-1">
-                                    <InputField
-                                        onBlur={onBlur}
-                                        onChangeText={onChange}
-                                        value={value}
-                                        placeholder="请输入名称"
-                                        className="text-sm"
-                                    />
-                                </Input>
-                                {source ? (
-                                    <PotatoButton
-                                        className="flex-0 basis-auto"
-                                        onPress={() => {
-                                            onChange(source?.originalTitle);
-                                        }}
-                                        disabled={source?.originalTitle === value}
-                                    >
-                                        还原
-                                    </PotatoButton>
-                                ) : null}
-                            </Box>
-                        )}
-                        name="title"
-                        rules={{ required: "请输入名称" }}
-                    />
-                    <FormControlError>
-                        <FormControlErrorIcon as={AlertCircleIcon} />
-                        <FormControlErrorText size="sm">{errors.title?.message}</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
-
-                <FormControl isInvalid={"description" in errors}>
-                    <FormControlLabel>
-                        <FormControlLabelText className="text-sm">备注</FormControlLabelText>
-                    </FormControlLabel>
-                    <Controller
-                        control={control}
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <Textarea
-                                size="md"
-                                isReadOnly={false}
-                                isInvalid={false}
-                                isDisabled={false}
-                                className="h-48"
-                            >
-                                <TextareaInput
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value ?? ""}
-                                    placeholder="可以在这里设置歌单的备注"
-                                    className="text-sm"
-                                    textAlignVertical="top"
-                                />
-                            </Textarea>
-                        )}
-                        name="description"
-                    />
-                    <FormControlError>
-                        <FormControlErrorIcon as={AlertCircleIcon} />
-                        <FormControlErrorText size="sm">{errors.title?.message}</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
-
-                {source ? (
-                    <FormControl>
+            <ScrollView className="flex-1">
+                <Box className="p-4 gap-4" style={{ paddingBottom: bottom }}>
+                    <FormControl isRequired isInvalid={"title" in errors}>
                         <FormControlLabel>
-                            <FormControlLabelText className="text-sm">绑定在线歌单</FormControlLabelText>
+                            <FormControlLabelText className="text-sm">歌单名称</FormControlLabelText>
                         </FormControlLabel>
-                        <Box className="gap-4">
-                            <Input isDisabled>
-                                <InputField value={source.originalTitle} className="text-sm text-typography-400" />
-                            </Input>
-                            <PotatoButton onPress={() => handleClone()}>创建解绑副本</PotatoButton>
-                        </Box>
-                    </FormControl>
-                ) : null}
-
-                {id === MAGIC_ID_NEW_ENTRY && (
-                    <FormControl>
                         <Controller
                             control={control}
-                            render={({ field: { onChange, value } }) => (
-                                <Checkbox
-                                    onChange={onChange}
-                                    isChecked={!!value}
-                                    value={String(value)}
-                                    aria-label="从当前队列创建歌单"
-                                >
-                                    <CheckboxIndicator>
-                                        <CheckboxIcon as={CheckIcon} />
-                                    </CheckboxIndicator>
-                                    <CheckboxLabel className="text-sm">从当前队列创建歌单</CheckboxLabel>
-                                </Checkbox>
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <Box className="flex-row w-full gap-3">
+                                    <Input className="flex-1">
+                                        <InputField
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            value={value}
+                                            placeholder="请输入名称"
+                                            className="text-sm"
+                                        />
+                                    </Input>
+                                    {source ? (
+                                        <PotatoButton
+                                            className="flex-0 basis-auto"
+                                            onPress={() => {
+                                                onChange(source?.originalTitle);
+                                            }}
+                                            disabled={source?.originalTitle === value}
+                                        >
+                                            还原
+                                        </PotatoButton>
+                                    ) : null}
+                                </Box>
                             )}
-                            name="createFromQueue"
-                            defaultValue={false}
+                            name="title"
+                            rules={{ required: "请输入名称" }}
                         />
+                        <FormControlError>
+                            <FormControlErrorIcon as={AlertCircleIcon} />
+                            <FormControlErrorText size="sm">{errors.title?.message}</FormControlErrorText>
+                        </FormControlError>
                     </FormControl>
-                )}
-                <PotatoButton
-                    variant="solid"
-                    color="primary"
-                    onPress={handleSubmit(onSubmit)}
-                    disabled={!!errors.title}
-                >
-                    保存
-                </PotatoButton>
-            </Box>
+
+                    <FormControl isInvalid={"description" in errors}>
+                        <FormControlLabel>
+                            <FormControlLabelText className="text-sm">备注</FormControlLabelText>
+                        </FormControlLabel>
+                        <Controller
+                            control={control}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <Textarea
+                                    size="md"
+                                    isReadOnly={false}
+                                    isInvalid={false}
+                                    isDisabled={false}
+                                    className="h-48"
+                                >
+                                    <TextareaInput
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        value={value ?? ""}
+                                        placeholder="可以在这里设置歌单的备注"
+                                        className="text-sm"
+                                        textAlignVertical="top"
+                                    />
+                                </Textarea>
+                            )}
+                            name="description"
+                        />
+                        <FormControlError>
+                            <FormControlErrorIcon as={AlertCircleIcon} />
+                            <FormControlErrorText size="sm">{errors.title?.message}</FormControlErrorText>
+                        </FormControlError>
+                    </FormControl>
+
+                    {source ? (
+                        <FormControl>
+                            <FormControlLabel>
+                                <FormControlLabelText className="text-sm">绑定在线歌单</FormControlLabelText>
+                            </FormControlLabel>
+                            <Box className="gap-4">
+                                <Input isDisabled>
+                                    <InputField value={source.originalTitle} className="text-sm text-typography-400" />
+                                </Input>
+                                <PotatoButton onPress={() => handleClone()}>创建解绑副本</PotatoButton>
+                            </Box>
+                        </FormControl>
+                    ) : null}
+
+                    {id === MAGIC_ID_NEW_ENTRY && (
+                        <FormControl>
+                            <Controller
+                                control={control}
+                                render={({ field: { onChange, value } }) => (
+                                    <Checkbox
+                                        onChange={onChange}
+                                        isChecked={!!value}
+                                        value={String(value)}
+                                        aria-label="从当前队列创建歌单"
+                                    >
+                                        <CheckboxIndicator>
+                                            <CheckboxIcon as={CheckIcon} />
+                                        </CheckboxIndicator>
+                                        <CheckboxLabel className="text-sm">从当前队列创建歌单</CheckboxLabel>
+                                    </Checkbox>
+                                )}
+                                name="createFromQueue"
+                                defaultValue={false}
+                            />
+                        </FormControl>
+                    )}
+                    <PotatoButton
+                        variant="solid"
+                        color="primary"
+                        onPress={handleSubmit(onSubmit)}
+                        disabled={!!errors.title}
+                    >
+                        保存
+                    </PotatoButton>
+                </Box>
+            </ScrollView>
         </CommonLayout>
     );
 }
