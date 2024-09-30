@@ -41,7 +41,7 @@ interface MigratePlan {
 
 export async function importPlaylistFromFile() {
     const pickResult = await DocumentPicker.getDocumentAsync({
-        type: ["application/*"],
+        // type: ["application/*"],
     });
     const uri = pickResult.assets?.[0].uri;
     if (!uri) {

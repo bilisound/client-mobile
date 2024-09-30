@@ -55,16 +55,16 @@ function FloatTabBar(props: BottomTabBarProps) {
 
     return (
         <Box
-            className="bg-transparent absolute left-0 bottom-0 w-full"
+            className="bg-transparent absolute left-3 right-3 bottom-3 md:left-4 md:right-4 md:bottom-4 items-center shadow-soft-2"
             style={{
                 paddingLeft: props.insets.left,
                 paddingRight: props.insets.right,
                 paddingBottom: props.insets.bottom,
             }}
         >
-            <Box className="m-3 h-16 rounded-full overflow-hidden shadow-lg relative">
-                {/*<BlurView blurAmount={8} blurType={colorScheme || "light"}>*/}
-                <Box className="w-full h-full flex-row bg-background-0/95">
+            <Box className="w-full md:w-[480px] rounded-[32px] md:rounded-[24px] overflow-hidden border border-typography-0 bg-background-0/95">
+                <AudioIndicator className="border-t-0 p-2 md:p-3" imageClassName="rounded-[20px] md:rounded-[12px]" />
+                <Box className="w-full h-16 md:h-12 flex-row">
                     {props.state.routes.map((route, i) => {
                         const metadata = props.descriptors[route.key];
                         const focused = props.state.index === i;
@@ -96,7 +96,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                                 <NavigationRouteContext.Provider value={route}>
                                     <Pressable
                                         key={route.key}
-                                        className="flex-1 items-center justify-center gap-1.5"
+                                        className="flex-1 items-center justify-center gap-1.5 md:flex-row"
                                         onPress={onPress}
                                         onLongPress={onLongPress}
                                     >
@@ -108,7 +108,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                                             })}
                                         </Box>
                                         <Text
-                                            className={`text-xs ${focused ? "text-accent-500 font-semibold" : "text-typography-700"}`}
+                                            className={`text-xs md:text-sm ${focused ? "text-accent-500 font-semibold" : "text-typography-700"}`}
                                         >
                                             {metadata.options.title}
                                         </Text>

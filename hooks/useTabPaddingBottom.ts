@@ -8,5 +8,7 @@ export function useTabPaddingBottom() {
     }));
     const edgeInsets = useSafeAreaInsets();
 
+    // normal: 47, md: 65
+
     return enableNavbar2 ? edgeInsets.bottom + 88 : 0;
 }

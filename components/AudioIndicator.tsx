@@ -2,102 +2,67 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
-import { View, Pressable as NativePressable, Text } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { twMerge } from "tailwind-merge";
+
+import { Pressable } from "./ui/pressable";
+import { Text } from "./ui/text";
 
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
+import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Box } from "~/components/ui/box";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { handleTogglePlay } from "~/utils/player-control";
 
-export default function AudioIndicator() {
+const IconPlay = createIcon(FontAwesome5, "play");
+const IconPause = createIcon(FontAwesome5, "pause");
+
+export interface AudioIndicatorProps {
+    className?: string;
+    imageClassName?: string;
+}
+
+export default function AudioIndicator({ className, imageClassName }: AudioIndicatorProps) {
     const activeTrack = useActiveTrack();
     const playbackState = usePlaybackState();
-    const { styles, theme } = useStyles(styleSheet);
-    const primaryColor = theme.colors.primary[500];
 
     if (!activeTrack) {
         return null;
     }
 
     return (
-        <View style={styles.container}>
-            <NativePressable
+        <Box
+            className={twMerge("border-t border-b border-outline-50 flex-row items-center gap-3 px-3 py-2", className)}
+        >
+            <Pressable
                 onPress={() => {
                     router.push("/modal");
                 }}
-                style={styles.pressableContainer}
+                className="flex-row flex-1 gap-3"
             >
                 <Image
                     source={getImageProxyUrl(activeTrack?.artwork ?? "", activeTrack?.bilisoundId ?? "")}
-                    style={styles.image}
+                    className={twMerge("h-10 aspect-[16/9] rounded", imageClassName)}
                 />
-                <View style={styles.textContainer}>
-                    <Text style={styles.text} ellipsizeMode="tail" numberOfLines={1}>
+                <Box className="flex-1 h-10 justify-center">
+                    <Text className="text-base text-typography-700" ellipsizeMode="tail" numberOfLines={1}>
                         {activeTrack?.title}
                     </Text>
-                </View>
-            </NativePressable>
+                </Box>
+            </Pressable>
             <PotatoPressable
-                outerStyle={styles.playButtonOuter}
-                style={styles.playButton}
+                outerClassName="rounded-[6px] overflow-hidden"
+                className="w-10 h-10 items-center justify-center"
                 onPressOut={async () => {
                     await handleTogglePlay();
                 }}
             >
-                <FontAwesome5
-                    name={playbackState.state === State.Playing ? "pause" : "play"}
-                    size={16}
-                    color={primaryColor}
-                />
+                {playbackState.state === State.Playing ? (
+                    <IconPause size={16} className="color-primary-500" />
+                ) : (
+                    <IconPlay size={16} className="color-primary-500" />
+                )}
             </PotatoPressable>
-        </View>
+        </Box>
     );
 }
-
-const styleSheet = createStyleSheet(theme => ({
-    container: {
-        borderWidth: 1,
-        borderColor: theme.colorTokens.border,
-        borderLeftWidth: 0,
-        borderRightWidth: 0,
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 12,
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-    },
-    pressableContainer: {
-        flexDirection: "row",
-        flex: 1,
-        gap: 12,
-    },
-    image: {
-        height: 40,
-        aspectRatio: 16 / 9,
-        borderRadius: 6,
-        flex: 0,
-        flexBasis: "auto",
-    },
-    textContainer: {
-        flex: 1,
-        height: 40,
-        justifyContent: "center",
-    },
-    text: {
-        fontSize: 16,
-        color: theme.colorTokens.foreground,
-    },
-    playButton: {
-        width: 40,
-        height: 40,
-        alignItems: "center",
-        justifyContent: "center",
-        flex: 0,
-        flexBasis: "auto",
-    },
-    playButtonOuter: {
-        borderRadius: 6,
-        overflow: "hidden",
-    },
-}));
