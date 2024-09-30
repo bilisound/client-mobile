@@ -16,6 +16,7 @@ import { Pressable } from "~/components/ui/pressable";
 import { Text } from "~/components/ui/text";
 import useFeaturesStore from "~/store/features";
 import useSettingsStore from "~/store/settings";
+import { useStyleParamStore } from "~/store/styleParam";
 
 const IconSearch = createIcon(FontAwesome5, "search");
 const IconSettings = createIcon(Ionicons, "settings-sharp");
@@ -55,15 +56,19 @@ function FloatTabBar(props: BottomTabBarProps) {
 
     return (
         <Box
-            className="bg-transparent absolute left-3 right-3 bottom-3 md:left-4 md:right-4 md:bottom-4 items-center shadow-soft-2"
+            className="bg-transparent absolute left-3 right-3 bottom-3 pt-3 md:left-4 md:right-4 md:bottom-4 items-center"
             style={{
                 paddingLeft: props.insets.left,
                 paddingRight: props.insets.right,
                 paddingBottom: props.insets.bottom,
             }}
+            onLayout={e => {
+                console.log(e.nativeEvent.layout);
+                useStyleParamStore.getState().setBottomBarHeight(-e.nativeEvent.layout.y);
+            }}
         >
-            <Box className="w-full md:w-[480px] rounded-[32px] md:rounded-[24px] overflow-hidden border border-typography-0 bg-background-0/95">
-                <AudioIndicator className="border-t-0 p-2 md:p-3" imageClassName="rounded-[20px] md:rounded-[12px]" />
+            <Box className="w-full md:w-[480px] rounded-[32px] md:rounded-[24px] overflow-hidden border border-typography-50 bg-background-0/95 shadow-xl ios:shadow-soft-2">
+                <AudioIndicator className="border-t-0 p-3 md:p-3" imageClassName="rounded-[24px] md:rounded-[12px]" />
                 <Box className="w-full h-16 md:h-12 flex-row">
                     {props.state.routes.map((route, i) => {
                         const metadata = props.descriptors[route.key];

@@ -1,14 +1,13 @@
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
 import useFeaturesStore from "~/store/features";
+import { useStyleParamStore } from "~/store/styleParam";
 
 export function useTabPaddingBottom() {
     const { enableNavbar2 } = useFeaturesStore(state => ({
         enableNavbar2: state.enableNavbar2,
     }));
-    const edgeInsets = useSafeAreaInsets();
+    const { bottomBarHeight } = useStyleParamStore(state => ({
+        bottomBarHeight: state.bottomBarHeight,
+    }));
 
-    // normal: 47, md: 65
-
-    return enableNavbar2 ? edgeInsets.bottom + 88 : 0;
+    return enableNavbar2 ? bottomBarHeight : 0;
 }
