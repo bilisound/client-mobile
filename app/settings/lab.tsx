@@ -7,7 +7,7 @@ import { createIcon } from "~/components/potato-ui/utils/icon";
 import { Switch } from "~/components/ui/switch";
 import useFeaturesStore from "~/store/features";
 
-const DeleteIcon = createIcon(MaterialIcons, "delete");
+const DeleteIcon = createIcon(MaterialIcons, "smart-button");
 
 export default function Page() {
     const { enableNavbar2, setEnableNavbar2 } = useFeaturesStore(state => ({

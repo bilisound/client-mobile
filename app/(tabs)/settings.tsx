@@ -22,6 +22,7 @@ const DeveloperIcon = createIcon(Entypo, "code");
 const BugIcon = createIcon(FontAwesome5, "bug");
 const PaintBrushIcon = createIcon(FontAwesome5, "paint-brush");
 const DatabaseIcon = createIcon(Entypo, "database");
+const LabIcon = createIcon(Entypo, "lab-flask");
 
 const Settings: React.FC = () => {
     const { useLegacyID, downloadNextTrack, filterResourceURL, debugMode, toggle } = useSettingsStore(state => ({
@@ -46,8 +47,8 @@ const Settings: React.FC = () => {
                 />
             ) : null}
             <SettingMenuItem
-                icon={DeveloperIcon}
-                title="实验功能"
+                icon={LabIcon}
+                title="实验性功能"
                 onPress={() => {
                     router.push("/settings/lab");
                 }}
