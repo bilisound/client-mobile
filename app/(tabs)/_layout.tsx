@@ -5,7 +5,7 @@ import BottomTabBar from "@react-navigation/bottom-tabs/src/views/BottomTabBar";
 import { CommonActions, NavigationContext, NavigationRouteContext } from "@react-navigation/native";
 import { Tabs } from "expo-router";
 import React from "react";
-import { useColorScheme, View } from "react-native";
+import { View } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import AudioIndicator from "~/components/AudioIndicator";
@@ -73,7 +73,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                     imageClassName="rounded-[24px] md:rounded-[12px]"
                     playButtonOuterClassName="rounded-full"
                 />
-                <Box className="w-full h-16 md:h-12 flex-row">
+                <Box className="w-full h-16 md:h-12 flex-row" accessibilityRole="tablist">
                     {props.state.routes.map((route, i) => {
                         const metadata = props.descriptors[route.key];
                         const focused = props.state.index === i;
