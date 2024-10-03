@@ -1,7 +1,7 @@
 {
   "name": "bilisound-client-mobile",
   "main": "expo-router/entry",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "scripts": {
     "start": "cross-env DARK_MODE=media expo start --dev-client",
     "android": "cross-env DARK_MODE=media expo run:android",
