@@ -5,14 +5,14 @@
 <table>
 <tbody>
 <tr>
-<td><img src=".github/assets/home.jpg" alt="首页"></td>
-<td><img src=".github/assets/detail.jpg" alt="详情"></td>
-<td><img src=".github/assets/playing.jpg" alt="正在播放"></td>
+<td><img src=".github/assets/Screenshot_2024-10-03-14-58-03-293_moe.bilisound.app.jpg" alt="首页"></td>
+<td><img src=".github/assets/Screenshot_2024-10-03-14-58-10-400_moe.bilisound.app.jpg" alt="详情"></td>
+<td><img src=".github/assets/Screenshot_2024-10-03-14-58-14-386_moe.bilisound.app.jpg" alt="正在播放"></td>
 </tr>
 <tr>
-<td><img src=".github/assets/playlist-remote.jpg" alt="合集"></td>
-<td><img src=".github/assets/playlist.jpg" alt="歌单"></td>
-<td><img src=".github/assets/settings.jpg" alt="设置"></td>
+<td><img src=".github/assets/Screenshot_2024-10-03-14-58-18-556_moe.bilisound.app.jpg" alt="合集"></td>
+<td><img src=".github/assets/Screenshot_2024-10-03-14-58-29-386_moe.bilisound.app.jpg" alt="歌单"></td>
+<td><img src=".github/assets/Screenshot_2024-10-03-14-58-35-375_moe.bilisound.app.jpg" alt="设置"></td>
 </tr>
 </tbody>
 </table>
@@ -45,7 +45,7 @@
 
 ## 开发模式
 
-由于本项目引用了若干第三方库，因此不能使用 Expo Go。开发前，请根据 [这篇文档](https://docs.expo.dev/guides/local-app-development/) 的说明设置好开发环境。
+由于本项目引用了若干带有原生代码的第三方库，因此不能使用 Expo Go。开发前，请根据 [这篇文档](https://docs.expo.dev/guides/local-app-development/) 的说明设置好开发环境，构建 Development build 进行开发。
 
 ### iOS
 
