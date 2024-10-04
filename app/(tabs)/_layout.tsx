@@ -56,7 +56,7 @@ function FloatTabBar(props: BottomTabBarProps) {
 
     return (
         <Box
-            className="bg-transparent absolute left-3 right-3 bottom-3 pt-3 md:left-4 md:right-4 md:bottom-4 items-center pointer-events-box-none"
+            className="bg-transparent absolute left-3 right-3 bottom-3 pt-3 md:left-4 md:right-4 md:bottom-4 items-center pointer-events-box-none z-50"
             style={{
                 paddingLeft: props.insets.left,
                 paddingRight: props.insets.right,
