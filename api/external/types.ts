@@ -1,4 +1,143 @@
+export type Section = {
+    season_id: number;
+    id: number;
+    title: string;
+    type: number;
+    episodes: {
+        season_id: number;
+        section_id: number;
+        id: number;
+        aid: number;
+        cid: number;
+        title: string;
+        attribute: number;
+        arc: {
+            aid: number;
+            videos: number;
+            type_id: number;
+            type_name: string;
+            copyright: number;
+            pic: string;
+            title: string;
+            pubdate: number;
+            ctime: number;
+            desc: string;
+            state: number;
+            duration: number;
+            rights: {
+                bp: number;
+                elec: number;
+                download: number;
+                movie: number;
+                pay: number;
+                hd5: number;
+                no_reprint: number;
+                autoplay: number;
+                ugc_pay: number;
+                is_cooperation: number;
+                ugc_pay_preview: number;
+                arc_pay: number;
+                free_watch: number;
+            };
+            author: {
+                mid: number;
+                name: string;
+                face: string;
+            };
+            stat: {
+                aid: number;
+                view: number;
+                danmaku: number;
+                reply: number;
+                fav: number;
+                coin: number;
+                share: number;
+                now_rank: number;
+                his_rank: number;
+                like: number;
+                dislike: number;
+                evaluation: string;
+                argue_msg: string;
+                vt: number;
+                vv: number;
+            };
+            dynamic: string;
+            dimension: {
+                width: number;
+                height: number;
+                rotate: number;
+            };
+            desc_v2: any;
+            is_chargeable_season: boolean;
+            is_blooper: boolean;
+            enable_vt: number;
+            vt_display: string;
+        };
+        page: {
+            cid: number;
+            page: number;
+            from: string;
+            part: string;
+            duration: number;
+            vid: string;
+            weblink: string;
+            dimension: {
+                width: number;
+                height: number;
+                rotate: number;
+            };
+        };
+        bvid: string;
+        pages: {
+            cid: number;
+            page: number;
+            from: string;
+            part: string;
+            duration: number;
+            vid: string;
+            weblink: string;
+            dimension: {
+                width: number;
+                height: number;
+                rotate: number;
+            };
+        }[];
+    }[];
+    isActive: boolean;
+    height: number;
+};
+
+export type SectionsInfo = {
+    id: number;
+    title: string;
+    cover: string;
+    mid: number;
+    intro: string;
+    sign_state: number;
+    attribute: number;
+    sections: Section[];
+    stat: {
+        season_id: number;
+        view: number;
+        danmaku: number;
+        reply: number;
+        fav: number;
+        coin: number;
+        share: number;
+        now_rank: number;
+        his_rank: number;
+        like: number;
+        vt: number;
+        vv: number;
+    };
+    ep_count: number;
+    season_type: number;
+    is_pay_season: boolean;
+    enable_vt: number;
+};
+
 export type InitialStateResponse = {
+    isPrVideo: boolean;
     aid: number;
     bvid: string;
     p: number;
@@ -22,6 +161,7 @@ export type InitialStateResponse = {
         }[];
         state: number;
         duration: number;
+        mission_id: number;
         rights: {
             bp: number;
             elec: number;
@@ -99,157 +239,61 @@ export type InitialStateResponse = {
                 height: number;
                 rotate: number;
             };
-            first_frame: string;
         }[];
         subtitle: {
             allow_submit: boolean;
-            list: {
-                id: number;
-                lan: string;
-                lan_doc: string;
-                is_lock: boolean;
-                subtitle_url: string;
-                type: number;
-                id_str: string;
-                ai_type: number;
-                ai_status: number;
-                author: {
-                    mid: number;
-                    name: string;
-                    sex: string;
-                    face: string;
-                    sign: string;
-                    rank: number;
-                    birthday: number;
-                    is_fake_account: number;
-                    is_deleted: number;
-                    in_reg_audit: number;
-                    is_senior_member: number;
-                    name_render: any;
-                };
-            }[];
+            list: any[];
         };
-        ugc_season: {
-            id: number;
-            title: string;
-            cover: string;
+        staff: {
             mid: number;
-            intro: string;
-            sign_state: number;
-            attribute: number;
-            sections: {
-                season_id: number;
-                id: number;
-                title: string;
+            title: string;
+            name: string;
+            face: string;
+            vip: {
                 type: number;
-                episodes: {
-                    season_id: number;
-                    section_id: number;
-                    id: number;
-                    aid: number;
-                    cid: number;
-                    title: string;
-                    attribute: number;
-                    arc: {
-                        aid: number;
-                        videos: number;
-                        type_id: number;
-                        type_name: string;
-                        copyright: number;
-                        pic: string;
-                        title: string;
-                        pubdate: number;
-                        ctime: number;
-                        desc: string;
-                        state: number;
-                        duration: number;
-                        rights: {
-                            bp: number;
-                            elec: number;
-                            download: number;
-                            movie: number;
-                            pay: number;
-                            hd5: number;
-                            no_reprint: number;
-                            autoplay: number;
-                            ugc_pay: number;
-                            is_cooperation: number;
-                            ugc_pay_preview: number;
-                            arc_pay: number;
-                            free_watch: number;
-                        };
-                        author: {
-                            mid: number;
-                            name: string;
-                            face: string;
-                        };
-                        stat: {
-                            aid: number;
-                            view: number;
-                            danmaku: number;
-                            reply: number;
-                            fav: number;
-                            coin: number;
-                            share: number;
-                            now_rank: number;
-                            his_rank: number;
-                            like: number;
-                            dislike: number;
-                            evaluation: string;
-                            argue_msg: string;
-                            vt: number;
-                            vv: number;
-                        };
-                        dynamic: string;
-                        dimension: {
-                            width: number;
-                            height: number;
-                            rotate: number;
-                        };
-                        desc_v2: any;
-                        is_chargeable_season: boolean;
-                        is_blooper: boolean;
-                        enable_vt: number;
-                        vt_display: string;
+                status: number;
+                due_date: number;
+                vip_pay_type: number;
+                theme_type: number;
+                label: {
+                    path: string;
+                    text: string;
+                    label_theme: string;
+                    text_color: string;
+                    bg_style: number;
+                    bg_color: string;
+                    border_color: string;
+                    use_img_label: boolean;
+                    img_label_uri_hans: string;
+                    img_label_uri_hant: string;
+                    img_label_uri_hans_static: string;
+                    img_label_uri_hant_static: string;
+                };
+                avatar_subscript: number;
+                nickname_color: string;
+                role: number;
+                avatar_subscript_url: string;
+                tv_vip_status: number;
+                tv_vip_pay_type: number;
+                tv_due_date: number;
+                avatar_icon: {
+                    icon_type: number;
+                    icon_resource: {
+                        type: number;
+                        url: string;
                     };
-                    page: {
-                        cid: number;
-                        page: number;
-                        from: string;
-                        part: string;
-                        duration: number;
-                        vid: string;
-                        weblink: string;
-                        dimension: {
-                            width: number;
-                            height: number;
-                            rotate: number;
-                        };
-                    };
-                    bvid: string;
-                }[];
-                isActive: boolean;
-                height: number;
-            }[];
-            stat: {
-                season_id: number;
-                view: number;
-                danmaku: number;
-                reply: number;
-                fav: number;
-                coin: number;
-                share: number;
-                now_rank: number;
-                his_rank: number;
-                like: number;
-                vt: number;
-                vv: number;
+                };
             };
-            ep_count: number;
-            season_type: number;
-            is_pay_season: boolean;
-            enable_vt: number;
-        };
+            official: {
+                role: number;
+                title: string;
+                desc: string;
+                type: number;
+            };
+            follower: number;
+            label_style: number;
+        }[];
+        ugc_season?: SectionsInfo;
         is_season_display: boolean;
         user_garb: {
             url_image_ani_cut: string;
@@ -259,6 +303,7 @@ export type InitialStateResponse = {
         need_jump_bv: boolean;
         disable_show_up_info: boolean;
         is_story_play: number;
+        is_view_self: boolean;
         embedPlayer: {
             p: number;
             aid: number;
@@ -357,7 +402,11 @@ export type InitialStateResponse = {
             tv_vip_pay_type: number;
             tv_due_date: number;
             avatar_icon: {
-                icon_resource: object;
+                icon_type: number;
+                icon_resource: {
+                    type: number;
+                    url: string;
+                };
             };
             vipType: number;
             vipStatus: number;
@@ -367,223 +416,58 @@ export type InitialStateResponse = {
         archiveCount: number;
     };
     isCollection: number;
-    sectionsInfo: {
-        id: number;
-        title: string;
-        cover: string;
-        mid: number;
-        intro: string;
-        sign_state: number;
-        attribute: number;
-        sections: {
-            season_id: number;
-            id: number;
-            title: string;
-            type: number;
-            episodes: {
-                season_id: number;
-                section_id: number;
-                id: number;
-                aid: number;
-                cid: number;
-                title: string;
-                attribute: number;
-                arc: {
-                    aid: number;
-                    videos: number;
-                    type_id: number;
-                    type_name: string;
-                    copyright: number;
-                    pic: string;
-                    title: string;
-                    pubdate: number;
-                    ctime: number;
-                    desc: string;
-                    state: number;
-                    duration: number;
-                    rights: {
-                        bp: number;
-                        elec: number;
-                        download: number;
-                        movie: number;
-                        pay: number;
-                        hd5: number;
-                        no_reprint: number;
-                        autoplay: number;
-                        ugc_pay: number;
-                        is_cooperation: number;
-                        ugc_pay_preview: number;
-                        arc_pay: number;
-                        free_watch: number;
-                    };
-                    author: {
-                        mid: number;
-                        name: string;
-                        face: string;
-                    };
-                    stat: {
-                        aid: number;
-                        view: number;
-                        danmaku: number;
-                        reply: number;
-                        fav: number;
-                        coin: number;
-                        share: number;
-                        now_rank: number;
-                        his_rank: number;
-                        like: number;
-                        dislike: number;
-                        evaluation: string;
-                        argue_msg: string;
-                        vt: number;
-                        vv: number;
-                    };
-                    dynamic: string;
-                    dimension: {
-                        width: number;
-                        height: number;
-                        rotate: number;
-                    };
-                    desc_v2: any;
-                    is_chargeable_season: boolean;
-                    is_blooper: boolean;
-                    enable_vt: number;
-                    vt_display: string;
-                };
-                page: {
-                    cid: number;
-                    page: number;
-                    from: string;
-                    part: string;
-                    duration: number;
-                    vid: string;
-                    weblink: string;
-                    dimension: {
-                        width: number;
-                        height: number;
-                        rotate: number;
-                    };
-                };
-                bvid: string;
-            }[];
-            isActive: boolean;
-            height: number;
-        }[];
-        stat: {
-            season_id: number;
-            view: number;
-            danmaku: number;
-            reply: number;
-            fav: number;
-            coin: number;
-            share: number;
-            now_rank: number;
-            his_rank: number;
-            like: number;
-            vt: number;
-            vv: number;
-        };
-        ep_count: number;
-        season_type: number;
-        is_pay_season: boolean;
-        enable_vt: number;
-    };
+    sectionsInfo?: SectionsInfo;
     playedSectionId: any[];
-    sections: {
-        season_id: number;
-        id: number;
+    sections: Section[];
+    staffData: {
+        mid: number;
         title: string;
-        type: number;
-        episodes: {
-            season_id: number;
-            section_id: number;
-            id: number;
-            aid: number;
-            cid: number;
+        name: string;
+        face: string;
+        vip: {
+            type: number;
+            status: number;
+            due_date: number;
+            vip_pay_type: number;
+            theme_type: number;
+            label: {
+                path: string;
+                text: string;
+                label_theme: string;
+                text_color: string;
+                bg_style: number;
+                bg_color: string;
+                border_color: string;
+                use_img_label: boolean;
+                img_label_uri_hans: string;
+                img_label_uri_hant: string;
+                img_label_uri_hans_static: string;
+                img_label_uri_hant_static: string;
+            };
+            avatar_subscript: number;
+            nickname_color: string;
+            role: number;
+            avatar_subscript_url: string;
+            tv_vip_status: number;
+            tv_vip_pay_type: number;
+            tv_due_date: number;
+            avatar_icon: {
+                icon_type: number;
+                icon_resource: {
+                    type: number;
+                    url: string;
+                };
+            };
+        };
+        official: {
+            role: number;
             title: string;
-            attribute: number;
-            arc: {
-                aid: number;
-                videos: number;
-                type_id: number;
-                type_name: string;
-                copyright: number;
-                pic: string;
-                title: string;
-                pubdate: number;
-                ctime: number;
-                desc: string;
-                state: number;
-                duration: number;
-                rights: {
-                    bp: number;
-                    elec: number;
-                    download: number;
-                    movie: number;
-                    pay: number;
-                    hd5: number;
-                    no_reprint: number;
-                    autoplay: number;
-                    ugc_pay: number;
-                    is_cooperation: number;
-                    ugc_pay_preview: number;
-                    arc_pay: number;
-                    free_watch: number;
-                };
-                author: {
-                    mid: number;
-                    name: string;
-                    face: string;
-                };
-                stat: {
-                    aid: number;
-                    view: number;
-                    danmaku: number;
-                    reply: number;
-                    fav: number;
-                    coin: number;
-                    share: number;
-                    now_rank: number;
-                    his_rank: number;
-                    like: number;
-                    dislike: number;
-                    evaluation: string;
-                    argue_msg: string;
-                    vt: number;
-                    vv: number;
-                };
-                dynamic: string;
-                dimension: {
-                    width: number;
-                    height: number;
-                    rotate: number;
-                };
-                desc_v2: any;
-                is_chargeable_season: boolean;
-                is_blooper: boolean;
-                enable_vt: number;
-                vt_display: string;
-            };
-            page: {
-                cid: number;
-                page: number;
-                from: string;
-                part: string;
-                duration: number;
-                vid: string;
-                weblink: string;
-                dimension: {
-                    width: number;
-                    height: number;
-                    rotate: number;
-                };
-            };
-            bvid: string;
-        }[];
-        isActive: boolean;
-        height: number;
+            desc: string;
+            type: number;
+        };
+        follower: number;
+        label_style: number;
     }[];
-    staffData: any[];
     tags: {
         tag_id: number;
         tag_name: string;
@@ -628,14 +512,14 @@ export type InitialStateResponse = {
     playurl: object;
     user: object;
     cidMap: {
-        "463243402": {
+        "288071517": {
             aid: number;
             bvid: string;
             cids: {
                 "1": number;
             };
         };
-        BV1cL411s7bB: {
+        BV1Wf4y1i7xZ: {
             aid: number;
             bvid: string;
             cids: {
@@ -646,220 +530,54 @@ export type InitialStateResponse = {
     isRecAutoPlay: boolean;
     continuousPlay: boolean;
     autoPlayNextVideo: any;
-    elecFullInfo: object;
-    adData: {
-        "2624": {
-            id: number;
-            contract_id: string;
-            res_id: number;
-            asg_id: number;
-            pos_num: number;
-            name: string;
-            pic: string;
-            litpic: string;
-            url: string;
-            style: number;
-            agency: string;
-            label: string;
-            intro: string;
-            creative_type: number;
-            request_id: string;
-            creative_id?: number;
-            src_id: number;
-            area: number;
-            is_ad_loc: boolean;
-            ad_cb: string;
+    elecFullInfo: {
+        show_info: {
+            show: boolean;
+            state: number;
             title: string;
-            server_type: number;
-            cm_mark: number;
-            stime: number;
-            mid: string;
-            activity_type: number;
-            epid: number;
-            season: any;
-            room: any;
-            sub_title: string;
-            ad_desc: string;
-            adver_name: string;
-            null_frame: boolean;
-            pic_main_color: string;
-            card_type: number;
-            business_mark?: {
-                type: number;
-                text: string;
-                text_color: string;
-                bg_border_color: string;
-                bg_color: string;
-                border_color: string;
+            jump_url: string;
+            icon: string;
+            high_level: {
+                privilege_type: number;
+                title: string;
+                sub_title: string;
+                show_button: boolean;
+                button_text: string;
+                jump_url: {
+                    up_link: string;
+                    paywall_link: string;
+                    previewbar_link: string;
+                };
+                intro: string;
+                open: boolean;
+                new: boolean;
             };
-            inline: {
-                inline_use_same: number;
-                inline_type: number;
-                inline_url: string;
-                inline_barrage_switch: number;
+        };
+        av_count: number;
+        count: number;
+        total_count: number;
+        special_day: number;
+        display_num: number;
+        cnt_priv_type: number;
+        list: {
+            mid: number;
+            pay_mid: number;
+            rank: number;
+            uname: string;
+            avatar: string;
+            message: string;
+            msg_deleted: number;
+            vip_info: {
+                vipType: number;
+                vipDueMsec: number;
+                vipStatus: number;
             };
-            operater: string;
-            jump_target: number;
-            show_urls?: string[];
-            click_urls?: any[];
-        }[];
-        "2625": {
-            id: number;
-            contract_id: string;
-            res_id: number;
-            asg_id: number;
-            pos_num: number;
-            name: string;
-            pic: string;
-            litpic: string;
-            url: string;
-            style: number;
-            is_ad: boolean;
-            agency: string;
-            label: string;
-            intro: string;
-            creative_type: number;
-            request_id: string;
-            creative_id: number;
-            src_id: number;
-            area: number;
-            is_ad_loc: boolean;
-            ad_cb: string;
-            title: string;
-            server_type: number;
-            cm_mark: number;
-            stime: number;
-            mid: string;
-            activity_type: number;
-            epid: number;
-            season: any;
-            room: any;
-            sub_title: string;
-            ad_desc: string;
-            adver_name: string;
-            null_frame: boolean;
-            pic_main_color: string;
-            card_type: number;
-            business_mark: {
-                type: number;
-                text: string;
-                text_color: string;
-                bg_border_color: string;
-                bg_color: string;
-                border_color: string;
-            };
-            inline: {
-                inline_use_same: number;
-                inline_type: number;
-                inline_url: string;
-                inline_barrage_switch: number;
-            };
-            operater: string;
-            jump_target: number;
-            show_urls: string[];
-            click_urls: any[];
-        }[];
-        "3038": {
-            id: number;
-            contract_id: string;
-            res_id: number;
-            asg_id: number;
-            pos_num: number;
-            name: string;
-            pic: string;
-            litpic: string;
-            url: string;
-            style: number;
-            agency: string;
-            label: string;
-            intro: string;
-            creative_type: number;
-            request_id: string;
-            src_id: number;
-            area: number;
-            is_ad_loc: boolean;
-            ad_cb: string;
-            title: string;
-            server_type: number;
-            cm_mark: number;
-            stime: number;
-            mid: string;
-            activity_type: number;
-            epid: number;
-            season: any;
-            room: any;
-            sub_title: string;
-            ad_desc: string;
-            adver_name: string;
-            null_frame: boolean;
-            pic_main_color: string;
-            card_type: number;
-            business_mark: any;
-            inline: {
-                inline_use_same: number;
-                inline_type: number;
-                inline_url: string;
-                inline_barrage_switch: number;
-            };
-            operater: string;
-            jump_target: number;
-            show_urls: any;
-            click_urls: any;
-        }[];
-        "4330": {
-            id: number;
-            contract_id: string;
-            res_id: number;
-            asg_id: number;
-            pos_num: number;
-            name: string;
-            pic: string;
-            litpic: string;
-            url: string;
-            style: number;
-            agency: string;
-            label: string;
-            intro: string;
-            creative_type: number;
-            request_id: string;
-            src_id: number;
-            area: number;
-            is_ad_loc: boolean;
-            ad_cb: string;
-            title: string;
-            server_type: number;
-            cm_mark: number;
-            stime: number;
-            mid: string;
-            activity_type: number;
-            epid: number;
-            season: any;
-            room: any;
-            sub_title: string;
-            ad_desc: string;
-            adver_name: string;
-            null_frame: boolean;
-            pic_main_color: string;
-            card_type: number;
-            business_mark: any;
-            inline: {
-                inline_use_same: number;
-                inline_type: number;
-                inline_url: string;
-                inline_barrage_switch: number;
-            };
-            operater: string;
-            jump_target: number;
-            show_urls: any;
-            click_urls: any;
+            trend_type: number;
         }[];
     };
-    adsControl: {
-        has_danmu: number;
-        under_player_scroller_seconds: number;
-        has_live_booking_ad: boolean;
-    };
-    bofqiParams: object;
+    adData: any;
+    adsControl: any;
+    bofqiParams: any;
     isBack: boolean;
     seasonType: number;
     premiereInfo: any;
@@ -877,7 +595,6 @@ export type InitialStateResponse = {
     isModern: boolean;
     playerReloadOrigin: string;
     queryTags: any[];
-    theme: string;
     pageTheme: string;
     nanoTheme: {
         "bpx-primary-color": string;
@@ -914,6 +631,8 @@ export type InitialStateResponse = {
         "bpx-aux-float-border": string;
         "bpx-aux-line-border": string;
         "bpx-aux-input-border": string;
+        "bpx-dmsend-disable-button-bg": string;
+        "bpx-dmsend-disable-button-text": string;
     };
     enable_vt: number;
     defaultWbiKey: {
@@ -963,7 +682,6 @@ export type InitialStateResponse = {
         type?: string;
     }[];
     insertScripts: string[];
-    isPrVideo: boolean;
     constants: object;
     abtest: {
         login_dialog_version: string;
@@ -973,7 +691,8 @@ export type InitialStateResponse = {
         bmg_fallback_version: string;
         rcmd_tab_version: string;
         danmuku_block_version: string;
-        comment_next_version: string;
+        multip_section_version: string;
+        comment_version_hash: string;
     };
     corePlayer: {
         id: number;
