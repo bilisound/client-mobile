@@ -39,7 +39,8 @@ function filterHostname(list: string[]) {
             return hostname;
         } catch (er) {
             // 日志用的工具函数，错误在这里不重要
-            return er;
+            log.warn("URL 解析失败：" + er);
+            return e;
         }
     });
 }
