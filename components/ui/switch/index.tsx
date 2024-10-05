@@ -21,7 +21,13 @@ const UISwitch = createSwitch({
 cssInterop(SwitchWrapper, { className: "style" });
 
 const switchStyle = tva({
-    base: "data-[focus=true]:outline-0 data-[focus=true]:ring-2 data-[focus=true]:ring-indicator-primary web:cursor-pointer disabled:cursor-not-allowed data-[disabled=true]:opacity-40 data-[invalid=true]:border-error-700 data-[invalid=true]:rounded-xl data-[invalid=true]:border-2",
+    base:
+        "{}-[trackColor.false]:color-primary-200 " +
+        "{}-[trackColor.true]:color-primary-500 " +
+        "{}-[thumbColor]:color-primary-50 dark:{}-[thumbColor]:color-primary-700 " +
+        "{}-[activeThumbColor]:color-primary-50 " +
+        "{}-[ios_backgroundColor]:color-primary-200" +
+        "data-[focus=true]:outline-0 data-[focus=true]:ring-2 data-[focus=true]:ring-indicator-primary web:cursor-pointer disabled:cursor-not-allowed data-[disabled=true]:opacity-40 data-[invalid=true]:border-error-700 data-[invalid=true]:rounded-xl data-[invalid=true]:border-2",
 
     variants: {
         size: {
