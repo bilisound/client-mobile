@@ -450,13 +450,7 @@ export default function Page() {
     return (
         <CommonLayout
             title="查看详情"
-            titleBarTheme="transparentAlt"
-            style={{
-                backgroundColor: enableUnderLayerColor ? fromColor : bgColor,
-            }}
-            titleBarContainerStyle={{
-                backgroundColor: fromColor,
-            }}
+            titleBarTheme="transparent"
             leftAccessories="backButton"
             rightAccessories={
                 <>
@@ -472,7 +466,7 @@ export default function Page() {
                                 })
                             }
                             Icon={editing ? IconEditingDone : IconEditing}
-                            theme="transparentAlt"
+                            theme="transparent"
                         />
                     ) : null}
                     <PotatoButtonTitleBar
@@ -482,7 +476,7 @@ export default function Page() {
                         }}
                         Icon={IconMenu}
                         iconSize={18}
-                        theme="transparentAlt"
+                        theme="transparent"
                     />
                 </>
             }
@@ -539,24 +533,14 @@ export default function Page() {
                 }}
                 extraData={[editing, selected.size]}
                 ListHeaderComponent={
-                    <LinearGradient
-                        colors={[fromColor, bgColor]}
-                        start={{ x: 0, y: 0.2 }}
-                        end={{ x: 0, y: 1 }}
-                        style={{
-                            width: "100%",
+                    <Header
+                        meta={meta}
+                        images={extractAndProcessImgUrls(playlistDetail)}
+                        showPlayButton={playlistDetail.length > 0}
+                        onPlay={async () => {
+                            await handleRequestPlay(0);
                         }}
-                        aria-hidden
-                    >
-                        <Header
-                            meta={meta}
-                            images={extractAndProcessImgUrls(playlistDetail)}
-                            showPlayButton={playlistDetail.length > 0}
-                            onPlay={async () => {
-                                await handleRequestPlay(0);
-                            }}
-                        />
-                    </LinearGradient>
+                    />
                 }
                 ListEmptyComponent={
                     <View style={{ flex: 1 }}>
