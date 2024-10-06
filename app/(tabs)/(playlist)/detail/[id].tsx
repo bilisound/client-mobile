@@ -563,7 +563,7 @@ export default function Page() {
                         <Empty title="暂无内容" action={null} />
                     </View>
                 }
-                ListFooterComponent={<Box style={{ height: bottom }} aria-hidden />}
+                ListFooterComponent={<Box style={{ height: editing ? 0 : bottom }} aria-hidden />}
             />
             {editing ? (
                 <EditAction

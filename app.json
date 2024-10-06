@@ -3,7 +3,6 @@
     "name": "Bilisound",
     "slug": "bilisound-client-mobile",
     "version": "1.8.0",
-    "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "bilisound",
     "userInterfaceStyle": "automatic",

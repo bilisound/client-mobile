@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import PotatoButton from "~/components/potato-ui/PotatoButton";
+import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
 
 interface EditActionProps {
     onAll: () => void;
@@ -14,9 +15,10 @@ interface EditActionProps {
 export default function EditAction({ onAll, onReverse, onDelete, amount }: EditActionProps) {
     const { theme, styles } = useStyles(styleSheet);
     const bgColor = theme.colorTokens.background;
+    const paddingBottom = useTabPaddingBottom();
 
     return (
-        <View style={[styles.container, { backgroundColor: bgColor }]}>
+        <View style={[styles.container, { backgroundColor: bgColor, paddingBottom, height: paddingBottom + 52 }]}>
             <Text style={styles.text}>{`已选择 ${amount} 项`}</Text>
             <View style={styles.buttonContainer}>
                 <PotatoButton size="sm" variant="outline" onPress={onAll}>
@@ -40,7 +42,6 @@ const styleSheet = createStyleSheet(theme => ({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        height: 52,
         paddingHorizontal: 12,
     },
     text: {
