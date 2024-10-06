@@ -13,7 +13,7 @@ import { Text } from "~/components/ui/text";
 
 export interface CommonFrameNewProps {
     title?: string | React.ReactNode;
-    titleBarTheme?: "transparent" | "transparentAlt" | "solid";
+    titleBarTheme?: "transparent" | "solid";
     /**
      * @deprecated 改用 `overrideEdgeInsets` 谢谢喵
      */
@@ -68,9 +68,6 @@ export default function CommonLayoutOriginal({
     let textColor = theme.colorTokens.topBarSolidForeground;
     if (titleBarTheme === "transparent") {
         textColor = theme.colorTokens.topBarTransparentForeground;
-    }
-    if (titleBarTheme === "transparentAlt") {
-        textColor = theme.colorTokens.topBarTransparentAltForeground;
     }
 
     return (

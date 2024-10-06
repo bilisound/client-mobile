@@ -42,7 +42,7 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Box } from "~/components/ui/box";
 import { Heading } from "~/components/ui/heading";
-import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalBody } from "~/components/ui/modal";
+import { Modal, ModalBackdrop, ModalContent, ModalBody } from "~/components/ui/modal";
 import { Text } from "~/components/ui/text";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
@@ -299,7 +299,6 @@ export default function Page() {
 
     const [contentHeight, setContentHeight] = useState(0);
     const [viewHeight, setViewHeight] = useState(0);
-    const enableUnderLayerColor = contentHeight > viewHeight;
 
     // 模态框管理
     const [dialogInfo, setDialogInfo] = useState({

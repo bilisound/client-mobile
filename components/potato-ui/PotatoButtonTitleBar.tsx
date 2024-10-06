@@ -7,7 +7,7 @@ import { IconComponent } from "~/components/potato-ui/utils/icon";
 
 export interface ButtonTitleBarProps extends PressableProps {
     label: string;
-    theme?: "transparent" | "transparentAlt" | "solid";
+    theme?: "transparent" | "solid";
     Icon?: IconComponent;
     iconColor?: string;
     iconSize?: number;
@@ -19,9 +19,6 @@ const PotatoButtonTitleBar = forwardRef<View, PropsWithChildren<ButtonTitleBarPr
         let textColor = theme.colorTokens.topBarSolidForeground;
         if (colorTheme === "transparent") {
             textColor = theme.colorTokens.topBarTransparentForeground;
-        }
-        if (colorTheme === "transparentAlt") {
-            textColor = theme.colorTokens.topBarTransparentAltForeground;
         }
 
         return (

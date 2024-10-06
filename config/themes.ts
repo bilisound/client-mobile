@@ -17,7 +17,6 @@ export interface SemanticColor {
     topBarSolidBackground: string;
     topBarSolidForeground: string;
     topBarTransparentForeground: string;
-    topBarTransparentAltForeground: string;
     dialogBackground: string;
     dialogBorder: string;
     toastBackground: string;
@@ -67,7 +66,6 @@ export const classicLight: BilisoundTheme = {
         topBarSolidBackground: colors.primary[500],
         topBarSolidForeground: colors.white,
         topBarTransparentForeground: colors.primary[500],
-        topBarTransparentAltForeground: colors.neutral[700],
         dialogBackground: colors.white,
         dialogBorder: colors.neutral[100],
         toastBackground: colors.white,
@@ -125,7 +123,6 @@ export const classicDark: BilisoundTheme = {
         topBarSolidBackground: colors.primary["900"],
         topBarSolidForeground: colors.white,
         topBarTransparentForeground: colors.primary[500],
-        topBarTransparentAltForeground: colors.white,
         dialogBackground: colors.neutral["900"],
         dialogBorder: colors.neutral[800],
         toastBackground: colors.neutral["800"],
@@ -187,7 +184,6 @@ export const redLight: BilisoundTheme = {
         topBarSolidBackground: colorsRed.primary[500],
         topBarSolidForeground: colorsRed.white,
         topBarTransparentForeground: colorsRed.primary[500],
-        topBarTransparentAltForeground: colorsRed.neutral[700],
         dialogBackground: colorsRed.white,
         dialogBorder: colorsRed.neutral[100],
         toastBackground: colorsRed.white,
@@ -245,7 +241,6 @@ export const redDark: BilisoundTheme = {
         topBarSolidBackground: colorsRed.primary["900"],
         topBarSolidForeground: colorsRed.white,
         topBarTransparentForeground: colorsRed.primary[500],
-        topBarTransparentAltForeground: colorsRed.white,
         dialogBackground: colorsRed.neutral["900"],
         dialogBorder: colorsRed.neutral[800],
         toastBackground: colorsRed.neutral["800"],
