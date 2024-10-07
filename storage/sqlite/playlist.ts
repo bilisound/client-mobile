@@ -164,7 +164,7 @@ export async function quickCreatePlaylist(
                     .toString(16)
                     .padStart(6, "0"), // 生成随机颜色
             amount: list.length,
-            source: source ? JSON.stringify(source) : null,
+            source: source && list.length > 1 ? JSON.stringify(source) : null,
         })
         .returning();
 
