@@ -1,4 +1,4 @@
-export const VERSION = require("~/app.json").expo.version;
+export const VERSION = require("~/package.json").version;
 
 export const RELEASE_CHANNEL = process.env.EXPO_PUBLIC_RELEASE_CHANNEL;
 

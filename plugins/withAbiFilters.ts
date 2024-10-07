@@ -1,6 +1,7 @@
-const { withAppBuildGradle } = require("@expo/config-plugins");
+import { withAppBuildGradle } from "@expo/config-plugins";
+import { ExpoConfig } from "expo/config";
 
-module.exports = function withAbiFilters(config) {
+export default function withAbiFilters(config: ExpoConfig) {
     return withAppBuildGradle(config, config => {
         if (config.modResults.language === "groovy") {
             config.modResults.contents = setAbiFilters(config.modResults.contents);
@@ -9,9 +10,9 @@ module.exports = function withAbiFilters(config) {
         }
         return config;
     });
-};
+}
 
-function setAbiFilters(appBuildGradle) {
+function setAbiFilters(appBuildGradle: string) {
     return appBuildGradle.replace(
         /defaultConfig\s*{/,
         `defaultConfig {

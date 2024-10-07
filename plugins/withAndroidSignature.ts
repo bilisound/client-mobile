@@ -1,8 +1,9 @@
-const { withAppBuildGradle } = require("@expo/config-plugins");
-const fs = require("fs");
-const path = require("path");
+import { withAppBuildGradle } from "@expo/config-plugins";
+import { ExpoConfig } from "expo/config";
+import fs from "fs";
+import path from "path";
 
-module.exports = function withAndroidSignature(config) {
+export default function withAndroidSignature(config: ExpoConfig) {
     return withAppBuildGradle(config, config => {
         if (config.modResults.language === "groovy") {
             config.modResults.contents = setAndroidSignature(config.modResults.contents);
@@ -11,9 +12,9 @@ module.exports = function withAndroidSignature(config) {
         }
         return config;
     });
-};
+}
 
-function setAndroidSignature(appBuildGradle) {
+function setAndroidSignature(appBuildGradle: string) {
     if (!fs.existsSync(path.resolve(__dirname, "../credentials.json"))) {
         console.warn("警告：没有设置正式版本的 Android Keystore 文件，因为 credentials.json 不存在。");
         return appBuildGradle;
