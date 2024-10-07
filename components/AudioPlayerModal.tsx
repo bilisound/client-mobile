@@ -203,8 +203,8 @@ function MusicList() {
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
 
     return (
-        <Box className="flex-1 mb-6">
-            <View className="flex-1 border border-l-0 border-r-0 border-outline-50">
+        <Box className="flex-1 mb-6 md:mb-0">
+            <View className="flex-1 border border-l-0 border-r-0 border-outline-50 md:border-0">
                 <FlashList
                     renderItem={item => {
                         return (
@@ -268,13 +268,14 @@ export default function AudioPlayerModal() {
     const { update } = useTracks();
 
     return (
-        <View style={styles.container}>
+        <View className="flex-1 bg-background-0">
             <CommonLayout
                 overrideEdgeInsets={{
                     top: Platform.OS === "ios" ? 0 : undefined,
                 }}
                 titleBarClassName="h-[72px] px-[14px]"
                 titleBarTheme="transparent"
+                containerClassName="flex-col md:flex-row"
                 title={
                     <Box className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
                         {/* key 是切换选项卡后阴影停滞问题的 workaround */}
@@ -305,18 +306,20 @@ export default function AudioPlayerModal() {
                     />
                 }
             >
-                {Platform.OS === "ios" ? null : (
-                    <StatusBar
-                        barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-                        showHideTransition="none"
-                    />
-                )}
-                {showList ? (
-                    <MusicList />
-                ) : (
-                    <MusicPicture image={activeTrack?.artwork} bilisoundId={activeTrack?.bilisoundId} />
-                )}
-                <View style={styles.controlsContainer}>
+                <View className="flex-1">
+                    {Platform.OS === "ios" ? null : (
+                        <StatusBar
+                            barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+                            showHideTransition="none"
+                        />
+                    )}
+                    {showList ? (
+                        <MusicList />
+                    ) : (
+                        <MusicPicture image={activeTrack?.artwork} bilisoundId={activeTrack?.bilisoundId} />
+                    )}
+                </View>
+                <View className="flex-0 md:flex-1 basis-auto h-64 md:h-full md:justify-center">
                     <PotatoPressable
                         onPress={() => {
                             if (Platform.OS === "ios") {
@@ -327,16 +330,24 @@ export default function AudioPlayerModal() {
                             router.replace(`/query/${activeTrack?.bilisoundId}`);
                         }}
                     >
-                        <View style={styles.trackInfoContainer}>
-                            <Text style={styles.trackTitle} numberOfLines={1} ellipsizeMode="tail">
+                        <View className="px-[30px] py-4 gap-2">
+                            <Text
+                                className="text-[20px] font-extrabold leading-normal"
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                            >
                                 {activeTrack?.title}
                             </Text>
-                            <Text style={styles.trackArtist} numberOfLines={1} ellipsizeMode="tail">
+                            <Text
+                                className="text-base leading-normal opacity-65"
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                            >
                                 {activeTrack?.artist}
                             </Text>
                         </View>
                     </PotatoPressable>
-                    <View style={styles.progressBarWrapper}>
+                    <View className="flex-row items-center h-4 px-5 mt-2">
                         <AudioProgressBar />
                     </View>
                     <AudioProgressTimer />
@@ -455,20 +466,6 @@ export default function AudioPlayerModal() {
 }
 
 const styleSheet = createStyleSheet(theme => ({
-    container: {
-        flex: 1,
-        backgroundColor: theme.colorTokens.background,
-    },
-    handleContainer: {
-        alignItems: "center",
-        padding: Platform.OS === "ios" ? 16 : 8,
-    },
-    handle: {
-        width: 48,
-        height: 4,
-        backgroundColor: theme.colorTokens.buttonBackground("primary", "default"),
-        borderRadius: 2,
-    },
     // AudioProgressBar
     barLoadingContainer: {
         height: 16,
@@ -567,36 +564,6 @@ const styleSheet = createStyleSheet(theme => ({
         },
         borderRadius: 16,
         shadowColor: "#000000",
-    },
-    controlsContainer: {
-        flex: 0,
-        flexBasis: "auto",
-        height: 256,
-    },
-    trackInfoContainer: {
-        paddingHorizontal: 30,
-        paddingVertical: 16,
-        gap: 8,
-    },
-    trackTitle: {
-        fontSize: 20,
-        fontWeight: "800",
-        lineHeight: 30,
-        color: theme.colorTokens.foreground,
-    },
-    trackArtist: {
-        fontSize: 16,
-        lineHeight: 24,
-        opacity: 0.65,
-        fontWeight: "400",
-        color: theme.colorTokens.foreground,
-    },
-    progressBarWrapper: {
-        flexDirection: "row",
-        alignItems: "center",
-        height: 16,
-        paddingHorizontal: 20,
-        marginTop: 8,
     },
     controlButtonsContainer: {
         flexDirection: "row",
