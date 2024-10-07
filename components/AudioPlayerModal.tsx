@@ -6,7 +6,7 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
+import { Linking, Platform, StatusBar, useColorScheme, useWindowDimensions, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import { useMMKVString } from "react-native-mmkv";
 import Animated, {
@@ -168,26 +168,29 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
     const colorScheme = useColorScheme();
     const [smallestSize, setSmallestSize] = useState(0);
     const { styles } = useStyles(styleSheet);
+    const windowDimensions = useWindowDimensions();
 
     return (
         <View
-            style={styles.musicPictureContainer}
+            className="flex-1 items-center justify-center"
             onLayout={e => {
                 const layout = e.nativeEvent.layout;
-                setSmallestSize(Math.min(layout.width, layout.height) - 64);
+                setSmallestSize(Math.min(layout.width, layout.height) - (windowDimensions.width >= 768 ? 48 : 64));
             }}
         >
             {colorScheme === "dark" ? (
                 <Image
                     source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
-                    style={[styles.musicImage, { width: smallestSize }]}
+                    className="rounded-[16px] aspect-square"
+                    style={{ width: smallestSize }}
                     contentFit="cover"
                 />
             ) : (
                 <ShadowedView style={styles.shadowedView}>
                     <Image
                         source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
-                        style={[styles.musicImage, { width: smallestSize }]}
+                        className="rounded-[16px] aspect-square"
+                        style={{ width: smallestSize }}
                         contentFit="cover"
                     />
                 </ShadowedView>
@@ -546,15 +549,6 @@ const styleSheet = createStyleSheet(theme => ({
         fontFamily: "Roboto_400Regular",
     },
     // MusicPicture
-    musicPictureContainer: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    musicImage: {
-        aspectRatio: 1,
-        borderRadius: 16,
-    },
     shadowedView: {
         shadowOpacity: 0.2,
         shadowRadius: 24,
