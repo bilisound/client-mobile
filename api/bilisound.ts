@@ -250,7 +250,7 @@ export interface GetEpisodeUserResponse {
     };
 }
 
-export type UserListMode = "season" | "series";
+export type UserListMode = "season" | "series" | "favourite";
 
 export async function getUserList(mode: UserListMode, userId: Numberish, listId: Numberish, page = 1) {
     let response;
