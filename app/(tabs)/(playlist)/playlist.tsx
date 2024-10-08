@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { FolderOpen, ListPlus } from "lucide-react-native";
 import React, { createContext, useContext, useState } from "react";
-import { Alert, Platform } from "react-native";
+import { Alert, Platform, ScaledSize, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStyles } from "react-native-unistyles";
 
@@ -35,17 +35,21 @@ import log from "~/utils/logger";
 
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
+    width: number;
+    columns: number;
 }
 
 const IconQrcodeScan = createIcon(MaterialCommunityIcons, "qrcode-scan");
 const IconAdd = createIcon(MaterialIcons, "add");
 
 const PlaylistContext = createContext<PlaylistContextProps>({
+    columns: 0,
     onLongPress: () => {},
+    width: 0,
 });
 
 function PlaylistActionItem(item: PlaylistMeta) {
-    const context = useContext(PlaylistContext);
+    const { onLongPress, columns, width } = useContext(PlaylistContext);
 
     return (
         <PlaylistItem
@@ -54,8 +58,9 @@ function PlaylistActionItem(item: PlaylistMeta) {
                 router.push(`/(tabs)/(playlist)/detail/${item.id}`);
             }}
             onLongPress={() => {
-                context.onLongPress(item.id);
+                onLongPress(item.id);
             }}
+            style={{ width: columns === 2 ? width / 2 : undefined }}
         />
     );
 }
@@ -160,6 +165,10 @@ export default function Page() {
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PlaylistMeta | undefined>();
 
+    const windowDimensions = useWindowDimensions();
+    const columns = windowDimensions.width > 768 ? 2 : 1;
+    const [width, setWidth] = useState(0);
+
     const handleClose = () => setShowActionSheet(prevState => !prevState);
 
     const handleLongPress = (id: number) => {
@@ -201,11 +210,13 @@ export default function Page() {
     };
 
     return (
-        <PlaylistContext.Provider value={{ onLongPress: handleLongPress }}>
+        <PlaylistContext.Provider value={{ onLongPress: handleLongPress, width, columns }}>
             <CommonLayout
                 title="歌单"
                 titleBarTheme="transparent"
-                extendToBottom
+                overrideEdgeInsets={{
+                    bottom: 0,
+                }}
                 rightAccessories={
                     <>
                         {Platform.OS === "web" ? null : (
@@ -257,6 +268,11 @@ export default function Page() {
                         data={data}
                         estimatedItemSize={73}
                         ListFooterComponent={<Box style={{ height: bottom }} aria-hidden />}
+                        numColumns={columns}
+                        extraData={columns}
+                        onLayout={e => {
+                            setWidth(e.nativeEvent.layout.width);
+                        }}
                     />
                 )}
             </CommonLayout>
