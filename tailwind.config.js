@@ -208,5 +208,5 @@ module.exports = {
             },
         },
     },
-    plugins: [gluestackPlugin],
+    plugins: [gluestackPlugin, require("@tailwindcss/container-queries")],
 };
