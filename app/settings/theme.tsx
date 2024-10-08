@@ -8,7 +8,6 @@ import { twMerge } from "tailwind-merge";
 
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
-import YuruChara from "~/components/YuruChara";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import { Center } from "~/components/ui/center";
 import { HStack } from "~/components/ui/hstack";
@@ -90,7 +89,7 @@ export default function Page() {
             <SettingMenuItem
                 icon={BackgroundIcon}
                 iconSize={20}
-                title="在右下角展示看板娘"
+                title="在首页右下角展示看板娘"
                 rightAccessories={
                     <Switch
                         value={showYuruChara}
@@ -101,7 +100,6 @@ export default function Page() {
                 }
                 onPress={() => toggle("showYuruChara")}
             />
-            {showYuruChara && <YuruChara />}
         </CommonLayout>
     );
 }
