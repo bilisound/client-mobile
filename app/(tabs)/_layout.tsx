@@ -5,7 +5,7 @@ import BottomTabBar from "@react-navigation/bottom-tabs/src/views/BottomTabBar";
 import { CommonActions, NavigationContext, NavigationRouteContext } from "@react-navigation/native";
 import { router, Tabs } from "expo-router";
 import React from "react";
-import { useWindowDimensions, View } from "react-native";
+import { View } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import AudioIndicator from "~/components/AudioIndicator";
@@ -14,6 +14,7 @@ import { createIcon } from "~/components/potato-ui/utils/icon";
 import { Box } from "~/components/ui/box";
 import { Pressable } from "~/components/ui/pressable";
 import { Text } from "~/components/ui/text";
+import { useIsNarrowWidth } from "~/hooks/useIsNarrowWidth";
 import useFeaturesStore from "~/store/features";
 import useSettingsStore from "~/store/settings";
 import { useStyleParamStore } from "~/store/styleParam";
@@ -58,8 +59,7 @@ function FloatTabBar(props: BottomTabBarProps) {
 
     // const colorScheme = useColorScheme();
 
-    const windowDimensions = useWindowDimensions();
-    const isNarrowWidth = windowDimensions.height < 480;
+    const isNarrowWidth = useIsNarrowWidth();
 
     return (
         <Box

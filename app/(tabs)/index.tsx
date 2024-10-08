@@ -19,6 +19,7 @@ import {
 import { AlertCircleIcon } from "~/components/ui/icon";
 import { Input, InputField, InputSlot } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
+import { useIsNarrowWidth } from "~/hooks/useIsNarrowWidth";
 import { resolveVideoAndJump } from "~/utils/format";
 import log from "~/utils/logger";
 
@@ -33,6 +34,7 @@ const TabIndexScreen: React.FC = () => {
     const { width } = useWindowDimensions();
     const insets = useSafeAreaInsets();
     const { theme } = useStyles();
+    const isNarrowWidth = useIsNarrowWidth();
 
     const [fontsLoaded] = useFonts({
         Poppins_700Bold,
@@ -59,7 +61,7 @@ const TabIndexScreen: React.FC = () => {
                 paddingTop: insets.top,
             }}
         >
-            <Box className="pt-24 pb-12 items-center">
+            <Box className={`${isNarrowWidth ? "pt-16 pb-8" : "pt-24 pb-12"} items-center`}>
                 {fontsLoaded ? (
                     <Text
                         className="text-3xl text-primary-500 dark:text-primary-400 h-12 leading-12"
