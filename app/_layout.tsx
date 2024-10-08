@@ -146,7 +146,7 @@ const RootLayoutNav = () => {
             <Stack.Screen name="settings/theme" options={{ title: "外观设置", headerShown: false }} />
             <Stack.Screen name="settings/data" options={{ title: "数据管理", headerShown: false }} />
             <Stack.Screen name="settings/lab" options={{ title: "实验性功能", headerShown: false }} />
-            <Stack.Screen name="test" options={{ title: "测试页面" }} />
+            <Stack.Screen name="test" options={{ title: "测试页面", headerShown: false }} />
         </Stack>
     );
 

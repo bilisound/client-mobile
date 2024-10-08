@@ -36,7 +36,7 @@ export interface CommonFrameNewProps {
 
 const IconArrowBack = createIcon(Ionicons, "arrow-back");
 
-export default function CommonLayoutOriginal({
+export default function CommonLayout({
     children,
     title,
     titleBarTheme = "solid",

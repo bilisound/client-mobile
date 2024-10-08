@@ -261,6 +261,9 @@ export default function Page() {
                         onPress={() => {
                             router.push(`/(tabs)/(playlist)/meta/new`);
                         }}
+                        style={{
+                            paddingBottom: bottom,
+                        }}
                     />
                 ) : (
                     <FlashList

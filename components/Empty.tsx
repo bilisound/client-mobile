@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text } from "react-native";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { View, Text, StyleProp, ViewStyle } from "react-native";
+import { twMerge } from "tailwind-merge";
 
 import PotatoButton from "~/components/potato-ui/PotatoButton";
 
@@ -8,30 +8,21 @@ export interface EmptyProps {
     onPress?: () => void;
     title?: string;
     action?: string | null;
+    className?: string;
+    style?: StyleProp<ViewStyle>;
 }
 
-export default function Empty({ onPress = () => {}, title = "这里空空如也", action = "去查询" }: EmptyProps) {
-    const { styles } = useStyles(styleSheet);
-
+export default function Empty({
+    onPress = () => {},
+    title = "这里空空如也",
+    action = "去查询",
+    style,
+    className,
+}: EmptyProps) {
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>{title}</Text>
+        <View className={twMerge("items-center justify-center grow gap-4", className)} style={style}>
+            <Text className="text-sm leading-normal opacity-50 text-typography-700">{title}</Text>
             {action && <PotatoButton onPress={onPress}>{action}</PotatoButton>}
         </View>
     );
 }
-
-const styleSheet = createStyleSheet(theme => ({
-    container: {
-        alignItems: "center",
-        justifyContent: "center",
-        flexGrow: 1,
-        gap: 16,
-    },
-    title: {
-        fontSize: 14,
-        lineHeight: 14 * 1.5,
-        opacity: 0.5,
-        color: theme.colorTokens.foreground,
-    },
-}));

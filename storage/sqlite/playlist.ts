@@ -239,3 +239,11 @@ export async function clonePlaylist(playlistId: number) {
         return newPlaylistId;
     });
 }
+
+/**
+ * 删除全部歌单
+ */
+export async function deleteAllPlaylist() {
+    await db.delete(playlistDetail);
+    await db.delete(playlistMeta);
+}
