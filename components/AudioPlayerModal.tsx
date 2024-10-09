@@ -206,8 +206,8 @@ function MusicList() {
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
 
     return (
-        <Box className="flex-1 mb-6 md:mb-0">
-            <View className="flex-1 border border-l-0 border-r-0 border-outline-50 md:border-0">
+        <Box className="flex-1 mb-6 @md:mb-0">
+            <View className="flex-1 border border-l-0 border-r-0 border-outline-50 @md:border-0">
                 <FlashList
                     renderItem={item => {
                         return (
@@ -271,14 +271,14 @@ export default function AudioPlayerModal() {
     const { update } = useTracks();
 
     return (
-        <View className="flex-1 bg-background-0">
+        <View className="flex-1 bg-background-0 @container">
             <CommonLayout
                 overrideEdgeInsets={{
                     top: Platform.OS === "ios" ? 0 : undefined,
                 }}
                 titleBarClassName="h-[72px] px-[14px]"
                 titleBarTheme="transparent"
-                containerClassName="flex-col md:flex-row"
+                containerClassName="flex-col @md:flex-row"
                 title={
                     <Box className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
                         {/* key 是切换选项卡后阴影停滞问题的 workaround */}
@@ -322,7 +322,7 @@ export default function AudioPlayerModal() {
                         <MusicPicture image={activeTrack?.artwork} bilisoundId={activeTrack?.bilisoundId} />
                     )}
                 </View>
-                <View className="flex-0 md:flex-1 basis-auto h-64 md:h-full md:justify-center">
+                <View className="flex-0 @md:flex-1 basis-auto h-64 @md:h-full @md:justify-center">
                     <PotatoPressable
                         onPress={() => {
                             if (Platform.OS === "ios") {
