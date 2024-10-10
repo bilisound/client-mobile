@@ -73,14 +73,7 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta, skeleton }) => {
         </Text>
     );
 
-    const showMoreElHidden = skeleton ? (
-        <VStack className="py-[3.75]px gap-[7.5px]">
-            <Skeleton className="h-[15px] w-full" />
-            <Skeleton className="h-[15px] w-full" />
-            <Skeleton className="h-[15px] w-full" />
-            <Skeleton className="h-[15px] w-1/2" />
-        </VStack>
-    ) : (
+    const showMoreElHidden = skeleton ? null : (
         <Pressable className="relative" onPress={() => setShowMore(true)}>
             {Platform.OS === "web" ? (
                 <>
@@ -193,7 +186,15 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta, skeleton }) => {
                     )}
                 </View>
 
-                {(skeleton || meta.desc.trim() !== "") && showMoreComputed}
+                {(meta?.desc ?? "").trim() !== "" && showMoreComputed}
+                {skeleton && (
+                    <VStack className="py-[3.75px] gap-[7.5px]">
+                        <Skeleton className="h-[15px] w-full" />
+                        <Skeleton className="h-[15px] w-full" />
+                        <Skeleton className="h-[15px] w-full" />
+                        <Skeleton className="h-[15px] w-1/2" />
+                    </VStack>
+                )}
 
                 {skeleton ? null : (
                     <View className="flex-row gap-2 mt-5">
