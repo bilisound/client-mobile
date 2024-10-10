@@ -4,7 +4,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View, useWindowDimensions } from "react-native";
+import { ActivityIndicator, ScrollView, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
@@ -20,6 +20,7 @@ import CommonLayout from "~/components/CommonLayout";
 import PotatoButton from "~/components/potato-ui/PotatoButton";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Text } from "~/components/ui/text";
 import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -87,11 +88,11 @@ function Header({ data, mode }: HeaderProps) {
     return (
         <View style={styles.container}>
             <Image source={getImageProxyUrl(data.meta.cover, data.rows[0].bvid)} style={styles.image} />
-            <Text style={styles.title} selectable>
+            <Text className="text-lg leading-[24px] font-semibold mt-4" selectable>
                 {data.meta.name}
             </Text>
-            {data.meta.description && <Text style={styles.description}>{data.meta.description}</Text>}
-            <View style={{ flexDirection: "row", marginTop: 20 }}>
+            {data.meta.description && <Text className="text-[15px] leading-normal mt-4">{data.meta.description}</Text>}
+            <View className="flex-row mt-5">
                 <PotatoButton
                     rounded
                     disabled={loading}
@@ -162,7 +163,6 @@ function HeaderSkeleton() {
 }
 
 export default function Page() {
-    const { styles } = useStyles(styleSheet);
     const { userId, listId, mode } = useLocalSearchParams<{ userId: string; listId: string; mode: UserListMode }>();
 
     const { width } = useWindowDimensions();
@@ -185,14 +185,17 @@ export default function Page() {
             onPress={() => {
                 router.push(`/query/${item.bvid}`);
             }}
-            style={styles.listItem}
+            className="flex-row items-center h-[72px] px-4 gap-4"
         >
-            <Image source={getImageProxyUrl(item.cover, item.bvid)} style={styles.listItemImage} />
-            <View style={styles.listItemContent}>
-                <Text style={styles.listItemTitle} ellipsizeMode="tail" numberOfLines={1}>
+            <Image
+                source={getImageProxyUrl(item.cover, item.bvid)}
+                className="h-12 aspect-[3/2] flex-0 basis-auto rounded-lg"
+            />
+            <View className="flex-1 gap-1">
+                <Text className="font-semibold text-sm" ellipsizeMode="tail" numberOfLines={1}>
                     {item.title}
                 </Text>
-                <Text style={styles.listItemDuration} ellipsizeMode="tail" numberOfLines={1}>
+                <Text className="text-xs opacity-50" ellipsizeMode="tail" numberOfLines={1}>
                     {formatSecond(item.duration)}
                 </Text>
             </View>
@@ -206,17 +209,21 @@ export default function Page() {
     };
 
     return (
-        <CommonLayout title="合集详情" leftAccessories="backButton" extendToBottom>
+        <CommonLayout
+            title="合集详情"
+            leftAccessories="backButton"
+            overrideEdgeInsets={{
+                bottom: 0,
+            }}
+        >
             {data ? (
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                    {width >= SCREEN_BREAKPOINTS.md ? (
-                        <View style={{ flex: 0, flexBasis: "auto", width: 384 }}>
-                            <ScrollView>
-                                <Header data={data.pages[0]} mode={mode!} />
-                                <View style={{ height: edgeInsets.bottom }} aria-hidden />
-                            </ScrollView>
-                        </View>
-                    ) : null}
+                <View className="flex-1 flex-row">
+                    <View className="hidden md:flex flex-1 lg:basis-auto lg:flex-0 lg:w-[384px]">
+                        <ScrollView>
+                            <Header data={data.pages[0]} mode={mode!} />
+                            <View style={{ height: edgeInsets.bottom }} aria-hidden />
+                        </ScrollView>
+                    </View>
                     <View style={{ flex: 1 }}>
                         <FlashList
                             data={data.pages.flatMap(page => page.rows) || []}
@@ -265,46 +272,5 @@ const styleSheet = createStyleSheet(theme => ({
         borderRadius: 8,
         flex: 0,
         flexBasis: "auto",
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginTop: 16,
-        lineHeight: 24,
-        color: theme.colorTokens.foreground,
-    },
-    description: {
-        fontSize: 15,
-        lineHeight: 15 * 1.5,
-        marginTop: 16,
-        color: theme.colorTokens.foreground,
-    },
-    listItem: {
-        flexDirection: "row",
-        alignItems: "center",
-        height: 72,
-        paddingHorizontal: 16,
-        gap: 16,
-    },
-    listItemImage: {
-        height: 48,
-        aspectRatio: "3/2",
-        flex: 0,
-        flexBasis: "auto",
-        borderRadius: 8,
-    },
-    listItemContent: {
-        flex: 1,
-        gap: 4,
-    },
-    listItemTitle: {
-        fontWeight: "bold",
-        fontSize: 14,
-        color: theme.colorTokens.foreground,
-    },
-    listItemDuration: {
-        opacity: 0.5,
-        fontSize: 12,
-        color: theme.colorTokens.foreground,
     },
 }));
