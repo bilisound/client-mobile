@@ -21,7 +21,13 @@ const VideoSkeleton: React.FC = () => {
     return (
         <View style={[styles.container, width >= SCREEN_BREAKPOINTS.md ? styles.rowDirection : styles.columnDirection]}>
             {/* Left */}
-            <View style={[styles.leftContainer, width >= SCREEN_BREAKPOINTS.md && styles.leftContainerMd]}>
+            <View
+                style={[
+                    styles.leftContainer,
+                    width >= SCREEN_BREAKPOINTS.md && styles.leftContainerMd,
+                    width >= SCREEN_BREAKPOINTS.lg && styles.leftContainerLg,
+                ]}
+            >
                 <View style={[styles.skeletonBlock, styles.videoPlaceholder]} />
                 <View>
                     <View style={[styles.skeletonBlock, styles.titlePlaceholder]} />
@@ -72,6 +78,10 @@ const stylesheet = createStyleSheet(theme => ({
         padding: 16,
     },
     leftContainerMd: {
+        flex: 1,
+    },
+    leftContainerLg: {
+        flex: 0,
         width: 384,
     },
     skeletonBlock: {
