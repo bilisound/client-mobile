@@ -14,7 +14,6 @@ import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "~/api/biliso
 import CommonLayout from "~/components/CommonLayout";
 import SongItem from "~/components/SongItem";
 import VideoMeta from "~/components/VideoMeta";
-import VideoSkeleton from "~/components/VideoSkeleton";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import {
@@ -103,7 +102,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
     );
 }
 
-export default function QueryIdScreen() {
+export default function Page() {
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
     const edgeInsets = useSafeAreaInsets();
     const { theme } = useStyles();
@@ -123,7 +122,7 @@ export default function QueryIdScreen() {
     }));
 
     // 数据请求
-    const { data, error, isLoading } = useQuery({
+    const { isLoading, data, error } = useQuery({
         queryKey: [id],
         queryFn: () => {
             if (!id) {
@@ -199,13 +198,13 @@ export default function QueryIdScreen() {
 
     const dataList = data?.data.pages ?? [];
     const dataLength = Math.max(dataList.length, 1);
-    const activeTrackString = `${activeTrack?.bilisoundId}__${activeTrack?.bilisoundEpisode}`;
-    const updateTriggerString = `${activeTrackString}__${!!activeTrack}`;
 
     return (
         <CommonLayout
             title="查看详情"
-            extendToBottom
+            overrideEdgeInsets={{
+                bottom: 0,
+            }}
             leftAccessories="backButton"
             rightAccessories={
                 <PotatoButtonTitleBar
@@ -219,7 +218,20 @@ export default function QueryIdScreen() {
                 />
             }
         >
-            {isLoading ? <VideoSkeleton /> : null}
+            {isLoading ? (
+                <Box className="flex-1 flex-row">
+                    {width >= SCREEN_BREAKPOINTS.md ? (
+                        <Box className="flex-1 lg:flex-0 basis-auto lg:w-[384px]">
+                            <ScrollView>
+                                <VideoMeta skeleton />
+                            </ScrollView>
+                        </Box>
+                    ) : null}
+                    <Box className="flex-1">
+                        {width < SCREEN_BREAKPOINTS.md ? <VideoMeta skeleton /> : <Box className="h-3" />}
+                    </Box>
+                </Box>
+            ) : null}
             {error ? (
                 <Box
                     style={{
@@ -231,8 +243,8 @@ export default function QueryIdScreen() {
                     }}
                 >
                     <MaterialIcons name="error-outline" size={72} color={textBasicColor} />
-                    <Text style={{ fontSize: 20, fontWeight: "700" }}>查询失败了</Text>
-                    <Text style={{ fontSize: 14 }}>{`${error?.message || error}`}</Text>
+                    <Text className="text-[20px] font-semibold text-typography-700">查询失败了</Text>
+                    <Text className="text-sm text-typography-700">{`${error?.message || error}`}</Text>
                 </Box>
             ) : null}
             {data ? (
@@ -248,7 +260,6 @@ export default function QueryIdScreen() {
                     <Box className="flex-1">
                         <FlashList
                             data={dataList}
-                            extraData={updateTriggerString}
                             keyExtractor={item => `${item.page}`}
                             ListHeaderComponent={
                                 width < SCREEN_BREAKPOINTS.md ? <VideoMeta meta={data.data} /> : <Box className="h-3" />

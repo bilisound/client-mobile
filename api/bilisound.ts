@@ -1,3 +1,5 @@
+// import sleep from "sleep-promise";
+
 import { defineWrap } from "./common";
 import { getVideo } from "./external/direct";
 
@@ -64,6 +66,7 @@ export async function parseB23(id: string) {
  * @param data
  */
 export async function getBilisoundMetadata(data: { id: string }) {
+    // await sleep(2000);
     const { id } = data;
     // 获取视频网页
     const { initialState, type } = await getVideo({ id, episode: 1 });

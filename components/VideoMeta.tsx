@@ -4,35 +4,38 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Platform, Text, Pressable, View } from "react-native";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { Platform, View } from "react-native";
 
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
 import PotatoButton from "~/components/potato-ui/PotatoButton";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Pressable } from "~/components/ui/pressable";
+import { Skeleton } from "~/components/ui/skeleton";
+import { Text } from "~/components/ui/text";
+import { VStack } from "~/components/ui/vstack";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { formatDate } from "~/utils/datetime";
+import log from "~/utils/logger";
 
 const detailMaxHeight = 192;
 
 const AddIcon = createIcon(Feather, "plus");
 const PlaylistIcon = createIcon(MaterialCommunityIcons, "playlist-music");
 
-export interface VideoMetaProps {
-    meta: GetBilisoundMetadataResponse;
-}
+export type VideoMetaProps =
+    | {
+          meta: GetBilisoundMetadataResponse;
+          skeleton?: false;
+      }
+    | {
+          meta?: GetBilisoundMetadataResponse;
+          skeleton: true;
+      };
 
-const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
-    const { theme, styles } = useStyles(styleSheet);
-    const textBasicColor = theme.colorTokens.foreground;
-    const accentColor = theme.colors.accent[500];
-    const bgColor = theme.colorTokens.background;
-
-    // 展示更多
+const VideoMeta: React.FC<VideoMetaProps> = ({ meta, skeleton }) => {
     const [showMore, setShowMore] = useState(false);
 
-    // 添加歌单
     const { setPlaylistDetail, setName, setDescription, setSource } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
@@ -40,8 +43,11 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
         setSource: state.setSource,
     }));
 
-    // 批量添加操作
     function handleCreatePlaylist() {
+        if (!meta) {
+            log.error("使用 handleCreatePlaylist 函数时，meta 没有准备就绪！");
+            return;
+        }
         setPlaylistDetail(
             meta.pages.map(e => ({
                 author: meta.owner.name ?? "",
@@ -61,36 +67,43 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
         router.push(`/apply-playlist`);
     }
 
-    const showMoreEl = (
-        <Text selectable style={styles.descText}>
+    const showMoreEl = skeleton ? null : (
+        <Text className="text-[15px] leading-[22.5px] text-typography-700" selectable>
             {meta.desc}
         </Text>
     );
 
-    const showMoreElHidden = (
-        <Pressable style={styles.showMoreContainer} onPress={() => setShowMore(true)}>
+    const showMoreElHidden = skeleton ? (
+        <VStack className="py-[3.75]px gap-[7.5px]">
+            <Skeleton className="h-[15px] w-full" />
+            <Skeleton className="h-[15px] w-full" />
+            <Skeleton className="h-[15px] w-full" />
+            <Skeleton className="h-[15px] w-1/2" />
+        </VStack>
+    ) : (
+        <Pressable className="relative" onPress={() => setShowMore(true)}>
             {Platform.OS === "web" ? (
                 <>
-                    <View style={styles.overflowHidden}>
+                    <View className="overflow-hidden" style={{ maxHeight: detailMaxHeight }}>
                         <Text
                             onLayout={e => {
                                 if (e.nativeEvent.layout.height < detailMaxHeight) {
                                     setShowMore(true);
                                 }
                             }}
-                            style={styles.descText}
+                            className="text-[15px] leading-normal text-typography-700"
                         >
                             {meta.desc}
                         </Text>
                     </View>
                     <LinearGradient
-                        colors={[`${bgColor}00`, `${bgColor}ff`]}
+                        colors={["rgba(255,255,255,0)", "rgba(255,255,255,1)"]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 0, y: 0.9 }}
-                        style={styles.gradientOverlay}
+                        className="absolute w-full left-0 bottom-0 justify-center items-center flex-row gap-0.5 p-4 pt-10"
                     >
-                        <Text style={styles.showMoreText}>查看更多</Text>
-                        <Entypo name="chevron-down" size={20} color={accentColor} />
+                        <Text className="text-accent-500 font-bold text-sm">查看更多</Text>
+                        <Entypo name="chevron-down" size={20} color="accent-500" />
                     </LinearGradient>
                 </>
             ) : (
@@ -100,19 +113,14 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                             height: detailMaxHeight,
                         }}
                         maskElement={
-                            <View
-                                style={{
-                                    overflow: "scroll",
-                                    maxHeight: detailMaxHeight,
-                                }}
-                            >
+                            <View className="overflow-hidden" style={{ maxHeight: detailMaxHeight }}>
                                 <Text
                                     onLayout={e => {
                                         if (e.nativeEvent.layout.height < detailMaxHeight) {
                                             setShowMore(true);
                                         }
                                     }}
-                                    style={styles.descText}
+                                    className="text-[15px] leading-normal text-typography-700"
                                 >
                                     {meta.desc}
                                 </Text>
@@ -120,31 +128,16 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
                         }
                     >
                         <LinearGradient
-                            colors={[`${textBasicColor}ff`, `${textBasicColor}00`]}
+                            colors={["rgba(0,0,0,1)", "rgba(0,0,0,0)"]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 0, y: 0.9 }}
-                            style={{
-                                width: "100%",
-                                height: "100%",
-                            }}
+                            className="w-full h-full"
                             aria-hidden
                         />
                     </MaskedView>
-                    <View
-                        style={{
-                            position: "absolute",
-                            width: "100%",
-                            left: 0,
-                            bottom: 0,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "row",
-                            gap: 2,
-                            padding: 16,
-                        }}
-                    >
-                        <Text style={styles.showMoreText}>查看更多</Text>
-                        <Entypo name="chevron-down" size={20} color={accentColor} />
+                    <View className="absolute w-full left-0 bottom-0 justify-center items-center flex-row gap-0.5 p-4">
+                        <Text className="text-accent-500 font-bold text-sm">查看更多</Text>
+                        <Entypo name="chevron-down" size={20} color="accent-500" />
                     </View>
                 </>
             )}
@@ -154,134 +147,78 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta }) => {
     const showMoreComputed = showMore ? showMoreEl : showMoreElHidden;
 
     return (
-        <View style={styles.container}>
-            <Image source={getImageProxyUrl(meta.pic, meta.bvid)} style={styles.coverImage} />
-            <View style={styles.contentContainer}>
-                <Text style={styles.titleText} selectable>
-                    {meta.title}
-                </Text>
-
-                <View style={styles.authorInfoContainer}>
-                    <Image source={getImageProxyUrl(meta.owner.face, meta.bvid)} style={styles.authorAvatar} />
-                    <Text style={styles.authorText} numberOfLines={1} ellipsizeMode="tail">
-                        {meta.owner.name}
+        <View className="p-4 flex-col gap-4">
+            {skeleton ? (
+                <Skeleton className="aspect-[16/9] rounded-lg flex-1" />
+            ) : (
+                <Image source={getImageProxyUrl(meta.pic, meta.bvid)} className="aspect-[16/9] rounded-lg" />
+            )}
+            <View className="flex-1">
+                {skeleton ? (
+                    <View className="gap-2 py-1 mb-4">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-1/2" />
+                    </View>
+                ) : (
+                    <Text className="text-base font-bold mb-4 leading-6 text-typography-700" selectable>
+                        {meta.title}
                     </Text>
-                    <Text style={styles.dateText}>{formatDate(meta.pubDate, "yyyy-MM-dd")}</Text>
+                )}
+                <View className="flex-row items-center gap-3 mb-4">
+                    {skeleton ? (
+                        <>
+                            <Skeleton className="w-9 h-9 relative flex-shrink-0 rounded-full" />
+                            <View className="flex-grow">
+                                <Skeleton className="w-20 h-[14px]" />
+                            </View>
+                            <Skeleton className="flex-shrink-0 w-16 h-[14px]" />
+                        </>
+                    ) : (
+                        <>
+                            <Image
+                                source={getImageProxyUrl(meta.owner.face, meta.bvid)}
+                                className="w-9 h-9 rounded-full aspect-square flex-shrink-0"
+                            />
+                            <Text
+                                className="flex-grow text-sm font-bold text-typography-700"
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                            >
+                                {meta.owner.name}
+                            </Text>
+                            <Text className="flex-shrink-0 text-sm opacity-50 text-typography-700">
+                                {formatDate(meta.pubDate, "yyyy-MM-dd")}
+                            </Text>
+                        </>
+                    )}
                 </View>
 
-                {meta.desc.trim() !== "" && showMoreComputed}
+                {(skeleton || meta.desc.trim() !== "") && showMoreComputed}
 
-                <View style={styles.actionContainer}>
-                    <PotatoButton
-                        rounded
-                        onPress={handleCreatePlaylist}
-                        Icon={AddIcon}
-                        style={styles.createPlaylistButton}
-                    >
-                        创建歌单
-                    </PotatoButton>
-                    {meta.seasonId ? (
-                        <PotatoButton
-                            rounded
-                            variant="outline"
-                            onPress={() => {
-                                router.push(
-                                    `/remote-list?mode=season&userId=${meta.owner.mid}&listId=${meta.seasonId}`,
-                                );
-                            }}
-                            Icon={PlaylistIcon}
-                        >
-                            查看所属合集
+                {skeleton ? null : (
+                    <View className="flex-row gap-2 mt-5">
+                        <PotatoButton rounded onPress={handleCreatePlaylist} Icon={AddIcon} className="pl-4">
+                            创建歌单
                         </PotatoButton>
-                    ) : null}
-                </View>
+                        {meta.seasonId ? (
+                            <PotatoButton
+                                rounded
+                                variant="outline"
+                                onPress={() => {
+                                    router.push(
+                                        `/remote-list?mode=season&userId=${meta.owner.mid}&listId=${meta.seasonId}`,
+                                    );
+                                }}
+                                Icon={PlaylistIcon}
+                            >
+                                查看所属合集
+                            </PotatoButton>
+                        ) : null}
+                    </View>
+                )}
             </View>
         </View>
     );
 };
 
 export default VideoMeta;
-
-const styleSheet = createStyleSheet(theme => ({
-    descText: {
-        fontSize: 15,
-        lineHeight: 15 * 1.5,
-        color: theme.colorTokens.foreground,
-    },
-    showMoreText: {
-        color: theme.colors.accent[500],
-        fontWeight: "700",
-        fontSize: 14,
-    },
-    titleText: {
-        fontSize: 16,
-        fontWeight: "bold",
-        marginBottom: 16,
-        lineHeight: 24,
-        color: theme.colorTokens.foreground,
-    },
-    authorText: {
-        flexGrow: 1,
-        fontSize: 14,
-        fontWeight: "bold",
-        color: theme.colorTokens.foreground,
-    },
-    dateText: {
-        flexShrink: 0,
-        fontSize: 14,
-        opacity: 0.5,
-        color: theme.colorTokens.foreground,
-    },
-    container: {
-        padding: 16,
-        flexDirection: "column",
-        gap: 16,
-    },
-    coverImage: {
-        aspectRatio: "16/9",
-        borderRadius: 8,
-    },
-    contentContainer: {
-        flex: 1,
-    },
-    authorInfoContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 12,
-        marginBottom: 16,
-    },
-    authorAvatar: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
-        aspectRatio: "1/1",
-        flexShrink: 0,
-    },
-    actionContainer: {
-        flexDirection: "row",
-        gap: 8,
-        marginTop: 20,
-    },
-    createPlaylistButton: {
-        paddingLeft: 16,
-    },
-    showMoreContainer: {
-        position: "relative",
-    },
-    overflowHidden: {
-        overflow: "hidden",
-        maxHeight: detailMaxHeight,
-    },
-    gradientOverlay: {
-        position: "absolute",
-        width: "100%",
-        left: 0,
-        bottom: 0,
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "row",
-        gap: 2,
-        padding: 16,
-        paddingTop: 40,
-    },
-}));
