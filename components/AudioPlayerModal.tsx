@@ -16,6 +16,7 @@ import Animated, {
     withRepeat,
     withTiming,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
@@ -168,14 +169,19 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
     const colorScheme = useColorScheme();
     const [smallestSize, setSmallestSize] = useState(0);
     const { styles } = useStyles(styleSheet);
-    const windowDimensions = useWindowDimensions();
+    const edgeInsets = useSafeAreaInsets();
+    const [shouldPaddingBottom, setShouldPaddingBottom] = useState(false);
 
     return (
         <View
             className="flex-1 items-center justify-center"
             onLayout={e => {
                 const layout = e.nativeEvent.layout;
-                setSmallestSize(Math.min(layout.width, layout.height) - (windowDimensions.width >= 768 ? 48 : 64));
+                setSmallestSize(Math.min(layout.width, layout.height) - 64);
+                setShouldPaddingBottom(layout.width >= 768);
+            }}
+            style={{
+                paddingBottom: shouldPaddingBottom ? edgeInsets.bottom : 0,
             }}
         >
             {colorScheme === "dark" ? (
@@ -201,6 +207,7 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
 
 function MusicList() {
     const { tracks } = useTracks();
+    const edgeInsets = useSafeAreaInsets();
 
     // 转换后的列表
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
@@ -222,7 +229,12 @@ function MusicList() {
                         );
                     }}
                     ListHeaderComponent={<Box className="h-2" />}
-                    ListFooterComponent={<Box className="h-2" />}
+                    ListFooterComponent={
+                        <>
+                            <Box className="flex @3xl:hidden h-2" />
+                            <Box className="hidden @3xl:flex" style={{ height: edgeInsets.bottom + 8 }} />
+                        </>
+                    }
                     data={convertedTrack}
                     estimatedItemSize={64}
                     extraData={[]}
@@ -269,14 +281,20 @@ export default function AudioPlayerModal() {
     }));
     const [queuePlayingMode] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
     const { update } = useTracks();
-
-    console.log(useWindowDimensions());
+    const edgeInsets = useSafeAreaInsets();
+    const [shouldMarginBottom, setShouldMarginBottom] = useState(false);
 
     return (
-        <View className="flex-1 bg-background-0 @container">
+        <View
+            className="flex-1 bg-background-0 @container"
+            onLayout={e => {
+                setShouldMarginBottom(e.nativeEvent.layout.width < 768);
+            }}
+        >
             <CommonLayout
                 overrideEdgeInsets={{
                     top: Platform.OS === "ios" ? 0 : undefined,
+                    bottom: 0,
                 }}
                 titleBarClassName="h-[72px] px-[14px]"
                 titleBarTheme="transparent"
@@ -324,7 +342,13 @@ export default function AudioPlayerModal() {
                         <MusicPicture image={activeTrack?.artwork} bilisoundId={activeTrack?.bilisoundId} />
                     )}
                 </View>
-                <View className="flex-0 @3xl:flex-1 basis-auto h-64 @3xl:h-full @3xl:justify-center">
+                <View
+                    className="flex-0 @3xl:flex-1 basis-auto h-64 @3xl:h-full @3xl:justify-center"
+                    style={{
+                        marginBottom: shouldMarginBottom ? edgeInsets.bottom : undefined,
+                        paddingBottom: shouldMarginBottom ? undefined : edgeInsets.bottom,
+                    }}
+                >
                     <PotatoPressable
                         onPress={() => {
                             if (Platform.OS === "ios") {
