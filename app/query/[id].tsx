@@ -219,58 +219,66 @@ export default function Page() {
             }
         >
             {isLoading ? (
-                <Box className="flex-1 flex-row">
-                    {width >= SCREEN_BREAKPOINTS.md ? (
-                        <Box className="flex-1 lg:flex-0 basis-auto lg:w-[384px]">
-                            <ScrollView>
-                                <VideoMeta skeleton />
-                            </ScrollView>
-                        </Box>
-                    ) : null}
+                <Box className="flex-1 flex-col md:flex-row">
+                    <Box className="hidden md:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+                        <ScrollView>
+                            <VideoMeta skeleton />
+                        </ScrollView>
+                    </Box>
                     <Box className="flex-1">
-                        {width < SCREEN_BREAKPOINTS.md ? <VideoMeta skeleton /> : <Box className="h-3" />}
+                        <VideoMeta className="flex md:hidden" skeleton />
                     </Box>
                 </Box>
             ) : null}
             {error ? (
-                <Box
-                    style={{
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 12,
-                        opacity: 0.5,
-                    }}
-                >
+                <Box className="flex-1 items-center justify-center gap-3 opacity-50">
                     <MaterialIcons name="error-outline" size={72} color={textBasicColor} />
                     <Text className="text-[20px] font-semibold text-typography-700">查询失败了</Text>
                     <Text className="text-sm text-typography-700">{`${error?.message || error}`}</Text>
                 </Box>
             ) : null}
             {data ? (
-                <Box className="flex-1 flex-row">
-                    {width >= SCREEN_BREAKPOINTS.md ? (
-                        <Box className="flex-1 lg:flex-0 basis-auto lg:w-[384px]">
-                            <ScrollView>
-                                <VideoMeta meta={data.data} />
-                                <Box style={{ height: edgeInsets.bottom }} />
-                            </ScrollView>
-                        </Box>
-                    ) : null}
+                <Box className="hidden md:flex flex-1 flex-row">
+                    <Box className="flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+                        <ScrollView>
+                            <VideoMeta meta={data.data} />
+                            <Box style={{ height: edgeInsets.bottom }} />
+                        </ScrollView>
+                    </Box>
                     <Box className="flex-1">
                         <FlashList
                             data={dataList}
                             keyExtractor={item => `${item.page}`}
                             ListHeaderComponent={
-                                width < SCREEN_BREAKPOINTS.md ? <VideoMeta meta={data.data} /> : <Box className="h-3" />
+                                <>
+                                    <Box className="h-3" aria-hidden />
+                                </>
                             }
                             ListFooterComponent={
                                 <View style={{ height: edgeInsets.bottom + (activeTrack ? 58 + 36 : 12) }} />
                             }
                             renderItem={renderItem}
-                            estimatedItemSize={dataLength * 64}
+                            estimatedItemSize={82}
                         />
                     </Box>
+                </Box>
+            ) : null}
+            {data ? (
+                <Box className="flex md:hidden flex-1">
+                    <FlashList
+                        data={dataList}
+                        keyExtractor={item => `${item.page}`}
+                        ListHeaderComponent={
+                            <>
+                                <VideoMeta meta={data.data} className="" />
+                            </>
+                        }
+                        ListFooterComponent={
+                            <View style={{ height: edgeInsets.bottom + (activeTrack ? 58 + 36 : 12) }} />
+                        }
+                        renderItem={renderItem}
+                        estimatedItemSize={82}
+                    />
                 </Box>
             ) : null}
             {activeTrack ? (

@@ -3,10 +3,10 @@
   "main": "expo-router/entry",
   "version": "1.8.0",
   "scripts": {
-    "start": "cross-env DARK_MODE=media expo start --dev-client",
+    "start": "cross-env DARK_MODE=media expo start -c --dev-client",
     "android": "cross-env DARK_MODE=media expo run:android",
     "ios": "cross-env DARK_MODE=media expo run:ios",
-    "web": "cross-env DARK_MODE=media expo start --web",
+    "web": "cross-env DARK_MODE=media expo start -c --web",
     "prepare": "pnpm run clean && expo prebuild",
     "test": "jest --watchAll",
     "build:android": "node ./scripts/run-gradle.js assembleRelease",

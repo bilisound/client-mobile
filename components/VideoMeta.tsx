@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Platform, View } from "react-native";
+import { twMerge } from "tailwind-merge";
 
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
 import PotatoButton from "~/components/potato-ui/PotatoButton";
@@ -33,7 +34,11 @@ export type VideoMetaProps =
           skeleton: true;
       };
 
-const VideoMeta: React.FC<VideoMetaProps> = ({ meta, skeleton }) => {
+export interface VideoMetaBaseProps {
+    className?: string;
+}
+
+const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skeleton, className }) => {
     const [showMore, setShowMore] = useState(false);
 
     const { setPlaylistDetail, setName, setDescription, setSource } = useApplyPlaylistStore(state => ({
@@ -140,13 +145,13 @@ const VideoMeta: React.FC<VideoMetaProps> = ({ meta, skeleton }) => {
     const showMoreComputed = showMore ? showMoreEl : showMoreElHidden;
 
     return (
-        <View className="p-4 flex-col gap-4">
+        <View className={twMerge("p-4 gap-4", className)}>
             {skeleton ? (
-                <Skeleton className="aspect-[16/9] rounded-lg flex-1" />
+                <Skeleton className="aspect-[16/9] rounded-lg w-[unset] h-[unset]" />
             ) : (
                 <Image source={getImageProxyUrl(meta.pic, meta.bvid)} className="aspect-[16/9] rounded-lg" />
             )}
-            <View className="flex-1">
+            <View>
                 {skeleton ? (
                     <View className="gap-2 py-1 mb-4">
                         <Skeleton className="h-4 w-full" />
