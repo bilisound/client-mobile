@@ -196,7 +196,6 @@ export default function Page() {
     );
 
     const dataList = data?.data.pages ?? [];
-    const dataLength = Math.max(dataList.length, 1);
 
     return (
         <CommonLayout

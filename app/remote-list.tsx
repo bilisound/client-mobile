@@ -4,10 +4,10 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, ScrollView, View, useWindowDimensions } from "react-native";
+import { ActivityIndicator, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { twMerge } from "tailwind-merge";
 
 import {
     getBilisoundMetadata,
@@ -20,8 +20,8 @@ import CommonLayout from "~/components/CommonLayout";
 import PotatoButton from "~/components/potato-ui/PotatoButton";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
-import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { formatSecond } from "~/utils/datetime";
@@ -31,10 +31,10 @@ const IconAdd = createIcon(MaterialIcons, "add");
 interface HeaderProps {
     data: GetEpisodeUserResponse;
     mode: UserListMode;
+    className?: string;
 }
 
-function Header({ data, mode }: HeaderProps) {
-    const { styles } = useStyles(styleSheet);
+function Header({ data, mode, className }: HeaderProps) {
     const [loading, setLoading] = useState(false);
 
     // 添加歌单
@@ -88,9 +88,9 @@ function Header({ data, mode }: HeaderProps) {
     }
 
     return (
-        <View style={styles.container}>
-            <Image source={getImageProxyUrl(data.meta.cover, data.rows[0].bvid)} style={styles.image} />
-            <Text className="text-lg leading-[24px] font-semibold mt-4" selectable>
+        <View className={twMerge("p-4", className)}>
+            <Image source={getImageProxyUrl(data.meta.cover, data.rows[0].bvid)} className="aspect-video rounded-lg" />
+            <Text className="text-lg leading-[24px] font-semibold mt-5" selectable>
                 {data.meta.name}
             </Text>
             {data.meta.description && <Text className="text-[15px] leading-normal mt-4">{data.meta.description}</Text>}
@@ -108,57 +108,20 @@ function Header({ data, mode }: HeaderProps) {
     );
 }
 
-function HeaderSkeleton() {
-    const { styles, theme } = useStyles(styleSheet);
-    const textBasicColor = theme.colorTokens.foreground;
+interface HeaderSkeletonProps {
+    className?: string;
+}
 
-    const skeletonBlock = {
-        backgroundColor: textBasicColor,
-        borderRadius: 8,
-        opacity: 0.1,
-    };
-
+function HeaderSkeleton({ className }: HeaderSkeletonProps) {
     return (
-        <View style={styles.container}>
-            <View
-                style={{
-                    ...skeletonBlock,
-                    aspectRatio: "16/9",
-                    flex: 0,
-                    flexBasis: "auto",
-                }}
-            />
-            <View
-                style={{
-                    marginTop: 16,
-                    height: 24,
-                }}
-            >
-                <View
-                    style={{
-                        ...skeletonBlock,
-                        height: 16,
-                    }}
-                />
+        <View className={twMerge("flex-1 p-4", className)}>
+            <Skeleton className="aspect-video rounded-lg w-[unset] h-[unset]" />
+            <View className="h-6 mt-5 justify-center">
+                <Skeleton className="rounded-full h-[18px]" />
             </View>
-            <View style={{ height: 15 * 1.5, marginTop: 16 }}>
-                <View
-                    style={{
-                        ...skeletonBlock,
-                        height: 15,
-                    }}
-                />
-            </View>
-            <View style={{ flexDirection: "row" }}>
-                <View
-                    style={{
-                        ...skeletonBlock,
-                        height: 40,
-                        width: 120,
-                        marginTop: 20,
-                        borderRadius: 9999,
-                    }}
-                />
+            <View className="mt-4 py-[3.75px] gap-[7.5px]">
+                <Skeleton className="rounded-full h-[15px]" />
+                <Skeleton className="rounded-full h-[15px] w-1/2" />
             </View>
         </View>
     );
@@ -167,7 +130,6 @@ function HeaderSkeleton() {
 export default function Page() {
     const { userId, listId, mode } = useLocalSearchParams<{ userId: string; listId: string; mode: UserListMode }>();
 
-    const { width } = useWindowDimensions();
     const edgeInsets = useSafeAreaInsets();
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
@@ -226,7 +188,7 @@ export default function Page() {
                             <View style={{ height: edgeInsets.bottom }} aria-hidden />
                         </ScrollView>
                     </View>
-                    <View style={{ flex: 1 }}>
+                    <View className="flex-1">
                         <FlashList
                             data={data.pages.flatMap(page => page.rows) || []}
                             renderItem={renderItem}
@@ -234,11 +196,12 @@ export default function Page() {
                             onEndReached={loadMore}
                             onEndReachedThreshold={0.5}
                             ListHeaderComponent={
-                                width < SCREEN_BREAKPOINTS.md && data.pages[0] ? (
-                                    <Header data={data.pages[0]} mode={mode!} />
-                                ) : (
-                                    <View style={{ height: 4 }} aria-hidden />
-                                )
+                                data.pages[0] ? (
+                                    <>
+                                        <Header className="flex md:hidden" data={data.pages[0]} mode={mode!} />
+                                        <View className="h-1 hidden md:flex" aria-hidden />
+                                    </>
+                                ) : null
                             }
                             ListFooterComponent={
                                 <>
@@ -251,28 +214,14 @@ export default function Page() {
                     </View>
                 </View>
             ) : (
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                    {width >= SCREEN_BREAKPOINTS.md ? (
-                        <View style={{ flex: 0, flexBasis: "auto", width: 384 }}>
-                            <HeaderSkeleton />
-                        </View>
-                    ) : null}
-                    <View style={{ flex: 1 }}>{width < SCREEN_BREAKPOINTS.md ? <HeaderSkeleton /> : null}</View>
+                <View className="flex-1">
+                    <View className="hidden md:flex w-full">
+                        <HeaderSkeleton className="flex-1" />
+                        <View className="flex-1" />
+                    </View>
+                    <HeaderSkeleton className="flex md:hidden" />
                 </View>
             )}
         </CommonLayout>
     );
 }
-
-const styleSheet = createStyleSheet(theme => ({
-    container: {
-        flex: 1,
-        padding: 16,
-    },
-    image: {
-        aspectRatio: 16 / 9,
-        borderRadius: 8,
-        flex: 0,
-        flexBasis: "auto",
-    },
-}));
