@@ -5,7 +5,6 @@ import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import Empty from "~/components/Empty";
@@ -31,7 +30,6 @@ const IconDelete = createIcon(MaterialIcons, "delete");
 
 export default function Page() {
     const edgeInsets = useSafeAreaInsets();
-    const { styles, theme } = useStyles(styleSheet);
 
     // 历史记录信息
     const { historyList, clearHistoryList, repairHistoryList } = useHistoryStore(state => ({
@@ -59,7 +57,6 @@ export default function Page() {
         <FlashList
             ref={flashListRef}
             data={historyList}
-            extraData={theme}
             keyExtractor={item => `${item?.key}`}
             ListHeaderComponent={<Box className="h-1" />}
             ListFooterComponent={<View style={{ height: edgeInsets.bottom + 4 }} />}
@@ -75,15 +72,21 @@ export default function Page() {
                         onPress={() => {
                             router.push(`/query/${data.id}?noHistory=1`);
                         }}
-                        onLongPress={() => null}
-                        style={[styles.historyItem]}
+                        className="flex-row items-center py-3 px-4 gap-4"
                     >
-                        <Image source={getImageProxyUrl(data.thumbnailUrl, data.id)} style={styles.thumbnail} />
-                        <View style={styles.textContainer}>
-                            <Text style={styles.titleText} ellipsizeMode="tail" numberOfLines={1}>
+                        <Image
+                            source={getImageProxyUrl(data.thumbnailUrl, data.id)}
+                            className="h-12 aspect-[3/2] flex-0 basis-auto rounded-lg"
+                        />
+                        <View className="flex-1 gap-1">
+                            <Text
+                                className="font-semibold text-sm leading-normal"
+                                ellipsizeMode="tail"
+                                numberOfLines={1}
+                            >
                                 {data.name}
                             </Text>
-                            <Text style={styles.authorText} ellipsizeMode="tail" numberOfLines={1}>
+                            <Text className="text-xs opacity-50 leading-normal" ellipsizeMode="tail" numberOfLines={1}>
                                 {data.authorName}
                             </Text>
                         </View>
@@ -96,7 +99,9 @@ export default function Page() {
     return (
         <CommonLayout
             title="历史记录"
-            extendToBottom
+            overrideEdgeInsets={{
+                bottom: 0,
+            }}
             leftAccessories="backButton"
             rightAccessories={
                 historyList.length > 0 ? (
@@ -136,44 +141,3 @@ export default function Page() {
         </CommonLayout>
     );
 }
-
-const styleSheet = createStyleSheet(theme => ({
-    historyItem: {
-        flexDirection: "row",
-        alignItems: "center",
-        height: 72,
-        paddingHorizontal: 16,
-        gap: 16,
-    },
-    thumbnail: {
-        height: 48,
-        aspectRatio: 3 / 2,
-        flex: 0,
-        flexBasis: "auto",
-        borderRadius: 8,
-    },
-    textContainer: {
-        flex: 1,
-        gap: 4,
-    },
-    titleText: {
-        fontWeight: "bold",
-        fontSize: 14,
-        color: theme.colorTokens.foreground,
-    },
-    authorText: {
-        opacity: 0.5,
-        fontSize: 12,
-        color: theme.colorTokens.foreground,
-    },
-    emptyContainer: {
-        alignItems: "center",
-        justifyContent: "center",
-        flexGrow: 1,
-        gap: 16,
-    },
-    emptyText: {
-        fontSize: 14,
-        opacity: 0.5,
-    },
-}));
