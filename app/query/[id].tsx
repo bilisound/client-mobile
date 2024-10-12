@@ -29,7 +29,6 @@ import { Box } from "~/components/ui/box";
 import { Fab } from "~/components/ui/fab";
 import { Text } from "~/components/ui/text";
 import { BILIBILI_VIDEO_URL_PREFIX } from "~/constants/network";
-import { SCREEN_BREAKPOINTS } from "~/constants/style";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import useHistoryStore from "~/store/history";
 import { formatSecond } from "~/utils/datetime";

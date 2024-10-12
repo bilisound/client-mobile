@@ -195,15 +195,21 @@ function Header({
         }
     }
 
+    const imgUrl = meta.imgUrl;
+
     return (
         <View className="pb-6 px-4 gap-4">
-            {meta.imgUrl ? <Image source={meta.imgUrl} className="aspect-video rounded-lg" /> : null}
-            <View className={`flex-row ${meta.imgUrl ? "" : "pt-4"} gap-4`}>
-                {meta.imgUrl ? null : <ImagesGroup images={images} />}
+            {imgUrl ? <Image source={imgUrl} className="aspect-video rounded-lg" /> : null}
+            <View className={`flex-row ${imgUrl ? "" : "pt-4"} gap-4`}>
+                {imgUrl ? null : <ImagesGroup images={images} />}
                 <View className="flex-1">
                     <Text className="text-[20px] font-semibold leading-normal">{meta.title}</Text>
-                    <Text className="opacity-60 mt-2 text-sm leading-normal">{`${meta.amount} 首歌曲`}</Text>
-                    {meta.source ? (
+                    <View className="flex-row">
+                        <Text className="opacity-60 mt-2 text-sm leading-normal">
+                            {`${meta.amount} 首歌曲` + (imgUrl ? ` ・ 上次同步：${lastSyncString}` : "")}
+                        </Text>
+                    </View>
+                    {meta.source && !imgUrl ? (
                         <Text className="opacity-60 mt-2 text-sm leading-normal">{`上次同步：${lastSyncString}`}</Text>
                     ) : null}
                     {showPlayButton && (
