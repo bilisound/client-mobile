@@ -3,10 +3,9 @@ import { Poppins_700Bold } from "@expo-google-fonts/poppins";
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Platform, useWindowDimensions, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useStyles } from "react-native-unistyles";
+import { Platform } from "react-native";
 
+import CommonLayout from "~/components/CommonLayout";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import { Box } from "~/components/ui/box";
@@ -31,9 +30,6 @@ const TabIndexScreen: React.FC = () => {
     const [value, setValue] = useState("");
     const [inputError, setInputError] = useState(false);
 
-    const { width } = useWindowDimensions();
-    const insets = useSafeAreaInsets();
-    const { theme } = useStyles();
     const isNarrowWidth = useIsNarrowWidth();
 
     const [fontsLoaded] = useFonts({
@@ -53,15 +49,31 @@ const TabIndexScreen: React.FC = () => {
     }
 
     return (
-        <Box
+        <CommonLayout
+            titleBarTheme="transparent"
+            rightAccessories={
+                <>
+                    {Platform.OS === "web" ? null : (
+                        <PotatoButtonTitleBar
+                            label="扫描二维码"
+                            Icon={IconQrcodeScan}
+                            iconSize={20}
+                            theme="transparent"
+                            onPress={() => router.push("/barcode")}
+                        />
+                    )}
+                    <PotatoButtonTitleBar
+                        label="历史记录"
+                        Icon={IconHistory}
+                        iconSize={20}
+                        theme="transparent"
+                        onPress={() => router.push("/history")}
+                    />
+                </>
+            }
             className="items-stretch h-full"
-            style={{
-                paddingLeft: insets.left,
-                paddingRight: insets.right,
-                paddingTop: insets.top,
-            }}
         >
-            <Box className={`${isNarrowWidth ? "pt-16 pb-8" : "pt-24 pb-12"} items-center`}>
+            <Box className={`${isNarrowWidth ? "pt-6 pb-8" : "pt-8 pb-12"} items-center`}>
                 {fontsLoaded ? (
                     <Text
                         className="text-3xl text-primary-500 dark:text-primary-400 h-12 leading-12"
@@ -80,7 +92,7 @@ const TabIndexScreen: React.FC = () => {
                     isReadOnly={false}
                     isRequired={false}
                     size="md"
-                    className={`${width >= 592 ? "w-[560px]" : "w-full"} bg-transparent`}
+                    className="w-full sm:w-[560px] bg-transparent"
                 >
                     <Input variant="outline" size="md" className="w-full h-12 rounded-lg">
                         <InputField
@@ -101,10 +113,7 @@ const TabIndexScreen: React.FC = () => {
                                     setValue("");
                                 }}
                             >
-                                <IconClear
-                                    size={24}
-                                    color={theme.colorTokens.buttonOutlineForeground("primary", "default")}
-                                />
+                                <IconClear size={24} className="color-typography-700" />
                             </InputSlot>
                         )}
                     </Input>
@@ -114,31 +123,7 @@ const TabIndexScreen: React.FC = () => {
                     </FormControlError>
                 </FormControl>
             </Box>
-            <Box
-                className="absolute p-2.5 right-0 flex-row items-center gap-1"
-                style={{
-                    top: insets.top,
-                }}
-            >
-                {Platform.OS === "web" ? null : (
-                    <PotatoButtonTitleBar
-                        label="扫描二维码"
-                        Icon={IconQrcodeScan}
-                        iconSize={20}
-                        theme="transparent"
-                        onPress={() => router.push("/barcode")}
-                    />
-                )}
-                <PotatoButtonTitleBar
-                    label="历史记录"
-                    Icon={IconHistory}
-                    iconSize={20}
-                    theme="transparent"
-                    onPress={() => router.push("/history")}
-                />
-            </Box>
-            <View className="flex-1" />
-        </Box>
+        </CommonLayout>
     );
 };
 
