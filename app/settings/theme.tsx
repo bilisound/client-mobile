@@ -1,8 +1,7 @@
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
-import { Image as ExpoImage } from "expo-image";
-import { cssInterop } from "nativewind";
+import { Image } from "expo-image";
 import React from "react";
-import { Pressable } from "react-native";
+import { Pressable, ScrollView } from "react-native";
 import { useStyles } from "react-native-unistyles";
 import { twMerge } from "tailwind-merge";
 
@@ -15,16 +14,6 @@ import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { VStack } from "~/components/ui/vstack";
 import useSettingsStore from "~/store/settings";
-
-const Image = cssInterop(ExpoImage, {
-    className: {
-        target: "style",
-        nativeStyleToProp: {
-            height: true,
-            width: true,
-        },
-    },
-});
 
 interface ThemeButtonProps {
     selected?: boolean;
@@ -64,42 +53,44 @@ export default function Page() {
 
     return (
         <CommonLayout titleBarTheme="solid" title="外观设置" leftAccessories="backButton">
-            <VStack space="xl" className="p-4">
-                <HStack space="md" className="items-center">
-                    <Center className="size-[24px]">
-                        <PaintBrushIcon size={20} color={themeData.colorTokens.foreground} />
-                    </Center>
-                    <Text className="text-[15px] font-semibold">App 界面主题</Text>
-                </HStack>
-                <VStack space="lg" className="md:flex-row">
-                    <ThemeButton
-                        name="默认主题"
-                        yuruChara={require("../../assets/images/bg-corner-classic.svg")}
-                        onPress={() => update("theme", "classic")}
-                        selected={theme === "classic"}
-                    />
-                    <ThemeButton
-                        name="红色主题"
-                        yuruChara={require("../../assets/images/bg-corner-red.webp")}
-                        onPress={() => update("theme", "red")}
-                        selected={theme === "red"}
-                    />
+            <ScrollView>
+                <VStack space="xl" className="p-4">
+                    <HStack space="md" className="items-center">
+                        <Center className="size-[24px]">
+                            <PaintBrushIcon size={20} color={themeData.colorTokens.foreground} />
+                        </Center>
+                        <Text className="text-[15px] font-semibold">App 界面主题</Text>
+                    </HStack>
+                    <VStack space="lg" className="md:flex-row">
+                        <ThemeButton
+                            name="默认主题"
+                            yuruChara={require("../../assets/images/bg-corner-classic.svg")}
+                            onPress={() => update("theme", "classic")}
+                            selected={theme === "classic"}
+                        />
+                        <ThemeButton
+                            name="红色主题"
+                            yuruChara={require("../../assets/images/bg-corner-red.webp")}
+                            onPress={() => update("theme", "red")}
+                            selected={theme === "red"}
+                        />
+                    </VStack>
                 </VStack>
-            </VStack>
-            <SettingMenuItem
-                icon={BackgroundIcon}
-                iconSize={20}
-                title="在首页右下角展示看板娘"
-                rightAccessories={
-                    <Switch
-                        value={showYuruChara}
-                        onChange={() => {
-                            toggle("showYuruChara");
-                        }}
-                    />
-                }
-                onPress={() => toggle("showYuruChara")}
-            />
+                <SettingMenuItem
+                    icon={BackgroundIcon}
+                    iconSize={20}
+                    title="在首页右下角展示看板娘"
+                    rightAccessories={
+                        <Switch
+                            value={showYuruChara}
+                            onChange={() => {
+                                toggle("showYuruChara");
+                            }}
+                        />
+                    }
+                    onPress={() => toggle("showYuruChara")}
+                />
+            </ScrollView>
         </CommonLayout>
     );
 }
