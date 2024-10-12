@@ -154,8 +154,8 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
             <View>
                 {skeleton ? (
                     <View className="gap-2 py-1 mb-4">
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="rounded-full h-4 w-full" />
+                        <Skeleton className="rounded-full h-4 w-1/2" />
                     </View>
                 ) : (
                     <Text className="text-base font-bold mb-4 leading-6 text-typography-700" selectable>
@@ -167,9 +167,9 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
                         <>
                             <Skeleton className="w-9 h-9 relative flex-shrink-0 rounded-full" />
                             <View className="flex-grow">
-                                <Skeleton className="w-20 h-[14px]" />
+                                <Skeleton className="rounded-full w-20 h-[14px]" />
                             </View>
-                            <Skeleton className="flex-shrink-0 w-16 h-[14px]" />
+                            <Skeleton className="rounded-full flex-shrink-0 w-16 h-[14px]" />
                         </>
                     ) : (
                         <>
@@ -194,10 +194,11 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
                 {(meta?.desc ?? "").trim() !== "" && showMoreComputed}
                 {skeleton && (
                     <VStack className="py-[3.75px] gap-[7.5px]">
-                        <Skeleton className="h-[15px] w-full" />
-                        <Skeleton className="h-[15px] w-full" />
-                        <Skeleton className="h-[15px] w-full" />
-                        <Skeleton className="h-[15px] w-1/2" />
+                        <Skeleton className="rounded-full h-[15px] w-full" />
+                        <Skeleton className="rounded-full h-[15px] w-full" />
+                        <Skeleton className="rounded-full h-[15px] w-full" />
+                        <Skeleton className="rounded-full h-[15px] w-full" />
+                        <Skeleton className="rounded-full h-[15px] w-1/2" />
                     </VStack>
                 )}
 
