@@ -159,7 +159,7 @@ export default function Page() {
     const queryClient = useQueryClient();
     const { data } = useQuery({
         queryKey: ["playlist_meta"],
-        queryFn: getPlaylistMetas,
+        queryFn: () => getPlaylistMetas(),
     });
 
     const [showActionSheet, setShowActionSheet] = useState(false);

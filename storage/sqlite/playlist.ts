@@ -1,4 +1,4 @@
-import { eq, count as countFunc, InferInsertModel, sql } from "drizzle-orm";
+import { eq, count as countFunc, InferInsertModel, sql, isNull } from "drizzle-orm";
 import omit from "lodash/omit";
 
 import { PlaylistDetail, playlistDetail, PlaylistImport, playlistMeta } from "./schema";
@@ -13,7 +13,10 @@ import { PlaylistSource } from "~/typings/playlist";
 /**
  * 查询歌单元数据列表
  */
-export async function getPlaylistMetas() {
+export async function getPlaylistMetas(filterHasSource = false) {
+    if (filterHasSource) {
+        return db.select().from(playlistMeta).where(isNull(playlistMeta.source));
+    }
     return db.select().from(playlistMeta);
 }
 

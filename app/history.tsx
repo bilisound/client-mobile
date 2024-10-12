@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CommonLayout from "~/components/CommonLayout";
 import Empty from "~/components/Empty";
+import { VideoItem } from "~/components/VideoItem";
 import PotatoButton from "~/components/potato-ui/PotatoButton";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
@@ -68,29 +69,14 @@ export default function Page() {
                     return null;
                 }
                 return (
-                    <PotatoPressable
+                    <VideoItem
                         onPress={() => {
                             router.push(`/query/${data.id}?noHistory=1`);
                         }}
-                        className="flex-row items-center py-3 px-4 gap-4"
-                    >
-                        <Image
-                            source={getImageProxyUrl(data.thumbnailUrl, data.id)}
-                            className="h-12 aspect-[3/2] flex-0 basis-auto rounded-lg"
-                        />
-                        <View className="flex-1 gap-1">
-                            <Text
-                                className="font-semibold text-sm leading-normal"
-                                ellipsizeMode="tail"
-                                numberOfLines={1}
-                            >
-                                {data.name}
-                            </Text>
-                            <Text className="text-xs opacity-50 leading-normal" ellipsizeMode="tail" numberOfLines={1}>
-                                {data.authorName}
-                            </Text>
-                        </View>
-                    </PotatoPressable>
+                        image={getImageProxyUrl(data.thumbnailUrl, data.id)}
+                        text1={data.name}
+                        text2={data.authorName}
+                    />
                 );
             }}
         />
