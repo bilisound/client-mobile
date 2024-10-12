@@ -5,8 +5,8 @@ import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import React, { useEffect, useMemo, useState } from "react";
-import { Linking, Platform, StatusBar, useColorScheme, useWindowDimensions, View } from "react-native";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import { useMMKVString } from "react-native-mmkv";
 import Animated, {
@@ -16,7 +16,7 @@ import Animated, {
     withRepeat,
     withTiming,
 } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
@@ -41,6 +41,13 @@ import { handlePrev, handleTogglePlay } from "~/utils/player-control";
 import { setMode, tracksToPlaylist } from "~/utils/track-data";
 
 const IconDown = createIcon(Entypo, "chevron-down");
+
+const AudioPlayerInsetContext = createContext<EdgeInsets>({
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+});
 
 function AudioProgressBar() {
     const colorScheme = useColorScheme();
@@ -169,7 +176,7 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
     const colorScheme = useColorScheme();
     const [smallestSize, setSmallestSize] = useState(0);
     const { styles } = useStyles(styleSheet);
-    const edgeInsets = useSafeAreaInsets();
+    const edgeInsets = useContext(AudioPlayerInsetContext);
     const [shouldPaddingBottom, setShouldPaddingBottom] = useState(false);
 
     return (
@@ -207,7 +214,7 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
 
 function MusicList() {
     const { tracks } = useTracks();
-    const edgeInsets = useSafeAreaInsets();
+    const edgeInsets = useContext(AudioPlayerInsetContext);
 
     // 转换后的列表
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
@@ -282,215 +289,222 @@ export default function AudioPlayerModal() {
     const [queuePlayingMode] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
     const { update } = useTracks();
     const edgeInsets = useSafeAreaInsets();
+    const customEdgeInsets: EdgeInsets = {
+        ...edgeInsets,
+        top: Platform.OS === "ios" ? 0 : edgeInsets.top,
+    };
     const [shouldMarginBottom, setShouldMarginBottom] = useState(false);
 
     return (
-        <View
-            className="flex-1 bg-background-0 @container"
-            onLayout={e => {
-                setShouldMarginBottom(e.nativeEvent.layout.width < 768);
-            }}
-        >
-            <CommonLayout
-                overrideEdgeInsets={{
-                    top: Platform.OS === "ios" ? 0 : undefined,
-                    bottom: 0,
+        <AudioPlayerInsetContext.Provider value={customEdgeInsets}>
+            <View
+                className="flex-1 bg-background-0 @container"
+                onLayout={e => {
+                    setShouldMarginBottom(e.nativeEvent.layout.width < 768);
                 }}
-                titleBarClassName="h-[72px] px-[14px]"
-                titleBarTheme="transparent"
-                containerClassName="flex-col @3xl:flex-row"
-                title={
-                    <Box className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
-                        {/* key 是切换选项卡后阴影停滞问题的 workaround */}
-                        <TopTabButton
-                            key={`${showList}_正在播放`}
-                            active={!showList}
-                            onPress={() => setShowList(false)}
-                        >
-                            正在播放
-                        </TopTabButton>
-                        <TopTabButton key={`${showList}_播放队列`} active={showList} onPress={() => setShowList(true)}>
-                            播放队列
-                        </TopTabButton>
-                    </Box>
-                }
-                leftAccessories={
-                    <PotatoButtonTitleBar
-                        label="返回"
-                        Icon={IconDown}
-                        theme="transparent"
-                        onPress={() => {
-                            if (router.canGoBack()) {
-                                router.back();
-                            } else {
-                                router.replace("/");
-                            }
-                        }}
-                    />
-                }
             >
-                <View className="flex-1">
-                    {Platform.OS === "ios" ? null : (
-                        <StatusBar
-                            barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-                            showHideTransition="none"
+                <CommonLayout
+                    overrideEdgeInsets={{ ...customEdgeInsets, bottom: 0 }}
+                    titleBarClassName="h-[72px] px-[14px]"
+                    titleBarTheme="transparent"
+                    containerClassName="flex-col @3xl:flex-row"
+                    title={
+                        <Box className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
+                            {/* key 是切换选项卡后阴影停滞问题的 workaround */}
+                            <TopTabButton
+                                key={`${showList}_正在播放`}
+                                active={!showList}
+                                onPress={() => setShowList(false)}
+                            >
+                                正在播放
+                            </TopTabButton>
+                            <TopTabButton
+                                key={`${showList}_播放队列`}
+                                active={showList}
+                                onPress={() => setShowList(true)}
+                            >
+                                播放队列
+                            </TopTabButton>
+                        </Box>
+                    }
+                    leftAccessories={
+                        <PotatoButtonTitleBar
+                            label="返回"
+                            Icon={IconDown}
+                            theme="transparent"
+                            onPress={() => {
+                                if (router.canGoBack()) {
+                                    router.back();
+                                } else {
+                                    router.replace("/");
+                                }
+                            }}
                         />
-                    )}
-                    {showList ? (
-                        <MusicList />
-                    ) : (
-                        <MusicPicture image={activeTrack?.artwork} bilisoundId={activeTrack?.bilisoundId} />
-                    )}
-                </View>
-                <View
-                    className="flex-0 @3xl:flex-1 basis-auto h-64 @3xl:h-full @3xl:justify-center"
-                    style={{
-                        marginBottom: shouldMarginBottom ? edgeInsets.bottom : undefined,
-                        paddingBottom: shouldMarginBottom ? undefined : edgeInsets.bottom,
-                    }}
+                    }
                 >
-                    <PotatoPressable
-                        onPress={() => {
-                            if (Platform.OS === "ios") {
-                                router.back();
-                                router.push(`/query/${activeTrack?.bilisoundId}`);
-                                return;
-                            }
-                            router.replace(`/query/${activeTrack?.bilisoundId}`);
+                    <View className="flex-1">
+                        {Platform.OS === "ios" ? null : (
+                            <StatusBar
+                                barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+                                showHideTransition="none"
+                            />
+                        )}
+                        {showList ? (
+                            <MusicList />
+                        ) : (
+                            <MusicPicture image={activeTrack?.artwork} bilisoundId={activeTrack?.bilisoundId} />
+                        )}
+                    </View>
+                    <View
+                        className="flex-0 @3xl:flex-1 basis-auto h-64 @3xl:h-full @3xl:justify-center"
+                        style={{
+                            marginBottom: shouldMarginBottom ? customEdgeInsets.bottom : undefined,
+                            paddingBottom: shouldMarginBottom ? undefined : customEdgeInsets.bottom,
                         }}
                     >
-                        <View className="px-[30px] py-4 gap-2">
-                            <Text
-                                className="text-[20px] font-extrabold leading-normal"
-                                numberOfLines={1}
-                                ellipsizeMode="tail"
-                            >
-                                {activeTrack?.title}
-                            </Text>
-                            <Text
-                                className="text-base leading-normal opacity-65"
-                                numberOfLines={1}
-                                ellipsizeMode="tail"
-                            >
-                                {activeTrack?.artist}
-                            </Text>
-                        </View>
-                    </PotatoPressable>
-                    <View className="flex-row items-center h-4 px-5 mt-2">
-                        <AudioProgressBar />
-                    </View>
-                    <AudioProgressTimer />
-                    <View style={styles.controlButtonsContainer}>
-                        {/* 歌单 */}
                         <PotatoPressable
-                            style={styles.controlButtonSmall}
-                            outerStyle={styles.controlButtonOuter}
-                            onPress={async () => {
-                                const result = await setMode();
-                                await update();
-                                if (result === "normal") {
-                                    Toast.show({
-                                        type: "info",
-                                        text1: "随机模式关闭",
-                                    });
-                                } else {
-                                    Toast.show({
-                                        type: "info",
-                                        text1: "随机模式开启",
-                                    });
-                                }
-                            }}
-                            aria-label={
-                                queuePlayingMode === "shuffle"
-                                    ? "随机模式开启（点击以关闭）"
-                                    : "随机模式关闭（点击以开启）"
-                            }
-                        >
-                            <Entypo
-                                name="shuffle"
-                                size={22}
-                                color={queuePlayingMode === "shuffle" ? theme.colors.accent[500] : textBasicColor}
-                            />
-                        </PotatoPressable>
-
-                        <View style={styles.controlButtonsGroup}>
-                            {/* 上一首 */}
-                            <PotatoPressable
-                                style={styles.controlButton}
-                                outerStyle={styles.controlButtonOuter}
-                                onPress={async () => {
-                                    await handlePrev();
-                                }}
-                                aria-label="上一首"
-                            >
-                                <FontAwesome5
-                                    name="step-backward"
-                                    size={24}
-                                    color={textBasicColor}
-                                    style={styles.controlButtonIcon}
-                                />
-                            </PotatoPressable>
-
-                            {/* 播放/暂停 */}
-                            <PotatoPressable
-                                style={styles.controlButtonPlay}
-                                outerStyle={styles.controlButtonOuter}
-                                pressedBackgroundColor={theme.colorTokens.buttonBackground("primary", "active")}
-                                onPress={async () => {
-                                    await handleTogglePlay();
-                                }}
-                                aria-label="播放/暂停"
-                            >
-                                <AudioPlayButtonIcon />
-                            </PotatoPressable>
-
-                            {/* 下一首 */}
-                            <PotatoPressable
-                                style={styles.controlButton}
-                                outerStyle={styles.controlButtonOuter}
-                                onPress={async () => {
-                                    await TrackPlayer.skipToNext();
-                                }}
-                                aria-label="下一首"
-                            >
-                                <FontAwesome5
-                                    name="step-forward"
-                                    size={24}
-                                    color={textBasicColor}
-                                    style={styles.controlButtonIcon}
-                                />
-                            </PotatoPressable>
-                        </View>
-
-                        {/* 导出 */}
-                        <PotatoPressable
-                            style={styles.controlButtonSmall}
-                            outerStyle={styles.controlButtonOuter}
-                            onPress={async () => {
-                                if (Platform.OS === "web") {
-                                    await Linking.openURL(
-                                        `${activeTrack?.url}&dl=${useSettingsStore.getState().useLegacyID ? "av" : "bv"}`,
-                                    );
+                            onPress={() => {
+                                if (Platform.OS === "ios") {
+                                    router.back();
+                                    router.push(`/query/${activeTrack?.bilisoundId}`);
                                     return;
                                 }
-                                await saveFile(
-                                    activeTrack?.url ?? "",
-                                    getFileName({
-                                        av: useLegacyID,
-                                        episode: activeTrack?.bilisoundEpisode ?? "",
-                                        id: activeTrack?.bilisoundId ?? "",
-                                        title: activeTrack?.title ?? "",
-                                    }),
-                                );
+                                router.replace(`/query/${activeTrack?.bilisoundId}`);
                             }}
-                            aria-label="导出"
                         >
-                            <Ionicons name="save" size={20} color={textBasicColor} />
+                            <View className="px-[30px] py-4 gap-2">
+                                <Text
+                                    className="text-[20px] font-extrabold leading-normal"
+                                    numberOfLines={1}
+                                    ellipsizeMode="tail"
+                                >
+                                    {activeTrack?.title}
+                                </Text>
+                                <Text
+                                    className="text-base leading-normal opacity-65"
+                                    numberOfLines={1}
+                                    ellipsizeMode="tail"
+                                >
+                                    {activeTrack?.artist}
+                                </Text>
+                            </View>
                         </PotatoPressable>
+                        <View className="flex-row items-center h-4 px-5 mt-2">
+                            <AudioProgressBar />
+                        </View>
+                        <AudioProgressTimer />
+                        <View style={styles.controlButtonsContainer}>
+                            {/* 歌单 */}
+                            <PotatoPressable
+                                style={styles.controlButtonSmall}
+                                outerStyle={styles.controlButtonOuter}
+                                onPress={async () => {
+                                    const result = await setMode();
+                                    await update();
+                                    if (result === "normal") {
+                                        Toast.show({
+                                            type: "info",
+                                            text1: "随机模式关闭",
+                                        });
+                                    } else {
+                                        Toast.show({
+                                            type: "info",
+                                            text1: "随机模式开启",
+                                        });
+                                    }
+                                }}
+                                aria-label={
+                                    queuePlayingMode === "shuffle"
+                                        ? "随机模式开启（点击以关闭）"
+                                        : "随机模式关闭（点击以开启）"
+                                }
+                            >
+                                <Entypo
+                                    name="shuffle"
+                                    size={22}
+                                    color={queuePlayingMode === "shuffle" ? theme.colors.accent[500] : textBasicColor}
+                                />
+                            </PotatoPressable>
+
+                            <View style={styles.controlButtonsGroup}>
+                                {/* 上一首 */}
+                                <PotatoPressable
+                                    style={styles.controlButton}
+                                    outerStyle={styles.controlButtonOuter}
+                                    onPress={async () => {
+                                        await handlePrev();
+                                    }}
+                                    aria-label="上一首"
+                                >
+                                    <FontAwesome5
+                                        name="step-backward"
+                                        size={24}
+                                        color={textBasicColor}
+                                        style={styles.controlButtonIcon}
+                                    />
+                                </PotatoPressable>
+
+                                {/* 播放/暂停 */}
+                                <PotatoPressable
+                                    style={styles.controlButtonPlay}
+                                    outerStyle={styles.controlButtonOuter}
+                                    pressedBackgroundColor={theme.colorTokens.buttonBackground("primary", "active")}
+                                    onPress={async () => {
+                                        await handleTogglePlay();
+                                    }}
+                                    aria-label="播放/暂停"
+                                >
+                                    <AudioPlayButtonIcon />
+                                </PotatoPressable>
+
+                                {/* 下一首 */}
+                                <PotatoPressable
+                                    style={styles.controlButton}
+                                    outerStyle={styles.controlButtonOuter}
+                                    onPress={async () => {
+                                        await TrackPlayer.skipToNext();
+                                    }}
+                                    aria-label="下一首"
+                                >
+                                    <FontAwesome5
+                                        name="step-forward"
+                                        size={24}
+                                        color={textBasicColor}
+                                        style={styles.controlButtonIcon}
+                                    />
+                                </PotatoPressable>
+                            </View>
+
+                            {/* 导出 */}
+                            <PotatoPressable
+                                style={styles.controlButtonSmall}
+                                outerStyle={styles.controlButtonOuter}
+                                onPress={async () => {
+                                    if (Platform.OS === "web") {
+                                        await Linking.openURL(
+                                            `${activeTrack?.url}&dl=${useSettingsStore.getState().useLegacyID ? "av" : "bv"}`,
+                                        );
+                                        return;
+                                    }
+                                    await saveFile(
+                                        activeTrack?.url ?? "",
+                                        getFileName({
+                                            av: useLegacyID,
+                                            episode: activeTrack?.bilisoundEpisode ?? "",
+                                            id: activeTrack?.bilisoundId ?? "",
+                                            title: activeTrack?.title ?? "",
+                                        }),
+                                    );
+                                }}
+                                aria-label="导出"
+                            >
+                                <Ionicons name="save" size={20} color={textBasicColor} />
+                            </PotatoPressable>
+                        </View>
                     </View>
-                </View>
-            </CommonLayout>
-        </View>
+                </CommonLayout>
+            </View>
+        </AudioPlayerInsetContext.Provider>
     );
 }
 
