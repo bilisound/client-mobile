@@ -111,14 +111,13 @@ export default function Page() {
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
 
-    const { width } = useWindowDimensions();
-
     // 添加歌单
-    const { setPlaylistDetail, setName, setDescription, setSource } = useApplyPlaylistStore(state => ({
+    const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
         setDescription: state.setDescription,
         setSource: state.setSource,
+        setCover: state.setCover,
     }));
 
     // 数据请求
@@ -323,6 +322,7 @@ export default function Page() {
                                 },
                             ]);
                             setSource();
+                            setCover();
                             router.push(`/apply-playlist`);
                             break;
                         case "close":

@@ -26,11 +26,12 @@ export default function Page() {
     const { update } = useTracks();
 
     // 添加歌单
-    const { playlistDetail, name, description, source } = useApplyPlaylistStore(state => ({
+    const { playlistDetail, name, description, source, cover } = useApplyPlaylistStore(state => ({
         playlistDetail: state.playlistDetail,
         name: state.name,
         description: state.description,
         source: state.source,
+        cover: state.cover,
     }));
 
     const edgeInsets = useSafeAreaInsets();
@@ -97,7 +98,7 @@ export default function Page() {
                     <PotatoPressable
                         className="gap-1 px-5 py-3"
                         onPress={async () => {
-                            await quickCreatePlaylist(name, description, playlistDetail ?? [], source);
+                            await quickCreatePlaylist(name, description, playlistDetail ?? [], source, cover);
                             await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
                             await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
                             Toast.show({

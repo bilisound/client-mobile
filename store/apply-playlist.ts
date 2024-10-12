@@ -8,6 +8,7 @@ export interface ApplyPlaylistProps {
     name: string;
     description: string;
     source?: PlaylistSource;
+    cover?: string;
 }
 
 export interface ApplyPlaylistMethods {
@@ -15,6 +16,7 @@ export interface ApplyPlaylistMethods {
     setName: (name: string) => void;
     setDescription: (description: string) => void;
     setSource: (source?: PlaylistSource) => void;
+    setCover: (cover?: string) => void;
 }
 
 const useApplyPlaylistStore = create<ApplyPlaylistProps & ApplyPlaylistMethods>()(setState => ({
@@ -25,7 +27,9 @@ const useApplyPlaylistStore = create<ApplyPlaylistProps & ApplyPlaylistMethods>(
     description: "",
     setDescription: description => setState(() => ({ description })),
     source: undefined,
-    setSource: (source?: PlaylistSource) => setState(() => ({ source })),
+    setSource: source => setState(() => ({ source })),
+    cover: undefined,
+    setCover: cover => setState(() => ({ cover })),
 }));
 
 export default useApplyPlaylistStore;

@@ -148,12 +148,14 @@ export function replacePlaylistDetail(playlistId: number, playlist: InferInsertM
  * @param description
  * @param list
  * @param source
+ * @param imgUrl
  */
 export async function quickCreatePlaylist(
     title: string,
     description: string,
     list: PlaylistDetail[],
     source?: PlaylistSource,
+    imgUrl?: string,
 ) {
     // 在 playlistMeta 表中创建新的播放列表
     const newPlaylist = await db
@@ -161,6 +163,7 @@ export async function quickCreatePlaylist(
         .values({
             title,
             description,
+            imgUrl,
             color:
                 "#" +
                 Math.floor(Math.random() * 16777216)

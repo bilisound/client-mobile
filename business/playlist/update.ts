@@ -30,6 +30,7 @@ export async function updatePlaylist(id: number, source: PlaylistSource, progres
             replacePlaylistDetail(id, builtList);
             await setPlaylistMeta({
                 id,
+                imgUrl: meta.cover,
                 source: JSON.stringify({
                     ...source,
                     originalTitle: meta.name,
@@ -54,6 +55,7 @@ export async function updatePlaylist(id: number, source: PlaylistSource, progres
             replacePlaylistDetail(id, builtList);
             await setPlaylistMeta({
                 id,
+                imgUrl: data.pic,
                 source: JSON.stringify({
                     ...source,
                     originalTitle: data.title,

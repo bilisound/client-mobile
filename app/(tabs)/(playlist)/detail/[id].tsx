@@ -2,13 +2,11 @@ import { Entypo, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/v
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import Color from "color";
 import { Image } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { cssInterop } from "nativewind";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useColorScheme, Vibration, View } from "react-native";
+import { Vibration, View } from "react-native";
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
 import Toast from "react-native-toast-message";
@@ -198,15 +196,18 @@ function Header({
     }
 
     return (
-        <View style={styles.headerContainerOuter}>
-            <View style={styles.headerContainer}>
-                <ImagesGroup images={images} />
-                <View style={styles.headerContent}>
-                    <Text style={styles.headerTitle}>{meta.title}</Text>
-                    <Text style={styles.headerSubtitle}>{`${meta.amount} 首歌曲`}</Text>
-                    {meta.source ? <Text style={styles.headerSubtitle}>{`上次同步：${lastSyncString}`}</Text> : null}
+        <View className="pb-6 px-4 gap-4">
+            {meta.imgUrl ? <Image source={meta.imgUrl} className="aspect-video rounded-lg" /> : null}
+            <View className={`flex-row ${meta.imgUrl ? "" : "pt-4"} gap-4`}>
+                {meta.imgUrl ? null : <ImagesGroup images={images} />}
+                <View className="flex-1">
+                    <Text className="text-[20px] font-semibold leading-normal">{meta.title}</Text>
+                    <Text className="opacity-60 mt-2 text-sm leading-normal">{`${meta.amount} 首歌曲`}</Text>
+                    {meta.source ? (
+                        <Text className="opacity-60 mt-2 text-sm leading-normal">{`上次同步：${lastSyncString}`}</Text>
+                    ) : null}
                     {showPlayButton && (
-                        <Box className="flex-row mt-5 gap-2">
+                        <Box className="flex-row mt-4 gap-2">
                             <PotatoButton Icon={IconPlay} rounded onPress={onPlay}>
                                 播放
                             </PotatoButton>
@@ -277,7 +278,6 @@ export default function Page() {
     const { theme } = useStyles();
     const bottom = useTabPaddingBottom();
     const bgColor = theme.colorTokens.background;
-    const colorMode = useColorScheme();
     const { id } = useLocalSearchParams<{ id: string }>();
     const textBasicColor = theme.colorTokens.foreground;
 
@@ -297,9 +297,6 @@ export default function Page() {
     });
 
     const activeTrack = useActiveTrack();
-
-    const [contentHeight, setContentHeight] = useState(0);
-    const [viewHeight, setViewHeight] = useState(0);
 
     // 模态框管理
     const [dialogInfo, setDialogInfo] = useState({
@@ -444,11 +441,6 @@ export default function Page() {
         return null;
     }
 
-    const fromColor = Color(meta.color)
-        .lightness(colorMode === "dark" ? 12 : 95)
-        .saturationl(100)
-        .toString();
-
     return (
         <CommonLayout
             title="查看详情"
@@ -520,16 +512,6 @@ export default function Page() {
                 }}
                 data={playlistDetail}
                 estimatedItemSize={68}
-                onContentSizeChange={(_, contentHeight) => {
-                    setContentHeight(contentHeight);
-                }}
-                onLayout={({
-                    nativeEvent: {
-                        layout: { height },
-                    },
-                }) => {
-                    setViewHeight(height);
-                }}
                 contentContainerStyle={{
                     backgroundColor: bgColor,
                 }}
@@ -699,32 +681,6 @@ const stylesheet = createStyleSheet(theme => ({
         width: HEADER_BASE_SIZE / 2,
         height: HEADER_BASE_SIZE / 2,
         objectFit: "cover",
-    },
-    headerContainerOuter: {
-        paddingBottom: 24,
-        paddingHorizontal: 16,
-        gap: 24,
-    },
-    headerContainer: {
-        flexDirection: "row",
-        paddingTop: 16,
-        gap: 16,
-    },
-    headerContent: {
-        flex: 1,
-    },
-    headerTitle: {
-        fontSize: 20,
-        fontWeight: "700",
-        lineHeight: 20 * 1.5,
-        color: theme.colorTokens.foreground,
-    },
-    headerSubtitle: {
-        opacity: 0.6,
-        marginTop: 8,
-        fontSize: 14,
-        lineHeight: 14 * 1.5,
-        color: theme.colorTokens.foreground,
     },
     playButtonContainer: {
         flexDirection: "row",

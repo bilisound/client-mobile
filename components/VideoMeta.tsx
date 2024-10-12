@@ -41,11 +41,12 @@ export interface VideoMetaBaseProps {
 const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skeleton, className }) => {
     const [showMore, setShowMore] = useState(false);
 
-    const { setPlaylistDetail, setName, setDescription, setSource } = useApplyPlaylistStore(state => ({
+    const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
         setDescription: state.setDescription,
         setSource: state.setSource,
+        setCover: state.setCover,
     }));
 
     function handleCreatePlaylist() {
@@ -69,6 +70,7 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
         setName(meta.title);
         setDescription(meta.desc);
         setSource({ type: "video", bvid: meta.bvid, originalTitle: meta.title, lastSyncAt: new Date().getTime() });
+        setCover(meta.pic);
         router.push(`/apply-playlist`);
     }
 
