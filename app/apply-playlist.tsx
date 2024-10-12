@@ -80,7 +80,7 @@ export default function Page() {
             }}
         >
             <View className={`gap-2 pt-4 ${isSingle ? "pb-2" : "pb-4"}`}>
-                <Text className="px-5 font-semibold opacity-60">
+                <Text className="px-5 text-sm font-semibold opacity-60">
                     {playlistDetail?.length === 1
                         ? "添加以下曲目到指定歌单："
                         : `添加 ${playlistDetail?.length} 项到指定歌单：`}
