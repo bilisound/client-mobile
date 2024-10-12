@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import useDownloadStore from "~/store/download";
 
@@ -10,7 +9,6 @@ export default function ProgressBar({ item }: { item: string }) {
         downloadList: state.downloadList,
     }));
     const downloadEntry = downloadList.get(item);
-    const { styles } = useStyles(stylesheet);
 
     const progress = useSharedValue(0);
 
@@ -37,15 +35,5 @@ export default function ProgressBar({ item }: { item: string }) {
         return null;
     }
 
-    return <Animated.View style={[styles.progressBar, animatedStyle]} />;
+    return <Animated.View style={animatedStyle} className="h-[3px] absolute left-0 bottom-0 bg-accent-500" />;
 }
-
-const stylesheet = createStyleSheet(theme => ({
-    progressBar: {
-        height: 3,
-        position: "absolute",
-        left: 0,
-        bottom: 0,
-        backgroundColor: theme.colors.accent[500],
-    },
-}));

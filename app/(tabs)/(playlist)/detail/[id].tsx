@@ -175,6 +175,7 @@ function Header({
             });
             await Promise.all([
                 queryClient.invalidateQueries({ queryKey: ["playlist_meta"] }),
+                queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] }),
                 queryClient.invalidateQueries({ queryKey: [`playlist_meta_${meta.id}`] }),
                 queryClient.invalidateQueries({ queryKey: [`playlist_detail_${meta.id}`] }),
             ]);
@@ -374,6 +375,7 @@ export default function Page() {
             await syncPlaylistAmount(Number(id));
             await Promise.all([
                 queryClient.invalidateQueries({ queryKey: ["playlist_meta"] }),
+                queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] }),
                 queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] }),
                 queryClient.invalidateQueries({ queryKey: [`playlist_detail_${id}`] }),
             ]);
@@ -420,6 +422,7 @@ export default function Page() {
             router.replace("..");
             await deletePlaylistMeta(Number(id));
             await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+            await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
 
             // 清空当前播放队列隶属歌单的状态机
             const got: { value?: PlaylistMeta } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");

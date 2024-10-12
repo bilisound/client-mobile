@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Text } from "react-native";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { View } from "react-native";
 
 import PotatoButton from "~/components/potato-ui/PotatoButton";
+import { Text } from "~/components/ui/text";
 import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
 
 interface EditActionProps {
@@ -13,14 +13,15 @@ interface EditActionProps {
 }
 
 export default function EditAction({ onAll, onReverse, onDelete, amount }: EditActionProps) {
-    const { theme, styles } = useStyles(styleSheet);
-    const bgColor = theme.colorTokens.background;
     const paddingBottom = useTabPaddingBottom();
 
     return (
-        <View style={[styles.container, { backgroundColor: bgColor, paddingBottom, height: paddingBottom + 52 }]}>
-            <Text style={styles.text}>{`已选择 ${amount} 项`}</Text>
-            <View style={styles.buttonContainer}>
+        <View
+            className="border-t border-background-100 flex-row justify-between items-center px-3 bg-background-0"
+            style={{ paddingBottom, height: paddingBottom + 52 }}
+        >
+            <Text className="text-sm">{`已选择 ${amount} 项`}</Text>
+            <View className="flex-row gap-2">
                 <PotatoButton size="sm" variant="outline" onPress={onAll}>
                     全选
                 </PotatoButton>
@@ -34,22 +35,3 @@ export default function EditAction({ onAll, onReverse, onDelete, amount }: EditA
         </View>
     );
 }
-
-const styleSheet = createStyleSheet(theme => ({
-    container: {
-        borderTopWidth: 1,
-        borderColor: theme.colorTokens.border,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingHorizontal: 12,
-    },
-    text: {
-        fontSize: 14,
-        color: theme.colorTokens.foreground,
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        gap: 8,
-    },
-}));

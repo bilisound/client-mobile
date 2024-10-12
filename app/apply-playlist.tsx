@@ -36,7 +36,7 @@ export default function Page() {
     const edgeInsets = useSafeAreaInsets();
     const queryClient = useQueryClient();
     const { data } = useQuery({
-        queryKey: ["playlist_meta"],
+        queryKey: ["playlist_meta_apply"],
         queryFn: () => getPlaylistMetas(true),
     });
 
@@ -57,6 +57,7 @@ export default function Page() {
         }
 
         await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+        await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
         await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] });
         await queryClient.invalidateQueries({ queryKey: [`playlist_detail_${id}`] });
         Toast.show({
@@ -98,6 +99,7 @@ export default function Page() {
                         onPress={async () => {
                             await quickCreatePlaylist(name, description, playlistDetail ?? [], source);
                             await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+                            await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
                             Toast.show({
                                 type: "success",
                                 text1: "歌单创建成功",

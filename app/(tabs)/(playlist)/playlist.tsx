@@ -189,6 +189,7 @@ export default function Page() {
                     log.info("用户删除歌单");
                     await deletePlaylistMeta(displayTrack!.id);
                     await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+                    await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
 
                     // 清空当前播放队列隶属歌单的状态机
                     const got: { value?: PlaylistMeta } = JSON.parse(
@@ -206,6 +207,7 @@ export default function Page() {
         const result = await importPlaylistFromFile();
         if (result) {
             await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+            await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
         }
     };
 

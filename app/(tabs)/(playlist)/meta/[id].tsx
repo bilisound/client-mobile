@@ -80,6 +80,7 @@ export default function Page() {
                 source: "", // 不能是 null，否则会被 ORM 无视
             });
             await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+            await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
             Toast.show({
                 type: "success",
                 text1: "歌单副本创建成功",
@@ -124,6 +125,7 @@ export default function Page() {
             await syncPlaylistAmount(id);
         }
         await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+        await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
         await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] });
 
         if (isCreate) {
