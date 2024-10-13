@@ -2,7 +2,7 @@ import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { cssInterop, remapProps } from "nativewind";
 import React from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { useMMKVBoolean } from "react-native-mmkv";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 import { useStyles } from "react-native-unistyles";
@@ -10,7 +10,6 @@ import { useStyles } from "react-native-unistyles";
 import ProgressBar from "./ProgressBar";
 
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
-import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 import { cacheStatusStorage } from "~/storage/cache-status";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
@@ -40,9 +39,9 @@ function PlayingIcon() {
     }
 
     return (
-        <Box className="items-center justify-center">
+        <View className="items-center justify-center">
             <FontAwesome5 name={isPlaying ? "pause" : "play"} size={20} color={accentColor} />
-        </Box>
+        </View>
     );
 }
 
@@ -85,8 +84,8 @@ export default function SongItem({
             onLongPress={onLongPress}
             className="px-4 h-16 flex-row gap-3 items-center"
         >
-            <Box className="flex-row flex-1 gap-3 justify-start">
-                <Box
+            <View className="flex-row flex-1 gap-3 justify-start">
+                <View
                     className={`items-center justify-center px-1.5 h-[22px] rounded-md ${
                         isActiveTrack
                             ? "bg-accent-500 shadow-md ios:shadow-hard-2"
@@ -99,8 +98,8 @@ export default function SongItem({
                     >
                         {typeof index === "number" ? index : data.episode}
                     </Text>
-                </Box>
-                <Box className="flex-1">
+                </View>
+                <View className="flex-1">
                     <Text
                         className={`leading-[22px] text-sm ${
                             isActiveTrack ? "font-semibold text-accent-500" : "font-normal"
@@ -110,7 +109,7 @@ export default function SongItem({
                     >
                         {data.title}
                     </Text>
-                    <Box className="mt-1 flex-row items-center gap-1">
+                    <View className="mt-1 flex-row items-center gap-1">
                         {exists && (
                             <IoniconsWind
                                 name="checkmark-circle"
@@ -121,24 +120,24 @@ export default function SongItem({
                         <Text className="text-sm opacity-50" style={{ fontFamily: "Roboto_400Regular" }}>
                             {formatSecond(data.duration)}
                         </Text>
-                    </Box>
-                </Box>
-            </Box>
+                    </View>
+                </View>
+            </View>
             {isChecking ? (
-                <Box className="flex-basis-auto">
-                    <Box
+                <View className="flex-basis-auto">
+                    <View
                         className={`w-7 h-7 rounded-full border-2 border-primary-500 dark:border-primary-500 items-center justify-center ${
                             isChecked ? "bg-primary-500 dark:bg-primary-400" : "bg-transparent"
                         }`}
                     >
                         <Entypo name="check" size={18} color={isChecked ? "white" : "transparent"} />
-                    </Box>
-                </Box>
+                    </View>
+                </View>
             ) : isActiveTrack ? (
                 <>
-                    <Box className="flex-0 flex-basis-auto items-center justify-center w-8">
+                    <View className="flex-0 flex-basis-auto items-center justify-center w-8">
                         <PlayingIcon />
-                    </Box>
+                    </View>
                     <ProgressBar item={`${data.bvid}_${data.episode}`} />
                 </>
             ) : null}

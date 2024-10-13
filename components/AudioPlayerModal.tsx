@@ -27,7 +27,6 @@ import CommonLayout from "~/components/CommonLayout";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { createIcon } from "~/components/potato-ui/utils/icon";
-import { Box } from "~/components/ui/box";
 import { Pressable } from "~/components/ui/pressable";
 import { Text } from "~/components/ui/text";
 import useTracks from "~/hooks/useTracks";
@@ -220,7 +219,7 @@ function MusicList() {
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
 
     return (
-        <Box className="flex-1 mb-6 @3xl:mb-0">
+        <View className="flex-1 mb-6 @3xl:mb-0">
             <View className="flex-1 border border-l-0 border-r-0 border-outline-50 @3xl:border-0">
                 <FlashList
                     renderItem={item => {
@@ -235,11 +234,11 @@ function MusicList() {
                             />
                         );
                     }}
-                    ListHeaderComponent={<Box className="h-2" />}
+                    ListHeaderComponent={<View className="h-2" />}
                     ListFooterComponent={
                         <>
-                            <Box className="flex @3xl:hidden h-2" />
-                            <Box className="hidden @3xl:flex" style={{ height: edgeInsets.bottom + 8 }} />
+                            <View className="flex @3xl:hidden h-2" />
+                            <View className="hidden @3xl:flex" style={{ height: edgeInsets.bottom + 8 }} />
                         </>
                     }
                     data={convertedTrack}
@@ -247,7 +246,7 @@ function MusicList() {
                     extraData={[]}
                 />
             </View>
-        </Box>
+        </View>
     );
 }
 
@@ -309,7 +308,7 @@ export default function AudioPlayerModal() {
                     titleBarTheme="transparent"
                     containerClassName="flex-col @3xl:flex-row"
                     title={
-                        <Box className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
+                        <View className="h-10 items-center justify-center rounded-lg bg-background-100 p-1 gap-1 flex-row">
                             {/* key 是切换选项卡后阴影停滞问题的 workaround */}
                             <TopTabButton
                                 key={`${showList}_正在播放`}
@@ -325,7 +324,7 @@ export default function AudioPlayerModal() {
                             >
                                 播放队列
                             </TopTabButton>
-                        </Box>
+                        </View>
                     }
                     leftAccessories={
                         <PotatoButtonTitleBar

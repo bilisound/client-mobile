@@ -13,7 +13,6 @@ import {
     AlertDialogFooter,
     AlertDialogBody,
 } from "~/components/ui/alert-dialog";
-import { Box } from "~/components/ui/box";
 import { Button, ButtonText } from "~/components/ui/button";
 import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
@@ -33,7 +32,7 @@ export default function Page() {
             <ScrollView className="@container">
                 <View className="p-4 gap-4">
                     <Text>Hello World!</Text>
-                    <Box className="flex flex-row items-center gap-2">
+                    <View className="flex flex-row items-center gap-2">
                         <PotatoButton
                             onPress={() => {
                                 Toast.show({
@@ -48,7 +47,7 @@ export default function Page() {
                         <Button>
                             <ButtonText className="text-sm">Toast 测试</ButtonText>
                         </Button>
-                    </Box>
+                    </View>
                     <PotatoButton onPress={() => setModalVisible(!modalVisible)}>Modal 测试</PotatoButton>
 
                     <PotatoButton
@@ -69,6 +68,13 @@ export default function Page() {
                     >
                         删除全部歌单并解绑当前播放队列
                     </PotatoButton>
+
+                    <Text className="sm:bg-green-500">test sm</Text>
+                    <Text className="md:bg-blue-500">test md</Text>
+                    <Text className="lg:bg-red-500">test lg</Text>
+                    <Text className="xl:bg-orange-500">test xl</Text>
+                    <Text className="2xl:bg-amber-500">test 2xl</Text>
+
                     <AlertDialog isOpen={modalVisible} onClose={handleClose} size="md">
                         <AlertDialogBackdrop />
                         <AlertDialogContent>

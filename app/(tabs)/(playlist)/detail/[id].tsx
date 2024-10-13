@@ -40,7 +40,6 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
 } from "~/components/ui/alert-dialog";
-import { Box } from "~/components/ui/box";
 import { Heading } from "~/components/ui/heading";
 import { Modal, ModalBackdrop, ModalContent, ModalBody } from "~/components/ui/modal";
 import { Text } from "~/components/ui/text";
@@ -217,7 +216,7 @@ function Header({
                         <Text className="opacity-60 mt-2 text-sm leading-normal">{`上次同步：${lastSyncString}`}</Text>
                     ) : null}
                     {showPlayButton && (
-                        <Box className="flex-row mt-4 gap-2">
+                        <View className="flex-row mt-4 gap-2">
                             <PotatoButton Icon={IconPlay} rounded onPress={onPlay}>
                                 播放
                             </PotatoButton>
@@ -232,7 +231,7 @@ function Header({
                                     aria-label="同步"
                                 />
                             ) : null}
-                        </Box>
+                        </View>
                     )}
                 </View>
             </View>
@@ -246,8 +245,8 @@ function Header({
                 <ModalBackdrop />
                 <ModalContent className="p-3">
                     <ModalBody>
-                        <Box className="w-full flex-row gap-3 items-center">
-                            <Box className="-rotate-90 w-16 h-16">
+                        <View className="w-full flex-row gap-3 items-center">
+                            <View className="-rotate-90 w-16 h-16">
                                 <Svg width={64} height={64} viewBox="0 0 64 64">
                                     <Circle
                                         // @ts-ignore workaround
@@ -274,9 +273,9 @@ function Header({
                                         strokeDasharray="138.16px"
                                     />
                                 </Svg>
-                            </Box>
+                            </View>
                             <Text className="text-typography-700 text-sm">正在同步在线播放列表……</Text>
-                        </Box>
+                        </View>
                     </ModalBody>
                 </ModalContent>
             </Modal>
@@ -488,8 +487,8 @@ export default function Page() {
                 bottom: 0,
             }}
         >
-            <Box className="flex-1 flex-col md:flex-row">
-                <Box className="hidden md:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+            <View className="flex-1 flex-col md:flex-row">
+                <View className="hidden md:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
                     <ScrollView>
                         <Header
                             meta={meta}
@@ -499,10 +498,10 @@ export default function Page() {
                                 await handleRequestPlay(0);
                             }}
                         />
-                        <Box style={{ height: editing ? 0 : bottom }} aria-hidden />
+                        <View style={{ height: editing ? 0 : bottom }} aria-hidden />
                     </ScrollView>
-                </Box>
-                <Box className="flex-1">
+                </View>
+                <View className="flex-1">
                     <FlashList
                         renderItem={item => {
                             return (
@@ -552,7 +551,7 @@ export default function Page() {
                                     }}
                                     className="flex md:hidden"
                                 />
-                                <Box className="h-1.5 hidden md:flex" aria-hidden />
+                                <View className="h-1.5 hidden md:flex" aria-hidden />
                             </>
                         }
                         ListEmptyComponent={
@@ -560,10 +559,10 @@ export default function Page() {
                                 <Empty title="暂无内容" action={null} />
                             </View>
                         }
-                        ListFooterComponent={<Box style={{ height: editing ? 0 : bottom }} aria-hidden />}
+                        ListFooterComponent={<View style={{ height: editing ? 0 : bottom }} aria-hidden />}
                     />
-                </Box>
-            </Box>
+                </View>
+            </View>
             {editing ? (
                 <EditAction
                     onAll={() => {
@@ -585,17 +584,17 @@ export default function Page() {
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>
-                    <Box className="items-start w-full px-4 py-4 gap-1">
+                    <View className="items-start w-full px-4 py-4 gap-1">
                         <Text className="font-bold">{meta.title}</Text>
                         <Text className="text-sm opacity-60">{`${meta.amount} 首歌曲`}</Text>
-                    </Box>
+                    </View>
                     <ActionsheetItem
                         onPress={() => {
                             setShowActionMenu(false);
                             router.push(`../meta/${id}`);
                         }}
                     >
-                        <Box
+                        <View
                             style={{
                                 width: 24,
                                 height: 24,
@@ -604,7 +603,7 @@ export default function Page() {
                             }}
                         >
                             <MaterialIcons name="edit" size={24} color={textBasicColor} />
-                        </Box>
+                        </View>
                         <ActionsheetItemText>修改信息</ActionsheetItemText>
                     </ActionsheetItem>
                     <ActionsheetItem
@@ -613,7 +612,7 @@ export default function Page() {
                             handleWholeDelete();
                         }}
                     >
-                        <Box
+                        <View
                             style={{
                                 width: 24,
                                 height: 24,
@@ -622,7 +621,7 @@ export default function Page() {
                             }}
                         >
                             <MaterialIcons name="delete" size={24} color={textBasicColor} />
-                        </Box>
+                        </View>
                         <ActionsheetItemText>删除</ActionsheetItemText>
                     </ActionsheetItem>
                     <ActionsheetItem
@@ -631,7 +630,7 @@ export default function Page() {
                             await exportPlaylistToFile(Number(id));
                         }}
                     >
-                        <Box
+                        <View
                             style={{
                                 width: 24,
                                 height: 24,
@@ -640,7 +639,7 @@ export default function Page() {
                             }}
                         >
                             <Ionicons name="save" size={20} color={textBasicColor} />
-                        </Box>
+                        </View>
                         <ActionsheetItemText>导出</ActionsheetItemText>
                     </ActionsheetItem>
                     <ActionsheetItem
@@ -648,7 +647,7 @@ export default function Page() {
                             setShowActionMenu(false);
                         }}
                     >
-                        <Box
+                        <View
                             style={{
                                 width: 24,
                                 height: 24,
@@ -657,7 +656,7 @@ export default function Page() {
                             }}
                         >
                             <MaterialIcons name="cancel" size={22} color={textBasicColor} />
-                        </Box>
+                        </View>
                         <ActionsheetItemText>取消</ActionsheetItemText>
                     </ActionsheetItem>
                 </ActionsheetContent>

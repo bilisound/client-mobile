@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { FolderOpen, ListPlus } from "lucide-react-native";
 import React, { createContext, useContext, useState } from "react";
-import { Alert, Platform, ScaledSize, useWindowDimensions } from "react-native";
+import { Alert, Platform, ScaledSize, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStyles } from "react-native-unistyles";
 
@@ -22,7 +22,6 @@ import {
     ActionsheetItem,
     ActionsheetItemText,
 } from "~/components/ui/actionsheet";
-import { Box } from "~/components/ui/box";
 import { Icon } from "~/components/ui/icon";
 import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
 import { Text } from "~/components/ui/text";
@@ -88,13 +87,13 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                     <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
                 {!!displayTrack && (
-                    <Box className="items-start w-full px-4 py-4 gap-1">
+                    <View className="items-start w-full px-4 py-4 gap-1">
                         <Text className="font-bold">{displayTrack.title}</Text>
                         <Text className="text-sm opacity-60">{`${displayTrack.amount} 首歌曲`}</Text>
-                    </Box>
+                    </View>
                 )}
                 <ActionsheetItem onPress={() => onAction("edit")}>
-                    <Box
+                    <View
                         style={{
                             width: 24,
                             height: 24,
@@ -103,11 +102,11 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         }}
                     >
                         <MaterialIcons name="edit" size={24} color={textBasicColor} />
-                    </Box>
+                    </View>
                     <ActionsheetItemText>修改信息</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("delete")}>
-                    <Box
+                    <View
                         style={{
                             width: 24,
                             height: 24,
@@ -116,7 +115,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         }}
                     >
                         <MaterialIcons name="delete" size={24} color={textBasicColor} />
-                    </Box>
+                    </View>
                     <ActionsheetItemText>删除</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem
@@ -124,7 +123,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         onAction("export");
                     }}
                 >
-                    <Box
+                    <View
                         style={{
                             width: 24,
                             height: 24,
@@ -133,11 +132,11 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         }}
                     >
                         <Ionicons name="save" size={20} color={textBasicColor} />
-                    </Box>
+                    </View>
                     <ActionsheetItemText>导出</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("close")}>
-                    <Box
+                    <View
                         style={{
                             width: 24,
                             height: 24,
@@ -146,7 +145,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         }}
                     >
                         <MaterialIcons name="cancel" size={22} color={textBasicColor} />
-                    </Box>
+                    </View>
                     <ActionsheetItemText>取消</ActionsheetItemText>
                 </ActionsheetItem>
             </ActionsheetContent>
@@ -272,7 +271,7 @@ export default function Page() {
                         renderItem={item => <PlaylistActionItem {...item.item} />}
                         data={data}
                         estimatedItemSize={73}
-                        ListFooterComponent={<Box style={{ height: bottom }} aria-hidden />}
+                        ListFooterComponent={<View style={{ height: bottom }} aria-hidden />}
                         numColumns={columns}
                         extraData={columns}
                         onLayout={e => {

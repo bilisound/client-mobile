@@ -2,6 +2,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
+import { View } from "react-native";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 import { twMerge } from "tailwind-merge";
 
@@ -10,7 +11,6 @@ import { Text } from "./ui/text";
 
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { createIcon } from "~/components/potato-ui/utils/icon";
-import { Box } from "~/components/ui/box";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { handleTogglePlay } from "~/utils/player-control";
 
@@ -32,7 +32,7 @@ export default function AudioIndicator({ className, imageClassName, playButtonOu
     }
 
     return (
-        <Box
+        <View
             className={twMerge("border-t border-b border-outline-50 flex-row items-center gap-3 px-3 py-2", className)}
         >
             <Pressable
@@ -45,11 +45,11 @@ export default function AudioIndicator({ className, imageClassName, playButtonOu
                     source={getImageProxyUrl(activeTrack?.artwork ?? "", activeTrack?.bilisoundId ?? "")}
                     className={twMerge("h-10 aspect-[16/9] rounded", imageClassName)}
                 />
-                <Box className="flex-1 h-10 justify-center">
+                <View className="flex-1 h-10 justify-center">
                     <Text className="text-base text-typography-700" ellipsizeMode="tail" numberOfLines={1}>
                         {activeTrack?.title}
                     </Text>
-                </Box>
+                </View>
             </Pressable>
             <PotatoPressable
                 outerClassName={twMerge("rounded-[6px] overflow-hidden", playButtonOuterClassName)}
@@ -64,6 +64,6 @@ export default function AudioIndicator({ className, imageClassName, playButtonOu
                     <IconPlay size={16} className="color-primary-500" />
                 )}
             </PotatoPressable>
-        </Box>
+        </View>
     );
 }

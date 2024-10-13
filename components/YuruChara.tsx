@@ -1,8 +1,8 @@
 import { Image as ExpoImage } from "expo-image";
 import { cssInterop } from "nativewind";
 import React from "react";
+import { View } from "react-native";
 
-import { Box } from "~/components/ui/box";
 import useSettingsStore from "~/store/settings";
 
 const Image = cssInterop(ExpoImage, {
@@ -29,8 +29,8 @@ export default function YuruChara() {
     }
 
     return (
-        <Box className="w-[240px] aspect-square absolute right-0 bottom-[100px] z-10" pointerEvents="none">
+        <View className="w-[240px] aspect-square absolute right-0 bottom-[100px] z-10" pointerEvents="none">
             <Image source={source} className="w-[240px] aspect-square opacity-20" />
-        </Box>
+        </View>
     );
 }

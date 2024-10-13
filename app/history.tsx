@@ -21,7 +21,6 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
 } from "~/components/ui/alert-dialog";
-import { Box } from "~/components/ui/box";
 import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
 import useHistoryStore, { HistoryItem } from "~/store/history";
@@ -59,7 +58,7 @@ export default function Page() {
             ref={flashListRef}
             data={historyList}
             keyExtractor={item => `${item?.key}`}
-            ListHeaderComponent={<Box className="h-1" />}
+            ListHeaderComponent={<View className="h-1" />}
             ListFooterComponent={<View style={{ height: edgeInsets.bottom + 4 }} />}
             estimatedItemSize={historyList.length}
             renderItem={item => {

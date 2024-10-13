@@ -1,12 +1,11 @@
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Platform, ScrollView } from "react-native";
+import { Platform, ScrollView, View } from "react-native";
 
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
 import { createIcon } from "~/components/potato-ui/utils/icon";
-import { Box } from "~/components/ui/box";
 import { Switch } from "~/components/ui/switch";
 import { VERSION } from "~/constants/releasing";
 import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
@@ -160,7 +159,7 @@ const Settings: React.FC = () => {
                     }}
                 />
                 {debugMode ? developerOptions : null}
-                <Box style={{ height: bottom }} aria-hidden />
+                <View style={{ height: bottom }} aria-hidden />
             </ScrollView>
         </CommonLayout>
     );

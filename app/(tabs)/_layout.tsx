@@ -11,7 +11,6 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 import AudioIndicator from "~/components/AudioIndicator";
 import YuruChara from "~/components/YuruChara";
 import { createIcon } from "~/components/potato-ui/utils/icon";
-import { Box } from "~/components/ui/box";
 import { Pressable } from "~/components/ui/pressable";
 import { Text } from "~/components/ui/text";
 import { useIsNarrowWidth } from "~/hooks/useIsNarrowWidth";
@@ -38,10 +37,10 @@ const iconDisc = ({ focused }: { focused: boolean }) => (
 );
 
 const tabBarV1 = (props: BottomTabBarProps) => (
-    <Box>
+    <View>
         <AudioIndicator />
         <BottomTabBar {...props} />
-    </Box>
+    </View>
 );
 
 const tabBarV2 = (props: BottomTabBarProps) => {
@@ -62,7 +61,7 @@ function FloatTabBar(props: BottomTabBarProps) {
     const isNarrowWidth = useIsNarrowWidth();
 
     return (
-        <Box
+        <View
             className="bg-transparent absolute left-3 right-3 bottom-3 pt-3 md:left-4 md:right-4 md:bottom-4 items-center pointer-events-box-none z-50"
             style={{
                 paddingLeft: props.insets.left,
@@ -74,7 +73,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                 useStyleParamStore.getState().setBottomBarHeight(-e.nativeEvent.layout.y);
             }}
         >
-            <Box className="w-full md:w-[480px] rounded-[32px] md:rounded-[24px] overflow-hidden border border-typography-50 bg-background-0/95 shadow-xl ios:shadow-soft-2">
+            <View className="w-full md:w-[480px] rounded-[32px] md:rounded-[24px] overflow-hidden border border-typography-50 bg-background-0/95 shadow-xl ios:shadow-soft-2">
                 {isNarrowWidth ? null : (
                     <AudioIndicator
                         className="border-t-0 p-3 md:p-3"
@@ -82,7 +81,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                         playButtonOuterClassName="rounded-full"
                     />
                 )}
-                <Box className="w-full h-16 md:h-12 flex-row" accessibilityRole="tablist">
+                <View className="w-full h-16 md:h-12 flex-row" accessibilityRole="tablist">
                     {isNarrowWidth ? (
                         <Pressable
                             className="flex-1 items-center justify-center gap-1.5 md:flex-row"
@@ -90,7 +89,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                                 router.push("/modal");
                             }}
                         >
-                            <Box className="w-6 h-6 items-center justify-center">{iconDisc({ focused: false })}</Box>
+                            <View className="w-6 h-6 items-center justify-center">{iconDisc({ focused: false })}</View>
                             <Text className="text-xs md:text-sm text-typography-700">正在播放</Text>
                         </Pressable>
                     ) : null}
@@ -129,13 +128,13 @@ function FloatTabBar(props: BottomTabBarProps) {
                                         onPress={onPress}
                                         onLongPress={onLongPress}
                                     >
-                                        <Box className="w-6 h-6 items-center justify-center">
+                                        <View className="w-6 h-6 items-center justify-center">
                                             {metadata.options.tabBarIcon?.({
                                                 focused,
                                                 color: "",
                                                 size: 0,
                                             })}
-                                        </Box>
+                                        </View>
                                         <Text
                                             className={`text-xs md:text-sm ${focused ? "text-accent-500 font-semibold" : "text-typography-700"}`}
                                         >
@@ -146,10 +145,10 @@ function FloatTabBar(props: BottomTabBarProps) {
                             </NavigationContext.Provider>
                         );
                     })}
-                </Box>
+                </View>
                 {/*</BlurView>*/}
-            </Box>
-        </Box>
+            </View>
+        </View>
     );
 }
 

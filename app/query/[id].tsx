@@ -25,7 +25,6 @@ import {
     ActionsheetItem,
     ActionsheetItemText,
 } from "~/components/ui/actionsheet";
-import { Box } from "~/components/ui/box";
 import { Fab } from "~/components/ui/fab";
 import { Text } from "~/components/ui/text";
 import { BILIBILI_VIDEO_URL_PREFIX } from "~/constants/network";
@@ -63,15 +62,15 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                     <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
                 {!!displayTrack && (
-                    <Box className="flex items-start w-full px-4 py-4 gap-1">
+                    <View className="flex items-start w-full px-4 py-4 gap-1">
                         <Text className="font-bold" ellipsizeMode="tail" numberOfLines={1}>
                             {displayTrack.part}
                         </Text>
                         <Text className="text-sm opacity-60">{formatSecond(displayTrack.duration)}</Text>
-                    </Box>
+                    </View>
                 )}
                 <ActionsheetItem onPress={() => onAction("addPlaylist")}>
-                    <Box
+                    <View
                         style={{
                             width: 24,
                             height: 24,
@@ -80,11 +79,11 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         }}
                     >
                         <Entypo name="add-to-list" size={20} color={textBasicColor} />
-                    </Box>
+                    </View>
                     <ActionsheetItemText>添加到歌单</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("close")}>
-                    <Box
+                    <View
                         style={{
                             width: 24,
                             height: 24,
@@ -93,7 +92,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         }}
                     >
                         <MaterialIcons name="cancel" size={22} color={textBasicColor} />
-                    </Box>
+                    </View>
                     <ActionsheetItemText>取消</ActionsheetItemText>
                 </ActionsheetItem>
             </ActionsheetContent>
@@ -216,39 +215,39 @@ export default function Page() {
             }
         >
             {isLoading ? (
-                <Box className="flex-1 flex-col md:flex-row">
-                    <Box className="hidden md:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+                <View className="flex-1 flex-col md:flex-row">
+                    <View className="hidden md:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
                         <ScrollView>
                             <VideoMeta skeleton />
                         </ScrollView>
-                    </Box>
-                    <Box className="flex-1">
+                    </View>
+                    <View className="flex-1">
                         <VideoMeta className="flex md:hidden" skeleton />
-                    </Box>
-                </Box>
+                    </View>
+                </View>
             ) : null}
             {error ? (
-                <Box className="flex-1 items-center justify-center gap-3 opacity-50">
+                <View className="flex-1 items-center justify-center gap-3 opacity-50">
                     <MaterialIcons name="error-outline" size={72} color={textBasicColor} />
                     <Text className="text-[20px] font-semibold text-typography-700">查询失败了</Text>
                     <Text className="text-sm text-typography-700">{`${error?.message || error}`}</Text>
-                </Box>
+                </View>
             ) : null}
             {data ? (
-                <Box className="hidden md:flex flex-1 flex-row">
-                    <Box className="flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+                <View className="hidden md:flex flex-1 flex-row">
+                    <View className="flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
                         <ScrollView>
                             <VideoMeta meta={data.data} />
-                            <Box style={{ height: edgeInsets.bottom }} />
+                            <View style={{ height: edgeInsets.bottom }} />
                         </ScrollView>
-                    </Box>
-                    <Box className="flex-1">
+                    </View>
+                    <View className="flex-1">
                         <FlashList
                             data={dataList}
                             keyExtractor={item => `${item.page}`}
                             ListHeaderComponent={
                                 <>
-                                    <Box className="h-3" aria-hidden />
+                                    <View className="h-3" aria-hidden />
                                 </>
                             }
                             ListFooterComponent={
@@ -257,11 +256,11 @@ export default function Page() {
                             renderItem={renderItem}
                             estimatedItemSize={82}
                         />
-                    </Box>
-                </Box>
+                    </View>
+                </View>
             ) : null}
             {data ? (
-                <Box className="flex md:hidden flex-1">
+                <View className="flex md:hidden flex-1">
                     <FlashList
                         data={dataList}
                         keyExtractor={item => `${item.page}`}
@@ -276,7 +275,7 @@ export default function Page() {
                         renderItem={renderItem}
                         estimatedItemSize={82}
                     />
-                </Box>
+                </View>
             ) : null}
             {activeTrack ? (
                 <Fab

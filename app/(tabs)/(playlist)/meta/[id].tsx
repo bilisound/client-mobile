@@ -3,13 +3,12 @@ import { router, useLocalSearchParams } from "expo-router";
 import omit from "lodash/omit";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
 
 import CommonLayout from "~/components/CommonLayout";
 import PotatoButton from "~/components/potato-ui/PotatoButton";
-import { Box } from "~/components/ui/box";
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import {
     FormControl,
@@ -150,7 +149,7 @@ export default function Page() {
             leftAccessories="backButton"
         >
             <ScrollView className="flex-1">
-                <Box className="p-4 gap-4" style={{ paddingBottom: bottom }}>
+                <View className="p-4 gap-4" style={{ paddingBottom: bottom }}>
                     <FormControl isRequired isInvalid={"title" in errors}>
                         <FormControlLabel>
                             <FormControlLabelText className="text-sm">歌单名称</FormControlLabelText>
@@ -158,7 +157,7 @@ export default function Page() {
                         <Controller
                             control={control}
                             render={({ field: { onChange, onBlur, value } }) => (
-                                <Box className="flex-row w-full gap-3">
+                                <View className="flex-row w-full gap-3">
                                     <Input className="flex-1">
                                         <InputField
                                             onBlur={onBlur}
@@ -179,7 +178,7 @@ export default function Page() {
                                             还原
                                         </PotatoButton>
                                     ) : null}
-                                </Box>
+                                </View>
                             )}
                             name="title"
                             rules={{ required: "请输入名称" }}
@@ -227,12 +226,12 @@ export default function Page() {
                             <FormControlLabel>
                                 <FormControlLabelText className="text-sm">绑定在线歌单</FormControlLabelText>
                             </FormControlLabel>
-                            <Box className="gap-4">
+                            <View className="gap-4">
                                 <Input isDisabled>
                                     <InputField value={source.originalTitle} className="text-sm text-typography-400" />
                                 </Input>
                                 <PotatoButton onPress={() => handleClone()}>创建解绑副本</PotatoButton>
-                            </Box>
+                            </View>
                         </FormControl>
                     ) : null}
 
@@ -266,7 +265,7 @@ export default function Page() {
                     >
                         保存
                     </PotatoButton>
-                </Box>
+                </View>
             </ScrollView>
         </CommonLayout>
     );

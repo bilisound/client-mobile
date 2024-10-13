@@ -8,7 +8,6 @@ import { twMerge } from "tailwind-merge";
 
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
-import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 
 export interface CommonFrameNewProps {
@@ -71,9 +70,9 @@ export default function CommonLayout({
     }
 
     return (
-        <Box className={twMerge("h-full", className)} style={style}>
+        <View className={twMerge("h-full", className)} style={style}>
             {titleBarTheme === "solid" && <StatusBar barStyle="light-content" showHideTransition="none" />}
-            <Box
+            <View
                 className={twMerge(
                     "flex-0 basis-auto " +
                         (titleBarTheme === "solid" ? "bg-primary-500 dark:bg-primary-100" : "bg-transparent"),
@@ -86,7 +85,7 @@ export default function CommonLayout({
                     titleBarContainerStyle,
                 ]}
             >
-                <Box
+                <View
                     className={twMerge("h-16 p-[10px] items-center justify-center", titleBarClassName)}
                     style={[titleBarStyle]}
                 >
@@ -103,7 +102,7 @@ export default function CommonLayout({
                         title
                     )}
                     {leftAccessories && (
-                        <Box className="absolute p-[10px] left-0 flex-row items-center gap-1">
+                        <View className="absolute p-[10px] left-0 flex-row items-center gap-1">
                             {leftAccessories === "backButton" ? (
                                 <PotatoButtonTitleBar
                                     label="返回"
@@ -115,16 +114,16 @@ export default function CommonLayout({
                             ) : (
                                 leftAccessories
                             )}
-                        </Box>
+                        </View>
                     )}
                     {rightAccessories && (
                         <View className="absolute p-[10px] right-0 flex-row items-center gap-1">
                             {rightAccessories}
                         </View>
                     )}
-                </Box>
-            </Box>
-            <Box
+                </View>
+            </View>
+            <View
                 className={twMerge("flex-1", containerClassName)}
                 style={[
                     {
@@ -136,7 +135,7 @@ export default function CommonLayout({
                 ]}
             >
                 {children}
-            </Box>
-        </Box>
+            </View>
+        </View>
     );
 }

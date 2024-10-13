@@ -3,12 +3,11 @@ import { Poppins_700Bold } from "@expo-google-fonts/poppins";
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 
 import CommonLayout from "~/components/CommonLayout";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
-import { Box } from "~/components/ui/box";
 import {
     FormControl,
     FormControlError,
@@ -73,7 +72,7 @@ const TabIndexScreen: React.FC = () => {
             }
             className="items-stretch h-full"
         >
-            <Box className={`${isNarrowWidth ? "pt-6 pb-8" : "pt-8 pb-12"} items-center`}>
+            <View className={`${isNarrowWidth ? "pt-6 pb-8" : "pt-8 pb-12"} items-center`}>
                 {fontsLoaded ? (
                     <Text
                         className="text-3xl text-primary-500 dark:text-primary-400 h-12 leading-12"
@@ -84,8 +83,8 @@ const TabIndexScreen: React.FC = () => {
                         BILISOUND
                     </Text>
                 ) : null}
-            </Box>
-            <Box className="px-4 items-center">
+            </View>
+            <View className="px-4 items-center">
                 <FormControl
                     isDisabled={false}
                     isInvalid={inputError}
@@ -122,7 +121,7 @@ const TabIndexScreen: React.FC = () => {
                         <FormControlErrorText size="sm">请输入合法的地址或 ID</FormControlErrorText>
                     </FormControlError>
                 </FormControl>
-            </Box>
+            </View>
         </CommonLayout>
     );
 };
