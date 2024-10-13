@@ -206,7 +206,7 @@ function Header({
                     <Text className="text-[20px] font-semibold leading-normal">{meta.title}</Text>
                     <View className="flex-row">
                         <Text className="opacity-60 mt-2 text-sm leading-normal">
-                            {`${meta.amount} 首歌曲` + (imgUrl ? ` ・ 上次同步：${lastSyncString}` : "")}
+                            {`${meta.amount} 首歌曲` + (meta.source ? ` ・ 上次同步：${lastSyncString}` : "")}
                         </Text>
                     </View>
                     {meta.source && !imgUrl ? (
