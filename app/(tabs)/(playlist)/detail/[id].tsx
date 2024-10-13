@@ -6,18 +6,20 @@ import { Image } from "expo-image";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { cssInterop } from "nativewind";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Vibration, View } from "react-native";
+import { ScrollView, Vibration, View } from "react-native";
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
 import Toast from "react-native-toast-message";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
 import { useStyles, createStyleSheet } from "react-native-unistyles";
+import { twMerge } from "tailwind-merge";
 
 import { updatePlaylist } from "~/business/playlist/update";
 import CommonLayout from "~/components/CommonLayout";
 import EditAction from "~/components/EditAction";
 import Empty from "~/components/Empty";
 import SongItem from "~/components/SongItem";
+import VideoMeta from "~/components/VideoMeta";
 import PotatoButton from "~/components/potato-ui/PotatoButton";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
@@ -119,11 +121,13 @@ function Header({
     images,
     onPlay,
     showPlayButton,
+    className,
 }: {
     meta: PlaylistMeta;
     images: string[];
     onPlay: () => void;
     showPlayButton: boolean;
+    className?: string;
 }) {
     const { styles } = useStyles(stylesheet);
     const queryClient = useQueryClient();
@@ -198,7 +202,7 @@ function Header({
     const imgUrl = meta.imgUrl;
 
     return (
-        <View className="pb-6 px-4 gap-4">
+        <View className={twMerge("pb-6 px-4 gap-4", imgUrl ? "pt-4" : "", className)}>
             {imgUrl ? <Image source={imgUrl} className="aspect-video rounded-lg" /> : null}
             <View className={`flex-row ${imgUrl ? "" : "pt-4"} gap-4`}>
                 {imgUrl ? null : <ImagesGroup images={images} />}
@@ -206,7 +210,7 @@ function Header({
                     <Text className="text-[20px] font-semibold leading-normal">{meta.title}</Text>
                     <View className="flex-row">
                         <Text className="opacity-60 mt-2 text-sm leading-normal">
-                            {`${meta.amount} 首歌曲` + (meta.source ? ` ・ 上次同步：${lastSyncString}` : "")}
+                            {`${meta.amount} 首歌曲` + (meta.source && imgUrl ? ` ・ 上次同步：${lastSyncString}` : "")}
                         </Text>
                     </View>
                     {meta.source && !imgUrl ? (
@@ -484,61 +488,82 @@ export default function Page() {
                 bottom: 0,
             }}
         >
-            <FlashList
-                renderItem={item => {
-                    return (
-                        <SongItem
-                            data={item.item}
-                            index={item.index + 1}
-                            onRequestPlay={async () => {
-                                await handleRequestPlay(item.index);
+            <Box className="flex-1 flex-col md:flex-row">
+                <Box className="hidden md:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+                    <ScrollView>
+                        <Header
+                            meta={meta}
+                            images={extractAndProcessImgUrls(playlistDetail)}
+                            showPlayButton={playlistDetail.length > 0}
+                            onPlay={async () => {
+                                await handleRequestPlay(0);
                             }}
-                            onToggle={() => {
-                                toggle(item.index);
-                            }}
-                            onLongPress={() => {
-                                if (isEditLocked) {
-                                    Toast.show({
-                                        type: "info",
-                                        text1: "当前歌单已绑定在线播放列表",
-                                        text2: "如需进行本地编辑，请先进入「修改信息」页面进行解绑操作",
-                                    });
-                                    return;
-                                }
-                                if (!editing) {
-                                    Vibration.vibrate(25);
-                                    setEditing(true);
-                                    toggle(item.index);
-                                }
-                            }}
-                            isChecking={editing}
-                            isChecked={selected.has(item.index)}
                         />
-                    );
-                }}
-                data={playlistDetail}
-                estimatedItemSize={68}
-                contentContainerStyle={{
-                    backgroundColor: bgColor,
-                }}
-                extraData={[editing, selected.size]}
-                ListHeaderComponent={
-                    <Header
-                        meta={meta}
-                        images={extractAndProcessImgUrls(playlistDetail)}
-                        showPlayButton={playlistDetail.length > 0}
-                        onPlay={async () => {
-                            await handleRequestPlay(0);
+                        <Box style={{ height: editing ? 0 : bottom }} aria-hidden />
+                    </ScrollView>
+                </Box>
+                <Box className="flex-1">
+                    <FlashList
+                        renderItem={item => {
+                            return (
+                                <SongItem
+                                    data={item.item}
+                                    index={item.index + 1}
+                                    onRequestPlay={async () => {
+                                        await handleRequestPlay(item.index);
+                                    }}
+                                    onToggle={() => {
+                                        toggle(item.index);
+                                    }}
+                                    onLongPress={() => {
+                                        if (isEditLocked) {
+                                            Toast.show({
+                                                type: "info",
+                                                text1: "当前歌单已绑定在线播放列表",
+                                                text2: "如需进行本地编辑，请先进入「修改信息」页面进行解绑操作",
+                                            });
+                                            return;
+                                        }
+                                        if (!editing) {
+                                            Vibration.vibrate(25);
+                                            setEditing(true);
+                                            toggle(item.index);
+                                        }
+                                    }}
+                                    isChecking={editing}
+                                    isChecked={selected.has(item.index)}
+                                />
+                            );
                         }}
+                        data={playlistDetail}
+                        estimatedItemSize={68}
+                        contentContainerStyle={{
+                            backgroundColor: bgColor,
+                        }}
+                        extraData={[editing, selected.size]}
+                        ListHeaderComponent={
+                            <>
+                                <Header
+                                    meta={meta}
+                                    images={extractAndProcessImgUrls(playlistDetail)}
+                                    showPlayButton={playlistDetail.length > 0}
+                                    onPlay={async () => {
+                                        await handleRequestPlay(0);
+                                    }}
+                                    className="flex md:hidden"
+                                />
+                                <Box className="h-1.5 hidden md:flex" aria-hidden />
+                            </>
+                        }
+                        ListEmptyComponent={
+                            <View style={{ flex: 1 }}>
+                                <Empty title="暂无内容" action={null} />
+                            </View>
+                        }
+                        ListFooterComponent={<Box style={{ height: editing ? 0 : bottom }} aria-hidden />}
                     />
-                }
-                ListEmptyComponent={
-                    <View style={{ flex: 1 }}>
-                        <Empty title="暂无内容" action={null} />
-                    </View>
-                }
-                ListFooterComponent={<Box style={{ height: editing ? 0 : bottom }} aria-hidden />}
-            />
+                </Box>
+            </Box>
             {editing ? (
                 <EditAction
                     onAll={() => {
