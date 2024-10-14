@@ -3,8 +3,9 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
+import { LinearGradient as ExpoLinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import { remapProps } from "nativewind";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
@@ -27,6 +28,7 @@ import CommonLayout from "~/components/CommonLayout";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Box } from "~/components/ui/box";
 import { Pressable } from "~/components/ui/pressable";
 import { Text } from "~/components/ui/text";
 import useTracks from "~/hooks/useTracks";
@@ -39,6 +41,10 @@ import { getFileName } from "~/utils/format";
 import { handlePrev, handleTogglePlay } from "~/utils/player-control";
 import { setMode, tracksToPlaylist } from "~/utils/track-data";
 
+const LinearGradient = remapProps(ExpoLinearGradient, {
+    className: "style",
+});
+
 const IconDown = createIcon(Entypo, "chevron-down");
 
 const AudioPlayerInsetContext = createContext<EdgeInsets>({
@@ -50,7 +56,7 @@ const AudioPlayerInsetContext = createContext<EdgeInsets>({
 
 function AudioProgressBar() {
     const colorScheme = useColorScheme();
-    const { theme, styles } = useStyles(styleSheet);
+    const { theme } = useStyles(styleSheet);
 
     const [value, setValue] = useState(0);
     const [holding, setHolding] = useState(false);
@@ -86,8 +92,11 @@ function AudioProgressBar() {
 
     if (!activeTrack?.bilisoundIsLoaded) {
         return (
-            <View onLayout={e => setGlowTotalWidth(e.nativeEvent.layout.width - 20)} style={styles.barLoadingContainer}>
-                <View style={styles.barLoading}>
+            <View
+                onLayout={e => setGlowTotalWidth(e.nativeEvent.layout.width - 20)}
+                className="h-4 justify-center flex-1 relative px-[10px]"
+            >
+                <View className="h-[3px] rounded-full overflow-hidden bg-neutral-200 dark:bg-primary-100">
                     <Animated.View style={[{ width: glowWidth, height: 3 }, animatedStyle]}>
                         <LinearGradient
                             colors={
@@ -97,7 +106,7 @@ function AudioProgressBar() {
                             }
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
-                            style={styles.barLoadingGradient}
+                            className="w-full h-full"
                         />
                     </Animated.View>
                 </View>
@@ -106,12 +115,15 @@ function AudioProgressBar() {
     }
 
     return (
-        <View style={styles.barContainer}>
-            <View style={styles.bar}>
-                <View style={[styles.barBuffered, { width: `${(buffered / duration) * 100}%` }]} />
-                <View style={[styles.barPlayed, { width: `${(value / duration) * 100}%` }]} />
+        <View className="h-4 justify-center flex-1 relative">
+            <View className="left-[10px] right-[10px] top-[6.5px] h-[3px] rounded-full absolute overflow-hidden bg-neutral-200 dark:bg-primary-100">
+                <View
+                    style={{ width: `${(buffered / duration) * 100}%` }}
+                    className="h-full absolute bg-neutral-200 dark:bg-primary-100"
+                />
+                <View style={{ width: `${(value / duration) * 100}%` }} className="h-full absolute bg-primary-500" />
             </View>
-            <View style={styles.barSliderOuter}>
+            <View className="absolute px-2 w-full">
                 <Slider
                     value={value}
                     onValueChange={([v]) => setValue(v)}
@@ -125,11 +137,14 @@ function AudioProgressBar() {
                     }}
                     minimumValue={0}
                     maximumValue={duration}
-                    containerStyle={styles.barSliderContainer}
-                    trackStyle={styles.barSliderTrack}
-                    minimumTrackStyle={styles.barSliderMinimumTrack}
-                    thumbStyle={styles.barSliderThumb}
-                    thumbTouchSize={{ width: 16, height: 16 }}
+                    containerStyle={{ width: "100%" }}
+                    trackStyle={{
+                        backgroundColor: "transparent",
+                    }}
+                    minimumTrackStyle={{
+                        backgroundColor: "transparent",
+                    }}
+                    renderThumbComponent={() => <Box className="w-4 h-4 bg-primary-500 rounded-full" />}
                 />
             </View>
         </View>
@@ -139,14 +154,23 @@ function AudioProgressBar() {
 function AudioProgressTimer() {
     const { position, duration } = useProgress();
     const activeTrack = useActiveTrack();
-    const { styles } = useStyles(styleSheet);
 
     return (
-        <View style={styles.timerContainer}>
-            <Text style={[styles.timerText, { textAlign: "left" }]}>
+        <View className="px-[30px] flex-row items-center pt-2">
+            <Text
+                className="text-[15px] opacity-60 flex-1 text-left"
+                style={{
+                    fontFamily: "Roboto_400Regular",
+                }}
+            >
                 {activeTrack?.bilisoundIsLoaded ? formatSecond(position) : "00:00"}
             </Text>
-            <Text style={[styles.timerText, { textAlign: "right" }]}>
+            <Text
+                className="text-[15px] opacity-60 flex-1 text-right"
+                style={{
+                    fontFamily: "Roboto_400Regular",
+                }}
+            >
                 {activeTrack?.bilisoundIsLoaded ? formatSecond(duration) : "00:00"}
             </Text>
         </View>
@@ -508,86 +532,6 @@ export default function AudioPlayerModal() {
 }
 
 const styleSheet = createStyleSheet(theme => ({
-    // AudioProgressBar
-    barLoadingContainer: {
-        height: 16,
-        justifyContent: "center",
-        flex: 1,
-        position: "relative",
-        paddingLeft: 10,
-        paddingRight: 10,
-    },
-    barLoading: {
-        height: 3,
-        borderRadius: 9999,
-        backgroundColor: theme.colorScheme === "light" ? theme.colors.neutral[200] : theme.colors.primary[900],
-        overflow: "hidden",
-    },
-    barLoadingGradient: {
-        width: "100%",
-        height: "100%",
-    },
-    barContainer: {
-        height: 16,
-        justifyContent: "center",
-        flex: 1,
-        position: "relative",
-    },
-    bar: {
-        left: 10,
-        right: 10,
-        top: 6.5,
-        height: 3,
-        borderRadius: 2,
-        backgroundColor: theme.colorScheme === "light" ? theme.colors.neutral[200] : theme.colors.primary[900],
-        position: "absolute",
-        overflow: "hidden",
-    },
-    barBuffered: {
-        height: "100%",
-        backgroundColor: theme.colorScheme === "light" ? theme.colors.neutral[200] : theme.colors.primary[900],
-        position: "absolute",
-    },
-    barPlayed: {
-        height: "100%",
-        backgroundColor: theme.colors.primary[500],
-        position: "absolute",
-    },
-    barSliderOuter: {
-        position: "absolute",
-        paddingHorizontal: 8,
-        width: "100%",
-    },
-    barSliderContainer: {
-        width: "100%",
-    },
-    barSliderTrack: {
-        backgroundColor: "transparent",
-    },
-    barSliderMinimumTrack: {
-        backgroundColor: "transparent",
-    },
-    barSliderThumb: {
-        width: 16,
-        height: 16,
-        backgroundColor: theme.colors.primary[500],
-    },
-    // AudioProgressTimer
-    timerContainer: {
-        paddingHorizontal: 30,
-        flexDirection: "row",
-        alignItems: "center",
-        // justifyContent: "space-between",
-        paddingTop: 8,
-    },
-    timerText: {
-        fontSize: 15,
-        opacity: 0.6,
-        color: theme.colorTokens.foreground,
-        flex: 1,
-        fontFamily: "Roboto_400Regular",
-    },
-    // MusicPicture
     shadowedView: {
         shadowOpacity: 0.2,
         shadowRadius: 24,
