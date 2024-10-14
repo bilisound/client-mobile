@@ -7,7 +7,7 @@ import { LinearGradient as ExpoLinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { remapProps } from "nativewind";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { Linking, Platform, StatusBar, useColorScheme, useWindowDimensions, View } from "react-native";
+import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import { useMMKVString } from "react-native-mmkv";
 import Animated, {
@@ -38,6 +38,7 @@ import { getImageProxyUrl } from "~/utils/constant-helper";
 import { formatSecond } from "~/utils/datetime";
 import { saveFile } from "~/utils/file";
 import { getFileName } from "~/utils/format";
+import log from "~/utils/logger";
 import { handlePrev, handleTogglePlay } from "~/utils/player-control";
 import { setMode, tracksToPlaylist } from "~/utils/track-data";
 
@@ -179,12 +180,11 @@ function AudioProgressTimer() {
 
 function AudioPlayButtonIcon() {
     const playbackState = usePlaybackState();
-    const { theme } = useStyles();
 
     return playbackState.state === State.Playing ? (
         <FontAwesome5 name="pause" className="text-[22px] @md:text-[28px] color-typography-0" />
     ) : (
-        <FontAwesome5 name="play" className="text-[22px] @md:text-[28px] color-typography-0 translate-x-3" />
+        <FontAwesome5 name="play" className="text-[22px] @md:text-[28px] color-typography-0 translate-x-[3px]" />
     );
 }
 
@@ -309,13 +309,16 @@ export default function AudioPlayerModal() {
         top: Platform.OS === "ios" ? 0 : edgeInsets.top,
     };
     const [shouldMarginBottom, setShouldMarginBottom] = useState(false);
+    const [superNarrowLayout, setSuperNarrowLayout] = useState(false);
 
     return (
         <AudioPlayerInsetContext.Provider value={customEdgeInsets}>
             <View
                 className="flex-1 bg-background-0 @container"
                 onLayout={e => {
+                    log.debug("当前播放器视窗宽度：" + e.nativeEvent.layout.width);
                     setShouldMarginBottom(e.nativeEvent.layout.width < 768);
+                    setSuperNarrowLayout(e.nativeEvent.layout.width < 320);
                 }}
             >
                 <CommonLayout
@@ -331,14 +334,14 @@ export default function AudioPlayerModal() {
                                 active={!showList}
                                 onPress={() => setShowList(false)}
                             >
-                                正在播放
+                                {superNarrowLayout ? "播放" : `正在播放`}
                             </TopTabButton>
                             <TopTabButton
                                 key={`${showList}_播放队列`}
                                 active={showList}
                                 onPress={() => setShowList(true)}
                             >
-                                播放队列
+                                {superNarrowLayout ? "队列" : `播放队列`}
                             </TopTabButton>
                         </View>
                     }
@@ -411,7 +414,7 @@ export default function AudioPlayerModal() {
                         <View className="flex-row items-center justify-between pt-5 px-5">
                             {/* 随机模式 */}
                             <PotatoPressable
-                                className="w-10 h-10 items-center justify-center"
+                                className={`w-10 h-10 items-center justify-center ${superNarrowLayout ? "hidden" : ""}`}
                                 outerClassName="overflow-hidden rounded-full"
                                 onPress={async () => {
                                     const result = await setMode();
@@ -490,7 +493,7 @@ export default function AudioPlayerModal() {
 
                             {/* 导出 */}
                             <PotatoPressable
-                                className="w-10 h-10 items-center justify-center"
+                                className={`w-10 h-10 items-center justify-center ${superNarrowLayout ? "hidden" : ""}`}
                                 outerClassName="overflow-hidden rounded-full"
                                 onPress={async () => {
                                     if (Platform.OS === "web") {
