@@ -59,6 +59,7 @@ import { getImageProxyUrl } from "~/utils/constant-helper";
 import { convertToRelativeTime } from "~/utils/datetime";
 import { exportPlaylistToFile } from "~/utils/exchange/playlist";
 import log from "~/utils/logger";
+import { convertToHTTPS } from "~/utils/string";
 import { playlistToTracks } from "~/utils/track-data";
 
 const IconPlay = createIcon(Ionicons, "play");
@@ -83,33 +84,26 @@ const Circle = Animated.createAnimatedComponent(
     }),
 );
 
-const HEADER_BASE_SIZE = 120;
-
 const IconEditingDone = createIcon(Entypo, "check");
 const IconEditing = createIcon(MaterialCommunityIcons, "format-list-checks");
 
 function ImagesGroup({ images: origImages }: { images: string[] }) {
-    const { styles } = useStyles(stylesheet);
     const images = origImages.map(image => getImageProxyUrl(image));
     if (images.length === 0) {
-        return <View style={[styles.imageGroupBase, styles.emptyImageGroup]} />;
+        return <View className="aspect-video rounded-lg bg-background-100" />;
     }
     if (images.length >= 1 && images.length <= 3) {
-        return (
-            <View style={styles.imageGroupBase}>
-                <Image source={images[0]} style={styles.singleImage} />
-            </View>
-        );
+        return <Image source={images[0]} className="aspect-video rounded-lg" />;
     }
     return (
-        <View style={styles.imageGroupBase}>
-            <View style={styles.imageRow}>
-                <Image source={images[0]} style={styles.quarterImage} />
-                <Image source={images[1]} style={styles.quarterImage} />
+        <View className="aspect-video rounded-lg overflow-hidden">
+            <View className="flex-row flex-1">
+                <Image className="aspect-video flex-1" source={images[0]} />
+                <Image className="aspect-video flex-1" source={images[1]} />
             </View>
-            <View style={styles.imageRow}>
-                <Image source={images[2]} style={styles.quarterImage} />
-                <Image source={images[3]} style={styles.quarterImage} />
+            <View className="flex-row flex-1">
+                <Image className="aspect-video flex-1" source={images[2]} />
+                <Image className="aspect-video flex-1" source={images[3]} />
             </View>
         </View>
     );
@@ -201,10 +195,13 @@ function Header({
     const imgUrl = meta.imgUrl;
 
     return (
-        <View className={twMerge("pb-6 px-4 gap-4", imgUrl ? "pt-4" : "", className)}>
-            {imgUrl ? <Image source={imgUrl} className="aspect-video rounded-lg" /> : null}
-            <View className={`flex-row ${imgUrl ? "" : "pt-4"} gap-4`}>
-                {imgUrl ? null : <ImagesGroup images={images} />}
+        <View className={twMerge("pb-6 px-4 gap-4 pt-4", className)}>
+            {imgUrl ? (
+                <Image source={convertToHTTPS(imgUrl)} className="aspect-video rounded-lg" />
+            ) : (
+                <ImagesGroup images={images} />
+            )}
+            <View className="flex-row gap-4">
                 <View className="flex-1">
                     <Text className="text-[20px] font-semibold leading-normal">{meta.title}</Text>
                     <View className="flex-row">
@@ -212,9 +209,6 @@ function Header({
                             {`${meta.amount} 首歌曲` + (meta.source && imgUrl ? ` ・ 上次同步：${lastSyncString}` : "")}
                         </Text>
                     </View>
-                    {meta.source && !imgUrl ? (
-                        <Text className="opacity-60 mt-2 text-sm leading-normal">{`上次同步：${lastSyncString}`}</Text>
-                    ) : null}
                     {showPlayButton && (
                         <View className="flex-row mt-4 gap-2">
                             <PotatoButton Icon={IconPlay} rounded onPress={onPlay}>
@@ -688,30 +682,6 @@ export default function Page() {
 }
 
 const stylesheet = createStyleSheet(theme => ({
-    imageGroupBase: {
-        flex: 0,
-        flexBasis: "auto",
-        width: HEADER_BASE_SIZE,
-        height: HEADER_BASE_SIZE,
-        borderRadius: 12,
-        overflow: "hidden",
-    },
-    emptyImageGroup: {
-        backgroundColor: theme.colors.neutral[500],
-    },
-    singleImage: {
-        width: HEADER_BASE_SIZE,
-        height: HEADER_BASE_SIZE,
-        objectFit: "cover",
-    },
-    imageRow: {
-        flexDirection: "row",
-    },
-    quarterImage: {
-        width: HEADER_BASE_SIZE / 2,
-        height: HEADER_BASE_SIZE / 2,
-        objectFit: "cover",
-    },
     playButtonContainer: {
         flexDirection: "row",
         marginTop: 20,
