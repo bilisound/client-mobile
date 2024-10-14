@@ -321,6 +321,7 @@ export default function AudioPlayerModal() {
                     setSuperNarrowLayout(e.nativeEvent.layout.width < 320);
                 }}
             >
+                {/* todo 增加超小布局使用的菜单，以及在 rightAccessories 的打开按钮 */}
                 <CommonLayout
                     overrideEdgeInsets={{ ...customEdgeInsets, bottom: 0 }}
                     titleBarClassName="h-[72px] px-[14px]"

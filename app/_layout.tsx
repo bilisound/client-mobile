@@ -27,6 +27,8 @@ import "~/global.css";
 import "~/unistyles";
 import log from "~/utils/logger";
 
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 export {
     // Catch any errors thrown by the Layout component.
     ErrorBoundary,
@@ -84,6 +86,7 @@ const RootLayoutNav = () => {
     }, [themeName]);
 
     const { theme } = useStyles();
+    const edgeInsets = useSafeAreaInsets();
 
     const modalSettings: NativeStackNavigationOptions =
         Platform.OS === "ios"
@@ -157,7 +160,7 @@ const RootLayoutNav = () => {
                     <PortalProvider>
                         {routes}
                         <AudioManager />
-                        <Toast config={toastConfig} />
+                        <Toast config={toastConfig} topOffset={edgeInsets.top} />
                         {RELEASE_CHANNEL === "android_github" && <CheckUpdate />}
                     </PortalProvider>
                 </ThemeProvider>

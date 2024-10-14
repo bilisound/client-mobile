@@ -18,6 +18,7 @@ import {
     Platform,
     PressableProps,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Svg } from "react-native-svg";
 
 type IPrimitiveIcon = {
@@ -304,12 +305,20 @@ const Actionsheet = React.forwardRef<React.ElementRef<typeof UIActionsheet>, IAc
 
 const ActionsheetContent = React.forwardRef<React.ElementRef<typeof UIActionsheet.Content>, IActionsheetContentProps>(
     ({ className, ...props }, ref) => {
+        // 修改点：正确处理安全区
+        const edgeInsets = useSafeAreaInsets();
+
         return (
             <UIActionsheet.Content
                 className={actionsheetContentStyle({
                     class: className,
                 })}
                 ref={ref}
+                style={{
+                    paddingBottom: edgeInsets.bottom,
+                    paddingLeft: edgeInsets.left,
+                    paddingRight: edgeInsets.right,
+                }}
                 {...props}
             />
         );
