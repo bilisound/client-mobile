@@ -86,7 +86,7 @@ const App: React.FC = () => {
                     onPress={() => handleShare()}
                 />
             }
-            extendToBottom
+            overrideEdgeInsets={{ bottom: 0 }}
         >
             {data ? (
                 <WebView

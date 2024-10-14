@@ -313,6 +313,7 @@ export default function AudioPlayerModal() {
 
     return (
         <AudioPlayerInsetContext.Provider value={customEdgeInsets}>
+            {Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
             <View
                 className="flex-1 bg-background-0 @container"
                 onLayout={e => {

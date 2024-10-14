@@ -49,7 +49,7 @@ export default function Page() {
     }
 
     return (
-        <CommonLayout title="关于" extendToBottom leftAccessories="backButton">
+        <CommonLayout title="关于" overrideEdgeInsets={{ bottom: 0 }} leftAccessories="backButton">
             <ScrollView>
                 <View style={styles.container}>
                     <Image style={styles.logoImage} source={require("../../assets/images/icon.png")} />

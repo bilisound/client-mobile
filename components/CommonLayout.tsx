@@ -13,10 +13,6 @@ import { Text } from "~/components/ui/text";
 export interface CommonFrameNewProps {
     title?: string | React.ReactNode;
     titleBarTheme?: "transparent" | "solid";
-    /**
-     * @deprecated 改用 `overrideEdgeInsets` 谢谢喵
-     */
-    extendToBottom?: boolean;
     leftAccessories?: React.ReactNode | "backButton";
     rightAccessories?: React.ReactNode;
 
@@ -39,7 +35,6 @@ export default function CommonLayout({
     children,
     title,
     titleBarTheme = "solid",
-    extendToBottom,
     leftAccessories,
     rightAccessories,
 
@@ -129,7 +124,7 @@ export default function CommonLayout({
                     {
                         paddingLeft: edgeInsets.left,
                         paddingRight: edgeInsets.right,
-                        paddingBottom: extendToBottom ? 0 : edgeInsets.bottom,
+                        paddingBottom: edgeInsets.bottom,
                     },
                     containerStyle,
                 ]}

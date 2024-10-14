@@ -185,7 +185,9 @@ export default function RootLayout() {
                 await NavigationBar.setPositionAsync("absolute");
                 await NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#17171701" : "#ffffff01");
             }
-            await SystemUI.setBackgroundColorAsync(colorScheme === "dark" ? "#171717" : "#ffffff");
+            await SystemUI.setBackgroundColorAsync(
+                colorScheme === "dark" || Platform.OS === "ios" ? "#171717" : "#ffffff",
+            );
         })();
     }, [colorScheme]);
 

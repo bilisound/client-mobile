@@ -39,7 +39,7 @@ const History: React.FC = () => {
     );
 
     return (
-        <CommonLayout title="用户说明" leftAccessories="backButton" extendToBottom>
+        <CommonLayout title="用户说明" leftAccessories="backButton" overrideEdgeInsets={{ bottom: 0 }}>
             {html && (
                 <WebView
                     ref={webviewRef}

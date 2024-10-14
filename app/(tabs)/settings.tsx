@@ -82,7 +82,7 @@ const Settings: React.FC = () => {
     );
 
     return (
-        <CommonLayout title="设置" extendToBottom titleBarTheme="transparent">
+        <CommonLayout title="设置" overrideEdgeInsets={{ bottom: 0 }} titleBarTheme="transparent">
             <ScrollView>
                 <SettingMenuItem
                     icon={LinkIcon}
