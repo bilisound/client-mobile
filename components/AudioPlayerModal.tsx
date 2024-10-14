@@ -7,7 +7,7 @@ import { LinearGradient as ExpoLinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { remapProps } from "nativewind";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
+import { Linking, Platform, StatusBar, useColorScheme, useWindowDimensions, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import { useMMKVString } from "react-native-mmkv";
 import Animated, {
@@ -156,9 +156,9 @@ function AudioProgressTimer() {
     const activeTrack = useActiveTrack();
 
     return (
-        <View className="px-[30px] flex-row items-center pt-2">
+        <View className="px-[30px] flex-row items-center pt-1.5 @md:pt-2">
             <Text
-                className="text-[15px] opacity-60 flex-1 text-left"
+                className="text-sm @md:text-[15px] opacity-60 flex-1 text-left"
                 style={{
                     fontFamily: "Roboto_400Regular",
                 }}
@@ -166,7 +166,7 @@ function AudioProgressTimer() {
                 {activeTrack?.bilisoundIsLoaded ? formatSecond(position) : "00:00"}
             </Text>
             <Text
-                className="text-[15px] opacity-60 flex-1 text-right"
+                className="text-sm @md:text-[15px] opacity-60 flex-1 text-right"
                 style={{
                     fontFamily: "Roboto_400Regular",
                 }}
@@ -182,16 +182,9 @@ function AudioPlayButtonIcon() {
     const { theme } = useStyles();
 
     return playbackState.state === State.Playing ? (
-        <FontAwesome5 name="pause" size={28} color={theme.colorTokens.buttonForeground("primary", "default")} />
+        <FontAwesome5 name="pause" className="text-[22px] @md:text-[28px] color-typography-0" />
     ) : (
-        <FontAwesome5
-            name="play"
-            size={28}
-            color={theme.colorTokens.buttonForeground("primary", "default")}
-            style={{
-                transform: [{ translateX: 3 }],
-            }}
-        />
+        <FontAwesome5 name="play" className="text-[22px] @md:text-[28px] color-typography-0 translate-x-3" />
     );
 }
 
@@ -243,7 +236,7 @@ function MusicList() {
     const convertedTrack = useMemo(() => tracksToPlaylist(tracks), [tracks]);
 
     return (
-        <View className="flex-1 mb-6 @3xl:mb-0">
+        <View className="flex-1 mb-2 @md:mb-6 @3xl:mb-0">
             <View className="flex-1 border border-l-0 border-r-0 border-outline-50 @3xl:border-0">
                 <FlashList
                     renderItem={item => {
@@ -301,9 +294,8 @@ function TopTabButton({ active, children, onPress }: TopTabButtonProps) {
 }
 
 export default function AudioPlayerModal() {
-    const { styles, theme } = useStyles(styleSheet);
+    const { theme } = useStyles(styleSheet);
     const colorScheme = useColorScheme();
-    const textBasicColor = theme.colorTokens.foreground;
     const activeTrack = useActiveTrack();
     const [showList, setShowList] = useState(false);
     const { useLegacyID } = useSettingsStore(state => ({
@@ -379,7 +371,7 @@ export default function AudioPlayerModal() {
                         )}
                     </View>
                     <View
-                        className="flex-0 @3xl:flex-1 basis-auto h-64 @3xl:h-full @3xl:justify-center"
+                        className="flex-0 @3xl:flex-1 basis-auto h-[220px] @md:h-64 @3xl:h-full @3xl:justify-center"
                         style={{
                             marginBottom: shouldMarginBottom ? customEdgeInsets.bottom : undefined,
                             paddingBottom: shouldMarginBottom ? undefined : customEdgeInsets.bottom,
@@ -395,16 +387,16 @@ export default function AudioPlayerModal() {
                                 router.replace(`/query/${activeTrack?.bilisoundId}`);
                             }}
                         >
-                            <View className="px-[30px] py-4 gap-2">
+                            <View className="px-[30px] py-2 @md:py-4 gap-2">
                                 <Text
-                                    className="text-[20px] font-extrabold leading-normal"
+                                    className="text-[18px] @md:text-[20px] font-extrabold leading-normal"
                                     numberOfLines={1}
                                     ellipsizeMode="tail"
                                 >
                                     {activeTrack?.title}
                                 </Text>
                                 <Text
-                                    className="text-base leading-normal opacity-65"
+                                    className="text-sm @md:text-base leading-normal opacity-65"
                                     numberOfLines={1}
                                     ellipsizeMode="tail"
                                 >
@@ -416,11 +408,11 @@ export default function AudioPlayerModal() {
                             <AudioProgressBar />
                         </View>
                         <AudioProgressTimer />
-                        <View style={styles.controlButtonsContainer}>
-                            {/* 歌单 */}
+                        <View className="flex-row items-center justify-between pt-5 px-5">
+                            {/* 随机模式 */}
                             <PotatoPressable
-                                style={styles.controlButtonSmall}
-                                outerStyle={styles.controlButtonOuter}
+                                className="w-10 h-10 items-center justify-center"
+                                outerClassName="overflow-hidden rounded-full"
                                 onPress={async () => {
                                     const result = await setMode();
                                     await update();
@@ -444,16 +436,15 @@ export default function AudioPlayerModal() {
                             >
                                 <Entypo
                                     name="shuffle"
-                                    size={22}
-                                    color={queuePlayingMode === "shuffle" ? theme.colors.accent[500] : textBasicColor}
+                                    className={`text-[18px] @md:text-[22px] ${queuePlayingMode === "shuffle" ? "color-accent-500" : "color-typography-700"}`}
                                 />
                             </PotatoPressable>
 
-                            <View style={styles.controlButtonsGroup}>
+                            <View className="flex-row items-center justify-center gap-3">
                                 {/* 上一首 */}
                                 <PotatoPressable
-                                    style={styles.controlButton}
-                                    outerStyle={styles.controlButtonOuter}
+                                    className="w-14 h-14 @sm:w-[68px] @sm:h-[68px] items-center justify-center"
+                                    outerClassName="overflow-hidden rounded-full"
                                     onPress={async () => {
                                         await handlePrev();
                                     }}
@@ -461,16 +452,17 @@ export default function AudioPlayerModal() {
                                 >
                                     <FontAwesome5
                                         name="step-backward"
-                                        size={24}
-                                        color={textBasicColor}
-                                        style={styles.controlButtonIcon}
+                                        className="color-typography-700 text-[20px] @sm:text-[24px] scale-x-[1.4]"
                                     />
                                 </PotatoPressable>
 
                                 {/* 播放/暂停 */}
                                 <PotatoPressable
-                                    style={styles.controlButtonPlay}
-                                    outerStyle={styles.controlButtonOuter}
+                                    className="w-14 h-14 @sm:w-[68px] @sm:h-[68px] items-center justify-center"
+                                    outerClassName="overflow-hidden rounded-full"
+                                    style={{
+                                        backgroundColor: theme.colorTokens.buttonBackground("primary", "default"),
+                                    }}
                                     pressedBackgroundColor={theme.colorTokens.buttonBackground("primary", "active")}
                                     onPress={async () => {
                                         await handleTogglePlay();
@@ -482,8 +474,8 @@ export default function AudioPlayerModal() {
 
                                 {/* 下一首 */}
                                 <PotatoPressable
-                                    style={styles.controlButton}
-                                    outerStyle={styles.controlButtonOuter}
+                                    className="w-14 h-14 @sm:w-[68px] @sm:h-[68px] items-center justify-center"
+                                    outerClassName="overflow-hidden rounded-full"
                                     onPress={async () => {
                                         await TrackPlayer.skipToNext();
                                     }}
@@ -491,17 +483,15 @@ export default function AudioPlayerModal() {
                                 >
                                     <FontAwesome5
                                         name="step-forward"
-                                        size={24}
-                                        color={textBasicColor}
-                                        style={styles.controlButtonIcon}
+                                        className="color-typography-700 text-[20px] @sm:text-[24px] scale-x-[1.4]"
                                     />
                                 </PotatoPressable>
                             </View>
 
                             {/* 导出 */}
                             <PotatoPressable
-                                style={styles.controlButtonSmall}
-                                outerStyle={styles.controlButtonOuter}
+                                className="w-10 h-10 items-center justify-center"
+                                outerClassName="overflow-hidden rounded-full"
                                 onPress={async () => {
                                     if (Platform.OS === "web") {
                                         await Linking.openURL(
@@ -521,7 +511,7 @@ export default function AudioPlayerModal() {
                                 }}
                                 aria-label="导出"
                             >
-                                <Ionicons name="save" size={20} color={textBasicColor} />
+                                <Ionicons name="save" className="text-[18px] @md:text-[20px] color-typography-700" />
                             </PotatoPressable>
                         </View>
                     </View>
@@ -541,44 +531,5 @@ const styleSheet = createStyleSheet(theme => ({
         },
         borderRadius: 16,
         shadowColor: "#000000",
-    },
-    controlButtonsContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingTop: 20,
-        paddingHorizontal: 20,
-    },
-    controlButton: {
-        width: 68,
-        height: 68,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    controlButtonSmall: {
-        width: 40,
-        height: 40,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    controlButtonPlay: {
-        width: 68,
-        height: 68,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: theme.colorTokens.buttonBackground("primary", "default"),
-    },
-    controlButtonOuter: {
-        borderRadius: 999,
-        overflow: "hidden",
-    },
-    controlButtonIcon: {
-        transform: [{ scaleX: 1.4 }],
-    },
-    controlButtonsGroup: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 12,
     },
 }));
