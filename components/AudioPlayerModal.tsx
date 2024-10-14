@@ -1,4 +1,4 @@
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
@@ -7,7 +7,7 @@ import { LinearGradient as ExpoLinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { remapProps } from "nativewind";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
+import { Linking, Platform, StatusBar, StyleSheet, useColorScheme, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import { useMMKVString } from "react-native-mmkv";
 import Animated, {
@@ -20,7 +20,7 @@ import Animated, {
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { useStyles } from "react-native-unistyles";
 
 import SongItem from "./SongItem";
 
@@ -28,6 +28,15 @@ import CommonLayout from "~/components/CommonLayout";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import {
+    Actionsheet,
+    ActionsheetBackdrop,
+    ActionsheetContent,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper,
+    ActionsheetItem,
+    ActionsheetItemText,
+} from "~/components/ui/actionsheet";
 import { Box } from "~/components/ui/box";
 import { Pressable } from "~/components/ui/pressable";
 import { Text } from "~/components/ui/text";
@@ -41,6 +50,7 @@ import { getFileName } from "~/utils/format";
 import log from "~/utils/logger";
 import { handlePrev, handleTogglePlay } from "~/utils/player-control";
 import { setMode, tracksToPlaylist } from "~/utils/track-data";
+const IconMenu = createIcon(Entypo, "dots-three-vertical");
 
 const LinearGradient = remapProps(ExpoLinearGradient, {
     className: "style",
@@ -293,6 +303,71 @@ function TopTabButton({ active, children, onPress }: TopTabButtonProps) {
     );
 }
 
+interface LongPressActionsProps {
+    showActionSheet: boolean;
+    onClose: () => void;
+    onAction: (action: "changeRandom" | "save" | "close") => void;
+}
+
+/**
+ * 长按操作
+ */
+function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActionsProps) {
+    const edgeInsets = useSafeAreaInsets();
+    const { theme } = useStyles();
+    const textBasicColor = theme.colorTokens.foreground;
+
+    return (
+        <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
+            <ActionsheetBackdrop />
+            <ActionsheetContent style={{ zIndex: 999, paddingBottom: edgeInsets.bottom }}>
+                <ActionsheetDragIndicatorWrapper>
+                    <ActionsheetDragIndicator />
+                </ActionsheetDragIndicatorWrapper>
+                <ActionsheetItem onPress={() => onAction("changeRandom")}>
+                    <View
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Entypo name="add-to-list" size={20} color={textBasicColor} />
+                    </View>
+                    <ActionsheetItemText>切换随机播放</ActionsheetItemText>
+                </ActionsheetItem>
+                <ActionsheetItem onPress={() => onAction("save")}>
+                    <View
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Entypo name="add-to-list" size={20} color={textBasicColor} />
+                    </View>
+                    <ActionsheetItemText>保存</ActionsheetItemText>
+                </ActionsheetItem>
+                <ActionsheetItem onPress={() => onAction("close")}>
+                    <View
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <MaterialIcons name="cancel" size={22} color={textBasicColor} />
+                    </View>
+                    <ActionsheetItemText>取消</ActionsheetItemText>
+                </ActionsheetItem>
+            </ActionsheetContent>
+        </Actionsheet>
+    );
+}
+
 export default function AudioPlayerModal() {
     const { theme } = useStyles(styleSheet);
     const colorScheme = useColorScheme();
@@ -310,6 +385,11 @@ export default function AudioPlayerModal() {
     };
     const [shouldMarginBottom, setShouldMarginBottom] = useState(false);
     const [superNarrowLayout, setSuperNarrowLayout] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
+
+    function handleClose() {
+        setShowMenu(false);
+    }
 
     return (
         <AudioPlayerInsetContext.Provider value={customEdgeInsets}>
@@ -360,6 +440,19 @@ export default function AudioPlayerModal() {
                                 }
                             }}
                         />
+                    }
+                    rightAccessories={
+                        Platform.OS !== "ios" && superNarrowLayout ? (
+                            <PotatoButtonTitleBar
+                                label="操作"
+                                onPress={() => {
+                                    setShowMenu(true);
+                                }}
+                                Icon={IconMenu}
+                                iconSize={18}
+                                theme="transparent"
+                            />
+                        ) : null
                     }
                 >
                     <View className="flex-1">
@@ -522,11 +615,12 @@ export default function AudioPlayerModal() {
                     </View>
                 </CommonLayout>
             </View>
+            <LongPressActions showActionSheet={showMenu} onClose={handleClose} onAction={() => {}} />
         </AudioPlayerInsetContext.Provider>
     );
 }
 
-const styleSheet = createStyleSheet(theme => ({
+const styleSheet = StyleSheet.create({
     shadowedView: {
         shadowOpacity: 0.2,
         shadowRadius: 24,
@@ -537,4 +631,4 @@ const styleSheet = createStyleSheet(theme => ({
         borderRadius: 16,
         shadowColor: "#000000",
     },
-}));
+});

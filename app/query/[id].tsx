@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
-import { ScrollView, useWindowDimensions, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
 import { useStyles } from "react-native-unistyles";
