@@ -6,11 +6,13 @@ import { FolderOpen, ListPlus } from "lucide-react-native";
 import React, { createContext, useContext, useState } from "react";
 import { Alert, Platform, ScaledSize, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import { useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import Empty from "~/components/Empty";
 import PlaylistItem from "~/components/PlaylistItem";
+import PotatoButton from "~/components/potato-ui/PotatoButton";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
 import {
@@ -22,9 +24,19 @@ import {
     ActionsheetItem,
     ActionsheetItemText,
 } from "~/components/ui/actionsheet";
+import {
+    AlertDialog,
+    AlertDialogBackdrop,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+} from "~/components/ui/alert-dialog";
+import { Heading } from "~/components/ui/heading";
 import { Icon } from "~/components/ui/icon";
 import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
 import { Text } from "~/components/ui/text";
+import { useConfirm } from "~/hooks/useConfirm";
 import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
 import { deletePlaylistMeta, getPlaylistMetas } from "~/storage/sqlite/playlist";
@@ -168,7 +180,10 @@ export default function Page() {
     const columns = windowDimensions.width > 768 ? 2 : 1;
     const [width, setWidth] = useState(0);
 
-    const handleClose = () => setShowActionSheet(prevState => !prevState);
+    // 模态框管理
+    const { dialogInfo, setDialogInfo, modalVisible, setModalVisible, handleClose, dialogCallback } = useConfirm();
+
+    const handleActionSheetClose = () => setShowActionSheet(prevState => !prevState);
 
     const handleLongPress = (id: number) => {
         setDisplayTrack(data?.find(e => e.id === id));
@@ -176,30 +191,30 @@ export default function Page() {
     };
 
     const handleDelete = async () => {
-        Alert.alert("删除歌单确认", `确定要删除歌单「${displayTrack?.title}」吗？`, [
-            {
-                text: "取消",
-                style: "cancel",
-            },
-            {
-                text: "确定",
-                style: "default",
-                onPress: async () => {
-                    log.info("用户删除歌单");
-                    await deletePlaylistMeta(displayTrack!.id);
-                    await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
-                    await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
+        dialogCallback.current = async () => {
+            log.info("用户删除歌单");
+            await deletePlaylistMeta(displayTrack!.id);
+            await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
+            await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
 
-                    // 清空当前播放队列隶属歌单的状态机
-                    const got: { value?: PlaylistMeta } = JSON.parse(
-                        playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}",
-                    );
-                    if (got?.value?.id === displayTrack?.id) {
-                        invalidateOnQueueStatus();
-                    }
-                },
-            },
-        ]);
+            // 清空当前播放队列隶属歌单的状态机
+            const got: { value?: PlaylistMeta } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");
+            if (got?.value?.id === displayTrack?.id) {
+                invalidateOnQueueStatus();
+            }
+
+            Toast.show({
+                type: "success",
+                text1: "歌单删除成功",
+                text2: displayTrack?.title,
+            });
+        };
+        setDialogInfo(e => ({
+            ...e,
+            title: "删除歌单确认",
+            description: `确定要删除歌单「${displayTrack?.title}」吗？`,
+        }));
+        setModalVisible(true);
     };
 
     const handleImport = async () => {
@@ -284,7 +299,7 @@ export default function Page() {
             {/* 操作菜单 */}
             <LongPressActions
                 showActionSheet={showActionSheet}
-                onClose={handleClose}
+                onClose={handleActionSheetClose}
                 displayTrack={displayTrack}
                 onAction={action => {
                     setShowActionSheet(false);
@@ -307,6 +322,29 @@ export default function Page() {
                     }
                 }}
             />
+
+            {/* 对话框 */}
+            <AlertDialog isOpen={modalVisible} onClose={() => handleClose(false)} size="md">
+                <AlertDialogBackdrop />
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <Heading className="text-typography-950 font-semibold" size="lg">
+                            {dialogInfo.title}
+                        </Heading>
+                    </AlertDialogHeader>
+                    <AlertDialogBody className="mt-4 mb-6">
+                        <Text size="sm" className="leading-normal">
+                            {dialogInfo.description}
+                        </Text>
+                    </AlertDialogBody>
+                    <AlertDialogFooter className="gap-2">
+                        <PotatoButton variant="ghost" onPress={() => handleClose(false)}>
+                            {dialogInfo.cancel}
+                        </PotatoButton>
+                        <PotatoButton onPress={() => handleClose(true)}>{dialogInfo.ok}</PotatoButton>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </PlaylistContext.Provider>
     );
 }

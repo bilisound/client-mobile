@@ -43,6 +43,7 @@ import {
 import { Heading } from "~/components/ui/heading";
 import { Modal, ModalBackdrop, ModalContent, ModalBody } from "~/components/ui/modal";
 import { Text } from "~/components/ui/text";
+import { useConfirm } from "~/hooks/useConfirm";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
@@ -302,21 +303,7 @@ export default function Page() {
     const activeTrack = useActiveTrack();
 
     // 模态框管理
-    const [dialogInfo, setDialogInfo] = useState({
-        title: "",
-        description: "",
-        ok: "确定",
-        cancel: "取消",
-    });
-    const dialogCallback = useRef<() => void>();
-    const [modalVisible, setModalVisible] = useState(false);
-
-    function handleClose(ok: boolean) {
-        setModalVisible(false);
-        if (ok) {
-            dialogCallback.current?.();
-        }
-    }
+    const { dialogInfo, setDialogInfo, modalVisible, setModalVisible, handleClose, dialogCallback } = useConfirm();
 
     // 多选管理
     const isEditLocked = !meta || !!meta?.source;
