@@ -182,7 +182,7 @@ export default function Page() {
         >
             {data ? (
                 <View className="flex-1 flex-row">
-                    <View className="hidden md:flex flex-1 lg:basis-auto lg:flex-0 lg:w-[384px]">
+                    <View className="hidden sm:flex flex-1 lg:basis-auto lg:flex-0 lg:w-[384px]">
                         <ScrollView>
                             <Header data={data.pages[0]} mode={mode!} />
                             <View style={{ height: edgeInsets.bottom }} aria-hidden />
@@ -198,8 +198,8 @@ export default function Page() {
                             ListHeaderComponent={
                                 data.pages[0] ? (
                                     <>
-                                        <Header className="flex md:hidden" data={data.pages[0]} mode={mode!} />
-                                        <View className="h-1 hidden md:flex" aria-hidden />
+                                        <Header className="flex sm:hidden" data={data.pages[0]} mode={mode!} />
+                                        <View className="h-1 hidden sm:flex" aria-hidden />
                                     </>
                                 ) : null
                             }
@@ -215,11 +215,11 @@ export default function Page() {
                 </View>
             ) : (
                 <View className="flex-1">
-                    <View className="hidden md:flex w-full">
+                    <View className="hidden sm:flex w-full">
                         <HeaderSkeleton className="flex-1" />
                         <View className="flex-1" />
                     </View>
-                    <HeaderSkeleton className="flex md:hidden" />
+                    <HeaderSkeleton className="flex sm:hidden" />
                 </View>
             )}
         </CommonLayout>

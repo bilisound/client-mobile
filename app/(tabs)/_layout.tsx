@@ -62,7 +62,7 @@ function FloatTabBar(props: BottomTabBarProps) {
 
     return (
         <View
-            className="bg-transparent absolute left-3 right-3 bottom-3 pt-3 md:left-4 md:right-4 md:bottom-4 items-center pointer-events-box-none z-50"
+            className="bg-transparent absolute left-3 right-3 bottom-3 pt-3 sm:left-4 sm:right-4 sm:bottom-4 items-center pointer-events-box-none z-50"
             style={{
                 paddingLeft: props.insets.left,
                 paddingRight: props.insets.right,
@@ -73,24 +73,24 @@ function FloatTabBar(props: BottomTabBarProps) {
                 useStyleParamStore.getState().setBottomBarHeight(-e.nativeEvent.layout.y);
             }}
         >
-            <View className="w-full md:w-[480px] rounded-[32px] md:rounded-[24px] overflow-hidden border border-typography-50 bg-background-0/95 shadow-xl ios:shadow-soft-2">
+            <View className="w-full sm:w-[480px] rounded-[32px] sm:rounded-[24px] overflow-hidden border border-typography-50 bg-background-0/95 shadow-xl ios:shadow-soft-2">
                 {isNarrowWidth ? null : (
                     <AudioIndicator
-                        className="border-t-0 p-3 md:p-3"
-                        imageClassName="rounded-[24px] md:rounded-[12px]"
+                        className="border-t-0 p-3 sm:p-3"
+                        imageClassName="rounded-[24px] sm:rounded-[12px]"
                         playButtonOuterClassName="rounded-full"
                     />
                 )}
-                <View className="w-full h-16 md:h-12 flex-row" accessibilityRole="tablist">
+                <View className="w-full h-16 sm:h-12 flex-row" accessibilityRole="tablist">
                     {isNarrowWidth ? (
                         <Pressable
-                            className="flex-1 items-center justify-center gap-1.5 md:flex-row"
+                            className="flex-1 items-center justify-center gap-1.5 sm:flex-row"
                             onPress={() => {
                                 router.push("/modal");
                             }}
                         >
                             <View className="w-6 h-6 items-center justify-center">{iconDisc({ focused: false })}</View>
-                            <Text className="text-xs md:text-sm text-typography-700">正在播放</Text>
+                            <Text className="text-xs sm:text-sm text-typography-700">正在播放</Text>
                         </Pressable>
                     ) : null}
                     {props.state.routes.map((route, i) => {
@@ -124,7 +124,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                                 <NavigationRouteContext.Provider value={route}>
                                     <Pressable
                                         key={route.key}
-                                        className="flex-1 items-center justify-center gap-1.5 md:flex-row"
+                                        className="flex-1 items-center justify-center gap-1.5 sm:flex-row"
                                         onPress={onPress}
                                         onLongPress={onLongPress}
                                     >
@@ -136,7 +136,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                                             })}
                                         </View>
                                         <Text
-                                            className={`text-xs md:text-sm ${focused ? "text-accent-500 font-semibold" : "text-typography-700"}`}
+                                            className={`text-xs sm:text-sm ${focused ? "text-accent-500 font-semibold" : "text-typography-700"}`}
                                         >
                                             {metadata.options.title}
                                         </Text>

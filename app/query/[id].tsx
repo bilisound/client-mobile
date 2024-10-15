@@ -215,14 +215,14 @@ export default function Page() {
             }
         >
             {isLoading ? (
-                <View className="flex-1 flex-col md:flex-row">
-                    <View className="hidden md:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+                <View className="flex-1 flex-col sm:flex-row">
+                    <View className="hidden sm:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
                         <ScrollView>
                             <VideoMeta skeleton />
                         </ScrollView>
                     </View>
                     <View className="flex-1">
-                        <VideoMeta className="flex md:hidden" skeleton />
+                        <VideoMeta className="flex sm:hidden" skeleton />
                     </View>
                 </View>
             ) : null}
@@ -234,7 +234,7 @@ export default function Page() {
                 </View>
             ) : null}
             {data ? (
-                <View className="hidden md:flex flex-1 flex-row">
+                <View className="hidden sm:flex flex-1 flex-row">
                     <View className="flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
                         <ScrollView>
                             <VideoMeta meta={data.data} />
@@ -260,7 +260,7 @@ export default function Page() {
                 </View>
             ) : null}
             {data ? (
-                <View className="flex md:hidden flex-1">
+                <View className="flex sm:hidden flex-1">
                     <FlashList
                         data={dataList}
                         keyExtractor={item => `${item.page}`}

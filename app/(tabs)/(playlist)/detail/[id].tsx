@@ -481,8 +481,8 @@ export default function Page() {
                 bottom: 0,
             }}
         >
-            <View className="flex-1 flex-col md:flex-row">
-                <View className="hidden md:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+            <View className="flex-1 flex-col sm:flex-row">
+                <View className="hidden sm:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
                     <ScrollView>
                         <Header
                             meta={meta}
@@ -543,9 +543,9 @@ export default function Page() {
                                     onPlay={async () => {
                                         await handleRequestPlay(0);
                                     }}
-                                    className="flex md:hidden"
+                                    className="flex sm:hidden"
                                 />
-                                <View className="h-1.5 hidden md:flex" aria-hidden />
+                                <View className="h-1.5 hidden sm:flex" aria-hidden />
                             </>
                         }
                         ListEmptyComponent={
