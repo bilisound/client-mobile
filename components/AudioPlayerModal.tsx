@@ -314,6 +314,7 @@ interface LongPressActionsProps {
  */
 function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActionsProps) {
     const edgeInsets = useSafeAreaInsets();
+    const [queuePlayingMode] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
     const { theme } = useStyles();
     const textBasicColor = theme.colorTokens.foreground;
 
@@ -333,9 +334,12 @@ function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActio
                             justifyContent: "center",
                         }}
                     >
-                        <Entypo name="add-to-list" size={20} color={textBasicColor} />
+                        <Entypo
+                            name="shuffle"
+                            className={`text-[20px] ${queuePlayingMode === "shuffle" ? "color-accent-500" : "color-typography-700"}`}
+                        />
                     </View>
-                    <ActionsheetItemText>切换随机播放</ActionsheetItemText>
+                    <ActionsheetItemText>{`${queuePlayingMode === "shuffle" ? "关闭随机播放" : "开启随机播放"}`}</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("save")}>
                     <View
@@ -346,7 +350,7 @@ function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActio
                             justifyContent: "center",
                         }}
                     >
-                        <Entypo name="add-to-list" size={20} color={textBasicColor} />
+                        <Ionicons name="save" className="text-[20px] color-typography-700" />
                     </View>
                     <ActionsheetItemText>保存</ActionsheetItemText>
                 </ActionsheetItem>
@@ -359,7 +363,7 @@ function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActio
                             justifyContent: "center",
                         }}
                     >
-                        <MaterialIcons name="cancel" size={22} color={textBasicColor} />
+                        <MaterialIcons name="cancel" className="text-[22px] color-typography-700" />
                     </View>
                     <ActionsheetItemText>取消</ActionsheetItemText>
                 </ActionsheetItem>
@@ -391,6 +395,38 @@ export default function AudioPlayerModal() {
         setShowMenu(false);
     }
 
+    async function handleSave() {
+        if (Platform.OS === "web") {
+            await Linking.openURL(`${activeTrack?.url}&dl=${useSettingsStore.getState().useLegacyID ? "av" : "bv"}`);
+            return;
+        }
+        await saveFile(
+            activeTrack?.url ?? "",
+            getFileName({
+                av: useLegacyID,
+                episode: activeTrack?.bilisoundEpisode ?? "",
+                id: activeTrack?.bilisoundId ?? "",
+                title: activeTrack?.title ?? "",
+            }),
+        );
+    }
+
+    async function handleToggleShuffle() {
+        const result = await setMode();
+        await update();
+        if (result === "normal") {
+            Toast.show({
+                type: "info",
+                text1: "随机模式关闭",
+            });
+        } else {
+            Toast.show({
+                type: "info",
+                text1: "随机模式开启",
+            });
+        }
+    }
+
     return (
         <AudioPlayerInsetContext.Provider value={customEdgeInsets}>
             {Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
@@ -402,7 +438,6 @@ export default function AudioPlayerModal() {
                     setSuperNarrowLayout(e.nativeEvent.layout.width < 320);
                 }}
             >
-                {/* todo 增加超小布局使用的菜单，以及在 rightAccessories 的打开按钮 */}
                 <CommonLayout
                     overrideEdgeInsets={{ ...customEdgeInsets, bottom: 0 }}
                     titleBarClassName="h-[72px] px-[14px]"
@@ -511,21 +546,7 @@ export default function AudioPlayerModal() {
                             <PotatoPressable
                                 className={`w-10 h-10 items-center justify-center ${superNarrowLayout ? "hidden" : ""}`}
                                 outerClassName="overflow-hidden rounded-full"
-                                onPress={async () => {
-                                    const result = await setMode();
-                                    await update();
-                                    if (result === "normal") {
-                                        Toast.show({
-                                            type: "info",
-                                            text1: "随机模式关闭",
-                                        });
-                                    } else {
-                                        Toast.show({
-                                            type: "info",
-                                            text1: "随机模式开启",
-                                        });
-                                    }
-                                }}
+                                onPress={handleToggleShuffle}
                                 aria-label={
                                     queuePlayingMode === "shuffle"
                                         ? "随机模式开启（点击以关闭）"
@@ -590,23 +611,7 @@ export default function AudioPlayerModal() {
                             <PotatoPressable
                                 className={`w-10 h-10 items-center justify-center ${superNarrowLayout ? "hidden" : ""}`}
                                 outerClassName="overflow-hidden rounded-full"
-                                onPress={async () => {
-                                    if (Platform.OS === "web") {
-                                        await Linking.openURL(
-                                            `${activeTrack?.url}&dl=${useSettingsStore.getState().useLegacyID ? "av" : "bv"}`,
-                                        );
-                                        return;
-                                    }
-                                    await saveFile(
-                                        activeTrack?.url ?? "",
-                                        getFileName({
-                                            av: useLegacyID,
-                                            episode: activeTrack?.bilisoundEpisode ?? "",
-                                            id: activeTrack?.bilisoundId ?? "",
-                                            title: activeTrack?.title ?? "",
-                                        }),
-                                    );
-                                }}
+                                onPress={handleSave}
                                 aria-label="导出"
                             >
                                 <Ionicons name="save" className="text-[18px] @md:text-[20px] color-typography-700" />
@@ -614,8 +619,25 @@ export default function AudioPlayerModal() {
                         </View>
                     </View>
                 </CommonLayout>
+                <LongPressActions
+                    showActionSheet={showMenu}
+                    onClose={handleClose}
+                    onAction={e => {
+                        switch (e) {
+                            case "changeRandom":
+                                handleToggleShuffle();
+                                break;
+                            case "save":
+                                handleSave();
+                                break;
+                            case "close":
+                            default:
+                                break;
+                        }
+                        handleClose();
+                    }}
+                />
             </View>
-            <LongPressActions showActionSheet={showMenu} onClose={handleClose} onAction={() => {}} />
         </AudioPlayerInsetContext.Provider>
     );
 }
