@@ -7,7 +7,7 @@ import { LinearGradient as ExpoLinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { remapProps } from "nativewind";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { Linking, Platform, StatusBar, StyleSheet, useColorScheme, View } from "react-native";
+import { Linking, Platform, StatusBar, useColorScheme, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
 import { useMMKVString } from "react-native-mmkv";
 import Animated, {
@@ -67,7 +67,7 @@ const AudioPlayerInsetContext = createContext<EdgeInsets>({
 
 function AudioProgressBar() {
     const colorScheme = useColorScheme();
-    const { theme } = useStyles(styleSheet);
+    const { theme } = useStyles();
 
     const [value, setValue] = useState(0);
     const [holding, setHolding] = useState(false);
@@ -201,7 +201,6 @@ function AudioPlayButtonIcon() {
 function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: string }) {
     const colorScheme = useColorScheme();
     const [smallestSize, setSmallestSize] = useState(0);
-    const { styles } = useStyles(styleSheet);
     const edgeInsets = useContext(AudioPlayerInsetContext);
     const [shouldPaddingBottom, setShouldPaddingBottom] = useState(false);
 
@@ -225,7 +224,18 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
                     contentFit="cover"
                 />
             ) : (
-                <ShadowedView style={styles.shadowedView}>
+                <ShadowedView
+                    style={{
+                        shadowOpacity: 0.2,
+                        shadowRadius: 24,
+                        shadowOffset: {
+                            width: 4,
+                            height: 4,
+                        },
+                        borderRadius: 16,
+                        shadowColor: "#000000",
+                    }}
+                >
                     <Image
                         source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
                         className="rounded-[16px] aspect-square"
@@ -315,8 +325,6 @@ interface LongPressActionsProps {
 function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActionsProps) {
     const edgeInsets = useSafeAreaInsets();
     const [queuePlayingMode] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
-    const { theme } = useStyles();
-    const textBasicColor = theme.colorTokens.foreground;
 
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
@@ -373,7 +381,7 @@ function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActio
 }
 
 export default function AudioPlayerModal() {
-    const { theme } = useStyles(styleSheet);
+    const { theme } = useStyles();
     const colorScheme = useColorScheme();
     const activeTrack = useActiveTrack();
     const [showList, setShowList] = useState(false);
@@ -641,16 +649,3 @@ export default function AudioPlayerModal() {
         </AudioPlayerInsetContext.Provider>
     );
 }
-
-const styleSheet = StyleSheet.create({
-    shadowedView: {
-        shadowOpacity: 0.2,
-        shadowRadius: 24,
-        shadowOffset: {
-            width: 4,
-            height: 4,
-        },
-        borderRadius: 16,
-        shadowColor: "#000000",
-    },
-});
