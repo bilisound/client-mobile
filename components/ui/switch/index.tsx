@@ -22,8 +22,8 @@ cssInterop(SwitchWrapper, { className: "style" });
 
 const switchStyle = tva({
     base:
-        "{}-[trackColor.false]:color-primary-100 " +
-        "{}-[trackColor.true]:color-primary-400 " +
+        "{}-[trackColor.false]:color-primary-200 dark:{}-[trackColor.false]:color-primary-50 " +
+        "{}-[trackColor.true]:color-primary-500 dark:{}-[trackColor.true]:color-primary-400 " +
         "{}-[thumbColor]:color-primary-50 dark:{}-[thumbColor]:color-primary-700 " +
         "{}-[activeThumbColor]:color-primary-50 " +
         "{}-[ios_backgroundColor]:color-primary-200" +
