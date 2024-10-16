@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { FolderOpen, ListPlus } from "lucide-react-native";
 import React, { createContext, useContext, useState } from "react";
-import { Alert, Platform, ScaledSize, useWindowDimensions, View } from "react-native";
+import { Platform, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { useStyles } from "react-native-unistyles";

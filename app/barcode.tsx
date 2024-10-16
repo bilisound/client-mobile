@@ -3,10 +3,21 @@ import { CameraView, Camera, PermissionStatus } from "expo-camera";
 import { BarcodeScanningResult } from "expo-camera/build/Camera.types";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, StatusBar, View, Text, StyleSheet, Pressable } from "react-native";
+import { StatusBar, View, StyleSheet, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import PotatoButton from "~/components/potato-ui/PotatoButton";
+import {
+    AlertDialog,
+    AlertDialogBackdrop,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+} from "~/components/ui/alert-dialog";
+import { Heading } from "~/components/ui/heading";
+import { Text } from "~/components/ui/text";
+import { useConfirm } from "~/hooks/useConfirm";
 import log from "~/utils/logger";
 import { handleQrCode } from "~/utils/qrcode";
 
@@ -16,32 +27,24 @@ const ScannerPage: React.FC = () => {
     const scanned = useRef(false);
     const safeAreaInsets = useSafeAreaInsets();
 
+    // 模态框管理
+    const { dialogInfo, setDialogInfo, modalVisible, setModalVisible, handleClose, dialogCallback } = useConfirm();
+
     const getBarCodeScannerPermissions = async () => {
         const { status } = await Camera.requestCameraPermissionsAsync();
         setHasPermission(status);
     };
 
-    const showUnsupportedWarning = (
-        message = "Bilisound 不支持您扫描的这个二维码，请确保您扫描的是视频网站地址的二维码。",
-    ) => {
-        Alert.alert(
-            "坏耶！",
-            message,
-            [
-                {
-                    text: "确定",
-                    isPreferred: true,
-                    onPress() {
-                        scanned.current = false;
-                    },
-                },
-            ],
-            {
-                onDismiss() {
-                    scanned.current = false;
-                },
-            },
-        );
+    const showUnsupportedWarning = (errorMessage?: string) => {
+        dialogCallback.current = () => {
+            router.replace("/");
+        };
+        setDialogInfo(e => ({
+            ...e,
+            title: "扫描失败",
+            description: errorMessage ?? "Bilisound 无法识别此二维码中的信息，请尝试使用其它的 APP 扫描。",
+        }));
+        setModalVisible(true);
     };
 
     useEffect(() => {
@@ -106,6 +109,26 @@ const ScannerPage: React.FC = () => {
                     />
                 );
             })()}
+
+            {/* 对话框 */}
+            <AlertDialog isOpen={modalVisible} onClose={() => handleClose(true)} size="md">
+                <AlertDialogBackdrop />
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <Heading className="text-typography-950 font-semibold" size="lg">
+                            {dialogInfo.title}
+                        </Heading>
+                    </AlertDialogHeader>
+                    <AlertDialogBody className="mt-4 mb-6">
+                        <Text size="sm" className="leading-normal">
+                            {dialogInfo.description}
+                        </Text>
+                    </AlertDialogBody>
+                    <AlertDialogFooter className="gap-2">
+                        <PotatoButton onPress={() => handleClose(true)}>{dialogInfo.ok}</PotatoButton>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </View>
     );
 };
@@ -135,7 +158,7 @@ const styles = StyleSheet.create({
     headerText: {
         color: "#fff",
         fontWeight: "600",
-        fontSize: 14,
+        fontSize: 16,
     },
     centeredContainer: {
         flex: 1,
