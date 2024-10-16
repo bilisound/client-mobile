@@ -5,6 +5,7 @@ import Toast from "react-native-toast-message";
 
 import CommonLayout from "~/components/CommonLayout";
 import PotatoButton from "~/components/potato-ui/PotatoButton";
+import PotatoToast from "~/components/potato-ui/PotatoToast";
 import {
     AlertDialog,
     AlertDialogBackdrop,
@@ -74,6 +75,11 @@ export default function Page() {
                     <Text className="lg:bg-red-500">test lg</Text>
                     <Text className="xl:bg-orange-500">test xl</Text>
                     <Text className="2xl:bg-amber-500">test 2xl</Text>
+
+                    <PotatoToast type="success" title="操作成功" description="数据已成功保存！" />
+                    <PotatoToast type="info" title="系统提示" description="请注意，新版本已发布。" />
+                    <PotatoToast type="warning" title="友情提醒" description="您的账户余额不足，请及时充值。" />
+                    <PotatoToast type="error" title="错误提示" description="发生未知错误，请稍后重试。" />
 
                     <AlertDialog isOpen={modalVisible} onClose={handleClose} size="md">
                         <AlertDialogBackdrop />

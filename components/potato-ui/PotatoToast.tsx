@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
-import { ShadowedView } from "react-native-fast-shadow";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { View } from "react-native";
+
+import { ShadowedView } from "~/components/ShadowedView";
+import { Text } from "~/components/ui/text";
 
 export interface ToastProps {
     type: "success" | "info" | "warning" | "error";
@@ -10,78 +11,34 @@ export interface ToastProps {
 }
 
 export default function PotatoToast({ type, title, description }: ToastProps) {
-    const { styles, theme } = useStyles(styleSheet);
     return (
-        <ShadowedView style={[styles.toast, vanillaStyles.toast]}>
+        <ShadowedView
+            style={{
+                shadowOpacity: 0.1,
+                shadowRadius: 25,
+                shadowOffset: {
+                    width: 0,
+                    height: 20,
+                },
+            }}
+            className="{}-[shadowColor]:color-black bg-background-0 border-background-100 border min-h-[50px] rounded-[25px] px-3 py-[13px] flex-row gap-3 mx-6 my-2 max-w-[400px]"
+        >
             {type === "success" && (
-                <Ionicons name="checkmark-circle" style={styles.toastIcon} size={24} color={theme.colors.green[500]} />
+                <Ionicons name="checkmark-circle" className="flex-0 basis-auto text-[24px] color-green-500" />
             )}
             {type === "info" && (
-                <Ionicons
-                    name="information-circle"
-                    style={styles.toastIcon}
-                    size={24}
-                    color={theme.colors.neutral[500]}
-                />
+                <Ionicons name="information-circle" className="flex-0 basis-auto text-[24px] color-neutral-500" />
             )}
             {type === "warning" && (
-                <Ionicons name="alert-circle" style={styles.toastIcon} size={24} color={theme.colors.orange[500]} />
+                <Ionicons name="alert-circle" className="flex-0 basis-auto text-[24px] color-orange-500" />
             )}
             {type === "error" && (
-                <Ionicons name="close-circle" style={styles.toastIcon} size={24} color={theme.colors.red[500]} />
+                <Ionicons name="close-circle" className="flex-0 basis-auto text-[24px] color-red-500" />
             )}
-            <View style={styles.toastText}>
-                <Text style={styles.toastTitle}>{title}</Text>
-                {description ? <Text style={styles.toastDescription}>{description}</Text> : null}
+            <View className="gap-1 flex-1">
+                <Text className="text-base leading-normal font-semibold">{title}</Text>
+                {description ? <Text className="text-sm leading-normal">{description}</Text> : null}
             </View>
         </ShadowedView>
     );
 }
-
-const vanillaStyles = StyleSheet.create({
-    toast: {
-        shadowOpacity: 0.1,
-        shadowRadius: 25,
-        shadowOffset: {
-            width: 0,
-            height: 20,
-        },
-        shadowColor: "#000000",
-    },
-});
-
-const styleSheet = createStyleSheet(theme => ({
-    toast: {
-        backgroundColor: theme.colorTokens.toastBackground,
-        borderColor: theme.colorTokens.toastBorder,
-        borderWidth: 1,
-        minHeight: 50,
-        borderRadius: 25,
-        paddingHorizontal: 12,
-        paddingVertical: 13,
-        flexDirection: "row",
-        gap: 12,
-        marginHorizontal: 24,
-        marginVertical: 8,
-        maxWidth: 400,
-    },
-    toastIcon: {
-        flex: 0,
-        flexBasis: "auto",
-    },
-    toastText: {
-        gap: 4,
-        flex: 1,
-    },
-    toastTitle: {
-        fontSize: 16,
-        fontWeight: "bold",
-        lineHeight: 16 * 1.5,
-        color: theme.colorTokens.foreground,
-    },
-    toastDescription: {
-        fontSize: 14,
-        lineHeight: 14 * 1.5,
-        color: theme.colorTokens.foreground,
-    },
-}));
