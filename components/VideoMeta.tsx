@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Platform, View } from "react-native";
+import { Platform, useColorScheme, View } from "react-native";
 import { twMerge } from "tailwind-merge";
 
 import { GetBilisoundMetadataResponse } from "~/api/bilisound";
@@ -40,6 +40,7 @@ export interface VideoMetaBaseProps {
 
 const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skeleton, className }) => {
     const [showMore, setShowMore] = useState(false);
+    const colorScheme = useColorScheme();
 
     const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
@@ -128,7 +129,7 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
                         }
                     >
                         <LinearGradient
-                            colors={["rgba(0,0,0,1)", "rgba(0,0,0,0)"]}
+                            colors={colorScheme === "dark" ? ["#dbdbdc", "#dbdbdc00"] : ["#525252", "#52525200"]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 0, y: 0.9 }}
                             className="w-full h-full"
