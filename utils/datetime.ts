@@ -48,7 +48,7 @@ const gapType: GapType[] = [
     { max: 60, suffix: " 秒前" },
     { max: 3600, suffix: " 分钟前" },
     { max: 86400, suffix: " 小时前" },
-    { max: 604800, suffix: " 天前" },
+    { max: 2592000, suffix: " 天前" },
     { max: 31536000, suffix: " 个月前" },
 ];
 
