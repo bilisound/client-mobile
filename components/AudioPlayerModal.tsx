@@ -191,9 +191,9 @@ function AudioPlayButtonIcon() {
     const playbackState = usePlaybackState();
 
     return playbackState.state === State.Playing ? (
-        <FontAwesome5 name="pause" className="text-[22px] @md:text-[28px] color-typography-0" />
+        <FontAwesome5 name="pause" className="!text-[22px] !@md:text-[28px] color-typography-0" />
     ) : (
-        <FontAwesome5 name="play" className="text-[22px] @md:text-[28px] color-typography-0 translate-x-[3px]" />
+        <FontAwesome5 name="play" className="!text-[22px] !@md:text-[28px] color-typography-0 translate-x-[3px]" />
     );
 }
 
@@ -562,7 +562,7 @@ export default function AudioPlayerModal() {
                             >
                                 <Entypo
                                     name="shuffle"
-                                    className={`text-[18px] @md:text-[22px] ${queuePlayingMode === "shuffle" ? "color-accent-500" : "color-typography-700"}`}
+                                    className={`!text-[18px] !@md:text-[22px] ${queuePlayingMode === "shuffle" ? "color-accent-500" : "color-typography-700"}`}
                                 />
                             </PotatoPressable>
 
@@ -578,7 +578,7 @@ export default function AudioPlayerModal() {
                                 >
                                     <FontAwesome5
                                         name="step-backward"
-                                        className="color-typography-700 text-[20px] @sm:text-[24px] scale-x-[1.4]"
+                                        className="color-typography-700 !text-[20px] !@sm:text-[24px] scale-x-[1.4]"
                                     />
                                 </PotatoPressable>
 
@@ -609,7 +609,7 @@ export default function AudioPlayerModal() {
                                 >
                                     <FontAwesome5
                                         name="step-forward"
-                                        className="color-typography-700 text-[20px] @sm:text-[24px] scale-x-[1.4]"
+                                        className="color-typography-700 !text-[20px] !@sm:text-[24px] scale-x-[1.4]"
                                     />
                                 </PotatoPressable>
                             </View>
@@ -621,7 +621,7 @@ export default function AudioPlayerModal() {
                                 onPress={handleSave}
                                 aria-label="导出"
                             >
-                                <Ionicons name="save" className="text-[18px] @md:text-[20px] color-typography-700" />
+                                <Ionicons name="save" className="!text-[18px] !@md:text-[20px] color-typography-700" />
                             </PotatoPressable>
                         </View>
                     </View>

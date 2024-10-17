@@ -6,6 +6,7 @@ import {
     FontAwesome6,
     Feather,
     Octicons,
+    Entypo,
 } from "@expo/vector-icons";
 import { cssInterop } from "nativewind";
 
@@ -58,6 +59,14 @@ cssInterop(Feather, {
     },
 });
 cssInterop(Octicons, {
+    className: {
+        target: "style",
+        nativeStyleToProp: {
+            color: true,
+        },
+    },
+});
+cssInterop(Entypo, {
     className: {
         target: "style",
         nativeStyleToProp: {
