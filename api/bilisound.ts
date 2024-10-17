@@ -1,4 +1,4 @@
-// import sleep from "sleep-promise";
+import { Platform } from "react-native";
 
 import { defineWrap } from "./common";
 import { getVideo } from "./external/direct";
@@ -7,6 +7,7 @@ import { getUserSeason, getUserSeries, getUserSeriesMeta } from "~/api/external/
 import {
     BILIBILI_GOOD_CDN_REGEX,
     BILIBILI_VIDEO_URL_PREFIX,
+    BILISOUND_API_PREFIX,
     USER_AGENT_BILIBILI,
     USER_AGENT_BILISOUND,
 } from "~/constants/network";
@@ -51,6 +52,12 @@ function filterHostname(list: string[]) {
  * 解析短链接
  */
 export async function parseB23(id: string) {
+    if (Platform.OS === "web") {
+        const response = await fetch(BILISOUND_API_PREFIX + `/internal/resolve-b23?id=${id}`);
+        const json = await response.json();
+        return json.data;
+    }
+
     // 注意：直接指定 fetch 的重定向模式为 manual 的方案在 React Native 不可用
     // 详见 https://reactnative.dev/docs/network#known-issues-with-fetch-and-cookie-based-authentication
     const res = await fetch(`https://b23.tv/${id}`, {
@@ -66,7 +73,11 @@ export async function parseB23(id: string) {
  * @param data
  */
 export async function getBilisoundMetadata(data: { id: string }) {
-    // await sleep(2000);
+    if (Platform.OS === "web") {
+        const response = await fetch(BILISOUND_API_PREFIX + `/internal/metadata?id=${data.id}`);
+        return response.json();
+    }
+
     const { id } = data;
     // 获取视频网页
     const { initialState, type } = await getVideo({ id, episode: 1 });
@@ -142,19 +153,19 @@ export async function getBilisoundMetadata(data: { id: string }) {
     }
 }
 
-export interface GetBilisoundResourceUrlOptions {
-    id: string;
-    episode: number | string;
-    filterResourceURL?: boolean;
-}
-
 /**
  * 获取音频资源 URL
  * @param data
  */
-export async function getBilisoundResourceUrl(
-    data: GetBilisoundResourceUrlOptions,
-): Promise<{ url: string; isAudio: boolean }> {
+export async function getBilisoundResourceUrl(data: {
+    id: string;
+    episode: number | string;
+    filterResourceURL?: boolean;
+}): Promise<{ url: string; isAudio: boolean }> {
+    if (Platform.OS === "web") {
+        throw new Error("getBilisoundResourceUrl 在 web 端未实现");
+    }
+
     const { id, episode } = data;
 
     // 获取视频
@@ -256,6 +267,13 @@ export interface GetEpisodeUserResponse {
 export type UserListMode = "season" | "series" | "favourite";
 
 export async function getUserList(mode: UserListMode, userId: Numberish, listId: Numberish, page = 1) {
+    if (Platform.OS === "web") {
+        const res = await fetch(
+            `${BILISOUND_API_PREFIX}/internal/user-list?mode=${mode}&userId=${userId}&listId=${listId}&page=${page}`,
+        );
+        return (await res.json()).data;
+    }
+
     let response;
     let pageSize;
     let pageNum;
