@@ -10,7 +10,7 @@ import { Pressable, Text, Platform, View } from "react-native";
 
 // 样式修改
 const menuStyle = tva({
-    base: `rounded-md bg-background-0 border border-outline-50 p-1 shadow-xl ios:shadow-soft-1`,
+    base: `rounded-md bg-background-0 border border-outline-50 p-1 shadow-xl ios:shadow-soft-1 web:shadow-[0_20px_25px_-5px_rgb(0_0_0_/_0.1),_0_8px_10px_-6px_rgb(0_0_0_/_0.1)]`,
 });
 
 const menuItemStyle = tva({

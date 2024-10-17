@@ -72,7 +72,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                 useStyleParamStore.getState().setBottomBarHeight(-e.nativeEvent.layout.y);
             }}
         >
-            <View className="w-full sm:w-[480px] rounded-[32px] sm:rounded-[24px] overflow-hidden border border-typography-50 bg-background-0/95 shadow-xl ios:shadow-soft-2">
+            <View className="w-full sm:w-[480px] rounded-[32px] sm:rounded-[24px] overflow-hidden border border-typography-50 bg-background-0/95 android:shadow-xl ios:shadow-soft-2 web:shadow-[0_20px_25px_-5px_rgb(0_0_0_/_0.1),_0_8px_10px_-6px_rgb(0_0_0_/_0.1)]">
                 {isNarrowWidth ? null : (
                     <AudioIndicator
                         className="border-t-0 p-3 sm:p-3"
