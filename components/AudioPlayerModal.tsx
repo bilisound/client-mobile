@@ -218,8 +218,8 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
             {colorScheme === "dark" ? (
                 <Image
                     source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
-                    className="rounded-[16px] aspect-square"
-                    style={{ width: smallestSize }}
+                    // 不能用 className，否则 web 不正常
+                    style={{ width: smallestSize, borderRadius: 16, aspectRatio: "1/1" }}
                     contentFit="cover"
                 />
             ) : (
@@ -237,8 +237,8 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
                 >
                     <Image
                         source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
-                        className="rounded-[16px] aspect-square"
-                        style={{ width: smallestSize }}
+                        // 不能用 className，否则 web 不正常
+                        style={{ width: smallestSize, borderRadius: 16, aspectRatio: "1/1" }}
                         contentFit="cover"
                     />
                 </ShadowedView>
