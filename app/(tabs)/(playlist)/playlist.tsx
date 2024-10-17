@@ -207,6 +207,7 @@ export default function Page() {
                 type: "success",
                 text1: "歌单删除成功",
                 text2: displayTrack?.title,
+                autoHide: false,
             });
         };
         setDialogInfo(e => ({

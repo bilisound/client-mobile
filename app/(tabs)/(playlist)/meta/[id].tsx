@@ -1,9 +1,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import omit from "lodash/omit";
-import React from "react";
+import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ScrollView, View } from "react-native";
+import { Platform, ScrollView, View } from "react-native";
 import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
 
@@ -48,6 +48,7 @@ export default function Page() {
         queryKey: [`playlist_meta_${id}`],
         queryFn: () => getPlaylistMeta(Number(id)),
     });
+
     const defaultValues = data?.[0]
         ? data[0]
         : {
@@ -66,9 +67,25 @@ export default function Page() {
         control,
         handleSubmit,
         formState: { errors },
+        setValue,
     } = useForm<PlaylistMetaFrom>({
         defaultValues,
     });
+
+    // web 第一次不出信息的临时解决方案
+    useEffect(() => {
+        if (!data || Platform.OS !== "web") {
+            return;
+        }
+        setValue("title", data[0].title);
+        setValue("color", data[0].color);
+        setValue("amount", data[0].amount);
+        setValue("description", data[0].description);
+        setValue("extendedData", data[0].extendedData);
+        setValue("source", data[0].source);
+        setValue("imgUrl", data[0].imgUrl);
+        setValue("id", data[0].id);
+    }, [data, setValue]);
 
     async function handleClone() {
         log.info("用户进行歌单克隆操作");
