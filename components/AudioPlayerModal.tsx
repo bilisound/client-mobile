@@ -49,12 +49,12 @@ import { getFileName } from "~/utils/format";
 import log from "~/utils/logger";
 import { handlePrev, handleTogglePlay } from "~/utils/player-control";
 import { setMode, tracksToPlaylist } from "~/utils/track-data";
-const IconMenu = createIcon(Entypo, "dots-three-vertical");
 
 const LinearGradient = remapProps(ExpoLinearGradient, {
     className: "style",
 });
 
+const IconMenu = createIcon(Entypo, "dots-three-vertical");
 const IconDown = createIcon(Entypo, "chevron-down");
 
 const AudioPlayerInsetContext = createContext<EdgeInsets>({

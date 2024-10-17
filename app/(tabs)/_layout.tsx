@@ -1,5 +1,4 @@
 import { Ionicons, FontAwesome5, Entypo } from "@expo/vector-icons";
-// import { BlurView } from "@react-native-community/blur";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
 import BottomTabBar from "@react-navigation/bottom-tabs/src/views/BottomTabBar";
 import { CommonActions, NavigationContext, NavigationRouteContext } from "@react-navigation/native";

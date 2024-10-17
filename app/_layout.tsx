@@ -12,6 +12,7 @@ import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import React, { useEffect, useRef, useState } from "react";
 import { Linking, LogBox, Platform, useColorScheme } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { UnistylesRuntime, useInitialTheme, useStyles } from "react-native-unistyles";
 
@@ -25,9 +26,8 @@ import { checkLatestVersion } from "~/utils/check-release";
 import init from "~/utils/init";
 import "~/global.css";
 import "~/unistyles";
+import "~/utils/icon";
 import log from "~/utils/logger";
-
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export {
     // Catch any errors thrown by the Layout component.

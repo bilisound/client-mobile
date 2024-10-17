@@ -1,5 +1,4 @@
 import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
-import { cssInterop, remapProps } from "nativewind";
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -14,16 +13,6 @@ import { cacheStatusStorage } from "~/storage/cache-status";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { formatSecond } from "~/utils/datetime";
 import { handleTogglePlay } from "~/utils/player-control";
-
-const PotatoPressableWind = remapProps(PotatoPressable, { className: "style" });
-const IoniconsWind = cssInterop(Ionicons, {
-    className: {
-        target: "style",
-        nativeStyleToProp: {
-            color: true,
-        },
-    },
-});
 
 // 播放状态图标
 function PlayingIcon() {
@@ -68,7 +57,7 @@ export default function SongItem({
     const [exists] = useMMKVBoolean(data.bvid + "_" + data.episode, cacheStatusStorage);
 
     return (
-        <PotatoPressableWind
+        <PotatoPressable
             onPress={async () => {
                 if (isChecking) {
                     onToggle();
@@ -110,11 +99,7 @@ export default function SongItem({
                     </Text>
                     <View className="mt-1 flex-row items-center gap-1">
                         {exists && (
-                            <IoniconsWind
-                                name="checkmark-circle"
-                                size={16}
-                                className="color-typography-700 opacity-50"
-                            />
+                            <Ionicons name="checkmark-circle" size={16} className="color-typography-700 opacity-50" />
                         )}
                         <Text className="text-sm opacity-50" style={{ fontFamily: "Roboto_400Regular" }}>
                             {formatSecond(data.duration)}
@@ -140,6 +125,6 @@ export default function SongItem({
                     <ProgressBar item={`${data.bvid}_${data.episode}`} />
                 </>
             ) : null}
-        </PotatoPressableWind>
+        </PotatoPressable>
     );
 }
