@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { cssInterop } from "nativewind";
 import { View } from "react-native";
 
 import { ShadowedView } from "~/components/ShadowedView";
@@ -24,17 +25,15 @@ export default function PotatoToast({ type, title, description }: ToastProps) {
             className="{}-[shadowColor]:color-black bg-background-0 border-background-100 border min-h-[50px] rounded-[25px] px-3 py-[13px] flex-row gap-3 mx-6 my-2 max-w-[400px]"
         >
             {type === "success" && (
-                <Ionicons name="checkmark-circle" className="flex-0 basis-auto text-[24px] color-green-500" />
+                <Ionicons name="checkmark-circle" size={24} className="flex-0 basis-auto color-green-500" />
             )}
             {type === "info" && (
-                <Ionicons name="information-circle" className="flex-0 basis-auto text-[24px] color-neutral-500" />
+                <Ionicons name="information-circle" size={24} className="flex-0 basis-auto color-neutral-500" />
             )}
             {type === "warning" && (
-                <Ionicons name="alert-circle" className="flex-0 basis-auto text-[24px] color-orange-500" />
+                <Ionicons name="alert-circle" size={24} className="flex-0 basis-auto color-orange-500" />
             )}
-            {type === "error" && (
-                <Ionicons name="close-circle" className="flex-0 basis-auto text-[24px] color-red-500" />
-            )}
+            {type === "error" && <Ionicons name="close-circle" size={24} className="flex-0 basis-auto color-red-500" />}
             <View className="gap-1 flex-1">
                 <Text className="text-base leading-normal font-semibold">{title}</Text>
                 {description ? <Text className="text-sm leading-normal">{description}</Text> : null}
