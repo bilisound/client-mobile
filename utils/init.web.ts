@@ -6,11 +6,16 @@ import { initPlaybackService } from "./player-control";
 import { loadTrackData } from "./track-data";
 import useSettingsStore from "../store/settings";
 
+import { initDatabase } from "~/storage/sqlite/init-web";
+
 export default async function init() {
     // 日志系统初始化
     await useSettingsStore.persist.rehydrate();
     const settings = useSettingsStore.getState();
     log.setSeverity(settings.debugMode ? "debug" : "info");
+
+    // 数据库初始化
+    await initDatabase();
 
     // 播放服务初始化
     try {

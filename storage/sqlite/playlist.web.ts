@@ -1,146 +1,202 @@
-import { PlaylistDetail, PlaylistDetailInsert, PlaylistImport, PlaylistMetaInsert } from "./schema";
+import omit from "lodash/omit";
 
+import { PlaylistDetail, PlaylistDetailInsert, PlaylistImport, PlaylistMeta, PlaylistMetaInsert } from "./schema";
+
+import { idb } from "~/storage/sqlite/init-web";
 import { PlaylistSource } from "~/typings/playlist";
 
 // ============================================================================
 // 歌单元数据部分
 // ============================================================================
 
-/**
- * 查询歌单元数据列表
- */
-export async function getPlaylistMetas(filterHasSource = false) {
-    return [];
+export async function getPlaylistMetas(filterHasSource = false): Promise<PlaylistMeta[]> {
+    const allMetas = await idb.getAll("playlistMeta");
+    if (filterHasSource) {
+        return allMetas
+            .filter(meta => meta.source === null)
+            .map(e => ({
+                ...e,
+                id: e.id ?? 0,
+                imgUrl: e.imgUrl ? e.imgUrl : null,
+                description: e.description ? e.description : null,
+                source: e.source ? e.source : null,
+                extendedData: e.extendedData ? e.extendedData : null,
+            }));
+    }
+    return allMetas.map(e => ({
+        ...e,
+        id: e.id ?? 0,
+        imgUrl: e.imgUrl ? e.imgUrl : null,
+        description: e.description ? e.description : null,
+        source: e.source ? e.source : null,
+        extendedData: e.extendedData ? e.extendedData : null,
+    }));
 }
 
-/**
- * 查询歌单元数据
- * @param id
- */
-export async function getPlaylistMeta(id: number) {
-    return [];
+export async function getPlaylistMeta(id: number): Promise<[PlaylistMeta] | undefined> {
+    const e = await idb.get("playlistMeta", id);
+    if (!e) {
+        return undefined;
+    }
+    return [
+        {
+            ...e,
+            id: e.id ?? 0,
+            imgUrl: e.imgUrl ? e.imgUrl : null,
+            description: e.description ? e.description : null,
+            source: e.source ? e.source : null,
+            extendedData: e.extendedData ? e.extendedData : null,
+        },
+    ];
 }
 
-/**
- * 删除歌单元数据
- * @param id
- */
-export async function deletePlaylistMeta(id: number) {}
+export async function deletePlaylistMeta(id: number) {
+    await idb.delete("playlistMeta", id);
+    const tx = idb.transaction("playlistDetail", "readwrite");
+    const index = tx.store.index("by-playlistId");
+    let cursor = await index.openCursor(id);
+    while (cursor) {
+        await cursor.delete();
+        cursor = await cursor.continue();
+    }
+}
 
-/**
- * 修改歌单元数据
- * @param meta
- */
-export async function setPlaylistMeta(meta: Partial<PlaylistMetaInsert> & { id: number }) {}
+export async function setPlaylistMeta(meta: Partial<PlaylistMetaInsert> & { id: number }) {
+    const existingMeta = await idb.get("playlistMeta", meta.id);
+    if (existingMeta) {
+        await idb.put("playlistMeta", { ...existingMeta, ...omit(meta, ["id"]) });
+    }
+}
 
-/**
- * 插入歌单元数据
- * @param meta
- */
-export async function insertPlaylistMeta(meta: PlaylistMetaInsert) {}
+export async function insertPlaylistMeta(meta: PlaylistMetaInsert) {
+    return idb.add("playlistMeta", { ...meta });
+}
 
 // ============================================================================
 // 歌单列表部分
 // ============================================================================
 
-/**
- * 获取歌单列表
- * @param playlistId
- */
 export async function getPlaylistDetail(playlistId: number) {
-    return [];
+    return idb.getAllFromIndex("playlistDetail", "by-playlistId", playlistId);
 }
 
-/**
- * 插入歌单列表项
- * @param data
- */
-export async function insertPlaylistDetail(data: PlaylistDetailInsert) {}
-
-/**
- * 删除歌单列表项
- * @param id
- */
-export async function deletePlaylistDetail(id: number) {}
+export async function deletePlaylistDetail(id: number) {
+    return idb.delete("playlistDetail", id);
+}
 
 // ============================================================================
 // 复杂操作部分
 // ============================================================================
 
-/**
- * 添加一首或多首曲目到已有的播放列表
- * @param playlistId
- * @param playlist
- */
-export async function addToPlaylist(playlistId: number, playlist: PlaylistDetailInsert[]) {}
+export async function addToPlaylist(playlistId: number, playlist: PlaylistDetailInsert[]) {
+    const tx = idb.transaction("playlistDetail", "readwrite");
+    for (const item of playlist) {
+        await tx.store.add({ ...omit(item, "id"), playlistId });
+    }
+    await tx.done;
+}
 
-/**
- * 用另一个列表替换已有列表中的内容
- * @param playlistId
- * @param playlist
- */
-export async function replacePlaylist(playlistId: number, playlist: PlaylistDetailInsert[]) {}
+export async function syncPlaylistAmount(playlistId: number) {
+    const count = await idb.countFromIndex("playlistDetail", "by-playlistId", playlistId);
+    await setPlaylistMeta({
+        id: playlistId,
+        amount: count,
+    });
+}
 
-/**
- * 同步指定播放列表的曲目数量
- * @param playlistId
- */
-export async function syncPlaylistAmount(playlistId: number) {}
+export async function replacePlaylistDetail(playlistId: number, playlist: PlaylistDetailInsert[]) {
+    const tx = idb.transaction(["playlistDetail", "playlistMeta"], "readwrite");
+    const index = tx.objectStore("playlistDetail").index("by-playlistId");
+    let cursor = await index.openCursor(playlistId);
+    while (cursor) {
+        await cursor.delete();
+        cursor = await cursor.continue();
+    }
+    for (const item of playlist) {
+        await tx.objectStore("playlistDetail").add({ ...omit(item, "id"), playlistId });
+    }
+    const meta = await tx.objectStore("playlistMeta").get(playlistId);
+    if (meta) {
+        meta.amount = playlist.length;
+        await tx.objectStore("playlistMeta").put(meta);
+    }
+    await tx.done;
+}
 
-/**
- * 用另一个播放列表详情完全替换播放列表
- * @param playlistId
- * @param playlist
- */
-export function replacePlaylistDetail(playlistId: number, playlist: PlaylistDetailInsert[]) {}
-
-/**
- * 从多首曲目快速创建新的播放列表
- * @param title
- * @param description
- * @param list
- * @param source
- * @param imgUrl
- */
 export async function quickCreatePlaylist(
     title: string,
     description: string,
     list: PlaylistDetail[],
     source?: PlaylistSource,
     imgUrl?: string,
-) {}
+) {
+    const newPlaylist: PlaylistMetaInsert = {
+        title,
+        description,
+        imgUrl,
+        color:
+            "#" +
+            Math.floor(Math.random() * 16777216)
+                .toString(16)
+                .padStart(6, "0"),
+        amount: list.length,
+        source: source && list.length > 1 ? JSON.stringify(source) : null,
+    };
+    const playlistId = await idb.add("playlistMeta", newPlaylist);
+    const tx = idb.transaction("playlistDetail", "readwrite");
+    for (const item of list) {
+        await tx.store.add({ ...omit(item, "id"), playlistId });
+    }
+    await tx.done;
+    return playlistId;
+}
 
-/**
- * 导出播放列表
- * @param id
- */
 export async function exportPlaylist(id: number): Promise<PlaylistImport> {
+    const meta = await idb.get("playlistMeta", id);
+    const detail = await idb.getAllFromIndex("playlistDetail", "by-playlistId", id);
     return {
-        meta: [],
-        detail: [],
+        meta: meta ? [meta] : [],
+        detail,
         kind: "moe.bilisound.app.exportedPlaylist",
         version: 1,
     };
 }
 
-/**
- * 导出全部播放列表
- */
 export async function exportAllPlaylist(): Promise<PlaylistImport> {
+    const meta = await idb.getAll("playlistMeta");
+    const detail = await idb.getAll("playlistDetail");
     return {
-        meta: [],
-        detail: [],
+        meta,
+        detail,
         kind: "moe.bilisound.app.exportedPlaylist",
         version: 1,
     };
 }
 
-/**
- * 克隆播放列表
- */
-export async function clonePlaylist(playlistId: number) {}
+export async function clonePlaylist(playlistId: number) {
+    const originalMeta = await idb.get("playlistMeta", playlistId);
+    if (!originalMeta) return;
 
-/**
- * 删除全部歌单
- */
-export async function deleteAllPlaylist() {}
+    const newMeta = {
+        ...originalMeta,
+        title: `${originalMeta.title}（副本）`,
+    };
+    delete newMeta.id;
+
+    const newPlaylistId = await idb.add("playlistMeta", newMeta);
+    const originalDetails = await idb.getAllFromIndex("playlistDetail", "by-playlistId", playlistId);
+    const tx = idb.transaction("playlistDetail", "readwrite");
+    for (const detail of originalDetails) {
+        const newDetail = { ...detail, playlistId: newPlaylistId };
+        delete newDetail.id;
+        await tx.store.add(newDetail);
+    }
+    await tx.done;
+
+    return newPlaylistId;
+}
+
+export async function deleteAllPlaylist() {
+    await idb.clear("playlistDetail");
+    await idb.clear("playlistMeta");
+}

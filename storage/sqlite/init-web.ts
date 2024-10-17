@@ -1,34 +1,27 @@
 import { openDB, DBSchema, IDBPDatabase } from "idb";
 
-import { PlaylistMeta } from "~/storage/sqlite/schema";
+import { PlaylistDetailInsert, PlaylistMetaInsert } from "./schema";
 
-interface MyDB extends DBSchema {
+export interface MyDB extends DBSchema {
     playlistMeta: {
         key: number;
-        value: PlaylistMeta;
+        value: PlaylistMetaInsert;
+    };
+    playlistDetail: {
+        key: number;
+        value: PlaylistDetailInsert;
+        indexes: { "by-playlistId": number };
     };
 }
 
 export let idb: IDBPDatabase<MyDB>;
 
-export async function init() {
-    idb = await openDB<MyDB>("bilisound-playlist", 1, {
+export async function initDatabase() {
+    idb = await openDB<MyDB>("myDatabase", 1, {
         upgrade(db) {
-            db.createObjectStore("playlistMeta", {
-                keyPath: "id",
-                autoIncrement: true,
-            });
+            db.createObjectStore("playlistMeta", { keyPath: "id", autoIncrement: true });
+            const playlistDetailStore = db.createObjectStore("playlistDetail", { keyPath: "id", autoIncrement: true });
+            playlistDetailStore.createIndex("by-playlistId", "playlistId");
         },
-    });
-
-    await idb.put("playlistMeta", {
-        amount: 1,
-        color: "#66ccff",
-        description: "",
-        extendedData: null,
-        id: 1,
-        imgUrl: "",
-        source: null,
-        title: "111111",
     });
 }

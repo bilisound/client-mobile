@@ -6,6 +6,7 @@ import {
     playlistDetail,
     PlaylistDetailInsert,
     PlaylistImport,
+    PlaylistMeta,
     playlistMeta,
     PlaylistMetaInsert,
 } from "./schema";
@@ -20,7 +21,7 @@ import { PlaylistSource } from "~/typings/playlist";
 /**
  * 查询歌单元数据列表
  */
-export async function getPlaylistMetas(filterHasSource = false) {
+export async function getPlaylistMetas(filterHasSource = false): Promise<PlaylistMeta[]> {
     if (filterHasSource) {
         return db.select().from(playlistMeta).where(isNull(playlistMeta.source));
     }
@@ -31,7 +32,7 @@ export async function getPlaylistMetas(filterHasSource = false) {
  * 查询歌单元数据
  * @param id
  */
-export async function getPlaylistMeta(id: number) {
+export async function getPlaylistMeta(id: number): Promise<PlaylistMeta[]> {
     return db.select().from(playlistMeta).where(eq(playlistMeta.id, id));
 }
 
@@ -49,7 +50,7 @@ export async function deletePlaylistMeta(id: number) {
  * @param meta
  */
 export async function setPlaylistMeta(meta: Partial<PlaylistMetaInsert> & { id: number }) {
-    return db
+    await db
         .update(playlistMeta)
         .set(omit(meta, ["id"]))
         .where(eq(playlistMeta.id, meta.id));
@@ -76,14 +77,6 @@ export async function getPlaylistDetail(playlistId: number) {
 }
 
 /**
- * 插入歌单列表项
- * @param data
- */
-export async function insertPlaylistDetail(data: PlaylistDetailInsert) {
-    return db.insert(playlistDetail).values(data);
-}
-
-/**
  * 删除歌单列表项
  * @param id
  */
@@ -103,16 +96,6 @@ export async function deletePlaylistDetail(id: number) {
 export async function addToPlaylist(playlistId: number, playlist: PlaylistDetailInsert[]) {
     const parsedPlaylist = playlist.map(e => omit({ ...e, playlistId }, "id"));
     await db.insert(playlistDetail).values(parsedPlaylist);
-}
-
-/**
- * 用另一个列表替换已有列表中的内容
- * @param playlistId
- * @param playlist
- */
-export async function replacePlaylist(playlistId: number, playlist: PlaylistDetailInsert[]) {
-    await db.delete(playlistDetail).where(eq(playlistDetail.playlistId, playlistId));
-    await addToPlaylist(playlistId, playlist);
 }
 
 /**

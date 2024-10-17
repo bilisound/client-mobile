@@ -122,7 +122,6 @@ function Header({
     showPlayButton: boolean;
     className?: string;
 }) {
-    const { styles } = useStyles(stylesheet);
     const queryClient = useQueryClient();
     const [syncing, setSyncing] = useState(false);
 
@@ -197,7 +196,7 @@ function Header({
     return (
         <View className={twMerge("pb-6 px-4 gap-4 pt-4", className)}>
             {imgUrl ? (
-                <Image source={convertToHTTPS(imgUrl)} className="aspect-video rounded-lg" />
+                <Image source={getImageProxyUrl(imgUrl)} className="aspect-video rounded-lg" />
             ) : (
                 <ImagesGroup images={images} />
             )}
@@ -230,7 +229,7 @@ function Header({
                 </View>
             </View>
             {(meta.description ?? "").trim() && (
-                <Text style={styles.headerDescription} selectable>
+                <Text className="text-base leading-normal opacity-80 pb-2" selectable>
                     {meta.description}
                 </Text>
             )}
@@ -666,17 +665,3 @@ export default function Page() {
         </CommonLayout>
     );
 }
-
-const stylesheet = createStyleSheet(theme => ({
-    playButtonContainer: {
-        flexDirection: "row",
-        marginTop: 20,
-    },
-    headerDescription: {
-        fontSize: 14,
-        lineHeight: 14 * 1.5,
-        color: theme.colorTokens.foreground,
-        opacity: 0.8,
-        paddingBottom: 8,
-    },
-}));
