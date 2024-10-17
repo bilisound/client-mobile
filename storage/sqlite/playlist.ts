@@ -1,7 +1,14 @@
-import { eq, count as countFunc, InferInsertModel, sql, isNull } from "drizzle-orm";
+import { eq, count as countFunc, sql, isNull } from "drizzle-orm";
 import omit from "lodash/omit";
 
-import { PlaylistDetail, playlistDetail, PlaylistImport, playlistMeta } from "./schema";
+import {
+    PlaylistDetail,
+    playlistDetail,
+    PlaylistDetailInsert,
+    PlaylistImport,
+    playlistMeta,
+    PlaylistMetaInsert,
+} from "./schema";
 
 import { db } from "~/storage/sqlite/main";
 import { PlaylistSource } from "~/typings/playlist";
@@ -41,7 +48,7 @@ export async function deletePlaylistMeta(id: number) {
  * 修改歌单元数据
  * @param meta
  */
-export async function setPlaylistMeta(meta: Partial<InferInsertModel<typeof playlistMeta>> & { id: number }) {
+export async function setPlaylistMeta(meta: Partial<PlaylistMetaInsert> & { id: number }) {
     return db
         .update(playlistMeta)
         .set(omit(meta, ["id"]))
@@ -52,7 +59,7 @@ export async function setPlaylistMeta(meta: Partial<InferInsertModel<typeof play
  * 插入歌单元数据
  * @param meta
  */
-export async function insertPlaylistMeta(meta: InferInsertModel<typeof playlistMeta>) {
+export async function insertPlaylistMeta(meta: PlaylistMetaInsert) {
     return db.insert(playlistMeta).values(meta);
 }
 
@@ -72,7 +79,7 @@ export async function getPlaylistDetail(playlistId: number) {
  * 插入歌单列表项
  * @param data
  */
-export async function insertPlaylistDetail(data: InferInsertModel<typeof playlistDetail>) {
+export async function insertPlaylistDetail(data: PlaylistDetailInsert) {
     return db.insert(playlistDetail).values(data);
 }
 
@@ -93,7 +100,7 @@ export async function deletePlaylistDetail(id: number) {
  * @param playlistId
  * @param playlist
  */
-export async function addToPlaylist(playlistId: number, playlist: InferInsertModel<typeof playlistDetail>[]) {
+export async function addToPlaylist(playlistId: number, playlist: PlaylistDetailInsert[]) {
     const parsedPlaylist = playlist.map(e => omit({ ...e, playlistId }, "id"));
     await db.insert(playlistDetail).values(parsedPlaylist);
 }
@@ -103,7 +110,7 @@ export async function addToPlaylist(playlistId: number, playlist: InferInsertMod
  * @param playlistId
  * @param playlist
  */
-export async function replacePlaylist(playlistId: number, playlist: InferInsertModel<typeof playlistDetail>[]) {
+export async function replacePlaylist(playlistId: number, playlist: PlaylistDetailInsert[]) {
     await db.delete(playlistDetail).where(eq(playlistDetail.playlistId, playlistId));
     await addToPlaylist(playlistId, playlist);
 }
@@ -129,7 +136,7 @@ export async function syncPlaylistAmount(playlistId: number) {
  * @param playlistId
  * @param playlist
  */
-export function replacePlaylistDetail(playlistId: number, playlist: InferInsertModel<typeof playlistDetail>[]) {
+export function replacePlaylistDetail(playlistId: number, playlist: PlaylistDetailInsert[]) {
     db.transaction(tx => {
         tx.delete(playlistDetail).where(eq(playlistDetail.playlistId, playlistId)).run();
         tx.insert(playlistDetail).values(playlist).run();

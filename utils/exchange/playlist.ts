@@ -6,7 +6,13 @@ import { parse, stringify } from "smol-toml";
 
 import { db } from "~/storage/sqlite/main";
 import { exportAllPlaylist, exportPlaylist } from "~/storage/sqlite/playlist";
-import { playlistDetail, playlistImportSchema, playlistMeta } from "~/storage/sqlite/schema";
+import {
+    playlistDetail,
+    PlaylistDetailInsert,
+    playlistImportSchema,
+    playlistMeta,
+    PlaylistMetaInsert,
+} from "~/storage/sqlite/schema";
 import { saveTextFile } from "~/utils/file";
 import log from "~/utils/logger";
 
@@ -35,8 +41,8 @@ export async function exportPlaylistToFile(id?: number) {
 }
 
 interface MigratePlan {
-    meta: InferInsertModel<typeof playlistMeta>;
-    detail: InferInsertModel<typeof playlistDetail>[];
+    meta: PlaylistMetaInsert;
+    detail: PlaylistDetailInsert[];
 }
 
 export async function importPlaylistFromFile() {
