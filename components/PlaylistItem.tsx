@@ -1,4 +1,4 @@
-import Entypo from "@expo/vector-icons/Entypo";
+import { Entypo } from "@expo/vector-icons";
 import React from "react";
 import { StyleProp, ViewStyle, View } from "react-native";
 import { twMerge } from "tailwind-merge";

@@ -216,7 +216,7 @@ export default function Page() {
         >
             {isLoading ? (
                 <View className="flex-1 flex-col sm:flex-row">
-                    <View className="hidden sm:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+                    <View className="hidden sm:flex flex-1 w-full">
                         <ScrollView>
                             <VideoMeta skeleton />
                         </ScrollView>
@@ -235,7 +235,7 @@ export default function Page() {
             ) : null}
             {data ? (
                 <View className="hidden sm:flex flex-1 flex-row">
-                    <View className="flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+                    <View className="flex-1 w-full">
                         <ScrollView>
                             <VideoMeta meta={data.data} />
                             <View style={{ height: edgeInsets.bottom }} />

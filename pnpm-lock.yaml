@@ -239,6 +239,9 @@ importers:
       filesize:
         specifier: ^10.1.6
         version: 10.1.6
+      idb:
+        specifier: ^8.0.0
+        version: 8.0.0
       jscodeshift:
         specifier: 0.15.2
         version: 0.15.2(@babel/preset-env@7.24.4(@babel/core@7.25.8))
@@ -4756,6 +4759,9 @@ packages:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
+  idb@8.0.0:
+    resolution: {integrity: sha512-l//qvlAKGmQO31Qn7xdzagVPPaHTxXx199MhrAFuVBTPqydcPYBWjkrbv4Y0ktB+GmWOiwHl237UUOrLmQxLvw==}
+
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
@@ -6703,7 +6709,6 @@ packages:
 
   shaka-player@4.11.7:
     resolution: {integrity: sha512-jNsdQd4pa24w2QwXHGNBs8MQ33YajYiZclWaSuGt+dLJ7/D9+NG1LJQGnTrGd0G1aDdbEzmEpppG3ic4OsGpyw==}
-    engines: {node: '>=14'}
 
   shallow-clone@3.0.1:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
@@ -7672,7 +7677,7 @@ snapshots:
 
   '@babel/helper-builder-binary-assignment-operator-visitor@7.22.15':
     dependencies:
-      '@babel/types': 7.25.6
+      '@babel/types': 7.25.8
 
   '@babel/helper-compilation-targets@7.24.7':
     dependencies:
@@ -8265,7 +8270,7 @@ snapshots:
   '@babel/plugin-transform-modules-amd@7.24.1(@babel/core@7.25.8)':
     dependencies:
       '@babel/core': 7.25.8
-      '@babel/helper-module-transforms': 7.25.2(@babel/core@7.25.8)
+      '@babel/helper-module-transforms': 7.25.7(@babel/core@7.25.8)
       '@babel/helper-plugin-utils': 7.24.0
     transitivePeerDependencies:
       - supports-color
@@ -8283,16 +8288,16 @@ snapshots:
     dependencies:
       '@babel/core': 7.25.8
       '@babel/helper-hoist-variables': 7.24.7
-      '@babel/helper-module-transforms': 7.25.2(@babel/core@7.25.8)
+      '@babel/helper-module-transforms': 7.25.7(@babel/core@7.25.8)
       '@babel/helper-plugin-utils': 7.24.0
-      '@babel/helper-validator-identifier': 7.24.7
+      '@babel/helper-validator-identifier': 7.25.7
     transitivePeerDependencies:
       - supports-color
 
   '@babel/plugin-transform-modules-umd@7.24.1(@babel/core@7.25.8)':
     dependencies:
       '@babel/core': 7.25.8
-      '@babel/helper-module-transforms': 7.25.2(@babel/core@7.25.8)
+      '@babel/helper-module-transforms': 7.25.7(@babel/core@7.25.8)
       '@babel/helper-plugin-utils': 7.24.0
     transitivePeerDependencies:
       - supports-color
@@ -8492,11 +8497,11 @@ snapshots:
 
   '@babel/preset-env@7.24.4(@babel/core@7.25.8)':
     dependencies:
-      '@babel/compat-data': 7.25.4
+      '@babel/compat-data': 7.25.8
       '@babel/core': 7.25.8
-      '@babel/helper-compilation-targets': 7.25.2
+      '@babel/helper-compilation-targets': 7.25.7
       '@babel/helper-plugin-utils': 7.24.0
-      '@babel/helper-validator-option': 7.24.8
+      '@babel/helper-validator-option': 7.25.7
       '@babel/plugin-bugfix-firefox-class-in-computed-class-key': 7.24.4(@babel/core@7.25.8)
       '@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression': 7.24.1(@babel/core@7.25.8)
       '@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining': 7.24.1(@babel/core@7.25.8)
@@ -8588,7 +8593,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.25.8
       '@babel/helper-plugin-utils': 7.24.0
-      '@babel/types': 7.25.6
+      '@babel/types': 7.25.8
       esutils: 2.0.3
 
   '@babel/preset-react@7.24.1(@babel/core@7.25.8)':
@@ -13287,6 +13292,8 @@ snapshots:
   iconv-lite@0.6.3:
     dependencies:
       safer-buffer: 2.1.2
+
+  idb@8.0.0: {}
 
   ieee754@1.2.1: {}
 

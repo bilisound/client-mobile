@@ -96,6 +96,7 @@
     "expo-web-browser": "~13.0.3",
     "ffmpeg-kit-react-native": "^6.0.2",
     "filesize": "^10.1.6",
+    "idb": "^8.0.0",
     "jscodeshift": "0.15.2",
     "ky": "^1.7.2",
     "lodash": "^4.17.21",

@@ -1,5 +1,4 @@
-import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { cssInterop, remapProps } from "nativewind";
 import React from "react";
 import { ActivityIndicator, View } from "react-native";

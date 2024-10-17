@@ -1,6 +1,6 @@
 import { Platform } from "react-native";
 
-import { defineWrap } from "./common";
+import { defineWrap, Wrap } from "./common";
 import { getVideo } from "./external/direct";
 
 import { getUserSeason, getUserSeries, getUserSeriesMeta } from "~/api/external/json";
@@ -72,7 +72,7 @@ export async function parseB23(id: string) {
  * 获取视频元数据
  * @param data
  */
-export async function getBilisoundMetadata(data: { id: string }) {
+export async function getBilisoundMetadata(data: { id: string }): Promise<Wrap<GetBilisoundMetadataResponse>> {
     if (Platform.OS === "web") {
         const response = await fetch(BILISOUND_API_PREFIX + `/internal/metadata?id=${data.id}`);
         return response.json();
@@ -101,7 +101,7 @@ export async function getBilisoundMetadata(data: { id: string }) {
                 pages[0].part = videoData.title;
             }
 
-            return defineWrap<GetBilisoundMetadataResponse>({
+            return {
                 code: 200,
                 data: {
                     bvid: videoData.bvid,
@@ -115,7 +115,7 @@ export async function getBilisoundMetadata(data: { id: string }) {
                     seasonId: videoData.season_id,
                 },
                 msg: "",
-            });
+            };
         }
         case "festival": {
             const videoInfo = initialState?.videoInfo;
@@ -133,7 +133,7 @@ export async function getBilisoundMetadata(data: { id: string }) {
                 log.error("找不到视频信息（在活动页面的合集列表找不到当前播放的视频）");
                 throw new Error("找不到视频信息");
             }
-            return defineWrap<GetBilisoundMetadataResponse>({
+            return {
                 code: 200,
                 data: {
                     bvid: videoInfo.bvid,
@@ -146,7 +146,7 @@ export async function getBilisoundMetadata(data: { id: string }) {
                     pages: pages.map(({ page, part, duration }) => ({ page, part, duration })),
                 },
                 msg: "",
-            });
+            };
         }
         default:
             throw new Error("未实现的视频类型！！");

@@ -182,7 +182,7 @@ export default function Page() {
         >
             {data ? (
                 <View className="flex-1 flex-row">
-                    <View className="hidden sm:flex flex-1 lg:basis-auto lg:flex-0 lg:w-[384px]">
+                    <View className="hidden sm:flex flex-1">
                         <ScrollView>
                             <Header data={data.pages[0]} mode={mode!} />
                             <View style={{ height: edgeInsets.bottom }} aria-hidden />

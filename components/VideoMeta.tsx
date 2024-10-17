@@ -98,13 +98,13 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
                         </Text>
                     </View>
                     <LinearGradient
-                        colors={["rgba(255,255,255,0)", "rgba(255,255,255,1)"]}
+                        colors={colorScheme === "dark" ? ["#17171700", "#171717"] : ["#ffffff00", "#ffffff"]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 0, y: 0.9 }}
                         className="absolute w-full left-0 bottom-0 justify-center items-center flex-row gap-0.5 p-4 pt-10"
                     >
                         <Text className="text-accent-500 font-bold text-sm">查看更多</Text>
-                        <Entypo name="chevron-down" size={20} color="accent-500" />
+                        <Entypo name="chevron-down" size={20} className="color-accent-500" />
                     </LinearGradient>
                 </>
             ) : (

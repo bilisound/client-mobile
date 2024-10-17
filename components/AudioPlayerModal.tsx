@@ -1,5 +1,4 @@
-import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import Entypo from "@expo/vector-icons/Entypo";
+import { FontAwesome5, Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";

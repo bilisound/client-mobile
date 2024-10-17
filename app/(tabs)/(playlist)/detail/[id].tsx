@@ -1,5 +1,4 @@
-import { Entypo, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { Entypo, Ionicons, MaterialCommunityIcons, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
@@ -469,7 +468,7 @@ export default function Page() {
             }}
         >
             <View className="flex-1 flex-col sm:flex-row">
-                <View className="hidden sm:flex flex-1 lg:flex-0 basis-auto w-full lg:w-[384px]">
+                <View className="hidden sm:flex flex-1 w-full">
                     <ScrollView>
                         <Header
                             meta={meta}
