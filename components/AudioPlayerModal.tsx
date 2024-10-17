@@ -529,14 +529,14 @@ export default function AudioPlayerModal() {
                         >
                             <View className="px-[30px] py-2 @md:py-4 gap-2">
                                 <Text
-                                    className="text-[18px] @md:text-[20px] font-extrabold leading-normal"
+                                    className="text-[18px] @md:text-[20px] font-extrabold leading-normal truncate whitespace-nowrap"
                                     numberOfLines={1}
                                     ellipsizeMode="tail"
                                 >
                                     {activeTrack?.title}
                                 </Text>
                                 <Text
-                                    className="text-sm @md:text-base leading-normal opacity-65"
+                                    className="text-sm @md:text-base leading-normal opacity-65 truncate whitespace-nowrap"
                                     numberOfLines={1}
                                     ellipsizeMode="tail"
                                 >

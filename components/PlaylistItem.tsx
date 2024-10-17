@@ -41,7 +41,11 @@ export default function PlaylistItem({ item, onPress, onLongPress, className, st
                         <View className="w-[14px] h-[14px] rounded-full" style={[{ backgroundColor: item.color }]} />
                     )}
                 </View>
-                <Text className="text-base leading-normal flex-1" numberOfLines={1} ellipsizeMode="tail">
+                <Text
+                    className="text-base leading-normal flex-1 truncate whitespace-nowrap"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                >
                     {title}
                 </Text>
             </View>

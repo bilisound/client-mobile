@@ -17,10 +17,18 @@ export function VideoItem({ onPress, image, text1, text2 }: VideoItemProps) {
         <>
             <Image source={image} className="h-12 aspect-[3/2] flex-0 basis-auto rounded-lg" />
             <View className="flex-1 gap-1">
-                <Text className="font-semibold text-sm leading-normal" ellipsizeMode="tail" numberOfLines={1}>
+                <Text
+                    className="font-semibold text-sm leading-normal truncate whitespace-nowrap"
+                    ellipsizeMode="tail"
+                    numberOfLines={1}
+                >
                     {text1}
                 </Text>
-                <Text className="text-xs opacity-50 leading-normal" ellipsizeMode="tail" numberOfLines={1}>
+                <Text
+                    className="text-xs opacity-50 leading-normal truncate whitespace-nowrap"
+                    ellipsizeMode="tail"
+                    numberOfLines={1}
+                >
                     {text2}
                 </Text>
             </View>
