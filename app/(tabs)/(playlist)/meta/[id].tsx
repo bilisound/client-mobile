@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import omit from "lodash/omit";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Platform, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import Toast from "react-native-toast-message";
 import TrackPlayer from "react-native-track-player";
 
@@ -20,7 +20,6 @@ import {
 } from "~/components/ui/form-control";
 import { AlertCircleIcon, CheckIcon } from "~/components/ui/icon";
 import { Input, InputField } from "~/components/ui/input";
-import { Text } from "~/components/ui/text";
 import { Textarea, TextareaInput } from "~/components/ui/textarea";
 import { useTabPaddingBottom } from "~/hooks/useTabPaddingBottom";
 import {
@@ -69,7 +68,7 @@ export default function Page() {
     });
 
     useEffect(() => {
-        if (!data) {
+        if (!data || id === MAGIC_ID_NEW_ENTRY) {
             return;
         }
         setValue("title", data[0].title);
