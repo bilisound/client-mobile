@@ -48,6 +48,7 @@ import { saveFile } from "~/utils/file";
 import { getFileName } from "~/utils/format";
 import log from "~/utils/logger";
 import { handlePrev, handleTogglePlay } from "~/utils/player-control";
+import { rem2px } from "~/utils/styling";
 import { setMode, tracksToPlaylist } from "~/utils/track-data";
 
 const LinearGradient = remapProps(ExpoLinearGradient, {
@@ -57,11 +58,13 @@ const LinearGradient = remapProps(ExpoLinearGradient, {
 const IconMenu = createIcon(Entypo, "dots-three-vertical");
 const IconDown = createIcon(Entypo, "chevron-down");
 
-const AudioPlayerInsetContext = createContext<EdgeInsets>({
+const AudioPlayerInsetContext = createContext<EdgeInsets & { width: number; height: number }>({
     left: 0,
     top: 0,
     right: 0,
     bottom: 0,
+    width: 0,
+    height: 0,
 });
 
 function AudioProgressBar() {
@@ -189,11 +192,18 @@ function AudioProgressTimer() {
 
 function AudioPlayButtonIcon() {
     const playbackState = usePlaybackState();
+    const { width } = useContext(AudioPlayerInsetContext);
+
+    console.log({ width });
 
     return playbackState.state === State.Playing ? (
-        <FontAwesome5 name="pause" className="!text-[22px] !@md:text-[28px] color-typography-0" />
+        <FontAwesome5 name="pause" size={width >= rem2px(28) ? 28 : 22} className="color-typography-0" />
     ) : (
-        <FontAwesome5 name="play" className="!text-[22px] !@md:text-[28px] color-typography-0 translate-x-[3px]" />
+        <FontAwesome5
+            name="play"
+            size={width >= rem2px(28) ? 28 : 22}
+            className="color-typography-0 translate-x-[3px]"
+        />
     );
 }
 
@@ -390,9 +400,13 @@ export default function AudioPlayerModal() {
     const [queuePlayingMode] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
     const { update } = useTracks();
     const edgeInsets = useSafeAreaInsets();
-    const customEdgeInsets: EdgeInsets = {
+    const [width, setWidth] = useState(0);
+    const [height, setHeight] = useState(0);
+    const customEdgeInsets = {
         ...edgeInsets,
         top: Platform.OS === "ios" ? 0 : edgeInsets.top,
+        width,
+        height,
     };
     const [shouldMarginBottom, setShouldMarginBottom] = useState(false);
     const [superNarrowLayout, setSuperNarrowLayout] = useState(false);
@@ -443,6 +457,8 @@ export default function AudioPlayerModal() {
                     log.debug("当前播放器视窗宽度：" + e.nativeEvent.layout.width);
                     setShouldMarginBottom(e.nativeEvent.layout.width < 768);
                     setSuperNarrowLayout(e.nativeEvent.layout.width < 320);
+                    setWidth(e.nativeEvent.layout.width);
+                    setHeight(e.nativeEvent.layout.height);
                 }}
             >
                 <CommonLayout
@@ -562,7 +578,8 @@ export default function AudioPlayerModal() {
                             >
                                 <Entypo
                                     name="shuffle"
-                                    className={`!text-[18px] !@md:text-[22px] ${queuePlayingMode === "shuffle" ? "color-accent-500" : "color-typography-700"}`}
+                                    size={customEdgeInsets.width >= rem2px(28) ? 22 : 18}
+                                    className={`${queuePlayingMode === "shuffle" ? "color-accent-500" : "color-typography-700"}`}
                                 />
                             </PotatoPressable>
 
@@ -578,7 +595,8 @@ export default function AudioPlayerModal() {
                                 >
                                     <FontAwesome5
                                         name="step-backward"
-                                        className="color-typography-700 !text-[20px] !@sm:text-[24px] scale-x-[1.4]"
+                                        size={customEdgeInsets.width >= rem2px(28) ? 24 : 20}
+                                        className="color-typography-700 scale-x-[1.4]"
                                     />
                                 </PotatoPressable>
 
@@ -609,7 +627,8 @@ export default function AudioPlayerModal() {
                                 >
                                     <FontAwesome5
                                         name="step-forward"
-                                        className="color-typography-700 !text-[20px] !@sm:text-[24px] scale-x-[1.4]"
+                                        size={customEdgeInsets.width >= rem2px(28) ? 24 : 20}
+                                        className="color-typography-700  scale-x-[1.4]"
                                     />
                                 </PotatoPressable>
                             </View>
@@ -621,7 +640,11 @@ export default function AudioPlayerModal() {
                                 onPress={handleSave}
                                 aria-label="导出"
                             >
-                                <Ionicons name="save" className="!text-[18px] !@md:text-[20px] color-typography-700" />
+                                <Ionicons
+                                    name="save"
+                                    size={customEdgeInsets.width >= rem2px(28) ? 20 : 18}
+                                    className="color-typography-700"
+                                />
                             </PotatoPressable>
                         </View>
                     </View>

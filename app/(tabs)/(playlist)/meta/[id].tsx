@@ -49,18 +49,6 @@ export default function Page() {
         queryFn: () => getPlaylistMeta(Number(id)),
     });
 
-    const defaultValues = data?.[0]
-        ? data[0]
-        : {
-              title: "",
-              color:
-                  "#" +
-                  Math.floor(Math.random() * 16777216)
-                      .toString(16)
-                      .padStart(6, "0"),
-              amount: 0,
-          };
-
     const source = data?.[0]?.source ? (JSON.parse(data[0].source) as PlaylistSource) : null;
 
     const {
@@ -69,12 +57,19 @@ export default function Page() {
         formState: { errors },
         setValue,
     } = useForm<PlaylistMetaFrom>({
-        defaultValues,
+        defaultValues: {
+            title: "",
+            color:
+                "#" +
+                Math.floor(Math.random() * 16777216)
+                    .toString(16)
+                    .padStart(6, "0"),
+            amount: 0,
+        },
     });
 
-    // web 第一次不出信息的临时解决方案
     useEffect(() => {
-        if (!data || Platform.OS !== "web") {
+        if (!data) {
             return;
         }
         setValue("title", data[0].title);
