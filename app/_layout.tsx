@@ -80,6 +80,8 @@ const RootLayoutNav = () => {
     const colorScheme = useColorScheme();
     const themeName = currentTheme + "_" + (colorScheme === "dark" ? "dark" : "light");
 
+    console.log("colorScheme: " + colorScheme);
+
     useInitialTheme(themeName);
     useEffect(() => {
         UnistylesRuntime.setTheme(themeName);

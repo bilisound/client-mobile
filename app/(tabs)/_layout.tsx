@@ -80,7 +80,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                         playButtonOuterClassName="rounded-full"
                     />
                 )}
-                <View className="w-full h-16 sm:h-12 flex-row" accessibilityRole="tablist">
+                <View className="w-full h-16 sm:h-12 flex-row" role="tablist">
                     {isNarrowWidth ? (
                         <Pressable
                             className="flex-1 items-center justify-center gap-1.5 sm:flex-row"
@@ -210,12 +210,12 @@ const styleSheet = createStyleSheet(theme => ({
         backgroundColor: "transparent",
         borderStyle: "solid",
         borderBottomWidth: 0,
-        shadowColor: "transparent",
+        boxShadow: "unset",
     },
     tabBarStyle: {
         backgroundColor: theme.colorTokens.background,
         borderTopWidth: 0,
-        shadowColor: "transparent",
+        boxShadow: "unset",
     },
     tabBarLabelStyle: {},
 }));

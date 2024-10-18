@@ -20,6 +20,8 @@ export function useRawThemeValues() {
 }
 
 export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "light" | "dark"; children?: any }) {
+    console.log({ mode, props });
+
     const { theme } = useSettingsStore(state => ({
         theme: state.theme,
     }));
