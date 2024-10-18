@@ -52,8 +52,7 @@ const tabBarV2 = (props: BottomTabBarProps) => {
 
 function FloatTabBar(props: BottomTabBarProps) {
     /*const currentActive = props.state.routes[props.state.index];
-    const currentActiveOption = props.descriptors[currentActive.key];
-    console.log(JSON.stringify({ currentActive, currentActiveOption }));*/
+    const currentActiveOption = props.descriptors[currentActive.key];*/
 
     // const colorScheme = useColorScheme();
 
@@ -68,7 +67,6 @@ function FloatTabBar(props: BottomTabBarProps) {
                 paddingBottom: props.insets.bottom,
             }}
             onLayout={e => {
-                console.log(e.nativeEvent.layout);
                 useStyleParamStore.getState().setBottomBarHeight(-e.nativeEvent.layout.y);
             }}
         >

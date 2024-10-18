@@ -194,8 +194,6 @@ function AudioPlayButtonIcon() {
     const playbackState = usePlaybackState();
     const { width } = useContext(AudioPlayerInsetContext);
 
-    console.log({ width });
-
     return playbackState.state === State.Playing ? (
         <FontAwesome5 name="pause" size={width >= rem2px(28) ? 28 : 22} className="color-typography-0" />
     ) : (
