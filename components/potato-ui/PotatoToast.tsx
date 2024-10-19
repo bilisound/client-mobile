@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { cssInterop } from "nativewind";
 import { View } from "react-native";
 
 import { ShadowedView } from "~/components/ShadowedView";

@@ -9,7 +9,8 @@ import {
     Entypo,
 } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { cssInterop } from "nativewind";
+import { LinearGradient } from "expo-linear-gradient";
+import { cssInterop, remapProps } from "nativewind";
 
 cssInterop(Ionicons, {
     className: {
@@ -79,4 +80,7 @@ cssInterop(Image, {
     className: {
         target: "style",
     },
+});
+remapProps(LinearGradient, {
+    className: "style",
 });

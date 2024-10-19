@@ -46,7 +46,7 @@ export interface ButtonProps extends NativePressableProps {
     outerStyle?: StyleProp<ViewStyle>;
 }
 
-function PotatoButtonRaw(props: ButtonProps) {
+function PotatoButton(props: ButtonProps) {
     const {
         color = "primary",
         disabled = false,
@@ -177,7 +177,7 @@ function PotatoButtonRaw(props: ButtonProps) {
     );
 }
 
-const PotatoButton = remapProps(PotatoButtonRaw, {
+remapProps(PotatoButton, {
     className: "style",
     outerClassName: "outerStyle",
 });

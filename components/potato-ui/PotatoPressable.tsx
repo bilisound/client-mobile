@@ -1,5 +1,4 @@
 import omit from "lodash/omit";
-import { remapProps } from "nativewind";
 import { useState, forwardRef } from "react";
 import {
     Pressable as NativePressable,
@@ -14,12 +13,14 @@ import {
 export interface PressableProps extends NativePressableProps {
     style?: StyleProp<ViewStyle>;
     outerStyle?: StyleProp<ViewStyle>;
+    className?: string;
+    outerClassName?: string;
     pressedBackgroundColor?: string;
 }
 
 const isAndroid = Platform.OS === "android";
 
-const PotatoPressableRaw = forwardRef<View, PressableProps>((props, ref) => {
+const PotatoPressable = forwardRef<View, PressableProps>((props, ref) => {
     const [pressed, setPressed] = useState(false);
     const colorMode = useColorScheme();
     const pressedBackgroundColor = colorMode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
@@ -34,6 +35,7 @@ const PotatoPressableRaw = forwardRef<View, PressableProps>((props, ref) => {
                     backgroundColor: pressed ? pressedBackgroundColorUser || pressedBackgroundColor : undefined,
                 },
             ]}
+            className={props.outerClassName}
         >
             <NativePressable
                 onPressIn={event => {
@@ -51,17 +53,12 @@ const PotatoPressableRaw = forwardRef<View, PressableProps>((props, ref) => {
                 android_ripple={{
                     color: pressedBackgroundColorUser || pressedBackgroundColor,
                 }}
-                {...omit(props, ["onPressIn", "onPressOut", "outerStyle"])}
+                {...omit(props, ["onPressIn", "onPressOut", "outerStyle", "outerClassName"])}
             >
                 {props.children}
             </NativePressable>
         </View>
     );
-});
-
-const PotatoPressable = remapProps(PotatoPressableRaw, {
-    className: "style",
-    outerClassName: "outerStyle",
 });
 
 export default PotatoPressable;

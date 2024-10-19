@@ -2,9 +2,8 @@ import { FontAwesome5, Ionicons, MaterialIcons, Entypo } from "@expo/vector-icon
 import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
-import { LinearGradient as ExpoLinearGradient } from "expo-linear-gradient";
+import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
-import { remapProps } from "nativewind";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Platform, Linking, StatusBar, useColorScheme, View } from "react-native";
 import { ShadowedView } from "react-native-fast-shadow";
@@ -50,10 +49,6 @@ import log from "~/utils/logger";
 import { handlePrev, handleTogglePlay } from "~/utils/player-control";
 import { rem2px } from "~/utils/styling";
 import { setMode, tracksToPlaylist } from "~/utils/track-data";
-
-const LinearGradient = remapProps(ExpoLinearGradient, {
-    className: "style",
-});
 
 const IconMenu = createIcon(Entypo, "dots-three-vertical");
 const IconDown = createIcon(Entypo, "chevron-down");
