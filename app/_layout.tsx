@@ -26,7 +26,7 @@ import { checkLatestVersion } from "~/utils/check-release";
 import init from "~/utils/init";
 import "~/global.css";
 import "~/unistyles";
-import "~/utils/icon";
+import "~/utils/nativewind";
 import log from "~/utils/logger";
 
 export {

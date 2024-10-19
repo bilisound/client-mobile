@@ -1,15 +1,8 @@
-import { Image as ExpoImage } from "expo-image";
-import { cssInterop } from "nativewind";
+import { Image } from "expo-image";
 import React from "react";
 import { View } from "react-native";
 
 import useSettingsStore from "~/store/settings";
-
-const Image = cssInterop(ExpoImage, {
-    className: {
-        target: "style",
-    },
-});
 
 export default function YuruChara() {
     const { theme } = useSettingsStore(state => ({ theme: state.theme }));

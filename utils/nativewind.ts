@@ -8,6 +8,7 @@ import {
     Octicons,
     Entypo,
 } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { cssInterop } from "nativewind";
 
 cssInterop(Ionicons, {
@@ -72,5 +73,10 @@ cssInterop(Entypo, {
         nativeStyleToProp: {
             color: true,
         },
+    },
+});
+cssInterop(Image, {
+    className: {
+        target: "style",
     },
 });
