@@ -37,7 +37,9 @@ export default function AudioIndicator({ className, imageClassName, playButtonOu
         >
             <Pressable
                 onPress={() => {
-                    router.push("/modal");
+                    router.push(
+                        `/modal?initialImage=${encodeURIComponent(activeTrack?.artwork ?? "")}&initialTitle=${activeTrack?.title}&initialArtist=${activeTrack?.artist}`,
+                    );
                 }}
                 className="flex-row flex-1 gap-3"
             >

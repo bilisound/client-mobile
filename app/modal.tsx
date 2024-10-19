@@ -3,7 +3,7 @@ import { Slider } from "@miblanchard/react-native-slider";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { LinearGradient as ExpoLinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { remapProps } from "nativewind";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Platform, Linking, StatusBar, useColorScheme, View } from "react-native";
@@ -388,6 +388,11 @@ function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActio
 }
 
 function AudioPlayerModal() {
+    const { initialImage, initialTitle, initialArtist } = useLocalSearchParams<{
+        initialImage?: string;
+        initialTitle?: string;
+        initialArtist?: string;
+    }>();
     const { theme } = useStyles();
     const colorScheme = useColorScheme();
     const activeTrack = useActiveTrack();
@@ -521,7 +526,10 @@ function AudioPlayerModal() {
                         {showList ? (
                             <MusicList />
                         ) : (
-                            <MusicPicture image={activeTrack?.artwork} bilisoundId={activeTrack?.bilisoundId} />
+                            <MusicPicture
+                                image={activeTrack?.artwork ?? initialImage}
+                                bilisoundId={activeTrack?.bilisoundId}
+                            />
                         )}
                     </View>
                     <View
@@ -547,14 +555,14 @@ function AudioPlayerModal() {
                                     numberOfLines={1}
                                     ellipsizeMode="tail"
                                 >
-                                    {activeTrack?.title}
+                                    {activeTrack?.title ?? initialTitle}
                                 </Text>
                                 <Text
                                     className="text-sm @md:text-base leading-normal opacity-65 truncate whitespace-nowrap"
                                     numberOfLines={1}
                                     ellipsizeMode="tail"
                                 >
-                                    {activeTrack?.artist}
+                                    {activeTrack?.artist ?? initialArtist}
                                 </Text>
                             </View>
                         </PotatoPressable>
