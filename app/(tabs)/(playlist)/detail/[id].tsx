@@ -10,7 +10,7 @@ import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-na
 import { Circle as OrigCircle, Svg } from "react-native-svg";
 import Toast from "react-native-toast-message";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
-import { useStyles, createStyleSheet } from "react-native-unistyles";
+import { useStyles } from "react-native-unistyles";
 import { twMerge } from "tailwind-merge";
 
 import { updatePlaylist } from "~/business/playlist/update";
@@ -18,7 +18,6 @@ import CommonLayout from "~/components/CommonLayout";
 import EditAction from "~/components/EditAction";
 import Empty from "~/components/Empty";
 import SongItem from "~/components/SongItem";
-import VideoMeta from "~/components/VideoMeta";
 import PotatoButton from "~/components/potato-ui/PotatoButton";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
@@ -59,7 +58,6 @@ import { getImageProxyUrl } from "~/utils/constant-helper";
 import { convertToRelativeTime } from "~/utils/datetime";
 import { exportPlaylistToFile } from "~/utils/exchange/playlist";
 import log from "~/utils/logger";
-import { convertToHTTPS } from "~/utils/string";
 import { playlistToTracks } from "~/utils/track-data";
 
 const IconPlay = createIcon(Ionicons, "play");
@@ -71,18 +69,18 @@ function extractAndProcessImgUrls(playlistDetails: PlaylistDetail[]) {
     return Array.from(new Set(imgUrls));
 }
 
-const Circle = Animated.createAnimatedComponent(
-    cssInterop(OrigCircle, {
-        className: {
-            target: "style",
-            nativeStyleToProp: {
-                // @ts-ignore workaround
-                stroke: true,
-                fill: true,
-            },
+cssInterop(OrigCircle, {
+    className: {
+        target: "style",
+        nativeStyleToProp: {
+            // @ts-ignore workaround
+            stroke: true,
+            fill: true,
         },
-    }),
-);
+    },
+});
+
+const Circle = Animated.createAnimatedComponent(OrigCircle);
 
 const IconEditingDone = createIcon(Entypo, "check");
 const IconEditing = createIcon(MaterialCommunityIcons, "format-list-checks");
