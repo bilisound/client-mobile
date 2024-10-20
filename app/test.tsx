@@ -25,7 +25,6 @@ export default function Page() {
     const queryClient = useQueryClient();
 
     const colorScheme = useColorScheme();
-    console.log({ colorScheme });
 
     function handleClose() {
         setModalVisible(false);

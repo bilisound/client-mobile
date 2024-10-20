@@ -1,8 +1,39 @@
 "use client";
 import { vars } from "nativewind";
 
-export const parsedConfig: Record<string, ReturnType<typeof vars>> = {
-    classic_light: vars({
+export type ThemeName = "classic" | "red";
+export type ColorSchemeName = "light" | "dark";
+export type ConfigName = `${ThemeName}_${ColorSchemeName}`;
+
+type ColorShades = 0 | 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
+
+type ColorTypes =
+    | "primary"
+    | "accent"
+    | "secondary"
+    | "tertiary"
+    | "error"
+    | "success"
+    | "warning"
+    | "info"
+    | "typography"
+    | "outline"
+    | "background";
+
+type BackgroundSpecialColors = "error" | "warning" | "success" | "muted" | "info";
+
+type IndicatorColors = "primary" | "info" | "error";
+
+export type ConfigDetail = {
+    [K in `--color-${ColorTypes}-${ColorShades}`]: string;
+} & {
+    [K in `--color-background-${BackgroundSpecialColors}`]: string;
+} & {
+    [K in `--color-indicator-${IndicatorColors}`]: string;
+};
+
+export const config: Record<ConfigName, ConfigDetail> = {
+    classic_light: {
         "--color-primary-0": "247 255 253",
         "--color-primary-50": "238 255 250",
         "--color-primary-100": "198 255 241",
@@ -166,8 +197,8 @@ export const parsedConfig: Record<string, ReturnType<typeof vars>> = {
         "--color-indicator-primary": "55 55 55",
         "--color-indicator-info": "83 153 236",
         "--color-indicator-error": "185 28 28",
-    }),
-    classic_dark: vars({
+    },
+    classic_dark: {
         "--color-primary-950": "247 255 253",
         "--color-primary-900": "238 255 250",
         "--color-primary-800": "198 255 241",
@@ -331,8 +362,8 @@ export const parsedConfig: Record<string, ReturnType<typeof vars>> = {
         "--color-indicator-primary": "247 247 247",
         "--color-indicator-info": "161 199 245",
         "--color-indicator-error": "232 70 69",
-    }),
-    red_light: vars({
+    },
+    red_light: {
         "--color-primary-0": "254 249 249",
         "--color-primary-50": "254 242 242",
         "--color-primary-100": "253 230 231",
@@ -496,8 +527,8 @@ export const parsedConfig: Record<string, ReturnType<typeof vars>> = {
         "--color-indicator-primary": "55 55 55",
         "--color-indicator-info": "83 153 236",
         "--color-indicator-error": "185 28 28",
-    }),
-    red_dark: vars({
+    },
+    red_dark: {
         "--color-primary-950": "254 249 249",
         "--color-primary-900": "254 242 242",
         "--color-primary-800": "253 230 231",
@@ -661,5 +692,12 @@ export const parsedConfig: Record<string, ReturnType<typeof vars>> = {
         "--color-indicator-primary": "247 247 247",
         "--color-indicator-info": "161 199 245",
         "--color-indicator-error": "232 70 69",
-    }),
+    },
+};
+
+export const parsedConfig: Record<string, ReturnType<typeof vars>> = {
+    classic_light: vars(config.classic_light),
+    classic_dark: vars(config.classic_dark),
+    red_light: vars(config.red_light),
+    red_dark: vars(config.red_dark),
 };

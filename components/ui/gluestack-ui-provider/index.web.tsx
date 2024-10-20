@@ -2,22 +2,12 @@
 import { setFlushStyles } from "@gluestack-ui/nativewind-utils/flush";
 import { OverlayProvider } from "@gluestack-ui/overlay";
 import { ToastProvider } from "@gluestack-ui/toast";
-import React, { createContext, useContext, useId } from "react";
+import React, { useId } from "react";
 
-import { parsedConfig } from "./config";
+import { config, ConfigName, parsedConfig } from "./config";
+import { ThemeValueProvider } from "./theme";
 
 import useSettingsStore from "~/store/settings";
-
-const ThemeValueProvider = createContext<(typeof parsedConfig)[string] | null>(null);
-
-export function useRawThemeValues() {
-    const data = useContext(ThemeValueProvider);
-    if (!data) {
-        throw new Error("useRawThemeValues must be used within ThemeValueProvider");
-    }
-
-    return data;
-}
 
 export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "light" | "dark"; children?: any }) {
     const { theme } = useSettingsStore(state => ({
@@ -48,7 +38,12 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
     }
 
     return (
-        <ThemeValueProvider.Provider value={parsedConfig[theme + "_" + mode]}>
+        <ThemeValueProvider.Provider
+            value={{
+                theme: config[(theme + "_" + mode) as ConfigName],
+                mode,
+            }}
+        >
             <OverlayProvider>
                 <ToastProvider>{props.children}</ToastProvider>
             </OverlayProvider>
