@@ -86,16 +86,15 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
             {Platform.OS === "web" ? (
                 <>
                     <View className="overflow-hidden" style={{ maxHeight: detailMaxHeight }}>
-                        <Text
+                        <View
                             onLayout={e => {
                                 if (e.nativeEvent.layout.height < detailMaxHeight) {
                                     setShowMore(true);
                                 }
                             }}
-                            className="text-[15px] leading-normal text-typography-700"
                         >
-                            {meta.desc}
-                        </Text>
+                            <Text className="text-[15px] leading-normal text-typography-700">{meta.desc}</Text>
+                        </View>
                     </View>
                     <LinearGradient
                         colors={colorScheme === "dark" ? ["#17171700", "#171717"] : ["#ffffff00", "#ffffff"]}
