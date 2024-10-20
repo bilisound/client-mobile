@@ -11,7 +11,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import React, { useEffect, useRef, useState } from "react";
-import { Linking, LogBox, Platform, useColorScheme } from "react-native";
+import { ColorSchemeName, Linking, LogBox, Platform, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { UnistylesRuntime, useInitialTheme, useStyles } from "react-native-unistyles";
@@ -73,11 +73,10 @@ function CheckUpdate() {
     return <CheckUpdateDialog open={modalVisible} onClose={handleClose} result={data} />;
 }
 
-const RootLayoutNav = () => {
+const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
     const { theme: currentTheme } = useSettingsStore(state => ({
         theme: state.theme,
     }));
-    const colorScheme = useColorScheme();
     const themeName = currentTheme + "_" + (colorScheme === "dark" ? "dark" : "light");
 
     useInitialTheme(themeName);
@@ -214,5 +213,5 @@ export default function RootLayout() {
         return null;
     }
 
-    return <RootLayoutNav />;
+    return <RootLayoutNav colorScheme={colorScheme} />;
 }

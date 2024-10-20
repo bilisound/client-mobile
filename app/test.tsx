@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, useColorScheme, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import CommonLayout from "~/components/CommonLayout";
@@ -23,6 +23,9 @@ import { deleteAllPlaylist } from "~/storage/sqlite/playlist";
 export default function Page() {
     const [modalVisible, setModalVisible] = useState(false);
     const queryClient = useQueryClient();
+
+    const colorScheme = useColorScheme();
+    console.log({ colorScheme });
 
     function handleClose() {
         setModalVisible(false);
@@ -75,6 +78,8 @@ export default function Page() {
                     <Text className="lg:bg-red-500">test lg</Text>
                     <Text className="xl:bg-orange-500">test xl</Text>
                     <Text className="2xl:bg-amber-500">test 2xl</Text>
+
+                    <Text>{`useColorScheme() returns: ${colorScheme}`}</Text>
 
                     <PotatoToast type="success" title="操作成功" description="数据已成功保存！" />
                     <PotatoToast type="info" title="系统提示" description="请注意，新版本已发布。" />
