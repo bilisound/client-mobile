@@ -2,7 +2,7 @@
 import { setFlushStyles } from "@gluestack-ui/nativewind-utils/flush";
 import { OverlayProvider } from "@gluestack-ui/overlay";
 import { ToastProvider } from "@gluestack-ui/toast";
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useId } from "react";
 
 import { config } from "./config";
 
@@ -23,6 +23,7 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
     const { theme } = useSettingsStore(state => ({
         theme: state.theme,
     }));
+    const themeUniqueId = useId();
 
     const themeName = theme + "_" + mode;
 
@@ -36,7 +37,11 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
         const element = document.documentElement;
         if (element) {
             const head = element.querySelector("head");
-            const style = document.createElement("style");
+            let style = document.getElementById(themeUniqueId) as HTMLStyleElement | null;
+            if (!style) {
+                style = document.createElement("style");
+                style.id = themeUniqueId;
+            }
             style.innerHTML = `:root {${stringcssvars}} `;
             if (head) head.appendChild(style);
         }
