@@ -156,18 +156,10 @@ export default function Page() {
                 className="h-12 aspect-[3/2] flex-0 basis-auto rounded-lg"
             />
             <View className="flex-1 gap-1">
-                <Text
-                    className="font-semibold text-sm leading-normal truncate whitespace-nowrap"
-                    ellipsizeMode="tail"
-                    numberOfLines={1}
-                >
+                <Text className="font-semibold text-sm leading-normal" isTruncated>
                     {item.title}
                 </Text>
-                <Text
-                    className="text-xs opacity-50 leading-normal truncate whitespace-nowrap"
-                    ellipsizeMode="tail"
-                    numberOfLines={1}
-                >
+                <Text className="text-xs opacity-50 leading-normal" isTruncated>
                     {formatSecond(item.duration)}
                 </Text>
             </View>

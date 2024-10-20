@@ -63,7 +63,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                 </ActionsheetDragIndicatorWrapper>
                 {!!displayTrack && (
                     <View className="flex items-start w-full px-4 py-4 gap-1">
-                        <Text className="font-bold truncate whitespace-nowrap" ellipsizeMode="tail" numberOfLines={1}>
+                        <Text className="font-bold" isTruncated>
                             {displayTrack.part}
                         </Text>
                         <Text className="text-sm opacity-60">{formatSecond(displayTrack.duration)}</Text>

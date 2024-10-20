@@ -89,11 +89,10 @@ export default function SongItem({
                 </View>
                 <View className="flex-1">
                     <Text
-                        className={`leading-[22px] text-sm truncate whitespace-nowrap ${
+                        className={`leading-[22px] text-sm ${
                             isActiveTrack ? "font-semibold text-accent-500" : "font-normal"
                         }`}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
+                        isTruncated
                     >
                         {data.title}
                     </Text>

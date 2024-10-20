@@ -48,11 +48,7 @@ export default function AudioIndicator({ className, imageClassName, playButtonOu
                     className={twMerge("h-10 aspect-[16/9] rounded", imageClassName)}
                 />
                 <View className="flex-1 h-10 justify-center">
-                    <Text
-                        className="text-base text-typography-700 truncate whitespace-nowrap"
-                        ellipsizeMode="tail"
-                        numberOfLines={1}
-                    >
+                    <Text className="text-base text-typography-700" isTruncated>
                         {activeTrack?.title}
                     </Text>
                 </View>

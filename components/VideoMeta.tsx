@@ -180,11 +180,7 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
                                 source={getImageProxyUrl(meta.owner.face, meta.bvid)}
                                 className="w-9 h-9 rounded-full aspect-square flex-shrink-0"
                             />
-                            <Text
-                                className="flex-grow text-sm font-bold text-typography-700 truncate whitespace-nowrap"
-                                numberOfLines={1}
-                                ellipsizeMode="tail"
-                            >
+                            <Text className="flex-grow text-sm font-bold text-typography-700" isTruncated>
                                 {meta.owner.name}
                             </Text>
                             <Text className="flex-shrink-0 text-sm opacity-50 text-typography-700">

@@ -111,11 +111,7 @@ export default function Page() {
                     >
                         <View className="flex-row items-center gap-3">
                             <MaterialIcons name="add" size={24} color="red" />
-                            <Text
-                                className="text-base leading-normal flex-1 truncate whitespace-nowrap"
-                                numberOfLines={1}
-                                ellipsizeMode="tail"
-                            >
+                            <Text className="text-base leading-normal flex-1" isTruncated>
                                 {name}
                             </Text>
                         </View>

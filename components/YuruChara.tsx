@@ -22,7 +22,7 @@ export default function YuruChara() {
     }
 
     return (
-        <View className="w-[240px] aspect-square absolute right-0 bottom-[100px] z-10" pointerEvents="none">
+        <View className="w-[240px] aspect-square absolute right-0 bottom-[100px] z-10 pointer-events-none">
             <Image source={source} className="w-[240px] aspect-square opacity-20" />
         </View>
     );
