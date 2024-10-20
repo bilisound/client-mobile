@@ -70,7 +70,7 @@ const TabIndexScreen: React.FC = () => {
                     />
                 </>
             }
-            className="items-stretch h-full"
+            className="h-full"
         >
             <View className={`${isNarrowWidth ? "pt-6 pb-8" : "pt-8 pb-12"} items-center`}>
                 {fontsLoaded ? (

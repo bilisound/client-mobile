@@ -65,11 +65,11 @@ export default function CommonLayout({
     }
 
     return (
-        <View className={twMerge("h-full", className)} style={style}>
+        <View className={twMerge("h-full items-center", className)} style={style}>
             {titleBarTheme === "solid" && <StatusBar barStyle="light-content" showHideTransition="none" />}
             <View
                 className={twMerge(
-                    "flex-0 basis-auto " +
+                    "flex-0 basis-auto w-full " +
                         (titleBarTheme === "solid" ? "bg-primary-500 dark:bg-primary-100" : "bg-transparent"),
                     titleBarContainerClassName,
                 )}
@@ -119,7 +119,7 @@ export default function CommonLayout({
                 </View>
             </View>
             <View
-                className={twMerge("flex-1", containerClassName)}
+                className={twMerge("flex-1 w-full max-w-screen-xl", containerClassName)}
                 style={[
                     {
                         paddingLeft: edgeInsets.left,

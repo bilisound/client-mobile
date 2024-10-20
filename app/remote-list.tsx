@@ -223,7 +223,7 @@ export default function Page() {
                 </View>
             ) : (
                 <View className="flex-1">
-                    <View className="hidden sm:flex w-full">
+                    <View className="hidden sm:flex w-full flex-row">
                         <HeaderSkeleton className="flex-1" />
                         <View className="flex-1" />
                     </View>
