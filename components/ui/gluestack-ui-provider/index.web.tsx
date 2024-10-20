@@ -4,11 +4,11 @@ import { OverlayProvider } from "@gluestack-ui/overlay";
 import { ToastProvider } from "@gluestack-ui/toast";
 import React, { createContext, useContext, useId } from "react";
 
-import { config } from "./config";
+import { parsedConfig } from "./config";
 
 import useSettingsStore from "~/store/settings";
 
-const ThemeValueProvider = createContext<(typeof config)[string] | null>(null);
+const ThemeValueProvider = createContext<(typeof parsedConfig)[string] | null>(null);
 
 export function useRawThemeValues() {
     const data = useContext(ThemeValueProvider);
@@ -27,13 +27,13 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
 
     const themeName = theme + "_" + mode;
 
-    const stringcssvars = Object.keys(config[themeName]).reduce((acc, cur) => {
-        acc += `${cur}:${config[themeName][cur]};`;
+    const stringcssvars = Object.keys(parsedConfig[themeName]).reduce((acc, cur) => {
+        acc += `${cur}:${parsedConfig[themeName][cur]};`;
         return acc;
     }, "");
     setFlushStyles(`:root {${stringcssvars}} `);
 
-    if (config[themeName] && typeof document !== "undefined") {
+    if (parsedConfig[themeName] && typeof document !== "undefined") {
         const element = document.documentElement;
         if (element) {
             const head = element.querySelector("head");
@@ -48,7 +48,7 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
     }
 
     return (
-        <ThemeValueProvider.Provider value={config[theme + "_" + mode]}>
+        <ThemeValueProvider.Provider value={parsedConfig[theme + "_" + mode]}>
             <OverlayProvider>
                 <ToastProvider>{props.children}</ToastProvider>
             </OverlayProvider>

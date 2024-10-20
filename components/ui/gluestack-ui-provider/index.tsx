@@ -3,11 +3,11 @@ import { ToastProvider } from "@gluestack-ui/toast";
 import React, { createContext, useContext } from "react";
 import { View } from "react-native";
 
-import { config } from "./config";
+import { parsedConfig } from "./config";
 
 import useSettingsStore from "~/store/settings";
 
-const ThemeValueProvider = createContext<(typeof config)[string] | null>(null);
+const ThemeValueProvider = createContext<(typeof parsedConfig)[string] | null>(null);
 
 // todo 坏的，取不到值
 export function useRawThemeValues() {
@@ -27,13 +27,13 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
     return (
         <View
             style={[
-                config[theme + "_" + mode],
+                parsedConfig[theme + "_" + mode],
                 { flex: 1, height: "100%", width: "100%" },
                 // @ts-ignore
                 props.style,
             ]}
         >
-            <ThemeValueProvider.Provider value={config[theme + "_" + mode]}>
+            <ThemeValueProvider.Provider value={parsedConfig[theme + "_" + mode]}>
                 <OverlayProvider>
                     <ToastProvider>{props.children}</ToastProvider>
                 </OverlayProvider>

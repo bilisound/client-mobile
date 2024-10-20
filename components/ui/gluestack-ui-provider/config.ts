@@ -1,7 +1,7 @@
 "use client";
 import { vars } from "nativewind";
 
-export const config: Record<string, ReturnType<typeof vars>> = {
+export const parsedConfig: Record<string, ReturnType<typeof vars>> = {
     classic_light: vars({
         "--color-primary-0": "247 255 253",
         "--color-primary-50": "238 255 250",
