@@ -37,6 +37,7 @@ import {
 } from "~/components/ui/actionsheet";
 import { Box } from "~/components/ui/box";
 import { Pressable } from "~/components/ui/pressable";
+import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
 import useTracks from "~/hooks/useTracks";
 import { QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
@@ -206,19 +207,11 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
     const edgeInsets = useContext(AudioPlayerInsetContext);
     const [shouldPaddingBottom, setShouldPaddingBottom] = useState(false);
 
-    return (
-        <View
-            className="flex-1 items-center justify-center"
-            onLayout={e => {
-                const layout = e.nativeEvent.layout;
-                setSmallestSize(Math.min(layout.width, layout.height) - 64);
-                setShouldPaddingBottom(layout.width >= 768);
-            }}
-            style={{
-                paddingBottom: shouldPaddingBottom ? edgeInsets.bottom : 0,
-            }}
-        >
-            {colorScheme === "dark" ? (
+    let inner = <Skeleton style={{ width: smallestSize, borderRadius: 16, aspectRatio: "1/1" }} />;
+
+    if (image) {
+        inner =
+            colorScheme === "dark" ? (
                 <Image
                     source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
                     // 不能用 className，否则 web 不正常
@@ -239,13 +232,28 @@ function MusicPicture({ image, bilisoundId }: { image?: string; bilisoundId?: st
                     }}
                 >
                     <Image
-                        source={getImageProxyUrl(image ?? "", bilisoundId ?? "")}
+                        source={getImageProxyUrl(image, bilisoundId ?? "")}
                         // 不能用 className，否则 web 不正常
                         style={{ width: smallestSize, borderRadius: 16, aspectRatio: "1/1" }}
                         contentFit="cover"
                     />
                 </ShadowedView>
-            )}
+            );
+    }
+
+    return (
+        <View
+            className="flex-1 items-center justify-center"
+            onLayout={e => {
+                const layout = e.nativeEvent.layout;
+                setSmallestSize(Math.min(layout.width, layout.height) - 64);
+                setShouldPaddingBottom(layout.width >= 768);
+            }}
+            style={{
+                paddingBottom: shouldPaddingBottom ? edgeInsets.bottom : 0,
+            }}
+        >
+            {inner}
         </View>
     );
 }
