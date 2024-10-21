@@ -48,7 +48,6 @@ import { saveFile } from "~/utils/file";
 import { getFileName } from "~/utils/format";
 import log from "~/utils/logger";
 import { handlePrev, handleTogglePlay } from "~/utils/player-control";
-import { rem2px } from "~/utils/styling";
 import { setMode, tracksToPlaylist } from "~/utils/track-data";
 
 const IconMenu = createIcon(Entypo, "dots-three-vertical");
@@ -187,12 +186,11 @@ function AudioProgressTimer() {
 
 function AudioPlayButtonIcon() {
     const playbackState = usePlaybackState();
-    const { width } = useContext(AudioPlayerInsetContext);
 
     return playbackState.state === State.Playing ? (
-        <FontAwesome5 name="pause" size={width >= rem2px(28) ? 28 : 22} className="color-typography-0" />
+        <FontAwesome5 name="pause" size={-1} className="color-typography-0 text-[22px] @md:text-[28px]" />
     ) : (
-        <FontAwesome5 name="play" size={width >= rem2px(28) ? 28 : 22} className="color-typography-0" />
+        <FontAwesome5 name="play" size={-1} className="color-typography-0 text-[22px] @md:text-[28px]" />
     );
 }
 
@@ -577,8 +575,8 @@ function AudioPlayerModal() {
                             >
                                 <Entypo
                                     name="shuffle"
-                                    size={customEdgeInsets.width >= rem2px(28) ? 22 : 18}
-                                    className={`${queuePlayingMode === "shuffle" ? "color-accent-500" : "color-typography-700"}`}
+                                    size={-1}
+                                    className={`text-[18px] @md:text-[22px] ${queuePlayingMode === "shuffle" ? "color-accent-500" : "color-typography-700"}`}
                                 />
                             </PotatoPressable>
 
@@ -594,8 +592,8 @@ function AudioPlayerModal() {
                                 >
                                     <FontAwesome5
                                         name="step-backward"
-                                        size={customEdgeInsets.width >= rem2px(28) ? 24 : 20}
-                                        className="color-typography-700 scale-x-[1.4]"
+                                        size={-1}
+                                        className="text-[20px] @md:text-[24px] color-typography-700 scale-x-[1.4]"
                                     />
                                 </PotatoPressable>
 
@@ -623,8 +621,8 @@ function AudioPlayerModal() {
                                 >
                                     <FontAwesome5
                                         name="step-forward"
-                                        size={customEdgeInsets.width >= rem2px(28) ? 24 : 20}
-                                        className="color-typography-700  scale-x-[1.4]"
+                                        size={-1}
+                                        className="text-[20px] @md:text-[24px] color-typography-700 scale-x-[1.4]"
                                     />
                                 </PotatoPressable>
                             </View>
@@ -638,8 +636,8 @@ function AudioPlayerModal() {
                             >
                                 <Ionicons
                                     name="save"
-                                    size={customEdgeInsets.width >= rem2px(28) ? 20 : 18}
-                                    className="color-typography-700"
+                                    size={-1}
+                                    className="text-[18px] @md:text-[20px] color-typography-700"
                                 />
                             </PotatoPressable>
                         </View>
