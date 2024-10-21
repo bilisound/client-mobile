@@ -1,3 +1,4 @@
+import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import omit from "lodash/omit";
 import React, { useState } from "react";
 import {
@@ -31,6 +32,21 @@ function handleTextEffect(input: string) {
     }
     return texts.join(" ");
 }
+
+const buttonOuterStyles = tva({
+    base: "overflow-hidden",
+    variants: {
+        variant: {
+            solid: "",
+            outline: "border",
+            ghost: "",
+        },
+        disabled: {
+            true: "opacity-50",
+            false: "",
+        },
+    },
+});
 
 export interface ButtonProps extends NativePressableProps {
     color?: ColorTypes;
@@ -112,7 +128,10 @@ function PotatoButton(props: ButtonProps) {
 
     return (
         <View
-            className="overflow-hidden"
+            className={buttonOuterStyles({
+                variant,
+                disabled,
+            })}
             style={[
                 {
                     backgroundColor,
@@ -120,12 +139,10 @@ function PotatoButton(props: ButtonProps) {
                 variant === "outline"
                     ? {
                           borderColor,
-                          borderWidth: 1,
                       }
                     : {},
                 {
                     borderRadius: rounded ? theme.sizes.radiusButtonFull : theme.sizes.radiusButton,
-                    opacity: disabled ? 0.5 : 1,
                 },
                 props.outerStyle,
             ]}
