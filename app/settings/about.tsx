@@ -2,13 +2,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import React from "react";
-import { Linking, ScrollView, View, Text } from "react-native";
+import { Linking, ScrollView, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import SettingMenuItem from "~/components/SettingMenuItem";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { Text } from "~/components/ui/text";
 import { BILISOUND_OFFICIAL_WEBSITE } from "~/constants/branding";
 import { RELEASE_CHANNEL, VERSION } from "~/constants/releasing";
 import { checkLatestVersion } from "~/utils/check-release";
@@ -18,8 +18,6 @@ const UpdateIcon = createIcon(MaterialIcons, "update");
 const HomeIcon = createIcon(MaterialIcons, "home");
 
 export default function Page() {
-    const { styles } = useStyles(stylesheet);
-
     // 检查更新
     const { data, isLoading, isError, refetch } = useQuery({
         queryKey: ["check_update"],
@@ -51,10 +49,10 @@ export default function Page() {
     return (
         <CommonLayout title="关于" overrideEdgeInsets={{ bottom: 0 }} leftAccessories="backButton">
             <ScrollView>
-                <View style={styles.container}>
-                    <Image style={styles.logoImage} source={require("../../assets/images/icon.png")} />
-                    <Text style={styles.logoTitle}>Bilisound</Text>
-                    <Text style={styles.version}>{`版本 ${VERSION}`}</Text>
+                <View className="items-center p-6">
+                    <Image className="w-[72px] h-[72px] rounded-xl" source={require("../../assets/images/icon.png")} />
+                    <Text className="text-2xl leading-normal font-semibold mt-2 mb-1">Bilisound</Text>
+                    <Text className="text-sm leading-normal opacity-50">{`版本 ${VERSION}`}</Text>
                 </View>
                 <SettingMenuItem
                     icon={HomeIcon}
@@ -74,29 +72,3 @@ export default function Page() {
         </CommonLayout>
     );
 }
-
-const stylesheet = createStyleSheet(theme => ({
-    container: {
-        alignItems: "center",
-        padding: 24,
-    },
-    logoImage: {
-        width: 72,
-        height: 72,
-        borderRadius: 12,
-    },
-    logoTitle: {
-        fontSize: 24,
-        lineHeight: 24 * 1.5,
-        fontWeight: "700",
-        marginTop: 8,
-        marginBottom: 4,
-        color: theme.colorTokens.foreground,
-    },
-    version: {
-        fontSize: 14,
-        lineHeight: 14 * 1.5,
-        opacity: 0.5,
-        color: theme.colorTokens.foreground,
-    },
-}));

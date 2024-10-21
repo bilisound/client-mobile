@@ -7,7 +7,6 @@ import React, { createContext, useContext, useState } from "react";
 import { Platform, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import { useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import Empty from "~/components/Empty";
@@ -88,8 +87,6 @@ interface LongPressActionsProps {
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
     const edgeInsets = useSafeAreaInsets();
-    const { theme } = useStyles();
-    const textBasicColor = theme.colorTokens.foreground;
 
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose}>
@@ -113,7 +110,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                             justifyContent: "center",
                         }}
                     >
-                        <MaterialIcons name="edit" size={24} color={textBasicColor} />
+                        <MaterialIcons name="edit" size={24} className="color-typography-700" />
                     </View>
                     <ActionsheetItemText>修改信息</ActionsheetItemText>
                 </ActionsheetItem>
@@ -126,7 +123,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                             justifyContent: "center",
                         }}
                     >
-                        <MaterialIcons name="delete" size={24} color={textBasicColor} />
+                        <MaterialIcons name="delete" size={24} className="color-typography-700" />
                     </View>
                     <ActionsheetItemText>删除</ActionsheetItemText>
                 </ActionsheetItem>
@@ -143,7 +140,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                             justifyContent: "center",
                         }}
                     >
-                        <Ionicons name="save" size={20} color={textBasicColor} />
+                        <Ionicons name="save" size={20} className="color-typography-700" />
                     </View>
                     <ActionsheetItemText>导出</ActionsheetItemText>
                 </ActionsheetItem>
@@ -156,7 +153,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                             justifyContent: "center",
                         }}
                     >
-                        <MaterialIcons name="cancel" size={22} color={textBasicColor} />
+                        <MaterialIcons name="cancel" size={22} className="color-typography-700" />
                     </View>
                     <ActionsheetItemText>取消</ActionsheetItemText>
                 </ActionsheetItem>

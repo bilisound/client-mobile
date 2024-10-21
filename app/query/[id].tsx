@@ -7,7 +7,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActiveTrack } from "react-native-track-player";
-import { useStyles } from "react-native-unistyles";
 import { v4 } from "uuid";
 
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "~/api/bilisound";
@@ -51,8 +50,6 @@ interface LongPressActionsProps {
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
     const edgeInsets = useSafeAreaInsets();
-    const { theme } = useStyles();
-    const textBasicColor = theme.colorTokens.foreground;
 
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
@@ -78,7 +75,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                             justifyContent: "center",
                         }}
                     >
-                        <Entypo name="add-to-list" size={20} color={textBasicColor} />
+                        <Entypo name="add-to-list" size={20} className="color-typography-700" />
                     </View>
                     <ActionsheetItemText>添加到歌单</ActionsheetItemText>
                 </ActionsheetItem>
@@ -91,7 +88,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                             justifyContent: "center",
                         }}
                     >
-                        <MaterialIcons name="cancel" size={22} color={textBasicColor} />
+                        <MaterialIcons name="cancel" size={22} className="color-typography-700" />
                     </View>
                     <ActionsheetItemText>取消</ActionsheetItemText>
                 </ActionsheetItem>
@@ -103,8 +100,6 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 export default function Page() {
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
     const edgeInsets = useSafeAreaInsets();
-    const { theme } = useStyles();
-    const textBasicColor = theme.colorTokens.foreground;
 
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
@@ -228,7 +223,7 @@ export default function Page() {
             ) : null}
             {error ? (
                 <View className="flex-1 items-center justify-center gap-3 opacity-50">
-                    <MaterialIcons name="error-outline" size={72} color={textBasicColor} />
+                    <MaterialIcons name="error-outline" size={72} className="color-typography-700" />
                     <Text className="text-[20px] font-semibold text-typography-700">查询失败了</Text>
                     <Text className="text-sm text-typography-700">{`${error?.message || error}`}</Text>
                 </View>

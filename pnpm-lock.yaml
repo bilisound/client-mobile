@@ -314,9 +314,6 @@ importers:
       react-native-track-player:
         specifier: ^4.1.1
         version: 4.1.1(react-native@0.74.5(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)(shaka-player@4.11.7)
-      react-native-unistyles:
-        specifier: ^2.10.0
-        version: 2.10.0(@react-native/normalize-colors@0.74.87)(react-native-web@0.19.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-native@0.74.5(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       react-native-url-polyfill:
         specifier: ^2.0.0
         version: 2.0.0(react-native@0.74.5(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@types/react@18.2.79)(react@18.2.0))
@@ -6387,24 +6384,6 @@ packages:
       react-native-windows:
         optional: true
       shaka-player:
-        optional: true
-
-  react-native-unistyles@2.10.0:
-    resolution: {integrity: sha512-vghSdN9IkHxJLdFLHCETBGNXe3WU9qEdz0l8MxVjqVma/B55N5okp//JCKNSrDxnahF7p3OFWxlbd2Hzehchfg==}
-    engines: {node: '>= 20.0.0'}
-    peerDependencies:
-      '@react-native/normalize-colors': '*'
-      react: '*'
-      react-native: '*'
-      react-native-macos: '*'
-      react-native-web: '*'
-      react-native-windows: '*'
-    peerDependenciesMeta:
-      react-native-macos:
-        optional: true
-      react-native-web:
-        optional: true
-      react-native-windows:
         optional: true
 
   react-native-url-polyfill@2.0.0:
@@ -15204,14 +15183,6 @@ snapshots:
       react-native: 0.74.5(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@types/react@18.2.79)(react@18.2.0)
     optionalDependencies:
       shaka-player: 4.11.7
-
-  react-native-unistyles@2.10.0(@react-native/normalize-colors@0.74.87)(react-native-web@0.19.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-native@0.74.5(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0):
-    dependencies:
-      '@react-native/normalize-colors': 0.74.87
-      react: 18.2.0
-      react-native: 0.74.5(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@types/react@18.2.79)(react@18.2.0)
-    optionalDependencies:
-      react-native-web: 0.19.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
   react-native-url-polyfill@2.0.0(react-native@0.74.5(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@types/react@18.2.79)(react@18.2.0)):
     dependencies:

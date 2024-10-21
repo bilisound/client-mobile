@@ -85,7 +85,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
                     buildToolsVersion: "34.0.0",
                     usesCleartextTraffic: true,
                     enableProguardInReleaseBuilds: true,
-                    extraProguardRules: "-keep class com.unistyles.** { *; }",
                 },
                 ios: {
                     deploymentTarget: "15.0",

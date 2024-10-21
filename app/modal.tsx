@@ -19,7 +19,6 @@ import Animated, {
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState, useProgress } from "react-native-track-player";
-import { useStyles } from "react-native-unistyles";
 
 import CommonLayout from "~/components/CommonLayout";
 import SongItem from "~/components/SongItem";
@@ -36,6 +35,7 @@ import {
     ActionsheetItemText,
 } from "~/components/ui/actionsheet";
 import { Box } from "~/components/ui/box";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Pressable } from "~/components/ui/pressable";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
@@ -64,15 +64,14 @@ const AudioPlayerInsetContext = createContext<EdgeInsets & { width: number; heig
 });
 
 function AudioProgressBar() {
-    const colorScheme = useColorScheme();
-    const { theme } = useStyles();
+    const { colorValue } = useRawThemeValues();
 
     const [value, setValue] = useState(0);
     const [holding, setHolding] = useState(false);
 
     // 进度提示
     const [glowTotalWidth, setGlowTotalWidth] = useState(0);
-    const glowWidth = glowTotalWidth * 1.2;
+    const glowWidth = glowTotalWidth * 1.5;
     const glowPosition = useSharedValue<number>(0);
 
     useEffect(() => {
@@ -105,14 +104,14 @@ function AudioProgressBar() {
                 onLayout={e => setGlowTotalWidth(e.nativeEvent.layout.width - 20)}
                 className="h-4 justify-center flex-1 relative px-[10px]"
             >
-                <View className="h-[3px] rounded-full overflow-hidden bg-neutral-200 dark:bg-primary-100">
+                <View className="h-[3px] rounded-full overflow-hidden bg-primary-100 dark:bg-primary-100">
                     <Animated.View style={[{ width: glowWidth, height: 3 }, animatedStyle]}>
                         <LinearGradient
-                            colors={
-                                colorScheme === "dark"
-                                    ? [theme.colors.primary[900], theme.colors.primary[700], theme.colors.primary[900]]
-                                    : [theme.colors.primary[200], theme.colors.primary[400], theme.colors.primary[200]]
-                            }
+                            colors={[
+                                colorValue("--color-primary-100"),
+                                colorValue("--color-primary-400"),
+                                colorValue("--color-primary-100"),
+                            ]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
                             className="w-full h-full"
@@ -396,8 +395,8 @@ function AudioPlayerModal() {
         initialTitle?: string;
         initialArtist?: string;
     }>();
-    const { theme } = useStyles();
     const colorScheme = useColorScheme();
+    const { colorValue } = useRawThemeValues();
     const activeTrack = useActiveTrack();
     const [showList, setShowList] = useState(false);
     const { useLegacyID } = useSettingsStore(state => ({
@@ -606,12 +605,9 @@ function AudioPlayerModal() {
 
                                 {/* 播放/暂停 */}
                                 <PotatoPressable
-                                    className="w-14 h-14 @sm:w-[68px] @sm:h-[68px] items-center justify-center"
+                                    className="w-14 h-14 @sm:w-[68px] @sm:h-[68px] items-center justify-center bg-primary-500"
                                     outerClassName="overflow-hidden rounded-full"
-                                    style={{
-                                        backgroundColor: theme.colorTokens.buttonBackground("primary", "default"),
-                                    }}
-                                    pressedBackgroundColor={theme.colorTokens.buttonBackground("primary", "active")}
+                                    pressedBackgroundColor={colorValue("--color-primary-700")}
                                     onPress={async () => {
                                         await handleTogglePlay();
                                     }}

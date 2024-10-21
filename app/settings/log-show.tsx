@@ -2,12 +2,12 @@ import { Octicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useRef } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useStyles } from "react-native-unistyles";
 import WebView from "react-native-webview";
 
 import CommonLayout from "~/components/CommonLayout";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { getLogContentForDisplay, shareLogContent } from "~/utils/logger";
 
 const webTemplate = (content: string) => `
@@ -44,8 +44,8 @@ const webTemplate = (content: string) => `
 const IconShare = createIcon(Octicons, "share");
 
 const App: React.FC = () => {
-    const { theme } = useStyles();
-    const textBasicColor = theme.colorTokens.foreground;
+    const { colorValue } = useRawThemeValues();
+    const textBasicColor = colorValue("--color-typography-700");
     const safeAreaInsets = useSafeAreaInsets();
     // const [content, setContent] = useState("");
 

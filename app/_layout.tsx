@@ -1,6 +1,6 @@
-import "react-native-get-random-values";
-import "react-native-url-polyfill/auto";
-import "core-js/actual/array/to-spliced";
+// import "react-native-get-random-values";
+// import "react-native-url-polyfill/auto";
+// import "core-js/actual/array/to-spliced";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { PortalProvider } from "@gorhom/portal";
 import { ThemeProvider } from "@react-navigation/native";
@@ -14,18 +14,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { ColorSchemeName, Linking, LogBox, Platform, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import { UnistylesRuntime, useInitialTheme, useStyles } from "react-native-unistyles";
 
 import AudioManager from "~/components/AudioManager";
 import CheckUpdateDialog from "~/components/CheckUpdateDialog";
 import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { toastConfig } from "~/config/toast";
 import { RELEASE_CHANNEL, VERSION } from "~/constants/releasing";
-import useSettingsStore from "~/store/settings";
 import { checkLatestVersion } from "~/utils/check-release";
 import init from "~/utils/init";
 import "~/global.css";
-import "~/unistyles";
 import "~/utils/nativewind";
 import log from "~/utils/logger";
 
@@ -74,17 +72,7 @@ function CheckUpdate() {
 }
 
 const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
-    const { theme: currentTheme } = useSettingsStore(state => ({
-        theme: state.theme,
-    }));
-    const themeName = currentTheme + "_" + (colorScheme === "dark" ? "dark" : "light");
-
-    useInitialTheme(themeName);
-    useEffect(() => {
-        UnistylesRuntime.setTheme(themeName);
-    }, [themeName]);
-
-    const { theme } = useStyles();
+    const { colorValue } = useRawThemeValues();
     const edgeInsets = useSafeAreaInsets();
 
     const modalSettings: NativeStackNavigationOptions =
@@ -105,7 +93,7 @@ const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
         dark,
         colors: dark
             ? {
-                  primary: theme.colors.primary[500],
+                  primary: colorValue("--color-primary-500"),
                   background: "#171717",
                   card: "#171717",
                   text: "#ffffff",
@@ -113,7 +101,7 @@ const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
                   notification: "red",
               }
             : {
-                  primary: theme.colors.primary[500],
+                  primary: colorValue("--color-primary-500"),
                   background: "#ffffff",
                   card: "#ffffff",
                   text: "#000000",
@@ -153,18 +141,12 @@ const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
     );
 
     return (
-        <GluestackUIProvider mode={colorScheme || "light"}>
-            <QueryClientProvider client={queryClient}>
-                <ThemeProvider value={reactNavigationTheme}>
-                    <PortalProvider>
-                        {routes}
-                        <AudioManager />
-                        <Toast config={toastConfig} topOffset={edgeInsets.top} />
-                        {RELEASE_CHANNEL === "android_github" && <CheckUpdate />}
-                    </PortalProvider>
-                </ThemeProvider>
-            </QueryClientProvider>
-        </GluestackUIProvider>
+        <ThemeProvider value={reactNavigationTheme}>
+            {routes}
+            <AudioManager />
+            <Toast config={toastConfig} topOffset={edgeInsets.top} />
+            {RELEASE_CHANNEL === "android_github" && <CheckUpdate />}
+        </ThemeProvider>
     );
 };
 
@@ -213,5 +195,13 @@ export default function RootLayout() {
         return null;
     }
 
-    return <RootLayoutNav colorScheme={colorScheme} />;
+    return (
+        <GluestackUIProvider mode={colorScheme || "light"}>
+            <QueryClientProvider client={queryClient}>
+                <PortalProvider>
+                    <RootLayoutNav colorScheme={colorScheme} />
+                </PortalProvider>
+            </QueryClientProvider>
+        </GluestackUIProvider>
+    );
 }

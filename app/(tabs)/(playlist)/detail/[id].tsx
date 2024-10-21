@@ -10,7 +10,6 @@ import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-na
 import { Circle as OrigCircle, Svg } from "react-native-svg";
 import Toast from "react-native-toast-message";
 import TrackPlayer, { useActiveTrack } from "react-native-track-player";
-import { useStyles } from "react-native-unistyles";
 import { twMerge } from "tailwind-merge";
 
 import { updatePlaylist } from "~/business/playlist/update";
@@ -275,11 +274,8 @@ function Header({
 }
 
 export default function Page() {
-    const { theme } = useStyles();
     const bottom = useTabPaddingBottom();
-    const bgColor = theme.colorTokens.background;
     const { id } = useLocalSearchParams<{ id: string }>();
-    const textBasicColor = theme.colorTokens.foreground;
 
     const [playlistOnQueue = {}, setPlaylistOnQueue] = usePlaylistOnQueue();
 
@@ -349,7 +345,7 @@ export default function Page() {
         setPlaylistOnQueue({ value: meta });
     }
 
-    const handleDelete = useCallback(() => {
+    const handleDelete = () => {
         dialogCallback.current = async () => {
             // 注意，这里的 selected 是数组的 index，不是项目在数据库中的 id！！
             for (const e of selected) {
@@ -373,7 +369,7 @@ export default function Page() {
             description: `确定要从本歌单中删除 ${selected.size} 首曲目吗？`,
         }));
         setModalVisible(true);
-    }, [clear, id, playlistDetail, playlistOnQueue.value?.id, queryClient, selected, setPlaylistOnQueue]);
+    };
 
     // 返回时先关闭编辑模式
     const navigation = useNavigation();
@@ -513,9 +509,6 @@ export default function Page() {
                         }}
                         data={playlistDetail}
                         estimatedItemSize={68}
-                        contentContainerStyle={{
-                            backgroundColor: bgColor,
-                        }}
                         extraData={[editing, selected.size]}
                         ListHeaderComponent={
                             <>
@@ -579,7 +572,7 @@ export default function Page() {
                                 justifyContent: "center",
                             }}
                         >
-                            <MaterialIcons name="edit" size={24} color={textBasicColor} />
+                            <MaterialIcons name="edit" size={24} className="bg-typography-700" />
                         </View>
                         <ActionsheetItemText>修改信息</ActionsheetItemText>
                     </ActionsheetItem>
@@ -597,7 +590,7 @@ export default function Page() {
                                 justifyContent: "center",
                             }}
                         >
-                            <MaterialIcons name="delete" size={24} color={textBasicColor} />
+                            <MaterialIcons name="delete" size={24} className="bg-typography-700" />
                         </View>
                         <ActionsheetItemText>删除</ActionsheetItemText>
                     </ActionsheetItem>
@@ -615,7 +608,7 @@ export default function Page() {
                                 justifyContent: "center",
                             }}
                         >
-                            <Ionicons name="save" size={20} color={textBasicColor} />
+                            <Ionicons name="save" size={20} className="bg-typography-700" />
                         </View>
                         <ActionsheetItemText>导出</ActionsheetItemText>
                     </ActionsheetItem>
@@ -632,7 +625,7 @@ export default function Page() {
                                 justifyContent: "center",
                             }}
                         >
-                            <MaterialIcons name="cancel" size={22} color={textBasicColor} />
+                            <MaterialIcons name="cancel" size={22} className="bg-typography-700" />
                         </View>
                         <ActionsheetItemText>取消</ActionsheetItemText>
                     </ActionsheetItem>
