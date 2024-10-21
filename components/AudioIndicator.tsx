@@ -61,9 +61,9 @@ export default function AudioIndicator({ className, imageClassName, playButtonOu
                 }}
             >
                 {playbackState.state === State.Playing ? (
-                    <IconPause size={16} className="color-primary-500" />
+                    <IconPause size={16} className="color-primary-500 dark:color-primary-400" />
                 ) : (
-                    <IconPlay size={16} className="color-primary-500" />
+                    <IconPlay size={16} className="color-primary-500 dark:color-primary-400" />
                 )}
             </PotatoPressable>
         </View>

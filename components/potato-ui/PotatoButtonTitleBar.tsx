@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, forwardRef } from "react";
 import { View } from "react-native";
+import { undefined } from "zod";
 
 import PotatoPressable, { PressableProps } from "~/components/potato-ui/PotatoPressable";
 import { IconComponent } from "~/components/potato-ui/utils/icon";
@@ -15,10 +16,17 @@ export interface ButtonTitleBarProps extends PressableProps {
 
 const PotatoButtonTitleBar = forwardRef<View, PropsWithChildren<ButtonTitleBarProps>>(
     ({ label, theme: colorTheme = "solid", Icon, iconColor, iconSize = 24, children, ...rest }, ref) => {
-        const { colorValue } = useRawThemeValues();
+        const { colorValueMode } = useRawThemeValues();
         let textColor = "#ffffff";
         if (colorTheme === "transparent") {
-            textColor = colorValue("--color-primary-500");
+            textColor = colorValueMode({
+                dark: {
+                    color: "--color-primary-400",
+                },
+                light: {
+                    color: "--color-primary-500",
+                },
+            });
         }
 
         return (
@@ -26,7 +34,7 @@ const PotatoButtonTitleBar = forwardRef<View, PropsWithChildren<ButtonTitleBarPr
                 ref={ref}
                 outerClassName="rounded-[6px] overflow-hidden"
                 className="items-center justify-center w-[44px] h-[44px]"
-                pressedBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.15)" : undefined}
+                pressedBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.05)"}
                 aria-label={label}
                 {...rest}
             >

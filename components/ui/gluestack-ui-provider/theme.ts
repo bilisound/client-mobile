@@ -9,6 +9,11 @@ interface ThemeValue {
 
 export const ThemeValueProvider = createContext<ThemeValue | null>(null);
 
+export interface ColorValueModeOptions {
+    light: { color: keyof ConfigDetail; opacity?: number };
+    dark: { color: keyof ConfigDetail; opacity?: number };
+}
+
 export function useRawThemeValues() {
     const values = useContext(ThemeValueProvider);
     if (!values) {
@@ -19,5 +24,12 @@ export function useRawThemeValues() {
         return `rgba(${values.theme[color]} / ${opacity})`;
     };
 
-    return { values: values.theme, mode: values.mode, colorValue };
+    const colorValueMode = (options: ColorValueModeOptions) => {
+        if (values.mode === "dark") {
+            return `rgba(${values.theme[options.dark.color]} / ${options.dark.opacity ?? 1})`;
+        }
+        return `rgba(${values.theme[options.dark.color]} / ${options.dark.opacity ?? 1})`;
+    };
+
+    return { values: values.theme, mode: values.mode, colorValue, colorValueMode };
 }

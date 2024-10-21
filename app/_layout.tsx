@@ -101,7 +101,7 @@ const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
                   notification: "red",
               }
             : {
-                  primary: colorValue("--color-primary-500"),
+                  primary: colorValue("--color-primary-400"),
                   background: "#ffffff",
                   card: "#ffffff",
                   text: "#000000",

@@ -192,11 +192,7 @@ function AudioPlayButtonIcon() {
     return playbackState.state === State.Playing ? (
         <FontAwesome5 name="pause" size={width >= rem2px(28) ? 28 : 22} className="color-typography-0" />
     ) : (
-        <FontAwesome5
-            name="play"
-            size={width >= rem2px(28) ? 28 : 22}
-            className="color-typography-0 translate-x-[3px]"
-        />
+        <FontAwesome5 name="play" size={width >= rem2px(28) ? 28 : 22} className="color-typography-0" />
     );
 }
 
