@@ -11,19 +11,13 @@ import {
     ViewStyle,
     Text,
 } from "react-native";
-import { useStyles } from "react-native-unistyles";
+import { twMerge } from "tailwind-merge";
 
 import { IconComponent } from "~/components/potato-ui/utils/icon";
 import { ColorTypes } from "~/components/ui/gluestack-ui-provider/config";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 const isAndroid = Platform.OS === "android";
-// const isAndroid = false;
-
-const sizes = {
-    sm: { h: 36, px: 18 },
-    md: { h: 40, px: 20 },
-};
 
 function handleTextEffect(input: string) {
     const texts = Array.from(input);
@@ -45,12 +39,69 @@ const buttonOuterStyles = tva({
             true: "opacity-50",
             false: "",
         },
+        rounded: {
+            true: "rounded-full",
+            false: "rounded-lg",
+        },
     },
+});
+
+const buttonStyles = tva({
+    base: "flex-row justify-center items-center gap-2",
+    variants: {
+        variant: {
+            solid: "",
+            outline: "",
+            ghost: "",
+        },
+        iconOnly: {
+            true: "",
+            false: "",
+        },
+        size: {
+            sm: "h-[36px] px-[18px]",
+            md: "h-[40px] px-[20px]",
+        },
+    },
+    compoundVariants: [
+        {
+            size: "sm",
+            iconOnly: true,
+            className: "h-[36px] w-[36px] px-[unset]",
+        },
+        {
+            size: "md",
+            iconOnly: true,
+            className: "h-[40px] w-[40px] px-[unset]",
+        },
+        {
+            variant: "outline",
+            size: "sm",
+            className: "h-[35px] px-[17px]",
+        },
+        {
+            variant: "outline",
+            size: "md",
+            className: "h-[39px] px-[19px]",
+        },
+        {
+            variant: "outline",
+            size: "sm",
+            iconOnly: true,
+            className: "h-[35px] w-[35px] px-[unset]",
+        },
+        {
+            variant: "outline",
+            size: "md",
+            iconOnly: true,
+            className: "h-[39px] w-[39px] px-[unset]",
+        },
+    ],
 });
 
 export interface ButtonProps extends NativePressableProps {
     color?: ColorTypes;
-    size?: keyof typeof sizes;
+    size?: "sm" | "md";
     disabled?: boolean;
     rounded?: boolean;
     iconOnly?: boolean;
@@ -76,10 +127,8 @@ function PotatoButton(props: ButtonProps) {
         size = "md",
     } = props;
 
-    // 0 - default, 1 - hover (unused now), 2 - active
     const [isHover, setIsHover] = useState(false);
     const [isActive, setIsActive] = useState(false);
-    const { theme } = useStyles();
     const { colorValue } = useRawThemeValues();
 
     let normalBackground = colorValue(`--color-${color}-500`);
@@ -115,34 +164,17 @@ function PotatoButton(props: ButtonProps) {
         backgroundColor = activeBackground;
     }
 
-    // 高度或左右内间距解析
-    let width: number | undefined = undefined;
-    const height = variant === "outline" ? sizes[size].h - 2 : sizes[size].h;
-    let paddingHorizontal: number | undefined = variant === "outline" ? sizes[size].px - 2 : sizes[size].px;
-
-    if (iconOnly) {
-        // noinspection JSSuspiciousNameCombination
-        width = height;
-        paddingHorizontal = undefined;
-    }
-
     return (
         <View
             className={buttonOuterStyles({
                 variant,
                 disabled,
+                rounded,
             })}
             style={[
                 {
                     backgroundColor,
-                },
-                variant === "outline"
-                    ? {
-                          borderColor,
-                      }
-                    : {},
-                {
-                    borderRadius: rounded ? theme.sizes.radiusButtonFull : theme.sizes.radiusButton,
+                    borderColor: variant === "outline" ? borderColor : undefined,
                 },
                 props.outerStyle,
             ]}
@@ -176,16 +208,15 @@ function PotatoButton(props: ButtonProps) {
                               color: activeBackground,
                           }
                 }
-                className="flex-row justify-center items-center gap-2"
-                style={[
-                    {
-                        width,
-                        height,
-                        paddingHorizontal,
-                    },
-                    props.style,
-                ]}
                 {...omit(props, ["color", "rounded", "variant", "Icon", "iconSize", "children", "style", "outerStyle"])}
+                className={twMerge(
+                    buttonStyles({
+                        size,
+                        variant,
+                        iconOnly,
+                    }),
+                    props.className,
+                )}
             >
                 {typeof Icon === "function" ? (
                     <Icon

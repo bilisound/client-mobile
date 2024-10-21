@@ -51,10 +51,12 @@ export default function Page() {
                             <ButtonText className="text-sm">Toast 测试</ButtonText>
                         </Button>
                     </View>
-                    <PotatoButton onPress={() => setModalVisible(!modalVisible)}>Modal 测试</PotatoButton>
-                    <PotatoButton variant="outline">Modal 测试</PotatoButton>
-                    <PotatoButton variant="ghost">Modal 测试</PotatoButton>
-
+                    <View className="gap-2 flex-row">
+                        <PotatoButton onPress={() => setModalVisible(!modalVisible)}>测试</PotatoButton>
+                        <PotatoButton rounded>测试</PotatoButton>
+                        <PotatoButton variant="outline">测试</PotatoButton>
+                        <PotatoButton variant="ghost">测试</PotatoButton>
+                    </View>
                     <PotatoButton
                         color="warning"
                         onPress={() => {
@@ -73,20 +75,16 @@ export default function Page() {
                     >
                         删除全部歌单并解绑当前播放队列
                     </PotatoButton>
-
                     <Text className="sm:bg-green-500">test sm</Text>
                     <Text className="md:bg-blue-500">test md</Text>
                     <Text className="lg:bg-red-500">test lg</Text>
                     <Text className="xl:bg-orange-500">test xl</Text>
                     <Text className="2xl:bg-amber-500">test 2xl</Text>
-
                     <Text>{`useColorScheme() returns: ${colorScheme}`}</Text>
-
                     <PotatoToast type="success" title="操作成功" description="数据已成功保存！" />
                     <PotatoToast type="info" title="系统提示" description="请注意，新版本已发布。" />
                     <PotatoToast type="warning" title="友情提醒" description="您的账户余额不足，请及时充值。" />
                     <PotatoToast type="error" title="错误提示" description="发生未知错误，请稍后重试。" />
-
                     <AlertDialog isOpen={modalVisible} onClose={handleClose} size="md">
                         <AlertDialogBackdrop />
                         <AlertDialogContent>
