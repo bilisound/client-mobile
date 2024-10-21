@@ -5,9 +5,9 @@ export type ThemeName = "classic" | "red";
 export type ColorSchemeName = "light" | "dark";
 export type ConfigName = `${ThemeName}_${ColorSchemeName}`;
 
-type ColorShades = 0 | 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
+export type ColorShades = 0 | 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
 
-type ColorTypes =
+export type ColorTypes =
     | "primary"
     | "accent"
     | "secondary"

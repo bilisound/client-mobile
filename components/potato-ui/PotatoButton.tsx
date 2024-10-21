@@ -1,5 +1,4 @@
 import omit from "lodash/omit";
-import { remapProps } from "nativewind";
 import React, { useState } from "react";
 import {
     ActivityIndicator,
@@ -14,7 +13,8 @@ import {
 import { useStyles } from "react-native-unistyles";
 
 import { IconComponent } from "~/components/potato-ui/utils/icon";
-import { ThemeColorPaletteKeys } from "~/config/palettes";
+import { ColorTypes } from "~/components/ui/gluestack-ui-provider/config";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 const isAndroid = Platform.OS === "android";
 // const isAndroid = false;
@@ -33,7 +33,7 @@ function handleTextEffect(input: string) {
 }
 
 export interface ButtonProps extends NativePressableProps {
-    color?: ThemeColorPaletteKeys;
+    color?: ColorTypes;
     size?: keyof typeof sizes;
     disabled?: boolean;
     rounded?: boolean;
@@ -44,6 +44,8 @@ export interface ButtonProps extends NativePressableProps {
     children?: string;
     style?: StyleProp<ViewStyle>;
     outerStyle?: StyleProp<ViewStyle>;
+    className?: string;
+    outerClassName?: string;
 }
 
 function PotatoButton(props: ButtonProps) {
@@ -59,45 +61,43 @@ function PotatoButton(props: ButtonProps) {
     } = props;
 
     // 0 - default, 1 - hover (unused now), 2 - active
-    // const pressState = useSharedValue<0 | 1 | 2>(0);
-    const [pressState, setPressState] = useState<0 | 1 | 2>(0);
+    const [isHover, setIsHover] = useState(false);
+    const [isActive, setIsActive] = useState(false);
     const { theme } = useStyles();
+    const { colorValue } = useRawThemeValues();
 
-    let normalBackground = theme.colorTokens.buttonBackground(color, "default");
-    let activeBackground = theme.colorTokens.buttonBackground(color, "active");
-    let disabledBackground = theme.colorTokens.buttonBackground(color, "disabled");
+    let normalBackground = colorValue(`--color-${color}-500`);
+    let hoverBackground = colorValue(`--color-${color}-600`);
+    let activeBackground = colorValue(`--color-${color}-700`);
 
-    let normalForeground = theme.colorTokens.buttonForeground(color, "default");
-    // let activeForeground = theme.colorTokens.buttonForeground(color, "active");
-    let disabledForeground = theme.colorTokens.buttonForeground(color, "disabled");
+    let normalForeground = colorValue(`--color-typography-0`);
 
-    const normalBorder = theme.colorTokens.buttonOutlineBorder(color, "default");
-    // const activeBorder = theme.colorTokens.buttonOutlineBorder(color, "active");
-    const disabledBorder = theme.colorTokens.buttonOutlineBorder(color, "disabled");
+    let borderColor = colorValue(`--color-${color}-500`);
 
     if (variant === "outline" || variant === "ghost") {
-        normalBackground = theme.colorTokens.buttonOutlineBackground(color, "default");
-        activeBackground = theme.colorTokens.buttonOutlineBackground(color, "active");
-        disabledBackground = theme.colorTokens.buttonOutlineBackground(color, "disabled");
+        normalBackground = "transparent";
+        hoverBackground = colorValue(`--color-${color}-50`);
+        activeBackground = colorValue(`--color-${color}-100`);
 
-        normalForeground = theme.colorTokens.buttonOutlineForeground(color, "default");
-        // activeForeground = theme.colorTokens.buttonOutlineForeground(color, "active");
-        disabledForeground = theme.colorTokens.buttonOutlineForeground(color, "disabled");
+        normalForeground = colorValue(`--color-${color}-500`);
+
+        if (isHover) {
+            borderColor = colorValue(`--color-${color}-600`);
+            normalForeground = colorValue(`--color-${color}-600`);
+        }
+        if (isActive && Platform.OS !== "android") {
+            borderColor = colorValue(`--color-${color}-700`);
+            normalForeground = colorValue(`--color-${color}-700`);
+        }
     }
 
-    const bg = disabled ? disabledBackground : normalBackground;
-    const animatedOuterBackgroundStyle = {
-        backgroundColor: pressState === 2 ? activeBackground : bg,
-    };
-
-    const animatedOuterBorderStyle = {
-        borderColor: disabled ? disabledBorder : normalBorder,
-        borderWidth: 1,
-    };
-
-    const animatedTextStyle = {
-        color: disabled ? disabledForeground : normalForeground,
-    };
+    let backgroundColor = normalBackground;
+    if (isHover) {
+        backgroundColor = hoverBackground;
+    }
+    if (isActive && Platform.OS !== "android") {
+        backgroundColor = activeBackground;
+    }
 
     // 高度或左右内间距解析
     let width: number | undefined = undefined;
@@ -112,33 +112,45 @@ function PotatoButton(props: ButtonProps) {
 
     return (
         <View
+            className="overflow-hidden"
             style={[
-                isAndroid
+                {
+                    backgroundColor,
+                },
+                variant === "outline"
                     ? {
-                          backgroundColor: disabled ? disabledBackground : normalBackground,
+                          borderColor,
+                          borderWidth: 1,
                       }
-                    : animatedOuterBackgroundStyle,
-                variant === "outline" ? animatedOuterBorderStyle : {},
+                    : {},
                 {
                     borderRadius: rounded ? theme.sizes.radiusButtonFull : theme.sizes.radiusButton,
-                    overflow: "hidden",
                     opacity: disabled ? 0.5 : 1,
                 },
                 props.outerStyle,
             ]}
         >
             <Pressable
+                role="button"
                 onPressIn={event => {
                     if (!isAndroid) {
-                        setPressState(2);
+                        setIsActive(true);
                     }
                     props.onPressIn?.(event);
                 }}
                 onPressOut={event => {
                     if (!isAndroid) {
-                        setPressState(0);
+                        setIsActive(false);
                     }
                     props.onPressOut?.(event);
+                }}
+                onPointerEnter={event => {
+                    setIsHover(true);
+                    props.onPointerEnter?.(event);
+                }}
+                onPointerLeave={event => {
+                    setIsHover(false);
+                    props.onPointerLeave?.(event);
                 }}
                 android_ripple={
                     disabled || !isAndroid
@@ -147,39 +159,46 @@ function PotatoButton(props: ButtonProps) {
                               color: activeBackground,
                           }
                 }
+                className="flex-row justify-center items-center gap-2"
                 style={[
                     {
                         width,
                         height,
                         paddingHorizontal,
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: 8,
-                        // backgroundColor: status.pressed && !isAndroid ? activeBackground : bg,
                     },
                     props.style,
                 ]}
                 {...omit(props, ["color", "rounded", "variant", "Icon", "iconSize", "children", "style", "outerStyle"])}
             >
-                {typeof Icon === "function" ? <Icon size={props.iconSize ?? 20} style={animatedTextStyle} /> : null}
+                {typeof Icon === "function" ? (
+                    <Icon
+                        size={props.iconSize ?? 20}
+                        style={{
+                            color: normalForeground,
+                        }}
+                    />
+                ) : null}
                 {Icon === "loading" ? (
                     <ActivityIndicator
                         style={{ width: props.iconSize ?? 22, height: props.iconSize ?? 22 }}
-                        color={disabled ? disabledForeground : normalForeground}
+                        color={normalForeground}
                     />
                 ) : null}
                 {iconOnly ? null : (
-                    <Text style={[animatedTextStyle, { fontWeight: "600" }]}>{handleTextEffect(children)}</Text>
+                    <Text
+                        className="font-semibold"
+                        style={[
+                            {
+                                color: normalForeground,
+                            },
+                        ]}
+                    >
+                        {handleTextEffect(children)}
+                    </Text>
                 )}
             </Pressable>
         </View>
     );
 }
-
-remapProps(PotatoButton, {
-    className: "style",
-    outerClassName: "outerStyle",
-});
 
 export default PotatoButton;

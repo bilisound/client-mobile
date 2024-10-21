@@ -28,7 +28,7 @@ export default function EditAction({ onAll, onReverse, onDelete, amount }: EditA
                 <PotatoButton size="sm" variant="outline" onPress={onReverse}>
                     反选
                 </PotatoButton>
-                <PotatoButton size="sm" variant="solid" color="red" onPress={onDelete} disabled={amount <= 0}>
+                <PotatoButton size="sm" variant="solid" color="error" onPress={onDelete} disabled={amount <= 0}>
                     删除
                 </PotatoButton>
             </View>

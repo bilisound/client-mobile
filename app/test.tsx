@@ -52,9 +52,11 @@ export default function Page() {
                         </Button>
                     </View>
                     <PotatoButton onPress={() => setModalVisible(!modalVisible)}>Modal 测试</PotatoButton>
+                    <PotatoButton variant="outline">Modal 测试</PotatoButton>
+                    <PotatoButton variant="ghost">Modal 测试</PotatoButton>
 
                     <PotatoButton
-                        color="amber"
+                        color="warning"
                         onPress={() => {
                             playlistStorage.set(PLAYLIST_DB_VERSION, 0);
                         }}
@@ -62,7 +64,7 @@ export default function Page() {
                         重置 PLAYLIST_DB_VERSION 以触发迁移程序
                     </PotatoButton>
                     <PotatoButton
-                        color="red"
+                        color="error"
                         onPress={async () => {
                             await deleteAllPlaylist();
                             invalidateOnQueueStatus();
