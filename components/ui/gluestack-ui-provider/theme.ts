@@ -28,7 +28,7 @@ export function useRawThemeValues() {
         if (values.mode === "dark") {
             return `rgba(${values.theme[options.dark.color]} / ${options.dark.opacity ?? 1})`;
         }
-        return `rgba(${values.theme[options.dark.color]} / ${options.dark.opacity ?? 1})`;
+        return `rgba(${values.theme[options.light.color]} / ${options.light.opacity ?? 1})`;
     };
 
     return { values: values.theme, mode: values.mode, colorValue, colorValueMode };

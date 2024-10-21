@@ -1,6 +1,5 @@
 import React, { PropsWithChildren, forwardRef } from "react";
 import { View } from "react-native";
-import { undefined } from "zod";
 
 import PotatoPressable, { PressableProps } from "~/components/potato-ui/PotatoPressable";
 import { IconComponent } from "~/components/potato-ui/utils/icon";
@@ -34,7 +33,7 @@ const PotatoButtonTitleBar = forwardRef<View, PropsWithChildren<ButtonTitleBarPr
                 ref={ref}
                 outerClassName="rounded-[6px] overflow-hidden"
                 className="items-center justify-center w-[44px] h-[44px]"
-                pressedBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.05)"}
+                pressedBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.15)" : undefined}
                 aria-label={label}
                 {...rest}
             >
