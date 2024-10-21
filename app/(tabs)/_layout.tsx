@@ -4,12 +4,12 @@ import BottomTabBar from "@react-navigation/bottom-tabs/src/views/BottomTabBar";
 import { CommonActions, NavigationContext, NavigationRouteContext } from "@react-navigation/native";
 import { router, Tabs } from "expo-router";
 import React from "react";
-import { View } from "react-native";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { StyleSheet, View } from "react-native";
 
 import AudioIndicator from "~/components/AudioIndicator";
 import YuruChara from "~/components/YuruChara";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Pressable } from "~/components/ui/pressable";
 import { Text } from "~/components/ui/text";
 import { useIsNarrowWidth } from "~/hooks/useIsNarrowWidth";
@@ -150,8 +150,8 @@ function FloatTabBar(props: BottomTabBarProps) {
 }
 
 export default function TabLayout() {
-    const { theme, styles } = useStyles(styleSheet);
-    const tabBarActiveTintColor = theme.colors.accent[500];
+    const { colorValue } = useRawThemeValues();
+    const tabBarActiveTintColor = colorValue("--color-accent-500");
     const { showYuruChara } = useSettingsStore(state => ({
         showYuruChara: state.showYuruChara,
     }));
@@ -160,13 +160,13 @@ export default function TabLayout() {
     }));
 
     return (
-        <View style={styles.container}>
+        <View style={styleSheet.container}>
             <Tabs
                 tabBar={enableNavbar2 ? tabBarV2 : tabBarV1}
                 screenOptions={{
-                    headerStyle: styles.headerStyle,
-                    tabBarStyle: styles.tabBarStyle,
-                    tabBarLabelStyle: styles.tabBarLabelStyle,
+                    headerStyle: styleSheet.headerStyle,
+                    tabBarStyle: styleSheet.tabBarStyle,
+                    tabBarLabelStyle: styleSheet.tabBarLabelStyle,
                     tabBarActiveTintColor,
                 }}
             >
@@ -200,7 +200,7 @@ export default function TabLayout() {
     );
 }
 
-const styleSheet = createStyleSheet(theme => ({
+const styleSheet = StyleSheet.create({
     container: {
         height: "100%",
     },
@@ -208,12 +208,9 @@ const styleSheet = createStyleSheet(theme => ({
         backgroundColor: "transparent",
         borderStyle: "solid",
         borderBottomWidth: 0,
-        boxShadow: "unset",
     },
     tabBarStyle: {
-        backgroundColor: theme.colorTokens.background,
         borderTopWidth: 0,
-        boxShadow: "unset",
     },
     tabBarLabelStyle: {},
-}));
+});

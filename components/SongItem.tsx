@@ -3,11 +3,11 @@ import React from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useMMKVBoolean } from "react-native-mmkv";
 import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
-import { useStyles } from "react-native-unistyles";
 
 import ProgressBar from "./ProgressBar";
 
 import PotatoPressable from "~/components/potato-ui/PotatoPressable";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Text } from "~/components/ui/text";
 import { cacheStatusStorage } from "~/storage/cache-status";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
@@ -19,8 +19,8 @@ function PlayingIcon() {
     const playingState = usePlaybackState().state;
     const activeTrack = useActiveTrack();
     const isPlaying = playingState === State.Playing;
-    const { theme } = useStyles();
-    const accentColor = theme.colors.accent[500];
+    const { colorValue } = useRawThemeValues();
+    const accentColor = colorValue("--color-accent-500");
 
     if (!activeTrack?.bilisoundIsLoaded) {
         return <ActivityIndicator color={accentColor} />;

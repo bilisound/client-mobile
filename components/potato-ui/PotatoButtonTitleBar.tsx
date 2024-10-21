@@ -1,9 +1,9 @@
 import React, { PropsWithChildren, forwardRef } from "react";
 import { View } from "react-native";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import PotatoPressable, { PressableProps } from "~/components/potato-ui/PotatoPressable";
 import { IconComponent } from "~/components/potato-ui/utils/icon";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 export interface ButtonTitleBarProps extends PressableProps {
     label: string;
@@ -15,17 +15,17 @@ export interface ButtonTitleBarProps extends PressableProps {
 
 const PotatoButtonTitleBar = forwardRef<View, PropsWithChildren<ButtonTitleBarProps>>(
     ({ label, theme: colorTheme = "solid", Icon, iconColor, iconSize = 24, children, ...rest }, ref) => {
-        const { styles, theme } = useStyles(styleSheet);
-        let textColor = theme.colorTokens.topBarSolidForeground;
+        const { colorValue } = useRawThemeValues();
+        let textColor = "#ffffff";
         if (colorTheme === "transparent") {
-            textColor = theme.colorTokens.topBarTransparentForeground;
+            textColor = colorValue("--color-primary-500");
         }
 
         return (
             <PotatoPressable
                 ref={ref}
-                outerStyle={styles.buttonOuter}
-                style={styles.button}
+                outerClassName="rounded-[6px] overflow-hidden"
+                className="items-center justify-center w-[44px] h-[44px]"
                 pressedBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.15)" : undefined}
                 aria-label={label}
                 {...rest}
@@ -39,16 +39,3 @@ const PotatoButtonTitleBar = forwardRef<View, PropsWithChildren<ButtonTitleBarPr
 PotatoButtonTitleBar.displayName = "PotatoButtonTitleBar";
 
 export default PotatoButtonTitleBar;
-
-const styleSheet = createStyleSheet(theme => ({
-    button: {
-        alignItems: "center",
-        justifyContent: "center",
-        width: 44,
-        height: 44,
-    },
-    buttonOuter: {
-        borderRadius: 6,
-        overflow: "hidden",
-    },
-}));

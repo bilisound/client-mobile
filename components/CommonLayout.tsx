@@ -3,11 +3,11 @@ import { router } from "expo-router";
 import React, { PropsWithChildren } from "react";
 import { View, StatusBar, StyleProp, ViewStyle } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
-import { useStyles } from "react-native-unistyles";
 import { twMerge } from "tailwind-merge";
 
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Text } from "~/components/ui/text";
 
 export interface CommonFrameNewProps {
@@ -50,7 +50,7 @@ export default function CommonLayout({
 
     overrideEdgeInsets = {},
 }: PropsWithChildren<CommonFrameNewProps>) {
-    const { theme } = useStyles();
+    const { colorValue } = useRawThemeValues();
     const edgeInsetsRaw = useSafeAreaInsets();
     const edgeInsets: EdgeInsets = {
         top: overrideEdgeInsets?.top ?? edgeInsetsRaw.top,
@@ -59,9 +59,9 @@ export default function CommonLayout({
         right: overrideEdgeInsets?.right ?? edgeInsetsRaw.right,
     };
 
-    let textColor = theme.colorTokens.topBarSolidForeground;
+    let textColor = "#ffffff";
     if (titleBarTheme === "transparent") {
-        textColor = theme.colorTokens.topBarTransparentForeground;
+        textColor = colorValue("--color-typography-700");
     }
 
     return (
