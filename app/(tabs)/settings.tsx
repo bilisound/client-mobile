@@ -38,6 +38,7 @@ const Settings: React.FC = () => {
         <>
             {process.env.NODE_ENV !== "production" ? (
                 <SettingMenuItem
+                    key="settings_20010"
                     icon={DeveloperIcon}
                     title="组件测试页面"
                     onPress={() => {
@@ -46,6 +47,7 @@ const Settings: React.FC = () => {
                 />
             ) : null}
             <SettingMenuItem
+                key="settings_20020"
                 icon={LabIcon}
                 title="实验性功能"
                 onPress={() => {
@@ -55,6 +57,7 @@ const Settings: React.FC = () => {
             {Platform.OS === "web" ? null : (
                 <>
                     <SettingMenuItem
+                        key="settings_20030"
                         icon={CDNIcon}
                         title="只从云服务商 CDN 节点获取音频"
                         subTitle="开启后可能会显著改善连接速度"
@@ -69,6 +72,7 @@ const Settings: React.FC = () => {
                         onPress={() => toggle("filterResourceURL")}
                     />
                     <SettingMenuItem
+                        key="settings_20040"
                         icon={BugIcon}
                         title="导出日志"
                         subTitle="对开发者真的太有用了"
@@ -85,6 +89,7 @@ const Settings: React.FC = () => {
         <CommonLayout title="设置" overrideEdgeInsets={{ bottom: 0 }} titleBarTheme="transparent">
             <ScrollView>
                 <SettingMenuItem
+                    key="settings_10010"
                     icon={LinkIcon}
                     title="使用 av 号而非 bv 号"
                     subTitle="开启该选项后，在保存的音频文件中，文件名前缀将以 av 号开头"
@@ -100,6 +105,7 @@ const Settings: React.FC = () => {
                 />
                 {Platform.OS === "web" ? null : (
                     <SettingMenuItem
+                        key="settings_10020"
                         icon={DownloadNextIcon}
                         title="自动下载队列中即将播放的曲目"
                         subTitle="可以显著改善持续听歌的体验"
@@ -115,6 +121,7 @@ const Settings: React.FC = () => {
                     />
                 )}
                 <SettingMenuItem
+                    key="settings_10030"
                     icon={PaintBrushIcon}
                     iconSize={20}
                     title="外观设置"
@@ -125,6 +132,7 @@ const Settings: React.FC = () => {
                 />
                 {Platform.OS === "web" ? null : (
                     <SettingMenuItem
+                        key="settings_10040"
                         icon={DatabaseIcon}
                         title="数据管理"
                         subTitle="管理离线缓存和数据备份"
@@ -134,6 +142,7 @@ const Settings: React.FC = () => {
                     />
                 )}
                 <SettingMenuItem
+                    key="settings_10050"
                     icon={InfoIcon}
                     title="关于 Bilisound"
                     subTitle={`版本 ${VERSION}`}
@@ -142,6 +151,7 @@ const Settings: React.FC = () => {
                     }}
                 />
                 <SettingMenuItem
+                    key="settings_10060"
                     icon={DeveloperIcon}
                     title="开发者模式"
                     rightAccessories={
