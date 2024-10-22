@@ -1,4 +1,5 @@
 import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -32,6 +33,26 @@ function PlayingIcon() {
         </View>
     );
 }
+
+const trackNumberStyle = tva({
+    base: "items-center justify-center px-1.5 h-[22px] rounded-md",
+    variants: {
+        isActiveTrack: {
+            true: "bg-accent-500 shadow-md ios:shadow-hard-2",
+            false: "bg-primary-500 dark:bg-primary-400",
+        },
+    },
+});
+
+const trackTitleStyle = tva({
+    base: "leading-[22px] text-sm",
+    variants: {
+        isActiveTrack: {
+            true: "font-semibold text-accent-500",
+            false: "font-normal",
+        },
+    },
+});
 
 export interface SongItemProps {
     onRequestPlay?: () => void;
@@ -73,13 +94,7 @@ export default function SongItem({
             className="px-4 h-16 flex-row gap-3 items-center"
         >
             <View className="flex-row flex-1 gap-3 justify-start">
-                <View
-                    className={`items-center justify-center px-1.5 h-[22px] rounded-md ${
-                        isActiveTrack
-                            ? "bg-accent-500 shadow-md ios:shadow-hard-2"
-                            : "bg-primary-500 dark:bg-primary-400"
-                    }`}
-                >
+                <View className={trackNumberStyle({ isActiveTrack })}>
                     <Text
                         className="text-sm text-white tabular-nums"
                         style={{ fontFamily: isActiveTrack ? "Roboto_700Bold" : "Roboto_400Regular" }}
@@ -88,12 +103,7 @@ export default function SongItem({
                     </Text>
                 </View>
                 <View className="flex-1">
-                    <Text
-                        className={`leading-[22px] text-sm ${
-                            isActiveTrack ? "font-semibold text-accent-500" : "font-normal"
-                        }`}
-                        isTruncated
-                    >
+                    <Text className={trackTitleStyle({ isActiveTrack })} isTruncated>
                         {data.title}
                     </Text>
                     <View className="mt-1 flex-row items-center gap-1">
