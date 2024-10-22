@@ -1,6 +1,4 @@
-// import "react-native-get-random-values";
-// import "react-native-url-polyfill/auto";
-// import "core-js/actual/array/to-spliced";
+import "~/utils/polyfill";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { PortalProvider } from "@gorhom/portal";
 import { ThemeProvider } from "@react-navigation/native";
@@ -41,7 +39,7 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-LogBox.ignoreAllLogs(true);
+// LogBox.ignoreAllLogs(true);
 
 // Query Client
 const queryClient = new QueryClient();

@@ -11,6 +11,7 @@ import {
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { cssInterop, remapProps } from "nativewind";
+import { ShadowedView } from "react-native-fast-shadow";
 
 cssInterop(Ionicons, {
     className: {
@@ -82,5 +83,8 @@ cssInterop(Image, {
     },
 });
 remapProps(LinearGradient, {
+    className: "style",
+});
+cssInterop(ShadowedView, {
     className: "style",
 });

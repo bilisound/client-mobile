@@ -97,9 +97,9 @@ export default function SongItem({
                         {data.title}
                     </Text>
                     <View className="mt-1 flex-row items-center gap-1">
-                        {exists && (
+                        {exists ? (
                             <Ionicons name="checkmark-circle" size={16} className="color-typography-700 opacity-50" />
-                        )}
+                        ) : null}
                         <Text className="text-sm opacity-50" style={{ fontFamily: "Roboto_400Regular" }}>
                             {formatSecond(data.duration)}
                         </Text>

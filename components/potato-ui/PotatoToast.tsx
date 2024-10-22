@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
+import { ShadowedView } from "react-native-fast-shadow";
 
-import { ShadowedView } from "~/components/ShadowedView";
 import { Text } from "~/components/ui/text";
 
 export interface ToastProps {
