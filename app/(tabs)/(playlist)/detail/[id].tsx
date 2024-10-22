@@ -572,7 +572,7 @@ export default function Page() {
                                 justifyContent: "center",
                             }}
                         >
-                            <MaterialIcons name="edit" size={24} className="bg-typography-700" />
+                            <MaterialIcons name="edit" size={24} className="text-typography-700" />
                         </View>
                         <ActionsheetItemText>修改信息</ActionsheetItemText>
                     </ActionsheetItem>
@@ -590,7 +590,7 @@ export default function Page() {
                                 justifyContent: "center",
                             }}
                         >
-                            <MaterialIcons name="delete" size={24} className="bg-typography-700" />
+                            <MaterialIcons name="delete" size={24} className="text-typography-700" />
                         </View>
                         <ActionsheetItemText>删除</ActionsheetItemText>
                     </ActionsheetItem>
@@ -608,7 +608,7 @@ export default function Page() {
                                 justifyContent: "center",
                             }}
                         >
-                            <Ionicons name="save" size={20} className="bg-typography-700" />
+                            <Ionicons name="save" size={20} className="text-typography-700" />
                         </View>
                         <ActionsheetItemText>导出</ActionsheetItemText>
                     </ActionsheetItem>
@@ -625,7 +625,7 @@ export default function Page() {
                                 justifyContent: "center",
                             }}
                         >
-                            <MaterialIcons name="cancel" size={22} className="bg-typography-700" />
+                            <MaterialIcons name="cancel" size={22} className="text-typography-700" />
                         </View>
                         <ActionsheetItemText>取消</ActionsheetItemText>
                     </ActionsheetItem>
