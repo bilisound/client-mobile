@@ -23,7 +23,7 @@ export async function handlePlaylist(forceVersion?: number) {
 
     // 版本为 0：首次使用 Bilisound 或从 1.5.0 以下版本升级上来，需要创建数据库，并且导入存在 MMKV 中的旧版歌单数据
     if (version <= 0) {
-        log.info("正在执行 v0 -> v2 升级程序……");
+        log.info("正在执行 v0 -> v3 升级程序……");
 
         // 备份旧数据
         const got = playlistStorage.getString(LEGACY_PLAYLIST_INDEX_KEY);
@@ -70,6 +70,7 @@ export async function handlePlaylist(forceVersion?: number) {
                     \`img_url\`       text,
                     \`description\`   text,
                     \`source\`        text,
+                    \`filter_rules\`  text,
                     \`extended_data\` text
                 );
             `);
@@ -110,12 +111,13 @@ export async function handlePlaylist(forceVersion?: number) {
             });
         });
 
-        log.info(`升级完毕，将数据库版本设置为 2`);
-        playlistStorage.set(PLAYLIST_DB_VERSION, 2);
+        log.info(`升级完毕，将数据库版本设置为 3`);
+        playlistStorage.set(PLAYLIST_DB_VERSION, 3);
     }
 
+    // 版本为 1：需要增加数据库列
     if (version === 1) {
-        log.info("正在执行 v1 -> v2 升级程序……");
+        log.info("正在执行 v1 -> v3 升级程序……");
 
         db.transaction(tx => {
             tx.run(sql`ALTER TABLE \`playlist_detail\`
@@ -126,10 +128,25 @@ export async function handlePlaylist(forceVersion?: number) {
             tx.run(sql`ALTER TABLE \`playlist_meta\`
                 ADD \`source\` text;`);
             tx.run(sql`ALTER TABLE \`playlist_meta\`
+                ADD \`filter_rules\` text;`);
+            tx.run(sql`ALTER TABLE \`playlist_meta\`
                 ADD \`extended_data\` text;`);
         });
 
-        log.info(`升级完毕，将数据库版本设置为 2`);
-        playlistStorage.set(PLAYLIST_DB_VERSION, 2);
+        log.info(`升级完毕，将数据库版本设置为 3`);
+        playlistStorage.set(PLAYLIST_DB_VERSION, 3);
+    }
+
+    // 版本为 2：需要增加数据库列
+    if (version === 2) {
+        log.info("正在执行 v2 -> v3 升级程序……");
+
+        db.transaction(tx => {
+            tx.run(sql`ALTER TABLE \`playlist_meta\`
+                ADD \`filter_rules\` text;`);
+        });
+
+        log.info(`升级完毕，将数据库版本设置为 3`);
+        playlistStorage.set(PLAYLIST_DB_VERSION, 3);
     }
 }

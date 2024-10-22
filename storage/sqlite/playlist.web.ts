@@ -20,6 +20,7 @@ export async function getPlaylistMetas(filterHasSource = false): Promise<Playlis
                 imgUrl: e.imgUrl ? e.imgUrl : null,
                 description: e.description ? e.description : null,
                 source: e.source ? e.source : null,
+                filterRules: e.filterRules ? e.filterRules : null,
                 extendedData: e.extendedData ? e.extendedData : null,
             }));
     }
@@ -29,6 +30,7 @@ export async function getPlaylistMetas(filterHasSource = false): Promise<Playlis
         imgUrl: e.imgUrl ? e.imgUrl : null,
         description: e.description ? e.description : null,
         source: e.source ? e.source : null,
+        filterRules: e.filterRules ? e.filterRules : null,
         extendedData: e.extendedData ? e.extendedData : null,
     }));
 }
@@ -45,6 +47,7 @@ export async function getPlaylistMeta(id: number): Promise<[PlaylistMeta] | unde
             imgUrl: e.imgUrl ? e.imgUrl : null,
             description: e.description ? e.description : null,
             source: e.source ? e.source : null,
+            filterRules: e.filterRules ? e.filterRules : null,
             extendedData: e.extendedData ? e.extendedData : null,
         },
     ];

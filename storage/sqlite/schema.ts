@@ -12,6 +12,7 @@ export const playlistMeta = sqliteTable("playlist_meta", {
     imgUrl: text("img_url"),
     description: text("description"),
     source: text("source"),
+    filterRules: text("filter_rules"),
     extendedData: text("extended_data"),
 });
 
