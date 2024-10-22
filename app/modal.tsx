@@ -15,6 +15,7 @@ import Animated, {
     useSharedValue,
     withRepeat,
     withTiming,
+    Easing,
 } from "react-native-reanimated";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -186,11 +187,46 @@ function AudioProgressTimer() {
 
 function AudioPlayButtonIcon() {
     const playbackState = usePlaybackState();
+    const isPlaying = playbackState.state === State.Playing;
 
-    return playbackState.state === State.Playing ? (
-        <FontAwesome5 name="pause" size={-1} className="color-typography-0 text-[22px] @md:text-[28px]" />
-    ) : (
-        <FontAwesome5 name="play" size={-1} className="color-typography-0 text-[22px] @md:text-[28px]" />
+    const pauseScale = useSharedValue(isPlaying ? 1 : 0);
+    const pauseOpacity = useSharedValue(isPlaying ? 1 : 0);
+    const playScale = useSharedValue(isPlaying ? 0 : 1);
+    const playOpacity = useSharedValue(isPlaying ? 0 : 1);
+
+    useEffect(() => {
+        pauseScale.value = withTiming(isPlaying ? 1 : 0, { duration: 200, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
+        pauseOpacity.value = withTiming(isPlaying ? 1 : 0, {
+            duration: 200,
+            easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+        });
+        playScale.value = withTiming(isPlaying ? 0 : 1, { duration: 200, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
+        playOpacity.value = withTiming(isPlaying ? 0 : 1, { duration: 200, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
+    }, [isPlaying, pauseOpacity, pauseScale, playOpacity, playScale]);
+
+    const pauseAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ scale: pauseScale.value }],
+            opacity: pauseOpacity.value,
+        };
+    });
+
+    const playAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ scale: playScale.value }],
+            opacity: playOpacity.value,
+        };
+    });
+
+    return (
+        <View className="relative size-[24px] @md:size-[30px]">
+            <Animated.View style={pauseAnimatedStyle} className="absolute size-full items-center justify-center">
+                <FontAwesome5 name="pause" size={-1} className="color-typography-0 text-[22px] @md:text-[28px]" />
+            </Animated.View>
+            <Animated.View style={playAnimatedStyle} className="absolute size-full items-center justify-center">
+                <FontAwesome5 name="play" size={-1} className="color-typography-0 text-[22px] @md:text-[28px]" />
+            </Animated.View>
+        </View>
     );
 }
 
