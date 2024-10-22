@@ -39,7 +39,8 @@ const trackNumberStyle = tva({
     variants: {
         isActiveTrack: {
             true: "bg-accent-500 shadow-md ios:shadow-hard-2",
-            false: "bg-primary-500 dark:bg-primary-400",
+            // shadow-none 很重要！！详见 https://github.com/nativewind/nativewind/issues/873
+            false: "shadow-none bg-primary-500 dark:bg-primary-400",
         },
     },
 });
