@@ -637,6 +637,7 @@ function AudioPlayerModal() {
                                 <PotatoPressable
                                     className="w-14 h-14 @sm:w-[68px] @sm:h-[68px] items-center justify-center bg-primary-500"
                                     outerClassName="overflow-hidden rounded-full"
+                                    hoverBackgroundColor={colorValue("--color-primary-600")}
                                     pressedBackgroundColor={colorValue("--color-primary-700")}
                                     onPress={async () => {
                                         await handleTogglePlay();

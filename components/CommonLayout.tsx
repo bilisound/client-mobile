@@ -119,7 +119,7 @@ export default function CommonLayout({
                 </View>
             </View>
             <View
-                className={twMerge("flex-1 w-full max-w-screen-xl", containerClassName)}
+                className={twMerge("flex-1 w-full max-w-screen-lg", containerClassName)}
                 style={[
                     {
                         paddingLeft: edgeInsets.left,
