@@ -33,6 +33,7 @@ const PotatoButtonTitleBar = forwardRef<View, PropsWithChildren<ButtonTitleBarPr
                 ref={ref}
                 outerClassName="rounded-[6px] overflow-hidden"
                 className="items-center justify-center w-[44px] h-[44px]"
+                hoverBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.075)" : undefined}
                 pressedBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.15)" : undefined}
                 aria-label={label}
                 {...rest}
