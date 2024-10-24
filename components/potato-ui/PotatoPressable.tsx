@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { twMerge } from "tailwind-merge";
 
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+
 export interface PressableProps extends NativePressableProps {
     style?: StyleProp<ViewStyle>;
     outerStyle?: StyleProp<ViewStyle>;
@@ -23,15 +25,17 @@ export interface PressableProps extends NativePressableProps {
 const isAndroid = Platform.OS === "android";
 
 const PotatoPressable = forwardRef<View, PressableProps>((props, ref) => {
+    const { colorValue } = useRawThemeValues();
+
     const [isHover, setIsHover] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
 
     let className = props.className;
     if (isHover) {
-        className = twMerge(className, props.hoverClassName);
+        className = twMerge(className, props.hoverClassName || "bg-background-50");
     }
     if (isPressed) {
-        className = twMerge(className, props.pressedClassName);
+        className = twMerge(className, props.pressedClassName || "bg-background-100");
     }
 
     return (
@@ -58,7 +62,7 @@ const PotatoPressable = forwardRef<View, PressableProps>((props, ref) => {
                     props.onPointerLeave?.(event);
                 }}
                 android_ripple={{
-                    color: props.rippleColor,
+                    color: props.rippleColor || colorValue("--color-background-100"),
                 }}
                 {...omit(props, ["onPressIn", "onPressOut", "outerStyle", "outerClassName"])}
                 className={className}
