@@ -15,6 +15,7 @@ export interface PressableProps extends NativePressableProps {
     outerStyle?: StyleProp<ViewStyle>;
     className?: string;
     outerClassName?: string;
+    backgroundColor?: string;
     hoverBackgroundColor?: string;
     pressedBackgroundColor?: string;
 }
@@ -25,7 +26,7 @@ const PotatoPressable = forwardRef<View, PressableProps>((props, ref) => {
     const [isHover, setIsHover] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
     const colorMode = useColorScheme();
-    let backgroundColor: string | undefined = undefined;
+    let backgroundColor = props.backgroundColor;
     const pressedBackgroundColor =
         props.pressedBackgroundColor || (colorMode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)");
     if (isHover) {

@@ -186,6 +186,7 @@ function AudioProgressTimer() {
 }
 
 function AudioPlayButtonIcon() {
+    const duration = 200;
     const playbackState = usePlaybackState();
     const isPlaying = playbackState.state === State.Playing;
 
@@ -195,13 +196,13 @@ function AudioPlayButtonIcon() {
     const playOpacity = useSharedValue(isPlaying ? 0 : 1);
 
     useEffect(() => {
-        pauseScale.value = withTiming(isPlaying ? 1 : 0, { duration: 200, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
+        pauseScale.value = withTiming(isPlaying ? 1 : 0, { duration, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
         pauseOpacity.value = withTiming(isPlaying ? 1 : 0, {
-            duration: 200,
+            duration,
             easing: Easing.bezier(0.25, 0.1, 0.25, 1),
         });
-        playScale.value = withTiming(isPlaying ? 0 : 1, { duration: 200, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
-        playOpacity.value = withTiming(isPlaying ? 0 : 1, { duration: 200, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
+        playScale.value = withTiming(isPlaying ? 0 : 1, { duration, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
+        playOpacity.value = withTiming(isPlaying ? 0 : 1, { duration, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
     }, [isPlaying, pauseOpacity, pauseScale, playOpacity, playScale]);
 
     const pauseAnimatedStyle = useAnimatedStyle(() => {
@@ -635,8 +636,9 @@ function AudioPlayerModal() {
 
                                 {/* 播放/暂停 */}
                                 <PotatoPressable
-                                    className="w-14 h-14 @sm:w-[68px] @sm:h-[68px] items-center justify-center bg-primary-500"
+                                    className="w-14 h-14 @sm:w-[68px] @sm:h-[68px] items-center justify-center"
                                     outerClassName="overflow-hidden rounded-full"
+                                    backgroundColor={colorValue("--color-primary-500")}
                                     hoverBackgroundColor={colorValue("--color-primary-600")}
                                     pressedBackgroundColor={colorValue("--color-primary-700")}
                                     onPress={async () => {
