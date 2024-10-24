@@ -636,11 +636,11 @@ function AudioPlayerModal() {
 
                                 {/* 播放/暂停 */}
                                 <PotatoPressable
-                                    className="w-14 h-14 @sm:w-[68px] @sm:h-[68px] items-center justify-center"
+                                    className="w-14 h-14 @sm:w-[68px] @sm:h-[68px] items-center justify-center bg-primary-500"
                                     outerClassName="overflow-hidden rounded-full"
-                                    backgroundColor={colorValue("--color-primary-500")}
-                                    hoverBackgroundColor={colorValue("--color-primary-600")}
-                                    pressedBackgroundColor={colorValue("--color-primary-700")}
+                                    hoverClassName="bg-primary-600"
+                                    pressedClassName="bg-primary-700"
+                                    rippleColor={colorValue("--color-primary-700")}
                                     onPress={async () => {
                                         await handleTogglePlay();
                                     }}

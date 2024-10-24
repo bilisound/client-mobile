@@ -15,7 +15,7 @@ export interface ButtonTitleBarProps extends PressableProps {
 
 const PotatoButtonTitleBar = forwardRef<View, PropsWithChildren<ButtonTitleBarProps>>(
     ({ label, theme: colorTheme = "solid", Icon, iconColor, iconSize = 24, children, ...rest }, ref) => {
-        const { colorValueMode } = useRawThemeValues();
+        const { colorValueMode, colorValue } = useRawThemeValues();
         let textColor = "#ffffff";
         if (colorTheme === "transparent") {
             textColor = colorValueMode({
@@ -33,8 +33,20 @@ const PotatoButtonTitleBar = forwardRef<View, PropsWithChildren<ButtonTitleBarPr
                 ref={ref}
                 outerClassName="rounded-[6px] overflow-hidden"
                 className="items-center justify-center w-[44px] h-[44px]"
-                hoverBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.075)" : undefined}
-                pressedBackgroundColor={colorTheme === "solid" ? "rgba(255,255,255,0.15)" : undefined}
+                rippleColor={
+                    colorTheme === "solid"
+                        ? colorValueMode({
+                              dark: {
+                                  color: "--color-primary-300",
+                              },
+                              light: {
+                                  color: "--color-primary-700",
+                              },
+                          })
+                        : colorValue("--color-background-100")
+                }
+                hoverClassName={colorTheme === "solid" ? "bg-primary-600 dark:bg-primary-200" : "bg-background-50"}
+                pressedClassName={colorTheme === "solid" ? "bg-primary-700 dark:bg-primary-300" : "bg-background-100"}
                 aria-label={label}
                 {...rest}
             >

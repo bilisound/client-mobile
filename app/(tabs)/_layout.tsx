@@ -81,6 +81,7 @@ function FloatTabBar(props: BottomTabBarProps) {
                 <View className="w-full h-16 sm:h-12 flex-row" role="tablist">
                     {isNarrowWidth ? (
                         <Pressable
+                            role="button"
                             className="flex-1 items-center justify-center gap-1.5 sm:flex-row"
                             onPress={() => {
                                 router.push("/modal");
