@@ -570,7 +570,7 @@ function AudioPlayerModal() {
                         )}
                     </View>
                     <View
-                        className="flex-0 @3xl:flex-1 basis-auto h-[220px] @md:h-64 @3xl:h-full @3xl:justify-center"
+                        className="flex-0 @3xl:flex-1 basis-auto h-[13.75rem] @md:h-64 @3xl:h-full @3xl:justify-center"
                         style={{
                             marginBottom: shouldMarginBottom ? customEdgeInsets.bottom : undefined,
                             paddingBottom: shouldMarginBottom ? undefined : customEdgeInsets.bottom,
