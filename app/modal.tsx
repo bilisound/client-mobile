@@ -102,7 +102,7 @@ function AudioProgressBar() {
         return (
             <View
                 onLayout={e => setGlowTotalWidth(e.nativeEvent.layout.width - 20)}
-                className="h-4 justify-center flex-1 relative px-[10px]"
+                className="h-4 justify-center flex-1 relative px-[0.625rem]"
             >
                 <View className="h-[3px] rounded-full overflow-hidden bg-primary-100 dark:bg-primary-100">
                     <Animated.View style={[{ width: glowWidth, height: 3 }, animatedStyle]}>
@@ -124,7 +124,7 @@ function AudioProgressBar() {
 
     return (
         <View className="h-4 justify-center flex-1 relative">
-            <View className="left-[10px] right-[10px] top-[6.5px] h-[3px] rounded-full absolute overflow-hidden bg-neutral-200 dark:bg-primary-100">
+            <View className="left-[0.625rem] right-[0.625rem] top-[6.5px] h-[3px] rounded-full absolute overflow-hidden bg-neutral-200 dark:bg-primary-100">
                 <View
                     style={{ width: `${(buffered / duration) * 100}%` }}
                     className="h-full absolute bg-neutral-200 dark:bg-primary-100"
@@ -166,7 +166,7 @@ function AudioProgressTimer() {
     return (
         <View className="px-[30px] flex-row items-center pt-1.5 @md:pt-2">
             <Text
-                className="text-sm @md:text-[15px] opacity-60 flex-1 text-left"
+                className="text-sm @md:text-[0.9375rem] opacity-60 flex-1 text-left"
                 style={{
                     fontFamily: "Roboto_400Regular",
                 }}
@@ -174,7 +174,7 @@ function AudioProgressTimer() {
                 {activeTrack?.bilisoundIsLoaded ? formatSecond(position) : "00:00"}
             </Text>
             <Text
-                className="text-sm @md:text-[15px] opacity-60 flex-1 text-right"
+                className="text-sm @md:text-[0.9375rem] opacity-60 flex-1 text-right"
                 style={{
                     fontFamily: "Roboto_400Regular",
                 }}
@@ -220,7 +220,7 @@ function AudioPlayButtonIcon() {
     });
 
     return (
-        <View className="relative size-[24px] @md:size-[30px]">
+        <View className="relative size-[1.5rem] @md:size-[30px]">
             <Animated.View style={pauseAnimatedStyle} className="absolute size-full items-center justify-center">
                 <FontAwesome5 name="pause" size={-1} className="color-typography-0 text-[22px] @md:text-[28px]" />
             </Animated.View>
@@ -384,7 +384,7 @@ function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActio
                     >
                         <Entypo
                             name="shuffle"
-                            className={`text-[20px] ${queuePlayingMode === "shuffle" ? "color-accent-500" : "color-typography-700"}`}
+                            className={`text-[1.25rem] ${queuePlayingMode === "shuffle" ? "color-accent-500" : "color-typography-700"}`}
                         />
                     </View>
                     <ActionsheetItemText>{`${queuePlayingMode === "shuffle" ? "关闭随机播放" : "开启随机播放"}`}</ActionsheetItemText>
@@ -398,7 +398,7 @@ function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActio
                             justifyContent: "center",
                         }}
                     >
-                        <Ionicons name="save" className="text-[20px] color-typography-700" />
+                        <Ionicons name="save" className="text-[1.25rem] color-typography-700" />
                     </View>
                     <ActionsheetItemText>保存</ActionsheetItemText>
                 </ActionsheetItem>
@@ -499,7 +499,7 @@ function AudioPlayerModal() {
             >
                 <CommonLayout
                     overrideEdgeInsets={{ ...customEdgeInsets, bottom: 0 }}
-                    titleBarClassName="h-[72px] px-[14px]"
+                    titleBarClassName="h-[72px] px-[0.875rem]"
                     titleBarTheme="transparent"
                     containerClassName="flex-col @3xl:flex-row"
                     title={
@@ -584,7 +584,7 @@ function AudioPlayerModal() {
                         >
                             <View className="px-[30px] py-2 @md:py-4 gap-2">
                                 <Text
-                                    className="text-[18px] @md:text-[20px] font-extrabold leading-normal truncate whitespace-nowrap"
+                                    className="text-[18px] @md:text-[1.25rem] font-extrabold leading-normal truncate whitespace-nowrap"
                                     isTruncated
                                 >
                                     {activeTrack?.title ?? initialTitle}
@@ -630,7 +630,7 @@ function AudioPlayerModal() {
                                     <FontAwesome5
                                         name="step-backward"
                                         size={-1}
-                                        className="text-[20px] @md:text-[24px] color-typography-700 scale-x-[1.4]"
+                                        className="text-[1.25rem] @md:text-[1.5rem] color-typography-700 scale-x-[1.4]"
                                     />
                                 </PotatoPressable>
 
@@ -661,7 +661,7 @@ function AudioPlayerModal() {
                                     <FontAwesome5
                                         name="step-forward"
                                         size={-1}
-                                        className="text-[20px] @md:text-[24px] color-typography-700 scale-x-[1.4]"
+                                        className="text-[1.25rem] @md:text-[1.5rem] color-typography-700 scale-x-[1.4]"
                                     />
                                 </PotatoPressable>
                             </View>
@@ -676,7 +676,7 @@ function AudioPlayerModal() {
                                 <Ionicons
                                     name="save"
                                     size={-1}
-                                    className="text-[18px] @md:text-[20px] color-typography-700"
+                                    className="text-[18px] @md:text-[1.25rem] color-typography-700"
                                 />
                             </PotatoPressable>
                         </View>

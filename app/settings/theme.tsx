@@ -55,10 +55,10 @@ export default function Page() {
             <ScrollView>
                 <VStack space="xl" className="p-4">
                     <HStack space="md" className="items-center">
-                        <Center className="size-[24px]">
+                        <Center className="size-[1.5rem]">
                             <PaintBrushIcon size={20} className="color-typography-700" />
                         </Center>
-                        <Text className="text-[15px] font-semibold">App 界面主题</Text>
+                        <Text className="text-[0.9375rem] font-semibold">App 界面主题</Text>
                     </HStack>
                     <VStack space="lg" className="sm:flex-row">
                         <ThemeButton

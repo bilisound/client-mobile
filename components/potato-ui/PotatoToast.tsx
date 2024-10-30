@@ -22,7 +22,7 @@ export default function PotatoToast({ type, title, description }: ToastProps) {
                 },
                 shadowColor: "#000000",
             }}
-            className="{}-[shadowColor]:color-black bg-background-0 border-background-100 border min-h-[50px] rounded-[25px] pl-3 pr-[18px] py-[13px] flex-row gap-3 mx-6 my-2 max-w-[400px]"
+            className="{}-[shadowColor]:color-black bg-background-0 border-background-100 border min-h-[50px] rounded-[25px] pl-3 pr-[18px] py-[0.8125rem] flex-row gap-3 mx-6 my-2 max-w-[400px]"
         >
             {type === "success" && (
                 <Ionicons name="checkmark-circle" size={24} className="flex-0 basis-auto color-green-500" />

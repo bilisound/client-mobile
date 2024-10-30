@@ -81,7 +81,7 @@ export default function CommonLayout({
                 ]}
             >
                 <View
-                    className={twMerge("h-16 p-[10px] items-center justify-center", titleBarClassName)}
+                    className={twMerge("h-16 p-[0.625rem] items-center justify-center", titleBarClassName)}
                     style={[titleBarStyle]}
                 >
                     {typeof title === "string" ? (
@@ -97,7 +97,7 @@ export default function CommonLayout({
                         title
                     )}
                     {leftAccessories && (
-                        <View className="absolute p-[10px] left-0 flex-row items-center gap-1">
+                        <View className="absolute p-[0.625rem] left-0 flex-row items-center gap-1">
                             {leftAccessories === "backButton" ? (
                                 <PotatoButtonTitleBar
                                     label="返回"
@@ -112,7 +112,7 @@ export default function CommonLayout({
                         </View>
                     )}
                     {rightAccessories && (
-                        <View className="absolute p-[10px] right-0 flex-row items-center gap-1">
+                        <View className="absolute p-[0.625rem] right-0 flex-row items-center gap-1">
                             {rightAccessories}
                         </View>
                     )}

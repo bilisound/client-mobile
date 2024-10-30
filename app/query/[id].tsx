@@ -224,7 +224,7 @@ export default function Page() {
             {error ? (
                 <View className="flex-1 items-center justify-center gap-3 opacity-50">
                     <MaterialIcons name="error-outline" size={72} className="color-typography-700" />
-                    <Text className="text-[20px] font-semibold text-typography-700">查询失败了</Text>
+                    <Text className="text-[1.25rem] font-semibold text-typography-700">查询失败了</Text>
                     <Text className="text-sm text-typography-700">{`${error?.message || error}`}</Text>
                 </View>
             ) : null}

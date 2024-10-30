@@ -59,15 +59,15 @@ const buttonStyles = tva({
             false: "",
         },
         size: {
-            sm: "h-[36px] px-[18px]",
-            md: "h-[40px] px-[20px]",
+            sm: "h-[2.25rem] px-[18px]",
+            md: "h-[40px] px-[1.25rem]",
         },
     },
     compoundVariants: [
         {
             size: "sm",
             iconOnly: true,
-            className: "h-[36px] w-[36px] px-[unset]",
+            className: "h-[2.25rem] w-[2.25rem] px-[unset]",
         },
         {
             size: "md",

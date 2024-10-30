@@ -76,7 +76,7 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
     }
 
     const showMoreEl = skeleton ? null : (
-        <Text className="text-[15px] leading-[22.5px] text-typography-700" selectable>
+        <Text className="text-[0.9375rem] leading-[22.5px] text-typography-700" selectable>
             {meta.desc}
         </Text>
     );
@@ -93,7 +93,7 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
                                 }
                             }}
                         >
-                            <Text className="text-[15px] leading-normal text-typography-700">{meta.desc}</Text>
+                            <Text className="text-[0.9375rem] leading-normal text-typography-700">{meta.desc}</Text>
                         </View>
                     </View>
                     <LinearGradient
@@ -120,7 +120,7 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
                                             setShowMore(true);
                                         }
                                     }}
-                                    className="text-[15px] leading-normal text-typography-700"
+                                    className="text-[0.9375rem] leading-normal text-typography-700"
                                 >
                                     {meta.desc}
                                 </Text>
@@ -169,9 +169,9 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
                         <>
                             <Skeleton className="w-9 h-9 relative flex-shrink-0 rounded-full" />
                             <View className="flex-grow">
-                                <Skeleton className="rounded-full w-20 h-[14px]" />
+                                <Skeleton className="rounded-full w-20 h-[0.875rem]" />
                             </View>
-                            <Skeleton className="rounded-full flex-shrink-0 w-16 h-[14px]" />
+                            <Skeleton className="rounded-full flex-shrink-0 w-16 h-[0.875rem]" />
                         </>
                     ) : (
                         <>
@@ -192,11 +192,11 @@ const VideoMeta: React.FC<VideoMetaProps & VideoMetaBaseProps> = ({ meta, skelet
                 {(meta?.desc ?? "").trim() !== "" && showMoreComputed}
                 {skeleton && (
                     <VStack className="py-[3.75px] gap-[7.5px]">
-                        <Skeleton className="rounded-full h-[15px] w-full" />
-                        <Skeleton className="rounded-full h-[15px] w-full" />
-                        <Skeleton className="rounded-full h-[15px] w-full" />
-                        <Skeleton className="rounded-full h-[15px] w-full" />
-                        <Skeleton className="rounded-full h-[15px] w-1/2" />
+                        <Skeleton className="rounded-full h-[0.9375rem] w-full" />
+                        <Skeleton className="rounded-full h-[0.9375rem] w-full" />
+                        <Skeleton className="rounded-full h-[0.9375rem] w-full" />
+                        <Skeleton className="rounded-full h-[0.9375rem] w-full" />
+                        <Skeleton className="rounded-full h-[0.9375rem] w-1/2" />
                     </VStack>
                 )}
 

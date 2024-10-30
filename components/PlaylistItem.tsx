@@ -38,7 +38,10 @@ export default function PlaylistItem({ item, onPress, onLongPress, className, st
                     {item.source ? (
                         <Entypo name="cloud" size={20} color={item.color} />
                     ) : (
-                        <View className="w-[14px] h-[14px] rounded-full" style={[{ backgroundColor: item.color }]} />
+                        <View
+                            className="w-[0.875rem] h-[0.875rem] rounded-full"
+                            style={[{ backgroundColor: item.color }]}
+                        />
                     )}
                 </View>
                 <Text className="text-base leading-normal flex-1" isTruncated>

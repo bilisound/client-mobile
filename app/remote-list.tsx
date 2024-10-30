@@ -90,10 +90,12 @@ function Header({ data, mode, className }: HeaderProps) {
     return (
         <View className={twMerge("p-4", className)}>
             <Image source={getImageProxyUrl(data.meta.cover, data.rows[0].bvid)} className="aspect-video rounded-lg" />
-            <Text className="text-lg leading-[24px] font-semibold mt-5" selectable>
+            <Text className="text-lg leading-[1.5rem] font-semibold mt-5" selectable>
                 {data.meta.name}
             </Text>
-            {data.meta.description && <Text className="text-[15px] leading-normal mt-4">{data.meta.description}</Text>}
+            {data.meta.description && (
+                <Text className="text-[0.9375rem] leading-normal mt-4">{data.meta.description}</Text>
+            )}
             <View className="flex-row mt-5">
                 <PotatoButton
                     rounded
@@ -120,8 +122,8 @@ function HeaderSkeleton({ className }: HeaderSkeletonProps) {
                 <Skeleton className="rounded-full h-[18px]" />
             </View>
             <View className="mt-4 py-[3.75px] gap-[7.5px]">
-                <Skeleton className="rounded-full h-[15px]" />
-                <Skeleton className="rounded-full h-[15px] w-1/2" />
+                <Skeleton className="rounded-full h-[0.9375rem]" />
+                <Skeleton className="rounded-full h-[0.9375rem] w-1/2" />
             </View>
         </View>
     );

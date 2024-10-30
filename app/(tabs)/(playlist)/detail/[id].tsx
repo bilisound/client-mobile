@@ -199,7 +199,7 @@ function Header({
             )}
             <View className="flex-row gap-4">
                 <View className="flex-1">
-                    <Text className="text-[20px] font-semibold leading-normal">{meta.title}</Text>
+                    <Text className="text-[1.25rem] font-semibold leading-normal">{meta.title}</Text>
                     <View className="flex-row">
                         <Text className="opacity-60 mt-2 text-sm leading-normal">
                             {`${meta.amount} 首歌曲` + (meta.source ? ` ・ 上次同步：${lastSyncString}` : "")}
