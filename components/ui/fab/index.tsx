@@ -143,7 +143,7 @@ const fabIconStyle = tva({
             "2xs": "h-3 w-3",
             xs: "h-3.5 w-3.5",
             sm: "h-4 w-4",
-            md: "w-[18px] h-[18px]",
+            md: "w-[1.125rem] h-[1.125rem]",
             lg: "h-5 w-5",
             xl: "h-6 w-6",
         },

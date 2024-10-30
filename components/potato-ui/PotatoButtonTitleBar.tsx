@@ -31,8 +31,8 @@ const PotatoButtonTitleBar = forwardRef<View, PropsWithChildren<ButtonTitleBarPr
         return (
             <PotatoPressable
                 ref={ref}
-                outerClassName="rounded-[6px] overflow-hidden"
-                className="items-center justify-center w-[44px] h-[44px]"
+                outerClassName="rounded-[0.375rem] overflow-hidden"
+                className="items-center justify-center size-[2.75rem]"
                 rippleColor={
                     colorTheme === "solid"
                         ? colorValueMode({

@@ -59,8 +59,8 @@ const buttonStyles = tva({
             false: "",
         },
         size: {
-            sm: "h-[2.25rem] px-[18px]",
-            md: "h-[40px] px-[1.25rem]",
+            sm: "h-[2.25rem] px-[1.125rem]",
+            md: "h-[2.5rem] px-[1.25rem]",
         },
     },
     compoundVariants: [
@@ -72,29 +72,29 @@ const buttonStyles = tva({
         {
             size: "md",
             iconOnly: true,
-            className: "h-[40px] w-[40px] px-[unset]",
+            className: "h-[2.5rem] w-[2.5rem] px-[unset]",
         },
         {
             variant: "outline",
             size: "sm",
-            className: "h-[35px] px-[17px]",
+            className: "h-[2.1875rem] px-[1.0625rem]",
         },
         {
             variant: "outline",
             size: "md",
-            className: "h-[39px] px-[19px]",
+            className: "h-[2.4375rem] px-[1.1875rem]",
         },
         {
             variant: "outline",
             size: "sm",
             iconOnly: true,
-            className: "h-[35px] w-[35px] px-[unset]",
+            className: "h-[2.1875rem] w-[2.1875rem] px-[unset]",
         },
         {
             variant: "outline",
             size: "md",
             iconOnly: true,
-            className: "h-[39px] w-[39px] px-[unset]",
+            className: "h-[2.4375rem] w-[2.4375rem] px-[unset]",
         },
     ],
 });

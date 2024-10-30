@@ -119,7 +119,7 @@ function HeaderSkeleton({ className }: HeaderSkeletonProps) {
         <View className={twMerge("flex-1 p-4", className)}>
             <Skeleton className="aspect-video rounded-lg w-[unset] h-[unset]" />
             <View className="h-6 mt-5 justify-center">
-                <Skeleton className="rounded-full h-[18px]" />
+                <Skeleton className="rounded-full h-[1.125rem]" />
             </View>
             <View className="mt-4 py-[3.75px] gap-[7.5px]">
                 <Skeleton className="rounded-full h-[0.9375rem]" />

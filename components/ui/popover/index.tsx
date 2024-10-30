@@ -97,7 +97,7 @@ const popoverContentStyle = tva({
         size: {
             xs: "max-w-[360px] p-3.5",
             sm: "max-w-[420px] p-4",
-            md: "max-w-[510px] p-[18px]",
+            md: "max-w-[510px] p-[1.125rem]",
             lg: "max-w-[640px] p-5",
             full: "p-6",
         },

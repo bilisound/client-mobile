@@ -50,7 +50,10 @@ export default function Page() {
         <CommonLayout title="关于" overrideEdgeInsets={{ bottom: 0 }} leftAccessories="backButton">
             <ScrollView>
                 <View className="items-center p-6">
-                    <Image className="w-[72px] h-[72px] rounded-xl" source={require("../../assets/images/icon.png")} />
+                    <Image
+                        className="w-[4.5rem] h-[4.5rem] rounded-xl"
+                        source={require("../../assets/images/icon.png")}
+                    />
                     <Text className="text-2xl leading-normal font-semibold mt-2 mb-1">Bilisound</Text>
                     <Text className="text-sm leading-normal opacity-50">{`版本 ${VERSION}`}</Text>
                 </View>

@@ -35,7 +35,7 @@ function PlayingIcon() {
 }
 
 const trackNumberStyle = tva({
-    base: "items-center justify-center px-1.5 h-[22px] rounded-md",
+    base: "items-center justify-center px-1.5 h-[1.375rem] rounded-md",
     variants: {
         isActiveTrack: {
             true: "bg-accent-500 shadow-md ios:shadow-hard-2",
@@ -46,7 +46,7 @@ const trackNumberStyle = tva({
 });
 
 const trackTitleStyle = tva({
-    base: "leading-[22px] text-sm",
+    base: "leading-[1.375rem] text-sm",
     variants: {
         isActiveTrack: {
             true: "font-semibold text-accent-500",

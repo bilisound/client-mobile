@@ -35,5 +35,5 @@ export default function ProgressBar({ item }: { item: string }) {
         return null;
     }
 
-    return <Animated.View style={animatedStyle} className="h-[3px] absolute left-0 bottom-0 bg-accent-500" />;
+    return <Animated.View style={animatedStyle} className="h-[0.1875rem] absolute left-0 bottom-0 bg-accent-500" />;
 }

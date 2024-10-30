@@ -54,7 +54,7 @@ export default function AudioIndicator({ className, imageClassName, playButtonOu
                 </View>
             </Pressable>
             <PotatoPressable
-                outerClassName={twMerge("rounded-[6px] overflow-hidden", playButtonOuterClassName)}
+                outerClassName={twMerge("rounded-[0.375rem] overflow-hidden", playButtonOuterClassName)}
                 className="w-10 h-10 items-center justify-center"
                 onPressOut={async () => {
                     await handleTogglePlay();
