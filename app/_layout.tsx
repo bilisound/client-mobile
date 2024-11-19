@@ -1,7 +1,7 @@
 import "~/utils/polyfill";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { PortalProvider } from "@gorhom/portal";
-import { ThemeProvider } from "@react-navigation/native";
+import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
@@ -9,7 +9,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import React, { useEffect, useRef, useState } from "react";
-import { ColorSchemeName, Linking, LogBox, Platform, useColorScheme } from "react-native";
+import { ColorSchemeName, Linking, Platform, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
@@ -24,6 +24,8 @@ import init from "~/utils/init";
 import "~/global.css";
 import "~/utils/nativewind";
 import log from "~/utils/logger";
+
+import { merge } from "lodash";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -139,7 +141,7 @@ const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
     );
 
     return (
-        <ThemeProvider value={reactNavigationTheme}>
+        <ThemeProvider value={merge(DefaultTheme, reactNavigationTheme)}>
             {routes}
             <AudioManager />
             <Toast config={toastConfig} topOffset={edgeInsets.top} />
