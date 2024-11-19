@@ -342,8 +342,8 @@ function TopTabButton({ active, children, onPress }: TopTabButtonProps) {
         <Pressable
             onPress={onPress}
             className={
-                "h-full items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" +
-                (active ? " bg-background-0 shadow-sm" : "")
+                "h-full items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 transition-all disabled:pointer-events-none disabled:opacity-50" +
+                (active ? " bg-background-0" : "")
             }
         >
             <Text
