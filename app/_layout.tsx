@@ -11,7 +11,7 @@ import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import { merge } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
-import { ColorSchemeName, Linking, Platform, useColorScheme } from "react-native";
+import { Linking, Platform, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
@@ -71,8 +71,8 @@ function CheckUpdate() {
     return <CheckUpdateDialog open={modalVisible} onClose={handleClose} result={data} />;
 }
 
-const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
-    const { colorValue } = useRawThemeValues();
+const RootLayoutNav = () => {
+    const { colorValue, mode } = useRawThemeValues();
     const edgeInsets = useSafeAreaInsets();
 
     const modalSettings: NativeStackNavigationOptions =
@@ -87,7 +87,7 @@ const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
                   animation: "slide_from_bottom",
               };
 
-    const dark = colorScheme === "dark";
+    const dark = mode === "dark";
 
     const reactNavigationTheme = {
         dark,
@@ -197,7 +197,7 @@ export default function RootLayout() {
         <GluestackUIProvider mode={colorScheme || "light"}>
             <QueryClientProvider client={queryClient}>
                 <PortalProvider>
-                    <RootLayoutNav colorScheme={colorScheme} />
+                    <RootLayoutNav />
                 </PortalProvider>
             </QueryClientProvider>
         </GluestackUIProvider>

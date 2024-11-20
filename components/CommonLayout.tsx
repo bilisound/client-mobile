@@ -66,7 +66,7 @@ export default function CommonLayout({
     }
 
     return (
-        <View className={twMerge("h-full items-center", className)} style={style}>
+        <View className={twMerge("h-full items-center bg-background-0", className)} style={style}>
             {titleBarTheme === "solid" && <SystemBars style="light" />}
             {titleBarTheme === "transparent" && <SystemBars style={mode === "dark" ? "light" : "dark"} />}
             <View
