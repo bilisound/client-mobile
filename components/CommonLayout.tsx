@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { PropsWithChildren } from "react";
 import { View, StatusBar, StyleProp, ViewStyle } from "react-native";
+import { SystemBars } from "react-native-edge-to-edge";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import { twMerge } from "tailwind-merge";
 
@@ -50,7 +51,7 @@ export default function CommonLayout({
 
     overrideEdgeInsets = {},
 }: PropsWithChildren<CommonFrameNewProps>) {
-    const { colorValue } = useRawThemeValues();
+    const { colorValue, mode } = useRawThemeValues();
     const edgeInsetsRaw = useSafeAreaInsets();
     const edgeInsets: EdgeInsets = {
         top: overrideEdgeInsets?.top ?? edgeInsetsRaw.top,
@@ -66,7 +67,8 @@ export default function CommonLayout({
 
     return (
         <View className={twMerge("h-full items-center", className)} style={style}>
-            {titleBarTheme === "solid" && <StatusBar barStyle="light-content" showHideTransition="none" />}
+            {titleBarTheme === "solid" && <SystemBars style="light" />}
+            {titleBarTheme === "transparent" && <SystemBars style={mode === "dark" ? "light" : "dark"} />}
             <View
                 className={twMerge(
                     "flex-0 basis-auto w-full " +

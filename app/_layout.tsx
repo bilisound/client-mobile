@@ -1,4 +1,5 @@
 import "~/utils/polyfill";
+
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { PortalProvider } from "@gorhom/portal";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
@@ -8,6 +9,7 @@ import { useFonts } from "expo-font";
 import * as NavigationBar from "expo-navigation-bar";
 import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
+import { merge } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import { ColorSchemeName, Linking, Platform, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -24,8 +26,6 @@ import init from "~/utils/init";
 import "~/global.css";
 import "~/utils/nativewind";
 import log from "~/utils/logger";
-
-import { merge } from "lodash";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -98,7 +98,6 @@ const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
                   card: "#171717",
                   text: "#ffffff",
                   border: "#262626",
-                  notification: "red",
               }
             : {
                   primary: colorValue("--color-primary-400"),
@@ -106,7 +105,6 @@ const RootLayoutNav = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
                   card: "#ffffff",
                   text: "#000000",
                   border: "#F1F1F1",
-                  notification: "red",
               },
     };
 

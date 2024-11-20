@@ -278,6 +278,9 @@ importers:
       react-native:
         specifier: 0.76.2
         version: 0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)
+      react-native-edge-to-edge:
+        specifier: ^1.1.2
+        version: 1.1.2(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
       react-native-fast-shadow:
         specifier: ^0.1.1
         version: 0.1.1(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
@@ -6455,6 +6458,12 @@ packages:
         optional: true
       react-native-svg:
         optional: true
+
+  react-native-edge-to-edge@1.1.2:
+    resolution: {integrity: sha512-tbDNQ+MsYHVbaxLEAu4Up6bPktqBP+DdwdM2MVwkO+uVe2TOB6a+57k3i+UJt426dZnL1ccOrzOg2HQ4Oeh3RA==}
+    peerDependencies:
+      react: '>=18.2.0'
+      react-native: '>=0.73.0'
 
   react-native-fast-shadow@0.1.1:
     resolution: {integrity: sha512-TsGx0aX1UuaN3FjUAcETVB2+JfrEMMpWlQK2J1BYokEWuOBHjYl4zKWLNsewfmqolSEPm8iEh7N2nsKBX6C/Bw==}
@@ -15367,6 +15376,11 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
+
+  react-native-edge-to-edge@1.1.2(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-native: 0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)
 
   react-native-fast-shadow@0.1.1(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1):
     dependencies:

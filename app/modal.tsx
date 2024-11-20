@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Platform, Linking, StatusBar, useColorScheme, View } from "react-native";
+import { SystemBars } from "react-native-edge-to-edge";
 import { ShadowedView } from "react-native-fast-shadow";
 import { Directions, Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import { useMMKVString } from "react-native-mmkv";
@@ -490,7 +491,7 @@ function AudioPlayerModal() {
 
     return (
         <AudioPlayerInsetContext.Provider value={customEdgeInsets}>
-            {Platform.OS === "ios" ? <StatusBar barStyle="light-content" /> : null}
+            {Platform.OS === "ios" ? <SystemBars style="light" /> : null}
             <View
                 className="flex-1 bg-background-0 @container"
                 onLayout={e => {
@@ -555,10 +556,7 @@ function AudioPlayerModal() {
                 >
                     <View className="flex-1">
                         {Platform.OS === "ios" ? null : (
-                            <StatusBar
-                                barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-                                showHideTransition="none"
-                            />
+                            <SystemBars style={colorScheme === "dark" ? "light" : "dark"} />
                         )}
                         {showList ? (
                             <MusicList />

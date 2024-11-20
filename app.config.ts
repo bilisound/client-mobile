@@ -63,6 +63,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     plugins: [
         "./plugins/withAbiFilters",
         "./plugins/withAndroidSignature",
+        "react-native-edge-to-edge",
         [
             "@config-plugins/ffmpeg-kit-react-native",
             {

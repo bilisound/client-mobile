@@ -3,7 +3,8 @@ import { CameraView, Camera, PermissionStatus } from "expo-camera";
 import { BarcodeScanningResult } from "expo-camera/build/Camera.types";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { StatusBar, View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
+import { SystemBars } from "react-native-edge-to-edge";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import PotatoButton from "~/components/potato-ui/PotatoButton";
@@ -75,7 +76,7 @@ const ScannerPage: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" showHideTransition="none" />
+            <SystemBars style="light" />
             <View style={[styles.header, { height: safeAreaInsets.top + 64, paddingTop: safeAreaInsets.top }]}>
                 <Pressable
                     onPress={() => {
