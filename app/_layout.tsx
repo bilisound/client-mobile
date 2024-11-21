@@ -38,6 +38,11 @@ export const unstable_settings = {
     initialRouteName: "(tabs)",
 };
 
+setInterval(() => {
+    NavigationBar.setPositionAsync("absolute");
+    NavigationBar.setBackgroundColorAsync("#ffffff01");
+}, 100);
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -159,11 +164,6 @@ export default function RootLayout() {
 
     useEffect(() => {
         (async () => {
-            // https://stackoverflow.com/questions/74999835/trying-to-make-the-android-navigation-bar-transparent-in-expo
-            if (Platform.OS === "android") {
-                await NavigationBar.setPositionAsync("absolute");
-                await NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#17171701" : "#ffffff01");
-            }
             await SystemUI.setBackgroundColorAsync(
                 colorScheme === "dark" || Platform.OS === "ios" ? "#171717" : "#ffffff",
             );
