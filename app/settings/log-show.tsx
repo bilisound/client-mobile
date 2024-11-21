@@ -1,77 +1,28 @@
 import { Octicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useRef } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import WebView from "react-native-webview";
+import { cssInterop } from "nativewind";
+import React from "react";
 
 import CommonLayout from "~/components/CommonLayout";
+import LogViewer from "~/components/dom/LogViewer";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
-import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { getLogContentForDisplay, shareLogContent } from "~/utils/logger";
-
-const webTemplate = (content: string) => `
-<!doctype html>
-<html lang="zh-hans-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style>
-        :root {
-            font-size: 14px;
-        }
-        body { 
-            background-color: transparent;
-            margin: 0;
-        }
-        pre {
-            margin: 0;
-            padding: 0.75rem;
-            word-break: break-all;
-            line-break: anywhere;
-            white-space: pre-wrap;
-        }
-    </style>
-    <title>Document</title>
-</head>
-<body style="display: none">
-    <pre>${content}</pre>
-</body>
-</html>`;
 
 const IconShare = createIcon(Octicons, "share");
 
-const App: React.FC = () => {
-    const { colorValue } = useRawThemeValues();
-    const textBasicColor = colorValue("--color-typography-700");
-    const safeAreaInsets = useSafeAreaInsets();
-    // const [content, setContent] = useState("");
+cssInterop(LogViewer, { className: "style" });
 
+const App: React.FC = () => {
     const { data } = useQuery({
         queryKey: ["log-show"],
         queryFn: getLogContentForDisplay,
         staleTime: 5000,
     });
 
-    const webviewRef = useRef<WebView>(null);
-
     const handleShare = async () => {
         await shareLogContent(data ?? "");
     };
-
-    useEffect(() => {
-        webviewRef.current?.injectJavaScript(`document.body.style.color = ${JSON.stringify(textBasicColor)};`);
-    }, [textBasicColor]);
-
-    useEffect(() => {
-        webviewRef.current?.injectJavaScript(`
-            document.body.style.marginBottom = "${safeAreaInsets.bottom}px";
-            document.body.style.marginLeft = "${safeAreaInsets.left}px";
-            document.body.style.marginRight = "${safeAreaInsets.right}px";
-        `);
-    }, [safeAreaInsets]);
 
     return (
         <CommonLayout
@@ -88,24 +39,8 @@ const App: React.FC = () => {
             }
             overrideEdgeInsets={{ bottom: 0 }}
         >
-            {data ? (
-                <WebView
-                    ref={webviewRef}
-                    source={{
-                        html: webTemplate(data),
-                    }}
-                    style={{
-                        backgroundColor: "transparent",
-                    }}
-                    injectedJavaScript={`
-                        document.body.style.color = ${JSON.stringify(textBasicColor)};
-                        document.body.style.display = "";
-                    `}
-                    // https://stackoverflow.com/questions/46690261/injectedjavascript-is-not-working-in-webview-of-react-native
-                    onMessage={event => {}}
-                    webviewDebuggingEnabled
-                />
-            ) : null}
+            {/* todo 需要一个优雅一点的办法来处理设备的 safe area */}
+            {data ? <LogViewer text={data} className="text-typography-700 p-4 m-0 w-full" /> : null}
         </CommonLayout>
     );
 };
