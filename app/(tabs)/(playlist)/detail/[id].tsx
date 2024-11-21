@@ -529,7 +529,7 @@ export default function Page() {
                                 <Empty title="暂无内容" action={null} />
                             </View>
                         }
-                        ListFooterComponent={<View style={{ height: editing ? 0 : bottom }} aria-hidden />}
+                        ListFooterComponent={<View style={{ height: editing ? bottom + 48 : bottom }} aria-hidden />}
                     />
                 </View>
             </View>

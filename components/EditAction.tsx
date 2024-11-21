@@ -17,20 +17,22 @@ export default function EditAction({ onAll, onReverse, onDelete, amount }: EditA
 
     return (
         <View
-            className="border-t border-background-100 flex-row justify-between items-center px-3 bg-background-0"
-            style={{ paddingBottom, height: paddingBottom + 52 }}
+            className="border-t border-background-100 bg-background-0 absolute bottom-0 w-full"
+            style={{ paddingBottom }}
         >
-            <Text className="text-sm">{`已选择 ${amount} 项`}</Text>
-            <View className="flex-row gap-2">
-                <PotatoButton size="sm" variant="outline" onPress={onAll}>
-                    全选
-                </PotatoButton>
-                <PotatoButton size="sm" variant="outline" onPress={onReverse}>
-                    反选
-                </PotatoButton>
-                <PotatoButton size="sm" variant="solid" color="error" onPress={onDelete} disabled={amount <= 0}>
-                    删除
-                </PotatoButton>
+            <View className="w-full flex-row justify-between items-center px-3 pt-3">
+                <Text className="text-sm">{`已选择 ${amount} 项`}</Text>
+                <View className="flex-row gap-2">
+                    <PotatoButton size="sm" variant="outline" onPress={onAll}>
+                        全选
+                    </PotatoButton>
+                    <PotatoButton size="sm" variant="outline" onPress={onReverse}>
+                        反选
+                    </PotatoButton>
+                    <PotatoButton size="sm" variant="solid" color="error" onPress={onDelete} disabled={amount <= 0}>
+                        删除
+                    </PotatoButton>
+                </View>
             </View>
         </View>
     );

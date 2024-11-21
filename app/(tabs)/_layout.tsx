@@ -1,6 +1,5 @@
 import { Ionicons, FontAwesome5, Entypo } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
-import BottomTabBar from "@react-navigation/bottom-tabs/src/views/BottomTabBar";
 import { CommonActions, NavigationContext, NavigationRouteContext } from "@react-navigation/native";
 import { router, Tabs } from "expo-router";
 import React from "react";
@@ -13,7 +12,6 @@ import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Pressable } from "~/components/ui/pressable";
 import { Text } from "~/components/ui/text";
 import { useIsNarrowWidth } from "~/hooks/useIsNarrowWidth";
-import useFeaturesStore from "~/store/features";
 import useSettingsStore from "~/store/settings";
 import { useStyleParamStore } from "~/store/styleParam";
 
@@ -33,13 +31,6 @@ const iconList = ({ focused }: { focused: boolean }) => (
 );
 const iconDisc = ({ focused }: { focused: boolean }) => (
     <IconDisc size={18} className={focused ? "color-accent-500" : "color-typography-400"} />
-);
-
-const tabBarV1 = (props: BottomTabBarProps) => (
-    <View>
-        <AudioIndicator />
-        <BottomTabBar {...props} />
-    </View>
 );
 
 const tabBarV2 = (props: BottomTabBarProps) => {
@@ -156,14 +147,11 @@ export default function TabLayout() {
     const { showYuruChara } = useSettingsStore(state => ({
         showYuruChara: state.showYuruChara,
     }));
-    const { enableNavbar2 } = useFeaturesStore(state => ({
-        enableNavbar2: state.enableNavbar2,
-    }));
 
     return (
         <View style={styleSheet.container}>
             <Tabs
-                tabBar={enableNavbar2 ? tabBarV2 : tabBarV1}
+                tabBar={tabBarV2}
                 screenOptions={{
                     headerStyle: styleSheet.headerStyle,
                     tabBarStyle: styleSheet.tabBarStyle,
