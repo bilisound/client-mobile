@@ -101,3 +101,11 @@ export async function shareLogContent(content: string) {
         mimeType: "text/plain",
     });
 }
+
+export async function deleteLogContent() {
+    const fileList = await FileSystem.readDirectoryAsync(BILISOUND_LOG_URI);
+    for (let i = 0; i < fileList.length; i++) {
+        const e = fileList[i];
+        await FileSystem.deleteAsync(`${BILISOUND_LOG_URI}/${e}`, { idempotent: true });
+    }
+}

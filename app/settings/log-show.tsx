@@ -1,27 +1,37 @@
-import { Octicons } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
+import { FontAwesome6, Octicons } from "@expo/vector-icons";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { cssInterop } from "nativewind";
 import React from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CommonLayout from "~/components/CommonLayout";
 import LogViewer from "~/components/dom/LogViewer";
 import PotatoButtonTitleBar from "~/components/potato-ui/PotatoButtonTitleBar";
 import { createIcon } from "~/components/potato-ui/utils/icon";
-import { getLogContentForDisplay, shareLogContent } from "~/utils/logger";
+import { deleteLogContent, getLogContentForDisplay, shareLogContent } from "~/utils/logger";
 
 const IconShare = createIcon(Octicons, "share");
+const IconTrash = createIcon(FontAwesome6, "trash");
 
 cssInterop(LogViewer, { className: "style" });
 
 const App: React.FC = () => {
-    const { data } = useQuery({
+    const edgeInsets = useSafeAreaInsets();
+    const { data, refetch } = useQuery({
         queryKey: ["log-show"],
         queryFn: getLogContentForDisplay,
         staleTime: 5000,
     });
+    const queryClient = useQueryClient();
 
     const handleShare = async () => {
         await shareLogContent(data ?? "");
+    };
+
+    const handleDelete = async () => {
+        await deleteLogContent();
+        await queryClient.invalidateQueries({ queryKey: ["log-show"] });
+        await refetch();
     };
 
     return (
@@ -29,18 +39,38 @@ const App: React.FC = () => {
             title="导出日志"
             leftAccessories="backButton"
             rightAccessories={
-                <PotatoButtonTitleBar
-                    label="分享日志文件"
-                    Icon={IconShare}
-                    iconSize={22}
-                    theme="solid"
-                    onPress={() => handleShare()}
-                />
+                <>
+                    {process.env.NODE_ENV === "development" ? (
+                        <PotatoButtonTitleBar
+                            label="删除日志"
+                            Icon={IconTrash}
+                            iconSize={20}
+                            theme="solid"
+                            onPress={() => handleDelete()}
+                        />
+                    ) : null}
+                    <PotatoButtonTitleBar
+                        label="分享日志文件"
+                        Icon={IconShare}
+                        iconSize={22}
+                        theme="solid"
+                        onPress={() => handleShare()}
+                    />
+                </>
             }
             overrideEdgeInsets={{ bottom: 0 }}
         >
-            {/* todo 需要一个优雅一点的办法来处理设备的 safe area */}
-            {data ? <LogViewer text={data} className="text-typography-700 p-4 m-0 w-full" /> : null}
+            {data ? (
+                <LogViewer
+                    text={data}
+                    className="text-typography-700 p-4 m-0 w-full"
+                    style={{
+                        paddingLeft: edgeInsets.left + 16,
+                        paddingRight: edgeInsets.right + 16,
+                        paddingBottom: edgeInsets.bottom + 16,
+                    }}
+                />
+            ) : null}
         </CommonLayout>
     );
 };
