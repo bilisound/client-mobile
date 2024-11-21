@@ -46,14 +46,14 @@ const Settings: React.FC = () => {
                     }}
                 />
             ) : null}
-            <SettingMenuItem
+            {/*<SettingMenuItem
                 key="settings_20020"
                 icon={LabIcon}
                 title="实验性功能"
                 onPress={() => {
                     router.push("/settings/lab");
                 }}
-            />
+            />*/}
             {Platform.OS === "web" ? null : (
                 <>
                     <SettingMenuItem
