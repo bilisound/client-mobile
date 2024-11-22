@@ -78,6 +78,8 @@ export default function CommonLayout({
                 style={[
                     {
                         paddingTop: edgeInsets.top,
+                        paddingLeft: edgeInsets.left,
+                        paddingRight: edgeInsets.right,
                     },
                     titleBarContainerStyle,
                 ]}
