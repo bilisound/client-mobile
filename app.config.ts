@@ -11,11 +11,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     scheme: "bilisound",
     userInterfaceStyle: "automatic",
     primaryColor: "#00ba9d",
-    splash: {
+    /*splash: {
         image: "./assets/images/splash-new.png",
         resizeMode: "cover",
         backgroundColor: "#ffffff",
-    },
+    },*/
     assetBundlePatterns: ["**/*"],
     ios: {
         supportsTablet: true,
@@ -24,7 +24,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             UIBackgroundModes: ["audio"],
         },
         bundleIdentifier: "moe.bilisound.app",
-        splash: {
+        /*splash: {
             resizeMode: "cover",
             backgroundColor: "#ffffff",
             image: "./assets/images/splash-new.png",
@@ -32,7 +32,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
                 backgroundColor: "#171717",
                 image: "./assets/images/splash-new-dark.png",
             },
-        },
+        },*/
     },
     android: {
         adaptiveIcon: {
@@ -45,7 +45,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             "android.permission.RECORD_AUDIO",
         ],
         package: "moe.bilisound.app",
-        splash: {
+        /*splash: {
             resizeMode: "cover",
             backgroundColor: "#ffffff",
             image: "./assets/images/splash-new.png",
@@ -53,7 +53,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
                 backgroundColor: "#171717",
                 image: "./assets/images/splash-new-dark.png",
             },
-        },
+        },*/
     },
     web: {
         bundler: "metro",
@@ -68,6 +68,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             "@config-plugins/ffmpeg-kit-react-native",
             {
                 package: "full-gpl",
+            },
+        ],
+        [
+            "expo-splash-screen",
+            {
+                backgroundColor: "#ffffff",
+                image: "./assets/images/icon.png",
+                dark: {
+                    image: "./assets/images/icon.png",
+                    backgroundColor: "#171717",
+                },
+                imageWidth: 160,
             },
         ],
         "expo-router",

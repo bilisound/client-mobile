@@ -128,9 +128,6 @@ importers:
       '@miblanchard/react-native-slider':
         specifier: ^2.6.0
         version: 2.6.0(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
-      '@react-native-community/blur':
-        specifier: ^4.4.1
-        version: 4.4.1(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
       '@react-native-masked-view/masked-view':
         specifier: 0.3.2
         version: 0.3.2(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
@@ -176,9 +173,6 @@ importers:
       expo-asset:
         specifier: ~11.0.1
         version: 11.0.1(expo@52.0.7(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@expo/metro-runtime@4.0.0(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)))(graphql@15.8.0)(react-native-webview@13.12.4(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1))(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1))(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
-      expo-blur:
-        specifier: ~14.0.1
-        version: 14.0.1(expo@52.0.7(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@expo/metro-runtime@4.0.0(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)))(graphql@15.8.0)(react-native-webview@13.12.4(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1))(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1))(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
       expo-build-properties:
         specifier: ~0.13.1
         version: 0.13.1(expo@52.0.7(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@expo/metro-runtime@4.0.0(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)))(graphql@15.8.0)(react-native-webview@13.12.4(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1))(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1))
@@ -2431,12 +2425,6 @@ packages:
       react: '*'
       react-native: '*'
 
-  '@react-native-community/blur@4.4.1':
-    resolution: {integrity: sha512-XBSsRiYxE/MOEln2ayunShfJtWztHwUxLFcSL20o+HNNRnuUDv+GXkF6FmM2zE8ZUfrnhQ/zeTqvnuDPGw6O8A==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
-
   '@react-native-community/cli-debugger-ui@13.6.9':
     resolution: {integrity: sha512-TkN7IdFmGPPvTpAo3nCAH9uwGCPxWBEAwpqEZDrq0NWllI7Tdie8vDpGdrcuCcKalmhq6OYnkXzeBah7O1Ztpw==}
 
@@ -4380,13 +4368,6 @@ packages:
 
   expo-asset@11.0.1:
     resolution: {integrity: sha512-WatvD7JVC89EsllXFYcS/rji3ajVzE2B/USo0TqedsETixwyVCQfrrvCdCPQyuKghrxVNEj8bQ/Qbea/RZLYjg==}
-    peerDependencies:
-      expo: '*'
-      react: '*'
-      react-native: '*'
-
-  expo-blur@14.0.1:
-    resolution: {integrity: sha512-3Q6jFBLbY8n2vwk28ycUC+eIlVhnlqwkXUKk/Lfaj+SGV3AZMQyrixe7OYwJdUfwqETBrnYYMB6uNrJzOSbG+g==}
     peerDependencies:
       expo: '*'
       react: '*'
@@ -10524,11 +10505,6 @@ snapshots:
       react: 18.3.1
       react-native: 0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)
 
-  '@react-native-community/blur@4.4.1(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      react: 18.3.1
-      react-native: 0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)
-
   '@react-native-community/cli-debugger-ui@13.6.9':
     dependencies:
       serve-static: 1.15.0
@@ -12923,12 +12899,6 @@ snapshots:
       react-native: 0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)
     transitivePeerDependencies:
       - supports-color
-
-  expo-blur@14.0.1(expo@52.0.7(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@expo/metro-runtime@4.0.0(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)))(graphql@15.8.0)(react-native-webview@13.12.4(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1))(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1))(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1):
-    dependencies:
-      expo: 52.0.7(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@expo/metro-runtime@4.0.0(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)))(graphql@15.8.0)(react-native-webview@13.12.4(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1))(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
-      react: 18.3.1
-      react-native: 0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)
 
   expo-build-properties@0.13.1(expo@52.0.7(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@expo/metro-runtime@4.0.0(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1)))(graphql@15.8.0)(react-native-webview@13.12.4(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1))(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.24.4(@babel/core@7.25.8))(@react-native-community/cli-server-api@13.6.9)(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)):
     dependencies:
