@@ -11,12 +11,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     scheme: "bilisound",
     userInterfaceStyle: "automatic",
     primaryColor: "#00ba9d",
-    /*splash: {
-        image: "./assets/images/splash-new.png",
-        resizeMode: "cover",
-        backgroundColor: "#ffffff",
-    },*/
-    assetBundlePatterns: ["**/*"],
     ios: {
         supportsTablet: true,
         infoPlist: {
@@ -24,15 +18,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             UIBackgroundModes: ["audio"],
         },
         bundleIdentifier: "moe.bilisound.app",
-        /*splash: {
-            resizeMode: "cover",
-            backgroundColor: "#ffffff",
-            image: "./assets/images/splash-new.png",
-            dark: {
-                backgroundColor: "#171717",
-                image: "./assets/images/splash-new-dark.png",
-            },
-        },*/
     },
     android: {
         adaptiveIcon: {
@@ -45,15 +30,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             "android.permission.RECORD_AUDIO",
         ],
         package: "moe.bilisound.app",
-        /*splash: {
-            resizeMode: "cover",
-            backgroundColor: "#ffffff",
-            image: "./assets/images/splash-new.png",
-            dark: {
-                backgroundColor: "#171717",
-                image: "./assets/images/splash-new-dark.png",
-            },
-        },*/
     },
     web: {
         bundler: "metro",
@@ -79,7 +55,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
                     image: "./assets/images/icon.png",
                     backgroundColor: "#171717",
                 },
-                imageWidth: 160,
+                imageWidth: 240,
             },
         ],
         "expo-router",
