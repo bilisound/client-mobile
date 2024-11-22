@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { PropsWithChildren } from "react";
-import { View, StatusBar, StyleProp, ViewStyle } from "react-native";
+import { View, StyleProp, ViewStyle } from "react-native";
 import { SystemBars } from "react-native-edge-to-edge";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import { twMerge } from "tailwind-merge";

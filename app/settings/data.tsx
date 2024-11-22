@@ -24,9 +24,16 @@ export default function Page() {
             <SettingMenuItem
                 icon={DeleteIcon}
                 title="清除离线缓存"
-                subTitle={
+                /*subTitle={
                     data && !isLoading
                         ? `共占用 ${filesize(data.cacheSize)} (${filesize(data.cacheFreeSize)} 可清除)`
+                        : "占用空间统计中……"
+                }*/
+                subTitle={
+                    data && !isLoading
+                        ? data.cacheFreeSize <= 0
+                            ? "目前没有可供清除的缓存"
+                            : `${filesize(data.cacheFreeSize)} 可清除`
                         : "占用空间统计中……"
                 }
                 onPress={async () => {
