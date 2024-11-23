@@ -53,3 +53,5 @@ expo-env.d.ts
 /ios
 /android
 .gluestack
+
+third-party-licenses.txt

@@ -1,6 +1,5 @@
 import { FontAwesome6, Octicons } from "@expo/vector-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { cssInterop } from "nativewind";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -12,8 +11,6 @@ import { deleteLogContent, getLogContentForDisplay, shareLogContent } from "~/ut
 
 const IconShare = createIcon(Octicons, "share");
 const IconTrash = createIcon(FontAwesome6, "trash");
-
-cssInterop(LogViewer, { className: "style" });
 
 const App: React.FC = () => {
     const edgeInsets = useSafeAreaInsets();

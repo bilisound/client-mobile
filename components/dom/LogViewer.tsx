@@ -15,7 +15,7 @@ export default function LogViewer({ text, style }: LogViewerProps) {
                     wordBreak: "break-all",
                     whiteSpace: "pre-wrap",
                     fontSize: "14px",
-                    lineHeight: 1.5,
+                    lineHeight: 1.25,
                 }}
             >
                 {text}

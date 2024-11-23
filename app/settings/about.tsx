@@ -1,6 +1,7 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import React from "react";
 import { Linking, ScrollView, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -16,6 +17,7 @@ import log from "~/utils/logger";
 
 const UpdateIcon = createIcon(MaterialIcons, "update");
 const HomeIcon = createIcon(MaterialIcons, "home");
+const LicenseIcon = createIcon(MaterialCommunityIcons, "license");
 
 export default function Page() {
     // 检查更新
@@ -71,6 +73,11 @@ export default function Page() {
                         onPress={() => handleCheckUpdate()}
                     />
                 ) : null}
+                <SettingMenuItem
+                    icon={LicenseIcon}
+                    title="开源软件使用声明"
+                    onPress={() => router.push("/settings/license")}
+                />
             </ScrollView>
         </CommonLayout>
     );

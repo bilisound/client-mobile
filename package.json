@@ -7,13 +7,14 @@
     "android": "cross-env DARK_MODE=media expo run:android",
     "ios": "cross-env DARK_MODE=media expo run:ios",
     "web": "cross-env DARK_MODE=media expo start -c --web",
-    "prepare": "pnpm run clean && expo prebuild",
+    "prepare": "pnpm run clean && expo prebuild && pnpm run generate-license",
     "test": "jest --watchAll",
     "build:android": "node ./scripts/run-gradle.js assembleRelease",
     "build:web": "expo export --platform web",
     "lint": "eslint --fix .",
     "postinstall": "patch-package",
     "generate-migration": "drizzle-kit generate",
+    "generate-license": "generate-license-file --input package.json --output third-party-licenses.txt --overwrite --ci",
     "clean": "node -e \"const opt = { recursive: true, force: true }; fs.rmSync('./ios', opt); fs.rmSync('./android', opt); fs.rmSync('./node_modules/.cache', opt)\""
   },
   "jest": {
@@ -150,6 +151,7 @@
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-universe": "^12.1.0",
+    "generate-license-file": "^3.6.0",
     "jest": "^29.7.0",
     "jest-expo": "~52.0.2",
     "prettier": "^3.3.3",

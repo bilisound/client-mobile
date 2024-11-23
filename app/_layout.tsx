@@ -134,7 +134,7 @@ const RootLayoutNav = () => {
             <Stack.Screen name="apply-playlist" options={{ headerShown: false }} />
             <Stack.Screen name="remote-list" options={{ headerShown: false }} />
             <Stack.Screen name="settings/about" options={{ title: "关于", headerShown: false }} />
-            <Stack.Screen name="settings/readme" options={{ title: "用户说明", headerShown: false }} />
+            <Stack.Screen name="settings/license" options={{ title: "开源软件使用声明", headerShown: false }} />
             <Stack.Screen name="settings/log-show" options={{ title: "导出日志", headerShown: false }} />
             <Stack.Screen name="settings/theme" options={{ title: "外观设置", headerShown: false }} />
             <Stack.Screen name="settings/data" options={{ title: "数据管理", headerShown: false }} />

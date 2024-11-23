@@ -13,6 +13,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { cssInterop, remapProps } from "nativewind";
 import { ShadowedView } from "react-native-fast-shadow";
 
+import LogViewer from "~/components/dom/LogViewer";
+
 cssInterop(Ionicons, {
     className: {
         target: "style",
@@ -88,3 +90,4 @@ remapProps(LinearGradient, {
 cssInterop(ShadowedView, {
     className: "style",
 });
+cssInterop(LogViewer, { className: "style" });
