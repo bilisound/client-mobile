@@ -38,10 +38,12 @@ export const unstable_settings = {
     initialRouteName: "(tabs)",
 };
 
-setInterval(() => {
-    NavigationBar.setPositionAsync("absolute");
-    NavigationBar.setBackgroundColorAsync("#ffffff01");
-}, 100);
+if (Platform.OS === "android") {
+    setInterval(() => {
+        NavigationBar.setPositionAsync("absolute");
+        NavigationBar.setBackgroundColorAsync("#ffffff01");
+    }, 100);
+}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
