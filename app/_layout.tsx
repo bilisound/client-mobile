@@ -6,7 +6,7 @@ import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
-import * as NavigationBar from "expo-navigation-bar";
+// import * as NavigationBar from "expo-navigation-bar";
 import { SplashScreen, Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import { merge } from "lodash";
@@ -38,12 +38,12 @@ export const unstable_settings = {
     initialRouteName: "(tabs)",
 };
 
-if (Platform.OS === "android") {
+/*if (Platform.OS === "android") {
     setInterval(() => {
         NavigationBar.setPositionAsync("absolute");
         NavigationBar.setBackgroundColorAsync("#ffffff01");
     }, 100);
-}
+}*/
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -116,7 +116,16 @@ const RootLayoutNav = () => {
     };
 
     const routes = (
-        <Stack>
+        <Stack
+            screenOptions={{
+                // https://github.com/zoontek/react-native-edge-to-edge/issues/45
+                // https://github.com/software-mansion/react-native-screens/pull/2464
+                statusBarTranslucent: true,
+                navigationBarTranslucent: true,
+                navigationBarColor: "transparent",
+                statusBarBackgroundColor: "transparent",
+            }}
+        >
             <Stack.Screen
                 name="(tabs)"
                 options={{
