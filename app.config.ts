@@ -55,7 +55,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
                     image: "./assets/images/icon.png",
                     backgroundColor: "#171717",
                 },
-                imageWidth: 240,
+                imageWidth: 200,
             },
         ],
         "expo-router",
