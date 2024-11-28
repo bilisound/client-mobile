@@ -1,14 +1,4 @@
-import { logger, consoleTransport, configLoggerType } from "react-native-logs";
-
-let transport: Partial<configLoggerType> = {
-    transport: consoleTransport,
-};
-
-if (process.env.NODE_ENV === "development") {
-    transport = {
-        transport: consoleTransport,
-    };
-}
+import { logger, consoleTransport } from "react-native-logs";
 
 const config = {
     levels: {
@@ -23,10 +13,10 @@ const config = {
     printLevel: true,
     printDate: true,
     enabled: true,
-    ...transport,
+    transport: consoleTransport,
 };
 
-const log = logger.createLogger<"debug" | "info" | "warn" | "error">(config);
+const log = logger.createLogger(config);
 
 export default log;
 

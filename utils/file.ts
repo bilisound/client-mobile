@@ -1,17 +1,13 @@
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import path from "path-browserify";
-import { Platform } from "react-native";
-import { createDocument } from "react-native-saf-x";
-import Toast from "react-native-toast-message";
-import TrackPlayer from "react-native-track-player";
 
 import { BILISOUND_OFFLINE_URI } from "~/constants/file";
 import { cacheStatusStorage } from "~/storage/cache-status";
 import log from "~/utils/logger";
 
 export async function saveTextFile(name: string, content: string, mimeType = "text/plain") {
-    if (Platform.OS === "android") {
+    /*if (Platform.OS === "android") {
         log.debug("使用 Android SAF 保存文本文件");
         const response = await createDocument(content, {
             initialName: name,
@@ -19,7 +15,7 @@ export async function saveTextFile(name: string, content: string, mimeType = "te
         });
         log.debug("保存文件流程结束");
         return !!response;
-    }
+    }*/
     const filePath = FileSystem.cacheDirectory + `/shared_text_file_${new Date().getTime()}`;
     const fileFullPath = `${filePath}/${name}`;
     await FileSystem.makeDirectoryAsync(filePath, {
@@ -44,7 +40,7 @@ export async function saveFile(location: string, replaceFileName?: string) {
         log.warn(`参数 location 必须是 file:// URI。传入的 location: ${location}`);
         location = `file://${encodeURI(location)}`;
     }
-    const parsed = path.parse(location);
+    /*const parsed = path.parse(location);
     const fileName = replaceFileName ?? `${parsed.name}${parsed.ext}`;
 
     if (Platform.OS === "android") {
@@ -59,7 +55,7 @@ export async function saveFile(location: string, replaceFileName?: string) {
             });
         }
         return !!response;
-    }
+    }*/
     let targetLocation = "";
 
     if (replaceFileName) {
@@ -101,20 +97,8 @@ async function checkDirectorySizeByUri(uri: string, options: CheckDirectorySizeO
     return totalSize;
 }
 
-export async function countSize() {
-    const tracks = await TrackPlayer.getQueue();
-    const cacheSize = await checkDirectorySizeByUri(BILISOUND_OFFLINE_URI);
-    const cacheFreeSize = await checkDirectorySizeByUri(BILISOUND_OFFLINE_URI, {
-        fileFilter(fileName) {
-            const name = path.parse(uriToPath(fileName)).name;
-            return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
-        },
-    });
-    return { cacheSize, cacheFreeSize };
-}
-
 export async function cleanAudioCache() {
-    const tracks = await TrackPlayer.getQueue();
+    const tracks: any[] = []; // await TrackPlayer.getQueue();
     const items = (await FileSystem.readDirectoryAsync(BILISOUND_OFFLINE_URI))
         .map(e => {
             return BILISOUND_OFFLINE_URI + "/" + encodeURI(e);

@@ -2,7 +2,7 @@ import { v4 } from "uuid";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { createStorage } from "../storage/zustand";
+import { createStorage } from "~/storage/zustand";
 import log from "../utils/logger";
 
 export interface HistoryItem {

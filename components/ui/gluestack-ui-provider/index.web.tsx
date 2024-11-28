@@ -1,52 +1,30 @@
 "use client";
-import { setFlushStyles } from "@gluestack-ui/nativewind-utils/flush";
+import React from "react";
+import { config } from "./config";
 import { OverlayProvider } from "@gluestack-ui/overlay";
 import { ToastProvider } from "@gluestack-ui/toast";
-import React, { useId } from "react";
-
-import { config, ConfigName, parsedConfig } from "./config";
-import { ThemeValueProvider } from "./theme";
-
-import useSettingsStore from "~/store/settings";
+import { setFlushStyles } from "@gluestack-ui/nativewind-utils/flush";
 
 export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "light" | "dark"; children?: any }) {
-    const { theme } = useSettingsStore(state => ({
-        theme: state.theme,
-    }));
-    const themeUniqueId = useId();
-
-    const themeName = theme + "_" + mode;
-
-    const stringcssvars = Object.keys(parsedConfig[themeName]).reduce((acc, cur) => {
-        acc += `${cur}:${parsedConfig[themeName][cur]};`;
+    const stringcssvars = Object.keys(config[mode]).reduce((acc, cur) => {
+        acc += `${cur}:${config[mode][cur]};`;
         return acc;
     }, "");
     setFlushStyles(`:root {${stringcssvars}} `);
 
-    if (parsedConfig[themeName] && typeof document !== "undefined") {
+    if (config[mode] && typeof document !== "undefined") {
         const element = document.documentElement;
         if (element) {
             const head = element.querySelector("head");
-            let style = document.getElementById(themeUniqueId) as HTMLStyleElement | null;
-            if (!style) {
-                style = document.createElement("style");
-                style.id = themeUniqueId;
-            }
+            const style = document.createElement("style");
             style.innerHTML = `:root {${stringcssvars}} `;
             if (head) head.appendChild(style);
         }
     }
 
     return (
-        <ThemeValueProvider.Provider
-            value={{
-                theme: config[(theme + "_" + mode) as ConfigName],
-                mode,
-            }}
-        >
-            <OverlayProvider>
-                <ToastProvider>{props.children}</ToastProvider>
-            </OverlayProvider>
-        </ThemeValueProvider.Provider>
+        <OverlayProvider>
+            <ToastProvider>{props.children}</ToastProvider>
+        </OverlayProvider>
     );
 }

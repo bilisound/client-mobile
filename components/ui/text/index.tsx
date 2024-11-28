@@ -1,7 +1,7 @@
-import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 import React from "react";
-import { Text as RNText } from "react-native";
 
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
+import { Text as RNText } from "react-native";
 import { textStyle } from "./styles";
 
 type ITextProps = React.ComponentProps<typeof RNText> & VariantProps<typeof textStyle>;
@@ -24,8 +24,6 @@ const Text = React.forwardRef<React.ElementRef<typeof RNText>, ITextProps>(
                     highlight,
                     class: className,
                 })}
-                numberOfLines={isTruncated ? 1 : undefined}
-                ellipsizeMode={isTruncated ? "tail" : undefined}
                 {...props}
                 ref={ref}
             />

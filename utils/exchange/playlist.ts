@@ -1,6 +1,5 @@
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
-import Toast from "react-native-toast-message";
 import { parse, stringify } from "smol-toml";
 
 import { db } from "~/storage/sqlite/main";
@@ -29,14 +28,7 @@ export async function exportPlaylistToFile(id?: number) {
     } else {
         name = output.meta[0].title;
     }
-    const ok = await saveTextFile("[Bilisound 歌单] " + name + ".toml", doc, "application/toml");
-    if (ok) {
-        Toast.show({
-            type: "success",
-            text1: "操作成功",
-            text2: `成功导出 ${output.meta.length} 个歌单`,
-        });
-    }
+    await saveTextFile("[Bilisound 歌单] " + name + ".toml", doc, "application/toml");
 }
 
 interface MigratePlan {
@@ -83,18 +75,18 @@ export async function importPlaylistFromFile() {
                 }
             }
         });
-        Toast.show({
+        /*Toast.show({
             type: "success",
             text1: "歌单导入成功",
             text2: `导入了 ${migratePlan.length} 个歌单`,
-        });
+        });*/
     } catch (e) {
         log.error(`歌单导入失败：${e}`);
-        Toast.show({
+        /* Toast.show({
             type: "error",
             text1: "歌单导入失败",
             text2: "无法读取选择的文件",
-        });
+        });*/
         if (process.env.NODE_ENV !== "production") {
             throw e;
         }

@@ -11,6 +11,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     scheme: "bilisound",
     userInterfaceStyle: "automatic",
     primaryColor: "#00ba9d",
+    newArchEnabled: true,
     ios: {
         supportsTablet: true,
         infoPlist: {

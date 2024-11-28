@@ -2,21 +2,12 @@ import * as Device from "expo-device";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { Platform } from "react-native";
-import { logger, fileAsyncTransport, consoleTransport, configLoggerType } from "react-native-logs";
+import { logger, fileAsyncTransport, consoleTransport } from "react-native-logs";
 
 import { BILISOUND_LOG_URI } from "~/constants/file";
 import { VERSION } from "~/constants/releasing";
 
-const transport: Partial<configLoggerType> = {
-    transport: [fileAsyncTransport, consoleTransport],
-    transportOptions: {
-        FS: FileSystem,
-        fileName: `bilisound_log_${VERSION}_{date-today}.log`,
-        filePath: BILISOUND_LOG_URI,
-    },
-};
-
-const config = {
+const log = logger.createLogger({
     levels: {
         debug: 0,
         info: 1,
@@ -29,10 +20,14 @@ const config = {
     printLevel: true,
     printDate: true,
     enabled: true,
-    ...transport,
-};
-
-const log = logger.createLogger<"debug" | "info" | "warn" | "error">(config);
+    transport: [fileAsyncTransport, consoleTransport],
+    transportOptions: {
+        // @ts-ignore
+        FS: FileSystem,
+        fileName: `bilisound_log_${VERSION}_{date-today}.log`,
+        filePath: BILISOUND_LOG_URI,
+    },
+});
 
 export default log;
 

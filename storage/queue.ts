@@ -1,5 +1,4 @@
 import { MMKV, useMMKVString } from "react-native-mmkv";
-import { Track } from "react-native-track-player";
 
 // 当前队列
 export const QUEUE_LIST = "queue_list";
@@ -28,9 +27,9 @@ export function getQueuePlayingMode() {
     return (queueStorage.getString(QUEUE_PLAYING_MODE) ?? "normal") as QueuePlayingMode;
 }
 
-export function addToQueueListBackup(tracks: Track[]) {
+export function addToQueueListBackup(tracks: any[]) {
     const got = queueStorage.getString(QUEUE_LIST_BACKUP) ?? "[]";
-    const list: Track[] = JSON.parse(got);
+    const list: any[] = JSON.parse(got); // Track
     const newList = list.concat(tracks);
     queueStorage.set(QUEUE_LIST_BACKUP, JSON.stringify(newList));
 }
