@@ -12,6 +12,8 @@ import log from "~/utils/logger";
 import init from "~/utils/init";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 
+import "~/utils/polyfill";
+
 if (Platform.OS === "android") {
     setInterval(() => {
         NavigationBar.setPositionAsync("absolute");
