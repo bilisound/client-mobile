@@ -1,37 +1,27 @@
-import { Tabs } from "expo-router";
-import { useColorScheme } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
+import { Text } from "~/components/ui/text";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabLayout() {
-    const colorScheme = useColorScheme();
+    const edgeInsets = useSafeAreaInsets();
 
     return (
-        <Tabs
-            screenOptions={{
-                tabBarActiveTintColor: colorScheme === "dark" ? "#fff" : "#000",
-            }}
-        >
-            <Tabs.Screen
-                name="main"
-                options={{
-                    title: "首页",
-                    tabBarIcon: ({ color }) => <MaterialIcons name="home" color={color} size={24} />,
-                }}
-            />
-            <Tabs.Screen
-                name="playlist"
-                options={{
-                    title: "播放列表",
-                    tabBarIcon: ({ color }) => <MaterialIcons name="queue-music" color={color} size={24} />,
-                }}
-            />
-            <Tabs.Screen
-                name="settings"
-                options={{
-                    title: "设置",
-                    tabBarIcon: ({ color }) => <MaterialIcons name="settings" color={color} size={24} />,
-                }}
-            />
+        <Tabs>
+            <TabSlot />
+            <TabList
+                className={"absolute flex flex-col items-center justify-center"}
+                style={{ left: edgeInsets.left, top: edgeInsets.top }}
+            >
+                <TabTrigger name="main" href="/(main)/main" className={"p-4 bg-red-500"}>
+                    <Text>主页</Text>
+                </TabTrigger>
+                <TabTrigger name="playlist" href="/(main)/playlist" className={"p-4 bg-red-500"}>
+                    <Text>播放列表</Text>
+                </TabTrigger>
+                <TabTrigger name="settings" href="/(main)/settings" className={"p-4 bg-red-500"}>
+                    <Text>设置</Text>
+                </TabTrigger>
+            </TabList>
         </Tabs>
     );
 }
