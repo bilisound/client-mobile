@@ -21,6 +21,11 @@ if (Platform.OS === "android") {
     }, 100);
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const unstable_settings = {
+    initialRouteName: "(main)",
+};
+
 export default function RootLayout() {
     const [loaded, error] = useFonts({
         Roboto_400Regular,
@@ -63,7 +68,13 @@ export default function RootLayout() {
                 <SystemBars style={colorScheme === "dark" ? "light" : "dark"} />
                 <Stack>
                     <Stack.Screen
-                        name={"index"}
+                        name={"(main)"}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name={"test"}
                         options={{
                             headerShown: false,
                         }}

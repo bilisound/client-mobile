@@ -4,7 +4,7 @@ import { useColorScheme } from "nativewind";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 
-export default function Index() {
+export default function Test() {
     const colorScheme = useColorScheme();
     return (
         <Box className={"flex-1 justify-center items-center bg-background-0"}>
