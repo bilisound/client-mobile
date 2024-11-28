@@ -1,9 +1,9 @@
-const gluestackPlugin = require("@gluestack-ui/nativewind-utils/tailwind-plugin");
+import gluestackPlugin from "@gluestack-ui/nativewind-utils/tailwind-plugin";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: "media",
-    content: ["./app/**/*.{tsx,jsx,ts,js}", "./components/**/*.{tsx,jsx,ts,js}"],
+    content: ["app/**/*.{tsx,jsx,ts,js}", "components/**/*.{tsx,jsx,ts,js}"],
     presets: [require("nativewind/preset")],
     safelist: [
         {
@@ -27,20 +27,6 @@ module.exports = {
                     800: "rgb(var(--color-primary-800)/<alpha-value>)",
                     900: "rgb(var(--color-primary-900)/<alpha-value>)",
                     950: "rgb(var(--color-primary-950)/<alpha-value>)",
-                },
-                accent: {
-                    0: "rgb(var(--color-accent-0)/<alpha-value>)",
-                    50: "rgb(var(--color-accent-50)/<alpha-value>)",
-                    100: "rgb(var(--color-accent-100)/<alpha-value>)",
-                    200: "rgb(var(--color-accent-200)/<alpha-value>)",
-                    300: "rgb(var(--color-accent-300)/<alpha-value>)",
-                    400: "rgb(var(--color-accent-400)/<alpha-value>)",
-                    500: "rgb(var(--color-accent-500)/<alpha-value>)",
-                    600: "rgb(var(--color-accent-600)/<alpha-value>)",
-                    700: "rgb(var(--color-accent-700)/<alpha-value>)",
-                    800: "rgb(var(--color-accent-800)/<alpha-value>)",
-                    900: "rgb(var(--color-accent-900)/<alpha-value>)",
-                    950: "rgb(var(--color-accent-950)/<alpha-value>)",
                 },
                 secondary: {
                     0: "rgb(var(--color-secondary-0)/<alpha-value>)",
@@ -205,8 +191,19 @@ module.exports = {
                 "soft-2": "0px 0px 20px rgba(38, 38, 38, 0.2)",
                 "soft-3": "0px 0px 30px rgba(38, 38, 38, 0.1)",
                 "soft-4": "0px 0px 40px rgba(38, 38, 38, 0.1)",
+                // 看起来 nativewind 并不支持复合阴影，尽管 React Native 0.76+ 支持了……
+                sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                DEFAULT: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
+                md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
+                lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)",
+                xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+                "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)",
+                none: "none",
+                test: "0px 0px 40px rgba(157, 66, 200, 1)",
+                test2: "0px 0px 40px rgba(157, 200, 8, 1), 10px -10px 20px rgba(221, 32, 21, 1)",
             },
         },
     },
-    plugins: [gluestackPlugin, require("@tailwindcss/container-queries")],
+    plugins: [gluestackPlugin],
 };
