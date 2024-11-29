@@ -25,6 +25,7 @@
     "@gluestack-ui/button": "^1.0.8",
     "@gluestack-ui/nativewind-utils": "1.0.23",
     "@gluestack-ui/overlay": "^0.1.16",
+    "@gluestack-ui/pressable": "^0.1.17",
     "@gluestack-ui/toast": "^1.0.8",
     "@react-navigation/bottom-tabs": "^7.0.0",
     "@react-navigation/native": "^7.0.0",
