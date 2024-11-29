@@ -12,11 +12,11 @@ export default function TabLayout() {
                 className={"absolute flex flex-col items-center justify-center"}
                 style={{ left: edgeInsets.left, top: edgeInsets.top }}
             >
-                <TabTrigger name="main" href="/(main)/main" className={"p-4 bg-red-500"}>
-                    <Text>主页</Text>
-                </TabTrigger>
                 <TabTrigger name="playlist" href="/(main)/playlist" className={"p-4 bg-red-500"}>
                     <Text>播放列表</Text>
+                </TabTrigger>
+                <TabTrigger name="index" href="/(main)" className={"p-4 bg-red-500"}>
+                    <Text>主页</Text>
                 </TabTrigger>
                 <TabTrigger name="settings" href="/(main)/settings" className={"p-4 bg-red-500"}>
                     <Text>设置</Text>
