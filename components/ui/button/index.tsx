@@ -176,10 +176,10 @@ const buttonTextStyle = tva({
         },
         size: {
             xs: "text-xs",
-            sm: "text-sm",
-            md: "text-base",
-            lg: "text-lg",
-            xl: "text-xl",
+            sm: "text-xs",
+            md: "text-sm",
+            lg: "text-base",
+            xl: "text-lg",
         },
     },
     parentCompoundVariants: [
