@@ -26,7 +26,7 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
         >
             <IconComponent
                 name={iconName}
-                className={twMerge("text-[16px]", isFocused ? "color-typography-700" : "color-typography-700/50")}
+                className={twMerge("text-[16px]", isFocused ? "color-typography-700" : "color-typography-700/40")}
                 size={-1}
             />
             <Text className={twMerge("text-xs", isFocused ? "font-semibold" : "")}>{title}</Text>
