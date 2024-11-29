@@ -1,10 +1,10 @@
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 
-export default function PlaylistScreen() {
+export default function Page() {
     return (
         <View className="flex-1 items-center justify-center">
-            <Text className="text-base">播放列表</Text>
+            <Text className="text-base">歌单元数据</Text>
         </View>
     );
 }

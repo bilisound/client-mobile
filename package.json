@@ -22,6 +22,7 @@
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.3",
     "@expo/vector-icons": "^14.0.2",
+    "@gluestack-ui/button": "^1.0.8",
     "@gluestack-ui/nativewind-utils": "1.0.23",
     "@gluestack-ui/overlay": "^0.1.16",
     "@gluestack-ui/toast": "^1.0.8",

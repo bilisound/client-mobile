@@ -13,6 +13,7 @@ import init from "~/utils/init";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 
 import "~/utils/polyfill";
+import "~/utils/nativewind";
 
 if (Platform.OS === "android") {
     setInterval(() => {
@@ -20,6 +21,15 @@ if (Platform.OS === "android") {
         NavigationBar.setBackgroundColorAsync("#ffffff01");
     }, 100);
 }
+
+// todo 把它们放到主题管理模块里
+const defaultTheme = structuredClone(DefaultTheme);
+defaultTheme.colors.background = "#ffffff";
+defaultTheme.colors.primary = "#00ba9d";
+
+const darkTheme = structuredClone(DarkTheme);
+darkTheme.colors.background = "#121212";
+darkTheme.colors.primary = "#00ba9d";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_settings = {
@@ -64,7 +74,7 @@ export default function RootLayout() {
 
     return (
         <GluestackUIProvider mode={(colorScheme ?? "light") as "light" | "dark"}>
-            <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+            <ThemeProvider value={colorScheme === "dark" ? darkTheme : defaultTheme}>
                 <SystemBars style={colorScheme === "dark" ? "light" : "dark"} />
                 <Stack>
                     <Stack.Screen
