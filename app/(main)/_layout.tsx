@@ -1,6 +1,5 @@
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from "expo-router/ui";
 import { Text } from "~/components/ui/text";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
 import { ComponentType, forwardRef, Ref } from "react";
@@ -19,7 +18,9 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
     return (
         <Pressable
             onPress={onPress}
-            className={"flex-1 h-16 gap-2 w-full flex-col items-center justify-center"}
+            className={
+                "flex-1 md:basis-auto h-16 gap-2 w-full md:w-16 flex-col items-center justify-center bg-green-200"
+            }
             {...props}
             ref={ref}
         >
@@ -34,19 +35,13 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
 });
 
 export default function TabLayout() {
-    const edgeInsets = useSafeAreaInsets();
-
     return (
-        <Tabs>
+        <Tabs className={"md:flex-row-reverse"}>
             <TabSlot />
             <TabList
-                style={{
-                    paddingLeft: edgeInsets.left,
-                    paddingRight: edgeInsets.right,
-                    paddingBottom: edgeInsets.bottom,
-                    justifyContent: "space-around",
-                }}
-                className={"bg-background-50"}
+                className={
+                    "px-safe pb-safe !flex-row !justify-around bg-background-50 md:!flex-col md:pr-0 md:pt-safe md:!justify-start"
+                }
             >
                 <TabTrigger asChild name="playlist" href="/(main)/(playlist)/playlist">
                     <TabTriggerChild IconComponent={FontAwesome5} iconName={"list"} title={"歌单"} />
