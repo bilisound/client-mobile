@@ -3,7 +3,6 @@ import { Text } from "~/components/ui/text";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
-import { usePathname } from "expo-router";
 import { ComponentType, forwardRef, Ref } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -26,18 +25,16 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
         >
             <IconComponent
                 name={iconName}
-                className={twMerge("text-[16px]", isFocused ? "color-typography-700" : "color-typography-700/40")}
+                className={twMerge("text-[16px]", isFocused ? "color-accent-500" : "color-typography-700/40")}
                 size={-1}
             />
-            <Text className={twMerge("text-xs", isFocused ? "font-semibold" : "")}>{title}</Text>
+            <Text className={twMerge("text-xs", isFocused ? "color-accent-500 font-semibold" : "")}>{title}</Text>
         </Pressable>
     );
 });
 
 export default function TabLayout() {
     const edgeInsets = useSafeAreaInsets();
-    const pathname = usePathname();
-    console.log(pathname);
 
     return (
         <Tabs>
