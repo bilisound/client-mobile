@@ -1,30 +1,51 @@
 "use client";
-import React from "react";
-import { config } from "./config";
+import { setFlushStyles } from "@gluestack-ui/nativewind-utils/flush";
 import { OverlayProvider } from "@gluestack-ui/overlay";
 import { ToastProvider } from "@gluestack-ui/toast";
-import { setFlushStyles } from "@gluestack-ui/nativewind-utils/flush";
+import React from "react";
+
+import { config, ConfigName, parsedConfig } from "./config";
+import { ThemeValueProvider } from "./theme";
+
+import useSettingsStore from "~/store/settings";
 
 export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "light" | "dark"; children?: any }) {
-    const stringcssvars = Object.keys(config[mode]).reduce((acc, cur) => {
-        acc += `${cur}:${config[mode][cur]};`;
+    const { theme } = useSettingsStore(state => ({
+        theme: state.theme,
+    }));
+
+    const themeName = theme + "_" + mode;
+
+    const stringcssvars = Object.keys(parsedConfig[themeName]).reduce((acc, cur) => {
+        acc += `${cur}:${parsedConfig[themeName][cur]};`;
         return acc;
     }, "");
     setFlushStyles(`:root {${stringcssvars}} `);
 
-    if (config[mode] && typeof document !== "undefined") {
+    if (parsedConfig[themeName] && typeof document !== "undefined") {
         const element = document.documentElement;
         if (element) {
             const head = element.querySelector("head");
-            const style = document.createElement("style");
+            let style = document.getElementById("nativewind-style") as HTMLStyleElement | null;
+            if (!style) {
+                style = document.createElement("style");
+                style.id = "nativewind-style";
+            }
             style.innerHTML = `:root {${stringcssvars}} `;
             if (head) head.appendChild(style);
         }
     }
 
     return (
-        <OverlayProvider>
-            <ToastProvider>{props.children}</ToastProvider>
-        </OverlayProvider>
+        <ThemeValueProvider.Provider
+            value={{
+                theme: config[(theme + "_" + mode) as ConfigName],
+                mode,
+            }}
+        >
+            <OverlayProvider>
+                <ToastProvider>{props.children}</ToastProvider>
+            </OverlayProvider>
+        </ThemeValueProvider.Provider>
     );
 }
