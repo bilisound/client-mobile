@@ -1,10 +1,10 @@
-import { View } from "react-native";
 import { Text } from "~/components/ui/text";
+import { TabSafeAreaView } from "~/hooks/useTabSafeArea";
 
 export default function Page() {
     return (
-        <View className="flex-1 items-center justify-center">
+        <TabSafeAreaView className="flex-1 items-center justify-center">
             <Text className="text-base">歌单元数据</Text>
-        </View>
+        </TabSafeAreaView>
     );
 }

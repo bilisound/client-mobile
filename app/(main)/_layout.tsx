@@ -22,7 +22,12 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
     return (
         <Pressable
             onPress={onPress}
-            className={"max-md:flex-1 md:basis-auto h-16 gap-2 w-full md:w-16 flex-col items-center justify-center"}
+            className={
+                "max-md:flex-1 md:basis-auto h-16 gap-2 w-full flex-col items-center justify-center " +
+                "md:w-16 " +
+                "xl:flex-row xl:gap-3 xl:h-12 xl:justify-start xl:px-5 xl:w-56 xl:rounded-full " +
+                (isFocused ? "xl:bg-background-0" : "")
+            }
             {...props}
             ref={ref}
         >
@@ -31,34 +36,40 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
                 className={twMerge("text-[16px]", isFocused ? "color-accent-500" : "color-typography-700/40")}
                 size={-1}
             />
-            <Text className={twMerge("text-xs", isFocused ? "color-accent-500 font-semibold" : "")}>{title}</Text>
+            <Text className={twMerge("text-xs xl:text-sm", isFocused ? "color-accent-500 font-semibold" : "")}>
+                {title}
+            </Text>
         </Pressable>
     );
 });
 
 export default function TabLayout() {
-    const edgeInsets = simpleCopy(useSafeAreaInsets());
+    const edgeInsets = useSafeAreaInsets();
+    const edgeInsetsTab = simpleCopy(edgeInsets);
     const windowDimensions = useWindowDimensions();
 
     if (windowDimensions.width < breakpoints.md) {
-        edgeInsets.bottom += 64;
+        edgeInsetsTab.bottom = edgeInsets.bottom + 64;
     }
     if (windowDimensions.width >= breakpoints.md) {
-        edgeInsets.left += 64;
+        edgeInsetsTab.left = edgeInsets.left + 64;
+    }
+    if (windowDimensions.width >= breakpoints.xl) {
+        edgeInsetsTab.left = edgeInsets.left + 256;
     }
 
-    console.log(windowDimensions, edgeInsets);
-
     return (
-        <TabSafeAreaContext.Provider value={edgeInsets}>
+        <TabSafeAreaContext.Provider value={edgeInsetsTab}>
             <Tabs>
                 <TabSlot />
                 <TabList
                     className={
-                        "absolute left-0 bottom-0 px-safe pb-safe !flex-row !justify-around bg-background-50 max-md:w-full md:h-full md:!flex-col md:pr-0 md:pt-safe md:!justify-start"
+                        "absolute left-0 bottom-0 px-safe pb-safe !flex-row !justify-around bg-background-50 " +
+                        "max-md:w-full md:h-full md:!flex-col md:pr-0 md:pt-safe md:!justify-start " +
+                        "xl:w-64 xl:items-center"
                     }
                 >
-                    <View className={"hidden md:flex h-3"} aria-hidden={true} />
+                    <View className={"hidden md:flex h-3 xl:h-4"} aria-hidden={true} />
                     <TabTrigger asChild name="playlist" href="/(main)/(playlist)/playlist">
                         <TabTriggerChild IconComponent={FontAwesome5} iconName={"list"} title={"歌单"} />
                     </TabTrigger>

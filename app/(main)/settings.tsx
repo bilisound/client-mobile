@@ -1,7 +1,7 @@
-import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import useSettingsStore from "~/store/settings";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
+import { TabSafeAreaView } from "~/hooks/useTabSafeArea";
 
 export default function SettingsScreen() {
     const { update } = useSettingsStore(state => ({
@@ -9,7 +9,7 @@ export default function SettingsScreen() {
     }));
 
     return (
-        <View className="flex-1 items-center justify-center gap-4">
+        <TabSafeAreaView className="flex-1 items-center justify-center gap-4">
             <ButtonOuter>
                 <Button onPress={() => update("theme", "classic")}>
                     <ButtonText>Classic Theme</ButtonText>
@@ -21,6 +21,6 @@ export default function SettingsScreen() {
                 </Button>
             </ButtonOuter>
             <Text className="text-base">设置</Text>
-        </View>
+        </TabSafeAreaView>
     );
 }

@@ -3,18 +3,11 @@ import { Text } from "~/components/ui/text";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { router } from "expo-router";
 import { Pressable } from "~/components/ui/pressable";
-import { useTabSafeArea } from "~/hooks/useTabSafeArea";
+import { TabSafeAreaView } from "~/hooks/useTabSafeArea";
 
 export default function Page() {
-    const edgeInsets = useTabSafeArea(true);
-
     return (
-        <View
-            className="flex-1 bg-green-300"
-            style={{
-                ...edgeInsets,
-            }}
-        >
+        <TabSafeAreaView className="flex-1 bg-green-300">
             <View className={"flex-1 items-center justify-center gap-4 bg-amber-200"}>
                 <Text className="text-base">歌单（嵌入 stack）</Text>
                 <ButtonOuter>
@@ -31,6 +24,6 @@ export default function Page() {
                     <Text>Pressable 测试</Text>
                 </Pressable>
             </View>
-        </View>
+        </TabSafeAreaView>
     );
 }
