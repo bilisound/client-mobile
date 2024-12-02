@@ -7,8 +7,8 @@ import { TabSafeAreaView } from "~/hooks/useTabSafeArea";
 
 export default function Page() {
     return (
-        <TabSafeAreaView className="flex-1 bg-green-300">
-            <View className={"flex-1 items-center justify-center gap-4 bg-amber-200"}>
+        <TabSafeAreaView className="flex-1">
+            <View className={"flex-1 items-center justify-center gap-4"}>
                 <Text className="text-base">歌单（嵌入 stack）</Text>
                 <ButtonOuter>
                     <Button onPress={() => router.push("/(main)/(playlist)/detail/1")}>
@@ -20,7 +20,9 @@ export default function Page() {
                         <ButtonText>Meta 测试</ButtonText>
                     </Button>
                 </ButtonOuter>
-                <Pressable className={"p-4 border {}-[android_ripple.color]/color:color-amber-400"}>
+                <Pressable
+                    className={"p-4 border border-typography-700 {}-[android_ripple.color]/color:color-amber-400"}
+                >
                     <Text>Pressable 测试</Text>
                 </Pressable>
             </View>
