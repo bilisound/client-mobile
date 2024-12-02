@@ -8,3 +8,11 @@ export const shadow = {
     inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)",
     none: "none",
 };
+
+export const breakpoints = {
+    sm: 640,
+    md: 768,
+    lg: 1024,
+    xl: 1280,
+    "2xl": 1536,
+};

@@ -1,9 +1,13 @@
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from "expo-router/ui";
 import { Text } from "~/components/ui/text";
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
-import { Pressable, View } from "react-native";
+import { Pressable, useWindowDimensions, View } from "react-native";
 import { ComponentType, forwardRef, Ref } from "react";
 import { twMerge } from "tailwind-merge";
+import { TabSafeAreaContext } from "~/hooks/useTabSafeArea";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { breakpoints } from "~/constants/styles";
+import { simpleCopy } from "~/utils/misc";
 
 type TabTriggerChildProps = TabTriggerSlotProps & {
     IconComponent: ComponentType<any>;
@@ -33,24 +37,39 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
 });
 
 export default function TabLayout() {
+    const edgeInsets = simpleCopy(useSafeAreaInsets());
+    const windowDimensions = useWindowDimensions();
+
+    if (windowDimensions.width < breakpoints.md) {
+        edgeInsets.bottom += 64;
+    }
+    if (windowDimensions.width >= breakpoints.md) {
+        edgeInsets.left += 64;
+    }
+
+    console.log(windowDimensions, edgeInsets);
+
     return (
-        <Tabs className={"md:flex-row-reverse"}>
-            <TabSlot />
-            <TabList
-                className={
-                    "px-safe pb-safe !flex-row !justify-around bg-background-50 md:!flex-col md:pr-0 md:pt-safe md:!justify-start"
-                }
-            >
-                <TabTrigger asChild name="playlist" href="/(main)/(playlist)/playlist">
-                    <TabTriggerChild IconComponent={FontAwesome5} iconName={"list"} title={"歌单"} />
-                </TabTrigger>
-                <TabTrigger asChild name="index" href="/(main)">
-                    <TabTriggerChild IconComponent={FontAwesome5} iconName={"search"} title={"查询"} />
-                </TabTrigger>
-                <TabTrigger asChild name="settings" href="/(main)/settings">
-                    <TabTriggerChild IconComponent={FontAwesome6} iconName={"gear"} title={"设置"} />
-                </TabTrigger>
-            </TabList>
-        </Tabs>
+        <TabSafeAreaContext.Provider value={edgeInsets}>
+            <Tabs>
+                <TabSlot />
+                <TabList
+                    className={
+                        "absolute left-0 bottom-0 px-safe pb-safe !flex-row !justify-around bg-background-50 max-md:w-full md:h-full md:!flex-col md:pr-0 md:pt-safe md:!justify-start"
+                    }
+                >
+                    <View className={"hidden md:flex h-3"} aria-hidden={true} />
+                    <TabTrigger asChild name="playlist" href="/(main)/(playlist)/playlist">
+                        <TabTriggerChild IconComponent={FontAwesome5} iconName={"list"} title={"歌单"} />
+                    </TabTrigger>
+                    <TabTrigger asChild name="index" href="/(main)">
+                        <TabTriggerChild IconComponent={FontAwesome5} iconName={"search"} title={"查询"} />
+                    </TabTrigger>
+                    <TabTrigger asChild name="settings" href="/(main)/settings">
+                        <TabTriggerChild IconComponent={FontAwesome6} iconName={"gear"} title={"设置"} />
+                    </TabTrigger>
+                </TabList>
+            </Tabs>
+        </TabSafeAreaContext.Provider>
     );
 }
