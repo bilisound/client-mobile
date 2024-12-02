@@ -2,6 +2,15 @@
 
 基于 React Native (Expo) 的 Bilisound 移动客户端。
 
+本分支为 UI 重做版。
+
+## 已知问题
+
+- 在 HMR 多次以后，按钮的 Android Ripple 效果会出现异常；在按住按钮的时候移开再松开，按钮的动画效果会直接结束
+- 旋转屏幕时有机会卡住
+
+---
+
 <table>
 <tbody>
 <tr>

@@ -18,9 +18,7 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
     return (
         <Pressable
             onPress={onPress}
-            className={
-                "flex-1 md:basis-auto h-16 gap-2 w-full md:w-16 flex-col items-center justify-center bg-green-200"
-            }
+            className={"max-md:flex-1 md:basis-auto h-16 gap-2 w-full md:w-16 flex-col items-center justify-center"}
             {...props}
             ref={ref}
         >
