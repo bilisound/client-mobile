@@ -68,10 +68,19 @@ export const getVideo = async ({
             /window\.__INITIAL_STATE__=(\{.+});\(function\(\){/,
             response,
         );
-        const playInfo: WebPlayInfo = extractJSON(
-            /window\.__playinfo__=(\{.+})<\/script><script>window.__INITIAL_STATE__=/,
-            response,
-        );
+        let playInfo: WebPlayInfo;
+        try {
+            playInfo = extractJSON(/window\.__playinfo__=(\{.+})<\/script><script>window.__INITIAL_STATE__=/, response);
+        } catch (e) {
+            log.debug(`匹配关键词失败：${e}`);
+            log.debug("正在采用降级方案……");
+            playInfo = await getVideoUrlFestival(
+                finalUrl,
+                initialState.videoData.aid,
+                initialState.videoData.bvid,
+                initialState.videoData.pages.find(e => e.page === Number(episode))?.cid ?? 0,
+            );
+        }
         return { type: "regular", initialState, playInfo };
     }
 };
