@@ -2,6 +2,7 @@ import { PropsWithChildren, ReactNode } from "react";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
+import { YuruChara } from "~/components/yuru-chara";
 
 export interface LayoutProps {
     leftAccessories?: ReactNode;
@@ -24,8 +25,6 @@ export function Layout({
     return (
         <View className={"flex-1"}>
             <View
-                // className={"border-b border-background-50"}
-                // className={"bg-primary-500"}
                 style={{
                     paddingTop: resultEdgeInsets.top,
                     paddingLeft: resultEdgeInsets.left,
@@ -60,7 +59,8 @@ export function Layout({
                     paddingBottom: resultEdgeInsets.bottom,
                 }}
             >
-                {children}
+                <YuruChara />
+                <View className={"flex-1"}>{children}</View>
             </View>
         </View>
     );

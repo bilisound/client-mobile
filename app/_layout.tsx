@@ -11,6 +11,7 @@ import { useFonts } from "expo-font";
 import log from "~/utils/logger";
 import init from "~/utils/init";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
+import { Poppins_700Bold } from "@expo-google-fonts/poppins";
 
 import "~/utils/polyfill";
 import "~/utils/nativewind";
@@ -40,6 +41,7 @@ export default function RootLayout() {
     const [loaded, error] = useFonts({
         Roboto_400Regular,
         Roboto_700Bold,
+        Poppins_700Bold,
     });
 
     const isInitializing = useRef(false);
