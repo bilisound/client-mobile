@@ -1,7 +1,7 @@
 import { Text } from "~/components/ui/text";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
 import { View } from "react-native";
-import { Layout } from "~/components/layout";
+import { Layout, LayoutButton } from "~/components/layout";
 import { useIsNarrowWidth } from "~/hooks/useIsNarrowWidth";
 import { useState } from "react";
 import { resolveVideoAndJump } from "~/utils/format";
@@ -16,9 +16,6 @@ import log from "~/utils/logger";
 import { AlertCircleIcon } from "~/components/ui/icon";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
-import { Button } from "~/components/ui/button";
-import { Monicon } from "@monicon/native";
-import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 export default function MainScreen() {
     const edgeInsets = useTabSafeAreaInsets();
@@ -26,8 +23,6 @@ export default function MainScreen() {
 
     const [value, setValue] = useState("");
     const [inputError, setInputError] = useState(false);
-
-    const { colorValue } = useRawThemeValues();
 
     async function handleSubmitEditing() {
         log.info("用户执行查询操作");
@@ -46,17 +41,8 @@ export default function MainScreen() {
             edgeInsets={edgeInsets}
             rightAccessories={
                 <>
-                    <Button variant={"ghost"} className={"w-[2.75rem] h-[2.75rem] px-0"} aria-label={"扫描二维码"}>
-                        {/* todo 这个 monicon 需要封装一下，包个 wrapper */}
-                        <Monicon size={22} color={colorValue("--color-primary-500")} name={"uil:qrcode-scan"} />
-                    </Button>
-                    <Button variant={"ghost"} className={"w-[2.75rem] h-[2.75rem] px-0"} aria-label={"历史记录"}>
-                        <Monicon
-                            size={20}
-                            color={colorValue("--color-primary-500")}
-                            name={"fa6-solid:clock-rotate-left"}
-                        />
-                    </Button>
+                    <LayoutButton iconName={"uil:qrcode-scan"} aria-label={"扫描二维码"} iconSize={22} />
+                    <LayoutButton iconName={"fa6-solid:clock-rotate-left"} aria-label={"历史记录"} />
                 </>
             }
         >

@@ -1,8 +1,12 @@
-import { PropsWithChildren, ReactNode } from "react";
+import React, { PropsWithChildren, ReactNode, forwardRef } from "react";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import { YuruChara } from "~/components/yuru-chara";
+import { Monicon } from "@monicon/native";
+import { Button } from "~/components/ui/button";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { twMerge } from "tailwind-merge";
 
 export interface LayoutProps {
     leftAccessories?: ReactNode;
@@ -65,3 +69,28 @@ export function Layout({
         </View>
     );
 }
+
+export interface LayoutButtonProps extends React.ComponentPropsWithoutRef<typeof Button> {
+    iconSize?: number;
+    iconName: string;
+    className?: string;
+}
+
+export const LayoutButton = forwardRef<React.ElementRef<typeof Button>, LayoutButtonProps>(
+    ({ iconSize = 20, iconName, className, ...props }, ref) => {
+        const { colorValue } = useRawThemeValues();
+
+        return (
+            <Button
+                variant={"ghost"}
+                {...props}
+                className={twMerge("w-[2.75rem] h-[2.75rem] px-0", className)}
+                ref={ref}
+            >
+                <Monicon size={iconSize} color={colorValue("--color-primary-500")} name={iconName} />
+            </Button>
+        );
+    },
+);
+
+LayoutButton.displayName = "LayoutButton";

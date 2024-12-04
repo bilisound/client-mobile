@@ -27,7 +27,7 @@ export const YuruChara = forwardRef<View, ViewProps>((props, ref) => {
             {...props}
             ref={ref}
             className={twMerge(
-                `w-[15rem] aspect-square absolute right-0 bottom-[100px] z-10 pointer-events-none`,
+                `w-[15rem] aspect-square absolute right-0 bottom-[120px] z-10 pointer-events-none`,
                 props.className,
             )}
         >
