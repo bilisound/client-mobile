@@ -4,7 +4,7 @@ import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import { Pressable, useWindowDimensions, View } from "react-native";
 import { ComponentType, forwardRef, Ref } from "react";
 import { twMerge } from "tailwind-merge";
-import { TabSafeAreaContext } from "~/hooks/useTabSafeArea";
+import { TabSafeAreaContext } from "~/hooks/useTabSafeAreaInsets";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { breakpoints } from "~/constants/styles";
 import { simpleCopy } from "~/utils/misc";

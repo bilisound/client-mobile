@@ -3,7 +3,7 @@ import { Text } from "~/components/ui/text";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { router } from "expo-router";
 import { Pressable } from "~/components/ui/pressable";
-import { TabSafeAreaView } from "~/hooks/useTabSafeArea";
+import { TabSafeAreaView } from "~/hooks/useTabSafeAreaInsets";
 
 export default function Page() {
     return (

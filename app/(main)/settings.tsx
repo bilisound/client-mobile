@@ -1,7 +1,7 @@
 import { Text } from "~/components/ui/text";
 import useSettingsStore from "~/store/settings";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
-import { TabSafeAreaView } from "~/hooks/useTabSafeArea";
+import { TabSafeAreaView } from "~/hooks/useTabSafeAreaInsets";
 
 export default function SettingsScreen() {
     const { update } = useSettingsStore(state => ({

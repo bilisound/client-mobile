@@ -1,5 +1,5 @@
 import { Text } from "~/components/ui/text";
-import { TabSafeAreaView } from "~/hooks/useTabSafeArea";
+import { TabSafeAreaView } from "~/hooks/useTabSafeAreaInsets";
 
 export default function Page() {
     return (
