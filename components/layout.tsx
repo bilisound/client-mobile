@@ -31,7 +31,7 @@ export function Layout({
                     paddingRight: resultEdgeInsets.right,
                 }}
             >
-                <View className={"h-14 relative items-center justify-center"}>
+                <View className={"h-16 relative items-center justify-center"}>
                     {leftAccessories ? (
                         <View className={"absolute left-0 top-0 h-full flex-row items-center px-2 gap-1"}>
                             {leftAccessories}
