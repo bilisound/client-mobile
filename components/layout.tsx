@@ -33,7 +33,7 @@ export function Layout({
             >
                 <View className={"h-14 relative items-center justify-center"}>
                     {leftAccessories ? (
-                        <View className={"absolute left-0 top-0 h-full flex-row items-center px-2"}>
+                        <View className={"absolute left-0 top-0 h-full flex-row items-center px-2 gap-1"}>
                             {leftAccessories}
                         </View>
                     ) : null}
@@ -45,7 +45,7 @@ export function Layout({
                         )}
                     </View>
                     {rightAccessories ? (
-                        <View className={"absolute right-0 top-0 h-full flex-row items-center px-2"}>
+                        <View className={"absolute right-0 top-0 h-full flex-row items-center px-2 gap-1"}>
                             {rightAccessories}
                         </View>
                     ) : null}

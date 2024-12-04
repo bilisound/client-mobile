@@ -1,6 +1,6 @@
 import { Text } from "~/components/ui/text";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { Layout } from "~/components/layout";
 import { useIsNarrowWidth } from "~/hooks/useIsNarrowWidth";
 import { useState } from "react";
@@ -16,6 +16,9 @@ import log from "~/utils/logger";
 import { AlertCircleIcon } from "~/components/ui/icon";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
+import { Button, ButtonIcon, ButtonText } from "~/components/ui/button";
+import { Monicon } from "@monicon/native";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 export default function MainScreen() {
     const edgeInsets = useTabSafeAreaInsets();
@@ -23,6 +26,8 @@ export default function MainScreen() {
 
     const [value, setValue] = useState("");
     const [inputError, setInputError] = useState(false);
+
+    const { colorValue } = useRawThemeValues();
 
     async function handleSubmitEditing() {
         log.info("用户执行查询操作");
@@ -37,7 +42,36 @@ export default function MainScreen() {
     }
 
     return (
-        <Layout edgeInsets={edgeInsets}>
+        <Layout
+            edgeInsets={edgeInsets}
+            rightAccessories={
+                <>
+                    <Button variant={"ghost"} className={"w-10 px-0"} aria-label={"扫描二维码"}>
+                        {/* todo 这个 monicon 需要封装一下，包个 wrapper */}
+                        <Monicon size={20} color={colorValue("--color-primary-500")} name={"uil:qrcode-scan"} />
+                    </Button>
+                    <Button variant={"ghost"} className={"w-10 px-0"} aria-label={"历史记录"}>
+                        <Monicon
+                            size={18}
+                            color={colorValue("--color-primary-500")}
+                            name={"fa6-solid:clock-rotate-left"}
+                        />
+                    </Button>
+                    {Platform.OS === "web" && (
+                        <Button className={"ml-2"}>
+                            <View className={"w-4 h-4 flex items-center justify-center"}>
+                                <Monicon
+                                    size={16}
+                                    color={colorValue("--color-background-0")}
+                                    name={"fa6-solid:mobile-screen-button"}
+                                />
+                            </View>
+                            <ButtonText>下载 App</ButtonText>
+                        </Button>
+                    )}
+                </>
+            }
+        >
             <View className={`${isNarrowWidth ? "pt-6 pb-8" : "pt-8 pb-12"} items-center`}>
                 <Text
                     className="text-3xl text-primary-500 dark:text-primary-400 h-12 leading-12"
