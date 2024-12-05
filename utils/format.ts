@@ -112,7 +112,7 @@ export async function resolveVideoAndJump(value: string, replace = false) {
         action = router.replace;
     }
     if (typeof parseResult === "string") {
-        action(`/query/${parseResult}`);
+        action(`/video/${parseResult}`);
     } else if (parseResult.type === "userList") {
         action(`/remote-list?mode=${parseResult.mode}&userId=${parseResult.userId}&listId=${parseResult.listId}`);
     } else {

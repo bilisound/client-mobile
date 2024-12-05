@@ -15,6 +15,7 @@ import { Poppins_700Bold } from "@expo-google-fonts/poppins";
 
 import "~/utils/polyfill";
 import "~/utils/nativewind";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 if (Platform.OS === "android") {
     setInterval(() => {
@@ -31,6 +32,8 @@ defaultTheme.colors.primary = "#00ba9d";
 const darkTheme = structuredClone(DarkTheme);
 darkTheme.colors.background = "#121212";
 darkTheme.colors.primary = "#00ba9d";
+
+const queryClient = new QueryClient();
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_settings = {
@@ -75,36 +78,38 @@ export default function RootLayout() {
     }
 
     return (
-        <GluestackUIProvider mode={(colorScheme ?? "light") as "light" | "dark"}>
-            <ThemeProvider value={colorScheme === "dark" ? darkTheme : defaultTheme}>
-                <SystemBars style={colorScheme === "dark" ? "light" : "dark"} />
-                <Stack>
-                    <Stack.Screen
-                        name={"(main)"}
-                        options={{
-                            headerShown: false,
-                        }}
-                    />
-                    <Stack.Screen
-                        name={"test"}
-                        options={{
-                            headerShown: false,
-                        }}
-                    />
-                    <Stack.Screen
-                        name={"index2"}
-                        options={{
-                            headerShown: false,
-                        }}
-                    />
-                    <Stack.Screen
-                        name={"example-empty"}
-                        options={{
-                            headerShown: false,
-                        }}
-                    />
-                </Stack>
-            </ThemeProvider>
-        </GluestackUIProvider>
+        <QueryClientProvider client={queryClient}>
+            <GluestackUIProvider mode={(colorScheme ?? "light") as "light" | "dark"}>
+                <ThemeProvider value={colorScheme === "dark" ? darkTheme : defaultTheme}>
+                    <SystemBars style={colorScheme === "dark" ? "light" : "dark"} />
+                    <Stack>
+                        <Stack.Screen
+                            name={"(main)"}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name={"video/[id]"}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name={"remote-list"}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name={"index2"}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                    </Stack>
+                </ThemeProvider>
+            </GluestackUIProvider>
+        </QueryClientProvider>
     );
 }

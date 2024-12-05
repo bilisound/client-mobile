@@ -7,12 +7,14 @@ import { Monicon } from "@monicon/native";
 import { Button } from "~/components/ui/button";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { twMerge } from "tailwind-merge";
+import { router } from "expo-router";
 
 export interface LayoutProps {
-    leftAccessories?: ReactNode;
+    leftAccessories?: ReactNode | "BACK_BUTTON";
     rightAccessories?: ReactNode;
     title?: string | ReactNode;
     edgeInsets?: EdgeInsets;
+    disableContentPadding?: boolean;
 }
 
 export function Layout({
@@ -21,6 +23,7 @@ export function Layout({
     rightAccessories,
     title,
     edgeInsets,
+    disableContentPadding,
 }: PropsWithChildren<LayoutProps>) {
     let resultEdgeInsets = useSafeAreaInsets();
     if (edgeInsets) {
@@ -38,7 +41,21 @@ export function Layout({
                 <View className={"h-16 relative items-center justify-center"}>
                     {leftAccessories ? (
                         <View className={"absolute left-0 top-0 h-full flex-row items-center px-2 gap-1"}>
-                            {leftAccessories}
+                            {leftAccessories === "BACK_BUTTON" ? (
+                                <LayoutButton
+                                    iconName={"fa6-solid:arrow-left"}
+                                    aria-label={"返回"}
+                                    onPress={() => {
+                                        if (router.canGoBack()) {
+                                            router.back();
+                                        } else {
+                                            router.navigate("/");
+                                        }
+                                    }}
+                                />
+                            ) : (
+                                leftAccessories
+                            )}
                         </View>
                     ) : null}
                     <View>
@@ -57,15 +74,19 @@ export function Layout({
             </View>
             <View
                 className={"flex-1"}
-                style={{
-                    paddingLeft: resultEdgeInsets.left,
-                    paddingRight: resultEdgeInsets.right,
-                    paddingBottom: resultEdgeInsets.bottom,
-                }}
+                style={
+                    disableContentPadding
+                        ? {}
+                        : {
+                              paddingLeft: resultEdgeInsets.left,
+                              paddingRight: resultEdgeInsets.right,
+                              paddingBottom: resultEdgeInsets.bottom,
+                          }
+                }
             >
-                <YuruChara />
                 <View className={"flex-1"}>{children}</View>
             </View>
+            <YuruChara />
         </View>
     );
 }

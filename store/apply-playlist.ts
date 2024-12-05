@@ -1,7 +1,6 @@
-import { create } from "zustand";
-
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { PlaylistSource } from "~/typings/playlist";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export interface ApplyPlaylistProps {
     playlistDetail: PlaylistDetail[] | null;
@@ -19,7 +18,7 @@ export interface ApplyPlaylistMethods {
     setCover: (cover?: string) => void;
 }
 
-const useApplyPlaylistStore = create<ApplyPlaylistProps & ApplyPlaylistMethods>()(setState => ({
+const useApplyPlaylistStore = createWithEqualityFn<ApplyPlaylistProps & ApplyPlaylistMethods>()(setState => ({
     playlistDetail: [],
     setPlaylistDetail: playlistDetail => setState(() => ({ playlistDetail })),
     name: "",

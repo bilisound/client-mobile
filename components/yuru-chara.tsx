@@ -35,3 +35,5 @@ export const YuruChara = forwardRef<View, ViewProps>((props, ref) => {
         </View>
     );
 });
+
+YuruChara.displayName = "YuruChara";
