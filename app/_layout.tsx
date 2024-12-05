@@ -6,6 +6,7 @@ import React, { useEffect, useRef } from "react";
 import { Platform, useColorScheme } from "react-native";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import * as NavigationBar from "expo-navigation-bar";
+import * as Player from "@bilisound/player";
 import { SystemBars } from "react-native-edge-to-edge";
 import { useFonts } from "expo-font";
 import log from "~/utils/logger";
@@ -16,6 +17,11 @@ import { Poppins_700Bold } from "@expo-google-fonts/poppins";
 import "~/utils/polyfill";
 import "~/utils/nativewind";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { USER_AGENT_BILIBILI } from "~/constants/network";
+
+Player.setDefaultHeaders({
+    "User-Agent": USER_AGENT_BILIBILI,
+});
 
 if (Platform.OS === "android") {
     setInterval(() => {
