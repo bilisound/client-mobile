@@ -7,6 +7,7 @@ import useSettingsStore from "../store/settings";
 import { BILISOUND_LOG_URI, BILISOUND_OFFLINE_URI } from "~/constants/file";
 import { handleCacheStatus } from "~/utils/migration/cache-status";
 import { handlePlaylist } from "~/utils/migration/playlist";
+import { loadTrackData } from "~/business/playlist/handler";
 
 export default async function init() {
     // 日志系统初始化
@@ -42,6 +43,8 @@ export default async function init() {
     } catch (e) {
         log.error(`缓存初始化失败。原因：${e}`);
     }
+
+    await loadTrackData();
 
     // 隐藏 Splash Screen
     await SplashScreen.hideAsync();

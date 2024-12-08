@@ -19,6 +19,7 @@ import "~/utils/nativewind";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 
+// todo 目前不对播放生效
 Player.setDefaultHeaders({
     "User-Agent": USER_AGENT_BILIBILI,
 });
