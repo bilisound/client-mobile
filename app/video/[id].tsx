@@ -137,11 +137,11 @@ export default function Page() {
                     }}
                     ListHeaderComponent={<MetaData data={data?.data} className={"flex md:hidden px-4 pb-4"} />}
                     renderItem={e => (
-                        <View className={"h-32 border-b bg-red-500"}>
-                            <Text>{e.item}</Text>
+                        <View className={"h-8 border-b bg-red-200"}>
+                            <Text>{e.item.part}</Text>
                         </View>
                     )}
-                    data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]}
+                    data={data?.data.pages ?? []}
                 />
             </View>
         </Layout>

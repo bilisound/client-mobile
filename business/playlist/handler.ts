@@ -140,7 +140,7 @@ export async function loadTrackData() {
         if (e.extendedData.isLoaded) {
             e.uri = getCacheAudioPath(e.extendedData.id, e.extendedData.episode);
         } else {
-            e.uri = require("../assets/placeholder.mp3");
+            e.uri = require("../../assets/placeholder.mp3");
         }
     });
 
