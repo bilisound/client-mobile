@@ -1,6 +1,6 @@
 import { Layout } from "~/components/layout";
 import { Text } from "~/components/ui/text";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
@@ -17,6 +17,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { formatDate } from "~/utils/datetime";
 import React from "react";
 import { FlashList } from "@shopify/flash-list";
+import { SongItem } from "~/components/song-item";
+import { SkeletonText } from "~/components/skeleton-text";
+import { Pressable } from "~/components/ui/pressable";
 
 interface MetaDataProps {
     data?: GetBilisoundMetadataResponse;
@@ -67,6 +70,15 @@ function MetaData({ data, className, style }: MetaDataProps) {
                         </>
                     )}
                 </View>
+                {data ? (
+                    <Pressable onPress={() => router.navigate(`/description?id=${data?.bvid}`)}>
+                        <Text className={"text-sm leading-normal"} numberOfLines={6}>
+                            {data.desc}
+                        </Text>
+                    </Pressable>
+                ) : (
+                    <SkeletonText lineSize={6} fontSize={14} lineHeight={21} />
+                )}
             </View>
         </View>
     );
@@ -135,11 +147,22 @@ export default function Page() {
                         paddingRight: edgeInsets.right,
                         paddingBottom: edgeInsets.bottom,
                     }}
+                    // ListHeaderComponent={<MetaData className={"flex md:hidden px-4 pb-4"} />}
                     ListHeaderComponent={<MetaData data={data?.data} className={"flex md:hidden px-4 pb-4"} />}
                     renderItem={e => (
-                        <View className={"h-8 border-b bg-red-200"}>
-                            <Text>{e.item.part}</Text>
-                        </View>
+                        <SongItem
+                            data={{
+                                author: data!.data.owner.name,
+                                bvid: data!.data.bvid,
+                                duration: e.item.duration,
+                                episode: e.item.page,
+                                title: e.item.part,
+                                imgUrl: data!.data.pic,
+                                id: 0,
+                                playlistId: 0,
+                                extendedData: null,
+                            }}
+                        />
                     )}
                     data={data?.data.pages ?? []}
                 />

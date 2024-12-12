@@ -114,6 +114,14 @@ export default function RootLayout() {
                                 headerShown: false,
                             }}
                         />
+                        <Stack.Screen
+                            name="description"
+                            options={{
+                                presentation: "formSheet",
+                                sheetAllowedDetents: "fitToContents",
+                                gestureEnabled: false,
+                            }}
+                        />
                     </Stack>
                 </ThemeProvider>
             </GluestackUIProvider>
