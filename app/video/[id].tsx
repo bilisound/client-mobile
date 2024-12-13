@@ -21,7 +21,7 @@ import { SongItem } from "~/components/song-item";
 import { SkeletonText } from "~/components/skeleton-text";
 import { Pressable } from "~/components/ui/pressable";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 interface MetaDataProps {
@@ -78,12 +78,10 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                     <>
                         {onOpenModal ? (
                             <Pressable onPress={onOpenModal}>
-                                <Text className={"text-sm leading-normal"} numberOfLines={6}>
-                                    {data.desc}
-                                </Text>
+                                <Text className={"text-sm leading-normal break-words line-clamp-6"}>{data.desc}</Text>
                             </Pressable>
                         ) : (
-                            <Text className={"text-sm leading-normal"}>{data.desc}</Text>
+                            <Text className={"text-sm leading-normal break-words"}>{data.desc}</Text>
                         )}
                     </>
                 ) : (
@@ -166,6 +164,7 @@ export default function Page() {
                         </View>
                     </ScrollView>
                     <FlashList
+                        estimatedItemSize={64}
                         contentContainerStyle={{
                             paddingLeft: 0,
                             paddingRight: edgeInsets.right,
@@ -207,13 +206,22 @@ export default function Page() {
                 enableDynamicSizing={false}
                 onChange={handleSheetChange}
                 enablePanDownToClose={true}
-                handleStyle={{
-                    backgroundColor: colorValue("--color-background-50"),
+                style={{
                     borderTopStartRadius: 14,
                     borderTopEndRadius: 14,
                 }}
+                handleStyle={{
+                    backgroundColor: "transparent",
+                }}
                 handleIndicatorStyle={{
-                    backgroundColor: colorValue("--color-typography-0"),
+                    backgroundColor: colorValue("--color-typography-700"),
+                    width: 80,
+                }}
+                containerStyle={{
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                }}
+                backgroundStyle={{
+                    backgroundColor: colorValue("--color-background-50"),
                 }}
             >
                 <BottomSheetScrollView
@@ -224,7 +232,10 @@ export default function Page() {
                         paddingBottom: edgeInsets.bottom + 16,
                     }}
                 >
-                    <Text className={"text-sm leading-normal"}>{data?.data.desc}</Text>
+                    <Text className={"text-xl leading-normal font-semibold mb-2"}>视频简介</Text>
+                    <Text className={"text-sm leading-normal break-words"} selectable>
+                        {data?.data.desc}
+                    </Text>
                 </BottomSheetScrollView>
             </BottomSheet>
         </GestureHandlerRootView>
