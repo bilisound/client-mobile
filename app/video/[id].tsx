@@ -1,27 +1,26 @@
 import { Layout } from "~/components/layout";
 import { Text } from "~/components/ui/text";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
-import { createContext, useCallback, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import useHistoryStore from "~/store/history";
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
-import { ScrollView, View, ViewStyle, StyleSheet } from "react-native";
+import { ScrollView, View, ViewStyle, Animated } from "react-native";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "~/components/ui/skeleton";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { formatDate } from "~/utils/datetime";
-import React, { useRef, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import { SongItem } from "~/components/song-item";
 import { SkeletonText } from "~/components/skeleton-text";
 import { Pressable } from "~/components/ui/pressable";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 interface MetaDataProps {
@@ -140,12 +139,9 @@ export default function Page() {
     // hooks
     const sheetRef = useRef<BottomSheet>(null);
 
-    const snapPoints = useMemo(() => ["30%", "75%"], []);
+    const snapPoints = useMemo(() => ["40%", "75%"], []);
 
-    // callbacks
-    const handleSheetChange = useCallback((index: number) => {
-        // console.log("handleSheetChange", index);
-    }, []);
+    const backdropOpacity = useRef(new Animated.Value(0)).current;
 
     return (
         <GestureHandlerRootView>
@@ -199,13 +195,40 @@ export default function Page() {
                     />
                 </View>
             </Layout>
+            <Animated.View
+                style={{
+                    opacity: backdropOpacity,
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    pointerEvents: "none",
+                }}
+                aria-hidden
+            />
             <BottomSheet
                 ref={sheetRef}
                 index={-1}
                 snapPoints={snapPoints}
                 enableDynamicSizing={false}
-                onChange={handleSheetChange}
                 enablePanDownToClose={true}
+                onAnimate={(fromIndex, toIndex) => {
+                    if (toIndex >= 0) {
+                        Animated.timing(backdropOpacity, {
+                            toValue: 1,
+                            duration: 300,
+                            useNativeDriver: true,
+                        }).start();
+                    } else {
+                        Animated.timing(backdropOpacity, {
+                            toValue: 0,
+                            duration: 300,
+                            useNativeDriver: true,
+                        }).start();
+                    }
+                }}
                 style={{
                     borderTopStartRadius: 14,
                     borderTopEndRadius: 14,
@@ -218,7 +241,7 @@ export default function Page() {
                     width: 80,
                 }}
                 containerStyle={{
-                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    backgroundColor: "transparent",
                 }}
                 backgroundStyle={{
                     backgroundColor: colorValue("--color-background-50"),
@@ -232,7 +255,7 @@ export default function Page() {
                         paddingBottom: edgeInsets.bottom + 16,
                     }}
                 >
-                    <Text className={"text-xl leading-normal font-semibold mb-2"}>视频简介</Text>
+                    <Text className={"text-lg leading-normal font-semibold mb-2"}>视频简介</Text>
                     <Text className={"text-sm leading-normal break-words"} selectable>
                         {data?.data.desc}
                     </Text>
