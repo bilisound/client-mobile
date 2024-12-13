@@ -30,15 +30,16 @@ export function Layout({
         resultEdgeInsets = edgeInsets;
     }
     return (
-        <View className={"flex-1"}>
+        <View className={"flex-1 items-center"}>
             <View
                 style={{
                     paddingTop: resultEdgeInsets.top,
                     paddingLeft: resultEdgeInsets.left,
                     paddingRight: resultEdgeInsets.right,
                 }}
+                className={"w-full items-center"}
             >
-                <View className={"h-16 relative items-center justify-center"}>
+                <View className={"h-16 relative items-center justify-center w-full max-w-screen-xl"}>
                     {leftAccessories ? (
                         <View className={"absolute left-0 top-0 h-full flex-row items-center px-2 gap-1"}>
                             {leftAccessories === "BACK_BUTTON" ? (
@@ -73,7 +74,7 @@ export function Layout({
                 </View>
             </View>
             <View
-                className={"flex-1"}
+                className={"w-full flex-1 max-w-screen-xl"}
                 style={
                     disableContentPadding
                         ? {}

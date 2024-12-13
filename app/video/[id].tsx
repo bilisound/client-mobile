@@ -23,6 +23,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { decodeHTML } from "entities";
+import { addTrackFromDetail } from "~/business/playlist/handler";
 
 interface MetaDataProps {
     data?: GetBilisoundMetadataResponse;
@@ -181,6 +182,7 @@ export default function Page() {
                         }
                         renderItem={e => (
                             <SongItem
+                                onRequestPlay={() => addTrackFromDetail(data!.data.bvid, e.item.page)}
                                 data={{
                                     author: data!.data.owner.name,
                                     bvid: data!.data.bvid,

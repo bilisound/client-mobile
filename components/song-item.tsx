@@ -18,6 +18,7 @@ import useDownloadStore from "~/store/download";
 import { Pressable } from "~/components/ui/pressable";
 import { useCurrentTrack } from "@bilisound/player/build/hooks/useCurrentTrack";
 import { useIsPlaying } from "@bilisound/player/build/hooks/useIsPlaying";
+import { usePlaybackState } from "@bilisound/player/build/hooks/usePlaybackState";
 
 // 加载进度条
 function ProgressBar({ item }: { item: string }) {
@@ -56,12 +57,12 @@ function ProgressBar({ item }: { item: string }) {
 
 // 播放状态图标
 function PlayingIcon() {
+    const playbackState = usePlaybackState();
     const isPlaying = useIsPlaying();
-    const activeTrack = useCurrentTrack();
     const { colorValue } = useRawThemeValues();
     const accentColor = colorValue("--color-accent-500");
 
-    if (!activeTrack?.extendedData.isLoaded) {
+    if (playbackState === "STATE_BUFFERING") {
         return <ActivityIndicator color={accentColor} />;
     }
 
@@ -176,7 +177,7 @@ export function SongItem({
                     <View className="flex-0 flex-basis-auto items-center justify-center w-8">
                         <PlayingIcon />
                     </View>
-                    <ProgressBar item={`${data.bvid}_${data.episode}`} />
+                    {/*<ProgressBar item={`${data.bvid}_${data.episode}`} />*/}
                 </>
             ) : null}
         </Pressable>

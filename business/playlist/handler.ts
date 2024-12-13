@@ -13,6 +13,8 @@ import { getOnlineUrl } from "~/utils/constant-helper";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { handleLegacyQueue } from "~/utils/migration/legacy-queue";
 import { getCacheAudioPath } from "~/utils/file";
+import { getBilisoundMetadata, getBilisoundResourceUrl } from "~/api/bilisound";
+import { undefined } from "zod";
 
 export interface TrackDataOld {
     /** The track title */
@@ -146,4 +148,33 @@ export async function loadTrackData() {
 
     await Player.addTracks(trackData);
     await Player.jump(current);
+}
+
+export async function addTrackFromDetail(id: string, episode: number) {
+    const { data } = await getBilisoundMetadata({ id });
+    const url = await getBilisoundResourceUrl({ id, episode });
+    const currentEpisode = data.pages.find(e => e.page === episode);
+    if (!currentEpisode) {
+        throw new Error("指定视频没有指定的分 P 信息");
+    }
+
+    await Player.addTrack({
+        uri: url.url,
+        artist: data.owner.name,
+        artworkUri: data.pic,
+        duration: currentEpisode.duration,
+        extendedData: {
+            id,
+            episode,
+            isLoaded: false,
+        },
+        headers: {
+            referer: getOnlineUrl(id, episode),
+            "user-agent": USER_AGENT_BILIBILI,
+        },
+        id: id + "_" + episode,
+        title: data.title,
+    });
+
+    await Player.play();
 }
