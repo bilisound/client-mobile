@@ -22,6 +22,7 @@ import { Pressable } from "~/components/ui/pressable";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { decodeHTML } from "entities";
 
 interface MetaDataProps {
     data?: GetBilisoundMetadataResponse;
@@ -77,10 +78,12 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                     <>
                         {onOpenModal ? (
                             <Pressable onPress={onOpenModal}>
-                                <Text className={"text-sm leading-normal break-words line-clamp-6"}>{data.desc}</Text>
+                                <Text className={"text-sm leading-normal break-words line-clamp-6"}>
+                                    {decodeHTML(data.desc)}
+                                </Text>
                             </Pressable>
                         ) : (
-                            <Text className={"text-sm leading-normal break-words"}>{data.desc}</Text>
+                            <Text className={"text-sm leading-normal break-words"}>{decodeHTML(data.desc)}</Text>
                         )}
                     </>
                 ) : (
@@ -257,7 +260,7 @@ export default function Page() {
                 >
                     <Text className={"text-lg leading-normal font-semibold mb-2"}>视频简介</Text>
                     <Text className={"text-sm leading-normal break-words"} selectable>
-                        {data?.data.desc}
+                        {decodeHTML(data?.data.desc ?? "")}
                     </Text>
                 </BottomSheetScrollView>
             </BottomSheet>
