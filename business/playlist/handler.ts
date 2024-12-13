@@ -9,7 +9,7 @@ import {
     queueStorage,
 } from "~/storage/queue";
 import { TrackData } from "@bilisound/player/build/types";
-import { getOnlineUrl } from "~/utils/constant-helper";
+import { getOnlineUrl, getVideoUrl } from "~/utils/constant-helper";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { handleLegacyQueue } from "~/utils/migration/legacy-queue";
 import { getCacheAudioPath } from "~/utils/file";
@@ -169,7 +169,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
             isLoaded: false,
         },
         headers: {
-            referer: getOnlineUrl(id, episode),
+            referer: getVideoUrl(id, episode),
             "user-agent": USER_AGENT_BILIBILI,
         },
         id: id + "_" + episode,

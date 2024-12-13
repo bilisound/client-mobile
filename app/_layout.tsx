@@ -18,6 +18,9 @@ import "~/utils/polyfill";
 import "~/utils/nativewind";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
+import { registerBackgroundEventListener } from "@bilisound/player/build/events";
+
+registerBackgroundEventListener(() => {});
 
 // todo 目前不对播放生效
 Player.setDefaultHeaders({
