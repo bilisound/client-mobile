@@ -2,7 +2,7 @@ import React from "react";
 import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 import { textStyle } from "./styles";
 
-type ITextProps = React.ComponentProps<"span"> & VariantProps<typeof textStyle>;
+type ITextProps = React.ComponentProps<"span"> & VariantProps<typeof textStyle> & { selectable: any };
 
 const Text = React.forwardRef<React.ElementRef<"span">, ITextProps>(
     (
@@ -16,6 +16,7 @@ const Text = React.forwardRef<React.ElementRef<"span">, ITextProps>(
             sub,
             italic,
             highlight,
+            selectable, // 在 Web 端过滤掉这个属性
             ...props
         }: { className?: string } & ITextProps,
         ref,
