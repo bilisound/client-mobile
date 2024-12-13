@@ -4,30 +4,34 @@ import { router, useLocalSearchParams } from "expo-router";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
-import { useEffect } from "react";
+import { createContext, useCallback, useEffect, useMemo } from "react";
 import useHistoryStore from "~/store/history";
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
-import { ScrollView, View, ViewStyle } from "react-native";
+import { ScrollView, View, ViewStyle, StyleSheet } from "react-native";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "~/components/ui/skeleton";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { formatDate } from "~/utils/datetime";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import { SongItem } from "~/components/song-item";
 import { SkeletonText } from "~/components/skeleton-text";
 import { Pressable } from "~/components/ui/pressable";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 interface MetaDataProps {
     data?: GetBilisoundMetadataResponse;
     className?: string;
     style?: ViewStyle;
+    onOpenModal?: () => void;
 }
 
-function MetaData({ data, className, style }: MetaDataProps) {
+function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
     return (
         <View className={twMerge("gap-4", className)} style={style}>
             {data ? (
@@ -71,11 +75,17 @@ function MetaData({ data, className, style }: MetaDataProps) {
                     )}
                 </View>
                 {data ? (
-                    <Pressable onPress={() => router.navigate(`/description?id=${data?.bvid}`)}>
-                        <Text className={"text-sm leading-normal"} numberOfLines={6}>
-                            {data.desc}
-                        </Text>
-                    </Pressable>
+                    <>
+                        {onOpenModal ? (
+                            <Pressable onPress={onOpenModal}>
+                                <Text className={"text-sm leading-normal"} numberOfLines={6}>
+                                    {data.desc}
+                                </Text>
+                            </Pressable>
+                        ) : (
+                            <Text className={"text-sm leading-normal"}>{data.desc}</Text>
+                        )}
+                    </>
                 ) : (
                     <SkeletonText lineSize={6} fontSize={14} lineHeight={21} />
                 )}
@@ -87,6 +97,7 @@ function MetaData({ data, className, style }: MetaDataProps) {
 export default function Page() {
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
     const edgeInsets = useSafeAreaInsets();
+    const { colorValue } = useRawThemeValues();
 
     // 添加歌单
     const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
@@ -126,47 +137,96 @@ export default function Page() {
         }
     }, [appendHistoryList, data, noHistory]);
 
+    // 详情文本展示
+
+    // hooks
+    const sheetRef = useRef<BottomSheet>(null);
+
+    const snapPoints = useMemo(() => ["30%", "75%"], []);
+
+    // callbacks
+    const handleSheetChange = useCallback((index: number) => {
+        // console.log("handleSheetChange", index);
+    }, []);
+
     return (
-        <Layout title={"查看详情"} leftAccessories={"BACK_BUTTON"} disableContentPadding={true}>
-            <View className={"flex-1 flex-row"}>
-                <ScrollView className={"hidden md:flex flex-1"}>
-                    <View
-                        style={{
-                            paddingLeft: edgeInsets.left + 16,
-                            paddingRight: 16,
-                            paddingBottom: edgeInsets.bottom + 16,
-                        }}
-                    >
-                        {/*<MetaData />*/}
-                        <MetaData data={data?.data} />
-                    </View>
-                </ScrollView>
-                <FlashList
-                    contentContainerStyle={{
-                        paddingLeft: 0,
-                        paddingRight: edgeInsets.right,
-                        paddingBottom: edgeInsets.bottom,
-                    }}
-                    // ListHeaderComponent={<MetaData className={"flex md:hidden px-4 pb-4"} />}
-                    ListHeaderComponent={<MetaData data={data?.data} className={"flex md:hidden px-4 pb-4"} />}
-                    renderItem={e => (
-                        <SongItem
-                            data={{
-                                author: data!.data.owner.name,
-                                bvid: data!.data.bvid,
-                                duration: e.item.duration,
-                                episode: e.item.page,
-                                title: e.item.part,
-                                imgUrl: data!.data.pic,
-                                id: 0,
-                                playlistId: 0,
-                                extendedData: null,
+        <GestureHandlerRootView>
+            <Layout title={"查看详情"} leftAccessories={"BACK_BUTTON"} disableContentPadding={true}>
+                <View className={"flex-1 flex-row"}>
+                    <ScrollView className={"hidden md:flex flex-1"}>
+                        <View
+                            style={{
+                                paddingLeft: edgeInsets.left + 16,
+                                paddingRight: 16,
+                                paddingBottom: edgeInsets.bottom + 16,
                             }}
-                        />
-                    )}
-                    data={data?.data.pages ?? []}
-                />
-            </View>
-        </Layout>
+                        >
+                            {/*<MetaData />*/}
+                            <MetaData data={data?.data} />
+                        </View>
+                    </ScrollView>
+                    <FlashList
+                        contentContainerStyle={{
+                            paddingLeft: 0,
+                            paddingRight: edgeInsets.right,
+                            paddingBottom: edgeInsets.bottom,
+                        }}
+                        // ListHeaderComponent={<MetaData className={"flex md:hidden px-4 pb-4"} />}
+                        ListHeaderComponent={
+                            <MetaData
+                                data={data?.data}
+                                className={"flex md:hidden px-4 pb-4"}
+                                onOpenModal={() => {
+                                    sheetRef.current?.snapToIndex(0);
+                                }}
+                            />
+                        }
+                        renderItem={e => (
+                            <SongItem
+                                data={{
+                                    author: data!.data.owner.name,
+                                    bvid: data!.data.bvid,
+                                    duration: e.item.duration,
+                                    episode: e.item.page,
+                                    title: e.item.part,
+                                    imgUrl: data!.data.pic,
+                                    id: 0,
+                                    playlistId: 0,
+                                    extendedData: null,
+                                }}
+                            />
+                        )}
+                        data={data?.data.pages ?? []}
+                    />
+                </View>
+            </Layout>
+            <BottomSheet
+                ref={sheetRef}
+                index={-1}
+                snapPoints={snapPoints}
+                enableDynamicSizing={false}
+                onChange={handleSheetChange}
+                enablePanDownToClose={true}
+                handleStyle={{
+                    backgroundColor: colorValue("--color-background-50"),
+                    borderTopStartRadius: 14,
+                    borderTopEndRadius: 14,
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: colorValue("--color-typography-0"),
+                }}
+            >
+                <BottomSheetScrollView
+                    className={"bg-background-50"}
+                    contentContainerStyle={{
+                        paddingLeft: edgeInsets.left + 16,
+                        paddingRight: edgeInsets.right + 16,
+                        paddingBottom: edgeInsets.bottom + 16,
+                    }}
+                >
+                    <Text className={"text-sm leading-normal"}>{data?.data.desc}</Text>
+                </BottomSheetScrollView>
+            </BottomSheet>
+        </GestureHandlerRootView>
     );
 }

@@ -32,6 +32,7 @@
     "@gluestack-ui/overlay": "^0.1.16",
     "@gluestack-ui/pressable": "^0.1.17",
     "@gluestack-ui/toast": "^1.0.8",
+    "@gorhom/bottom-sheet": "^5.0.6",
     "@iconify-json/fa6-regular": "^1.2.2",
     "@iconify-json/fa6-solid": "^1.2.2",
     "@monicon/babel-plugin": "^1.1.0",
