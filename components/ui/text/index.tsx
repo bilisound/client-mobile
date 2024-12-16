@@ -24,6 +24,7 @@ const Text = React.forwardRef<React.ElementRef<typeof RNText>, ITextProps>(
                     highlight,
                     class: className,
                 })}
+                numberOfLines={isTruncated ? 1 : undefined}
                 {...props}
                 ref={ref}
             />

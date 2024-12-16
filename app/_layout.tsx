@@ -18,7 +18,7 @@ import "~/utils/polyfill";
 import "~/utils/nativewind";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
-import { registerBackgroundEventListener } from "@bilisound/player/build/events";
+import { registerBackgroundEventListener } from "@bilisound/player";
 
 registerBackgroundEventListener(() => {});
 

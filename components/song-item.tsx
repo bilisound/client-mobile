@@ -16,9 +16,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 
 import useDownloadStore from "~/store/download";
 import { Pressable } from "~/components/ui/pressable";
-import { useCurrentTrack } from "@bilisound/player/build/hooks/useCurrentTrack";
-import { useIsPlaying } from "@bilisound/player/build/hooks/useIsPlaying";
-import { usePlaybackState } from "@bilisound/player/build/hooks/usePlaybackState";
+import { useCurrentTrack, useIsPlaying, usePlaybackState } from "@bilisound/player";
 
 // 加载进度条
 function ProgressBar({ item }: { item: string }) {
@@ -77,9 +75,8 @@ const trackNumberStyle = tva({
     base: "items-center justify-center px-1.5 h-[1.375rem] rounded-md",
     variants: {
         isActiveTrack: {
-            true: "bg-accent-500 shadow-md ios:shadow-hard-2",
-            // shadow-none 很重要！！详见 https://github.com/nativewind/nativewind/issues/873
-            false: "shadow-none bg-primary-500 dark:bg-primary-400",
+            true: "bg-accent-500",
+            false: "bg-primary-500 dark:bg-primary-400",
         },
     },
 });
@@ -114,6 +111,7 @@ export function SongItem({
     isChecked,
 }: SongItemProps) {
     const activeTrack = useCurrentTrack();
+    console.log(activeTrack);
     const isActiveTrack =
         data.bvid === activeTrack?.extendedData.id && data.episode === activeTrack?.extendedData.episode;
     const [exists] = useMMKVBoolean(data.bvid + "_" + data.episode, cacheStatusStorage);

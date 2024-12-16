@@ -15,6 +15,7 @@ import { handleLegacyQueue } from "~/utils/migration/legacy-queue";
 import { getCacheAudioPath } from "~/utils/file";
 import { getBilisoundMetadata, getBilisoundResourceUrl } from "~/api/bilisound";
 import { undefined } from "zod";
+import log from "~/utils/logger";
 
 export interface TrackDataOld {
     /** The track title */
@@ -151,6 +152,14 @@ export async function loadTrackData() {
 }
 
 export async function addTrackFromDetail(id: string, episode: number) {
+    const existing = await Player.getTracks();
+    const found = existing.findIndex(e => e.extendedData.id === id && e.extendedData.episode === episode);
+    if (found >= 0) {
+        log.debug(`发现列表中已有相同曲目 ${found}，进行跳转`);
+        await Player.jump(found);
+        return;
+    }
+
     const { data } = await getBilisoundMetadata({ id });
     const url = await getBilisoundResourceUrl({ id, episode });
     const currentEpisode = data.pages.find(e => e.page === episode);
