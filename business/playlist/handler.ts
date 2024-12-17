@@ -152,6 +152,7 @@ export async function loadTrackData() {
 }
 
 export async function addTrackFromDetail(id: string, episode: number) {
+    log.debug(`用户请求增加曲目：${id} / ${episode}`);
     const existing = await Player.getTracks();
     const found = existing.findIndex(e => e.extendedData.id === id && e.extendedData.episode === episode);
     if (found >= 0) {
@@ -185,5 +186,6 @@ export async function addTrackFromDetail(id: string, episode: number) {
         title: data.title,
     });
 
+    await Player.jump(existing.length); // existing.length - 1 + 1
     await Player.play();
 }

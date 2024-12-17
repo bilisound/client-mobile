@@ -20,7 +20,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@bilisound/player": "0.1.4",
+    "@bilisound/player": "0.1.5",
     "@expo-google-fonts/poppins": "^0.2.3",
     "@expo-google-fonts/roboto": "^0.2.3",
     "@expo/vector-icons": "^14.0.4",
@@ -31,6 +31,7 @@
     "@gluestack-ui/nativewind-utils": "1.0.26",
     "@gluestack-ui/overlay": "^0.1.16",
     "@gluestack-ui/pressable": "^0.1.17",
+    "@gluestack-ui/switch": "^0.1.23",
     "@gluestack-ui/toast": "^1.0.8",
     "@gorhom/bottom-sheet": "^5.0.6",
     "@iconify-json/fa6-regular": "^1.2.2",

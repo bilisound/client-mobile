@@ -111,7 +111,6 @@ export function SongItem({
     isChecked,
 }: SongItemProps) {
     const activeTrack = useCurrentTrack();
-    console.log(activeTrack);
     const isActiveTrack =
         data.bvid === activeTrack?.extendedData.id && data.episode === activeTrack?.extendedData.episode;
     const [exists] = useMMKVBoolean(data.bvid + "_" + data.episode, cacheStatusStorage);
