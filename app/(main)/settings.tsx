@@ -10,6 +10,7 @@ import { VERSION } from "~/constants/releasing";
 import useSettingsStore from "~/store/settings";
 import log from "~/utils/logger";
 import { Layout } from "~/components/layout";
+import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
 
 const LinkIcon = createIcon(Entypo, "link");
 const DownloadNextIcon = createIcon(MaterialIcons, "downloading");
@@ -23,6 +24,7 @@ const DatabaseIcon = createIcon(Entypo, "database");
 // const LabIcon = createIcon(Entypo, "lab-flask");
 
 const Settings: React.FC = () => {
+    const edgeInsets = useTabSafeAreaInsets();
     const { useLegacyID, downloadNextTrack, filterResourceURL, debugMode, toggle } = useSettingsStore(state => ({
         useLegacyID: state.useLegacyID,
         downloadNextTrack: state.downloadNextTrack,
@@ -84,7 +86,7 @@ const Settings: React.FC = () => {
     );
 
     return (
-        <Layout title="设置">
+        <Layout title="设置" edgeInsets={edgeInsets}>
             <ScrollView>
                 <SettingMenuItem
                     key="settings_10010"

@@ -5,6 +5,7 @@ import { VideoItem } from "~/components/video-item";
 import { useEffect } from "react";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { getImageProxyUrl } from "~/utils/constant-helper";
 
 export default function Page() {
     // 历史记录信息
@@ -38,7 +39,7 @@ export default function Page() {
                         <VideoItem
                             text1={item.name}
                             text2={item.authorName}
-                            image={item.thumbnailUrl}
+                            image={getImageProxyUrl(item.thumbnailUrl, item.id)}
                             onPress={() => {
                                 router.navigate(`/video/${item.id}`);
                             }}
