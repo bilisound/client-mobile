@@ -127,7 +127,7 @@ export async function loadTrackData() {
                 duration: e.duration,
                 extendedData: {
                     id: e.bilisoundId,
-                    episode: e.bilisoundEpisode,
+                    episode: Number(e.bilisoundEpisode),
                     isLoaded: e.bilisoundIsLoaded,
                 },
             }));
@@ -136,6 +136,9 @@ export async function loadTrackData() {
     }
 
     trackData.forEach(e => {
+        if (!e.extendedData) {
+            return;
+        }
         e.headers = {
             referer: getOnlineUrl(e.extendedData.id, e.extendedData.episode),
             "user-agent": USER_AGENT_BILIBILI,
@@ -154,7 +157,7 @@ export async function loadTrackData() {
 export async function addTrackFromDetail(id: string, episode: number) {
     log.debug(`用户请求增加曲目：${id} / ${episode}`);
     const existing = await Player.getTracks();
-    const found = existing.findIndex(e => e.extendedData.id === id && e.extendedData.episode === episode);
+    const found = existing.findIndex(e => e.extendedData?.id === id && e.extendedData.episode === episode);
     if (found >= 0) {
         log.debug(`发现列表中已有相同曲目 ${found}，进行跳转`);
         await Player.jump(found);

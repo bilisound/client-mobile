@@ -24,7 +24,6 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { decodeHTML } from "entities";
 import { addTrackFromDetail } from "~/business/playlist/handler";
-import { useIsPlaying } from "@bilisound/player";
 
 interface MetaDataProps {
     data?: GetBilisoundMetadataResponse;
@@ -34,7 +33,6 @@ interface MetaDataProps {
 }
 
 function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
-    const isPlaying = useIsPlaying();
     return (
         <View className={twMerge("gap-4", className)} style={style}>
             {data ? (
@@ -45,7 +43,7 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
             <View>
                 {data ? (
                     <Text className="text-base font-bold mb-4 leading-6 text-typography-700" selectable>
-                        {data.title + isPlaying}
+                        {data.title}
                     </Text>
                 ) : (
                     <View className="gap-2 py-1 mb-4">

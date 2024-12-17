@@ -112,8 +112,10 @@ export function SongItem({
 }: SongItemProps) {
     const activeTrack = useCurrentTrack();
     const isActiveTrack =
-        data.bvid === activeTrack?.extendedData.id && data.episode === activeTrack?.extendedData.episode;
+        data.bvid === activeTrack?.extendedData?.id && data.episode === activeTrack?.extendedData?.episode;
     const [exists] = useMMKVBoolean(data.bvid + "_" + data.episode, cacheStatusStorage);
+
+    console.log(data.bvid, activeTrack?.extendedData?.id, data.episode, activeTrack?.extendedData?.episode);
 
     const { colorValue } = useRawThemeValues();
 
