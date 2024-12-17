@@ -117,7 +117,7 @@ const buttonStyle = tva({
                     ? "{}-[android_ripple.color]/color:color-error-700"
                     : "data-[hover=true]:border-error-400 data-[hover=true]:bg-error-600 data-[active=true]:bg-error-700 data-[active=true]:border-error-500"
             } data-[focus-visible=true]:web:ring-indicator-info`,
-            default: `bg-transparent ${enableRipple ? "{}-[android_ripple.color]/color:color-primary-100" : "data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent"}`,
+            default: `bg-transparent ${enableRipple ? "{}-[android_ripple.color]/color:color-background-100" : "data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent"}`,
         },
         variant: {
             link: "px-0",

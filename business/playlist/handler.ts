@@ -186,7 +186,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
             "user-agent": USER_AGENT_BILIBILI,
         },
         id: id + "_" + episode,
-        title: data.title,
+        title: data.pages.length === 1 ? data.title : currentEpisode.part,
     });
 
     await Player.jump(existing.length); // existing.length - 1 + 1
