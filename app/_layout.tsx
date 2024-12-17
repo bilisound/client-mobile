@@ -112,6 +112,12 @@ export default function RootLayout() {
                             }}
                         />
                         <Stack.Screen
+                            name={"history"}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
                             name={"index2"}
                             options={{
                                 headerShown: false,

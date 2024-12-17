@@ -115,15 +115,10 @@ export function SongItem({
         data.bvid === activeTrack?.extendedData?.id && data.episode === activeTrack?.extendedData?.episode;
     const [exists] = useMMKVBoolean(data.bvid + "_" + data.episode, cacheStatusStorage);
 
-    console.log(data.bvid, activeTrack?.extendedData?.id, data.episode, activeTrack?.extendedData?.episode);
-
-    const { colorValue } = useRawThemeValues();
+    // console.log(data.bvid, activeTrack?.extendedData?.id, data.episode, activeTrack?.extendedData?.episode);
 
     return (
         <Pressable
-            android_ripple={{
-                color: colorValue("--color-background-100"),
-            }}
             onPress={async () => {
                 if (isChecking) {
                     onToggle();

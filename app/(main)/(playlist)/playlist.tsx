@@ -11,7 +11,7 @@ export default function Page() {
             <View className={"flex-1 items-center justify-center gap-4"}>
                 <Text className="text-base">歌单（嵌入 stack）</Text>
                 <ButtonOuter>
-                    <Button onPress={() => router.push("/(main)/(playlist)/detail/1")}>
+                    <Button onPress={() => router.push("/(main)/(playlist)/detail/1")} action={"default"}>
                         <ButtonText>Detail 测试</ButtonText>
                     </Button>
                 </ButtonOuter>

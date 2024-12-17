@@ -90,33 +90,39 @@ cssInterop(PrimitiveIcon, {
     },
 });
 
-const enableRipple = Platform.OS === "android" && process.env.EXPO_FEATURES_ANDROID_RIPPLE_BUTTON === "true";
+// const enableRipple = Platform.OS === "android" && process.env.EXPO_FEATURES_ANDROID_RIPPLE_BUTTON === "true";
+const enableRipple = Platform.OS === "android";
 
 const buttonStyle = tva({
     base: "group/button rounded-lg bg-primary-500 flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2",
     variants: {
         action: {
-            primary: `bg-primary-500 data-[hover=true]:bg-primary-600 ${
-                enableRipple ? "{}-[android_ripple.color]/color:color-primary-700" : "data-[active=true]:bg-primary-700"
-            } border-primary-300 data-[hover=true]:border-primary-400 data-[active=true]:border-primary-500 data-[focus-visible=true]:web:ring-indicator-info`,
-            secondary: `bg-secondary-500 border-secondary-300 data-[hover=true]:bg-secondary-600 data-[hover=true]:border-secondary-400 ${
+            primary: `bg-primary-500 ${
+                enableRipple
+                    ? "{}-[android_ripple.color]/color:color-primary-700"
+                    : "data-[hover=true]:bg-primary-600 data-[hover=true]:border-primary-400 data-[active=true]:bg-primary-700 data-[active=true]:border-primary-500"
+            } border-primary-300 data-[focus-visible=true]:web:ring-indicator-info`,
+            secondary: `bg-secondary-500 border-secondary-300 ${
                 enableRipple
                     ? "{}-[android_ripple.color]/color:color-secondary-700"
-                    : "data-[active=true]:bg-secondary-700"
-            } data-[active=true]:border-secondary-500 data-[focus-visible=true]:web:ring-indicator-info`,
-            positive: `bg-success-500 border-success-300 data-[hover=true]:bg-success-600 data-[hover=true]:border-success-400 ${
-                enableRipple ? "{}-[android_ripple.color]/color:color-success-700" : "data-[active=true]:bg-success-700"
-            } data-[active=true]:border-success-500 data-[focus-visible=true]:web:ring-indicator-info`,
-            negative: `bg-error-500 border-error-300 data-[hover=true]:bg-error-600 data-[hover=true]:border-error-400 ${
-                enableRipple ? "{}-[android_ripple.color]/color:color-error-700" : "data-[active=true]:bg-error-700"
-            } data-[active=true]:border-error-500 data-[focus-visible=true]:web:ring-indicator-info`,
-            default: `bg-transparent data-[hover=true]:bg-background-50 ${enableRipple ? "{}-[android_ripple.color]/color:color-primary-100" : ""} data-[active=true]:bg-transparent`,
+                    : "data-[hover=true]:bg-secondary-600 data-[hover=true]:border-secondary-400 data-[active=true]:bg-secondary-700 data-[active=true]:border-secondary-500"
+            } data-[focus-visible=true]:web:ring-indicator-info`,
+            positive: `bg-success-500 border-success-300 ${
+                enableRipple
+                    ? "{}-[android_ripple.color]/color:color-success-700"
+                    : "data-[hover=true]:border-success-400 data-[hover=true]:bg-success-600 data-[active=true]:bg-success-700 data-[active=true]:border-success-500"
+            } data-[focus-visible=true]:web:ring-indicator-info`,
+            negative: `bg-error-500 border-error-300 ${
+                enableRipple
+                    ? "{}-[android_ripple.color]/color:color-error-700"
+                    : "data-[hover=true]:border-error-400 data-[hover=true]:bg-error-600 data-[active=true]:bg-error-700 data-[active=true]:border-error-500"
+            } data-[focus-visible=true]:web:ring-indicator-info`,
+            default: `bg-transparent ${enableRipple ? "{}-[android_ripple.color]/color:color-primary-100" : "data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent"}`,
         },
         variant: {
             link: "px-0",
-            outline: `bg-transparent border data-[hover=true]:bg-background-50 ${enableRipple ? "{}-[android_ripple.color]/color:color-primary-100" : ""} data-[active=true]:bg-transparent`,
+            outline: `bg-transparent border ${enableRipple ? "{}-[android_ripple.color]/color:color-primary-100" : "data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent"}`,
             solid: "",
-            ghost: `bg-transparent border-0 data-[hover=true]:bg-background-50 ${enableRipple ? "{}-[android_ripple.color]/color:color-primary-100" : ""} data-[active=true]:bg-transparent`,
         },
 
         size: {
@@ -168,26 +174,6 @@ const buttonStyle = tva({
             variant: "outline",
             class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
         },
-        {
-            action: "primary",
-            variant: "ghost",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-background-100",
-        },
-        {
-            action: "secondary",
-            variant: "ghost",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-background-100",
-        },
-        {
-            action: "positive",
-            variant: "ghost",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-background-100",
-        },
-        {
-            action: "negative",
-            variant: "ghost",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-background-100",
-        },
     ],
 });
 
@@ -235,6 +221,11 @@ const buttonTextStyle = tva({
             class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
         },
         {
+            variant: "solid",
+            action: "default",
+            class: "text-typography-700 data-[hover=true]:text-typography-700 data-[active=true]:text-typography-700",
+        },
+        {
             variant: "outline",
             action: "primary",
             class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
@@ -256,23 +247,8 @@ const buttonTextStyle = tva({
         },
         {
             variant: "outline",
-            action: "ghost",
-            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
-        },
-        {
-            variant: "outline",
-            action: "ghost",
-            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
-        },
-        {
-            variant: "outline",
-            action: "ghost",
-            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
-        },
-        {
-            variant: "outline",
-            action: "ghost",
-            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+            action: "default",
+            class: "text-typography-700 data-[hover=true]:text-typography-700 data-[active=true]:text-typography-700",
         },
     ],
 });

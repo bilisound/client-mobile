@@ -16,6 +16,7 @@ import log from "~/utils/logger";
 import { AlertCircleIcon } from "~/components/ui/icon";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
+import { router } from "expo-router";
 
 export default function MainScreen() {
     const edgeInsets = useTabSafeAreaInsets();
@@ -42,7 +43,13 @@ export default function MainScreen() {
             rightAccessories={
                 <>
                     <LayoutButton iconName={"uil:qrcode-scan"} aria-label={"扫描二维码"} iconSize={22} />
-                    <LayoutButton iconName={"fa6-solid:clock-rotate-left"} aria-label={"历史记录"} />
+                    <LayoutButton
+                        iconName={"fa6-solid:clock-rotate-left"}
+                        aria-label={"历史记录"}
+                        onPress={() => {
+                            router.navigate("/history");
+                        }}
+                    />
                 </>
             }
         >
