@@ -33,7 +33,7 @@ export function SettingMenuItem({
             <View className="flex-1">
                 <View className="flex-row items-center gap-3">
                     <View className="size-6 items-center justify-center">
-                        <Icon size={iconSize} className="color-typography-700" />
+                        <Icon size={iconSize} color={colorValue("--color-typography-700")} />
                     </View>
                     <Text className="font-semibold text-[0.9375rem]">{title}</Text>
                 </View>

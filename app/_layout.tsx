@@ -3,10 +3,8 @@ import * as SystemUI from "expo-system-ui";
 import "~/global.css";
 import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
 import React, { useEffect, useRef } from "react";
-import { Platform, useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
-import * as NavigationBar from "expo-navigation-bar";
-import * as Player from "@bilisound/player";
 import { SystemBars } from "react-native-edge-to-edge";
 import { useFonts } from "expo-font";
 import log from "~/utils/logger";
@@ -17,22 +15,9 @@ import { Poppins_700Bold } from "@expo-google-fonts/poppins";
 import "~/utils/polyfill";
 import "~/utils/nativewind";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { registerBackgroundEventListener } from "@bilisound/player";
 
 registerBackgroundEventListener(() => {});
-
-// todo 目前不对播放生效
-Player.setDefaultHeaders({
-    "User-Agent": USER_AGENT_BILIBILI,
-});
-
-if (Platform.OS === "android") {
-    setInterval(() => {
-        NavigationBar.setPositionAsync("absolute");
-        NavigationBar.setBackgroundColorAsync("#ffffff01");
-    }, 100);
-}
 
 // todo 把它们放到主题管理模块里
 const defaultTheme = structuredClone(DefaultTheme);
@@ -101,6 +86,12 @@ export default function RootLayout() {
                         />
                         <Stack.Screen
                             name={"video/[id]"}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name={"settings/theme"}
                             options={{
                                 headerShown: false,
                             }}

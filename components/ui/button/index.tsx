@@ -1,88 +1,33 @@
 "use client";
-import React, { useMemo } from "react";
+import React from "react";
 import { createButton } from "@gluestack-ui/button";
-import { Svg } from "react-native-svg";
-import { PressableProps, ViewProps } from "react-native";
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import { withStyleContext, useStyleContext } from "@gluestack-ui/nativewind-utils/withStyleContext";
-import { withStyleContextAndStates } from "@gluestack-ui/nativewind-utils/withStyleContextAndStates";
 import { cssInterop } from "nativewind";
-import { withStates } from "@gluestack-ui/nativewind-utils/withStates";
-import { ActivityIndicator, Pressable, Text, View, Platform } from "react-native";
+import { ActivityIndicator, Pressable, Text, View, ViewProps } from "react-native";
 import type { VariantProps } from "@gluestack-ui/nativewind-utils";
-import { boxStyle } from "~/components/ui/box/styles";
+import { PrimitiveIcon, UIIcon } from "@gluestack-ui/icon";
 import { twMerge } from "tailwind-merge";
+import { boxStyle } from "~/components/ui/box/styles";
 
 const SCOPE = "BUTTON";
-const ButtonWrapper = React.forwardRef<React.ElementRef<typeof Pressable>, PressableProps>(({ ...props }, ref) => {
-    return <Pressable {...props} ref={ref} />;
-});
 
-type IPrimitiveIcon = React.ComponentPropsWithoutRef<typeof Svg> & {
-    height?: number | string;
-    width?: number | string;
-    fill?: string;
-    color?: string;
-    size?: number | string;
-    stroke?: string;
-    as?: React.ElementType;
-    className?: string;
-    classNameColor?: string;
-};
-
-const PrimitiveIcon = React.forwardRef<React.ElementRef<typeof Svg>, IPrimitiveIcon>(
-    ({ height, width, fill, color, classNameColor, size, stroke = "currentColor", as: AsComp, ...props }, ref) => {
-        color = color ?? classNameColor;
-        const sizeProps = useMemo(() => {
-            if (size) return { size };
-            if (height && width) return { height, width };
-            if (height) return { height };
-            if (width) return { width };
-            return {};
-        }, [size, height, width]);
-
-        let colorProps = {};
-        if (fill) {
-            colorProps = { ...colorProps, fill: fill };
-        }
-        if (stroke !== "currentColor") {
-            colorProps = { ...colorProps, stroke: stroke };
-        } else if (stroke === "currentColor" && color !== undefined) {
-            colorProps = { ...colorProps, stroke: color };
-        }
-
-        if (AsComp) {
-            return <AsComp ref={ref} {...props} {...sizeProps} {...colorProps} />;
-        }
-        return <Svg ref={ref} height={height} width={width} {...colorProps} {...props} />;
-    },
-);
-
-const Root =
-    Platform.OS === "web" ? withStyleContext(ButtonWrapper, SCOPE) : withStyleContextAndStates(ButtonWrapper, SCOPE);
+const Root = withStyleContext(Pressable, SCOPE);
 
 const UIButton = createButton({
     Root: Root,
     Text,
     Group: View,
     Spinner: ActivityIndicator,
-    Icon: withStates(PrimitiveIcon),
+    Icon: UIIcon,
 });
 
-cssInterop(Root, { className: "style" });
-cssInterop(UIButton.Text, { className: "style" });
-cssInterop(UIButton.Group, { className: "style" });
-cssInterop(UIButton.Spinner, {
-    className: { target: "style", nativeStyleToProp: { color: true } },
-});
-//@ts-ignore
 cssInterop(PrimitiveIcon, {
     className: {
         target: "style",
         nativeStyleToProp: {
             height: true,
             width: true,
-            //@ts-ignore
             fill: true,
             color: "classNameColor",
             stroke: true,
@@ -90,38 +35,23 @@ cssInterop(PrimitiveIcon, {
     },
 });
 
-// const enableRipple = Platform.OS === "android" && process.env.EXPO_FEATURES_ANDROID_RIPPLE_BUTTON === "true";
-const enableRipple = Platform.OS === "android";
-
 const buttonStyle = tva({
     base: "group/button rounded-lg bg-primary-500 flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2",
     variants: {
         action: {
-            primary: `bg-primary-500 ${
-                enableRipple
-                    ? "{}-[android_ripple.color]/color:color-primary-700"
-                    : "data-[hover=true]:bg-primary-600 data-[hover=true]:border-primary-400 data-[active=true]:bg-primary-700 data-[active=true]:border-primary-500"
-            } border-primary-300 data-[focus-visible=true]:web:ring-indicator-info`,
-            secondary: `bg-secondary-500 border-secondary-300 ${
-                enableRipple
-                    ? "{}-[android_ripple.color]/color:color-secondary-700"
-                    : "data-[hover=true]:bg-secondary-600 data-[hover=true]:border-secondary-400 data-[active=true]:bg-secondary-700 data-[active=true]:border-secondary-500"
-            } data-[focus-visible=true]:web:ring-indicator-info`,
-            positive: `bg-success-500 border-success-300 ${
-                enableRipple
-                    ? "{}-[android_ripple.color]/color:color-success-700"
-                    : "data-[hover=true]:border-success-400 data-[hover=true]:bg-success-600 data-[active=true]:bg-success-700 data-[active=true]:border-success-500"
-            } data-[focus-visible=true]:web:ring-indicator-info`,
-            negative: `bg-error-500 border-error-300 ${
-                enableRipple
-                    ? "{}-[android_ripple.color]/color:color-error-700"
-                    : "data-[hover=true]:border-error-400 data-[hover=true]:bg-error-600 data-[active=true]:bg-error-700 data-[active=true]:border-error-500"
-            } data-[focus-visible=true]:web:ring-indicator-info`,
-            default: `bg-transparent ${enableRipple ? "{}-[android_ripple.color]/color:color-background-100" : "data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent"}`,
+            primary:
+                "bg-primary-500 data-[hover=true]:bg-primary-600 data-[active=true]:bg-primary-700 border-primary-300 data-[hover=true]:border-primary-400 data-[active=true]:border-primary-500 data-[focus-visible=true]:web:ring-indicator-info",
+            secondary:
+                "bg-secondary-500 border-secondary-300 data-[hover=true]:bg-secondary-600 data-[hover=true]:border-secondary-400 data-[active=true]:bg-secondary-700 data-[active=true]:border-secondary-700 data-[focus-visible=true]:web:ring-indicator-info",
+            positive:
+                "bg-success-500 border-success-300 data-[hover=true]:bg-success-600 data-[hover=true]:border-success-400 data-[active=true]:bg-success-700 data-[active=true]:border-success-500 data-[focus-visible=true]:web:ring-indicator-info",
+            negative:
+                "bg-error-500 border-error-300 data-[hover=true]:bg-error-600 data-[hover=true]:border-error-400 data-[active=true]:bg-error-700 data-[active=true]:border-error-500 data-[focus-visible=true]:web:ring-indicator-info",
+            default: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
         },
         variant: {
             link: "px-0",
-            outline: `bg-transparent border ${enableRipple ? "{}-[android_ripple.color]/color:color-primary-100" : "data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent"}`,
+            outline: "bg-transparent border data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
             solid: "",
         },
 
@@ -182,7 +112,8 @@ const buttonTextStyle = tva({
     parentVariants: {
         action: {
             primary: "text-primary-600 data-[hover=true]:text-primary-600 data-[active=true]:text-primary-700",
-            secondary: "text-secondary-600 data-[hover=true]:text-secondary-600 data-[active=true]:text-secondary-700",
+            secondary:
+                "text-typography-500 data-[hover=true]:text-typography-600 data-[active=true]:text-typography-700",
             positive: "text-success-600 data-[hover=true]:text-success-600 data-[active=true]:text-success-700",
             negative: "text-error-600 data-[hover=true]:text-error-600 data-[active=true]:text-error-700",
         },
@@ -208,7 +139,7 @@ const buttonTextStyle = tva({
         {
             variant: "solid",
             action: "secondary",
-            class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+            class: "text-typography-800 data-[hover=true]:text-typography-800 data-[active=true]:text-typography-800",
         },
         {
             variant: "solid",
@@ -219,11 +150,6 @@ const buttonTextStyle = tva({
             variant: "solid",
             action: "negative",
             class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
-        },
-        {
-            variant: "solid",
-            action: "default",
-            class: "text-typography-700 data-[hover=true]:text-typography-700 data-[active=true]:text-typography-700",
         },
         {
             variant: "outline",
@@ -233,7 +159,7 @@ const buttonTextStyle = tva({
         {
             variant: "outline",
             action: "secondary",
-            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+            class: "text-typography-500 data-[hover=true]:text-primary-600 data-[active=true]:text-typography-700",
         },
         {
             variant: "outline",
@@ -244,11 +170,6 @@ const buttonTextStyle = tva({
             variant: "outline",
             action: "negative",
             class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
-        },
-        {
-            variant: "outline",
-            action: "default",
-            class: "text-typography-700 data-[hover=true]:text-typography-700 data-[active=true]:text-typography-700",
         },
     ],
 });
@@ -315,6 +236,12 @@ const buttonGroupStyle = tva({
         isAttached: {
             true: "gap-0",
         },
+        flexDirection: {
+            row: "flex-row",
+            column: "flex-col",
+            "row-reverse": "flex-row-reverse",
+            "column-reverse": "flex-col-reverse",
+        },
     },
 });
 
@@ -367,6 +294,8 @@ type IButtonIcon = React.ComponentPropsWithoutRef<typeof UIButton.Icon> &
     VariantProps<typeof buttonIconStyle> & {
         className?: string | undefined;
         as?: React.ElementType;
+        height?: number;
+        width?: number;
     };
 
 const ButtonIcon = React.forwardRef<React.ElementRef<typeof UIButton.Icon>, IButtonIcon>(
@@ -399,10 +328,15 @@ const ButtonIcon = React.forwardRef<React.ElementRef<typeof UIButton.Icon>, IBut
 type IButtonGroupProps = React.ComponentPropsWithoutRef<typeof UIButton.Group> & VariantProps<typeof buttonGroupStyle>;
 
 const ButtonGroup = React.forwardRef<React.ElementRef<typeof UIButton.Group>, IButtonGroupProps>(
-    ({ className, space = "md", isAttached = false, ...props }, ref) => {
+    ({ className, space = "md", isAttached = false, flexDirection = "column", ...props }, ref) => {
         return (
             <UIButton.Group
-                className={buttonGroupStyle({ class: className, space, isAttached })}
+                className={buttonGroupStyle({
+                    class: className,
+                    space,
+                    isAttached,
+                    flexDirection,
+                })}
                 {...props}
                 ref={ref}
             />

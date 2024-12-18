@@ -97,7 +97,7 @@ export async function getBilisoundMetadata(data: { id: string }): Promise<Wrap<G
             }
 
             // 没有分 P 的视频，将第一个视频的标题替换成投稿标题
-            if (pages.length === 1) {
+            if (pages.length === 1 && pages[0].part.trim().length <= 0) {
                 pages[0].part = videoData.title;
             }
 

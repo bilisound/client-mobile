@@ -2,7 +2,6 @@ import React, { PropsWithChildren, ReactNode, forwardRef } from "react";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
-import { YuruChara } from "~/components/yuru-chara";
 import { Monicon } from "@monicon/native";
 import { Button, ButtonOuter } from "~/components/ui/button";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
@@ -87,7 +86,6 @@ export function Layout({
             >
                 <View className={"flex-1"}>{children}</View>
             </View>
-            <YuruChara />
         </View>
     );
 }

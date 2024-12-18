@@ -8,6 +8,8 @@ import { TabSafeAreaContext } from "~/hooks/useTabSafeAreaInsets";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { breakpoints } from "~/constants/styles";
 import { simpleCopy } from "~/utils/misc";
+import { YuruChara } from "~/components/yuru-chara";
+import useSettingsStore from "~/store/settings";
 
 type TabTriggerChildProps = TabTriggerSlotProps & {
     IconComponent: ComponentType<any>;
@@ -47,6 +49,9 @@ export default function TabLayout() {
     const edgeInsets = useSafeAreaInsets();
     const edgeInsetsTab = simpleCopy(edgeInsets);
     const windowDimensions = useWindowDimensions();
+    const { showYuruChara } = useSettingsStore(state => ({
+        showYuruChara: state.showYuruChara,
+    }));
 
     if (windowDimensions.width < breakpoints.md) {
         edgeInsetsTab.bottom = edgeInsets.bottom + 64;
@@ -80,6 +85,7 @@ export default function TabLayout() {
                         <TabTriggerChild IconComponent={FontAwesome6} iconName={"gear"} title={"设置"} />
                     </TabTrigger>
                 </TabList>
+                {showYuruChara && <YuruChara />}
             </Tabs>
         </TabSafeAreaContext.Provider>
     );
