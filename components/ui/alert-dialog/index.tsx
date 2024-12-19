@@ -62,7 +62,7 @@ const alertDialogHeaderStyle = tva({
 });
 
 const alertDialogFooterStyle = tva({
-    base: "flex-row justify-end items-center gap-3",
+    base: "flex-row justify-end items-center gap-2.5",
 });
 
 const alertDialogBodyStyle = tva({ base: "" });
