@@ -1,22 +1,19 @@
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 
+// todo link 的样式是坏的，别用
 export const buttonStyle = tva({
-    base: "group/button rounded-lg bg-primary-500 flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2",
+    base: "group/button rounded-lg bg-primary-500 flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2 {}-[android_ripple.color]/color:color-background-100",
     variants: {
         action: {
-            primary:
-                "bg-primary-500 data-[hover=true]:bg-primary-600 data-[active=true]:bg-primary-700 border-primary-300 data-[hover=true]:border-primary-400 data-[active=true]:border-primary-500 data-[focus-visible=true]:web:ring-indicator-info",
-            secondary:
-                "bg-secondary-500 border-secondary-300 data-[hover=true]:bg-secondary-600 data-[hover=true]:border-secondary-400 data-[active=true]:bg-secondary-700 data-[active=true]:border-secondary-700 data-[focus-visible=true]:web:ring-indicator-info",
-            positive:
-                "bg-success-500 border-success-300 data-[hover=true]:bg-success-600 data-[hover=true]:border-success-400 data-[active=true]:bg-success-700 data-[active=true]:border-success-500 data-[focus-visible=true]:web:ring-indicator-info",
-            negative:
-                "bg-error-500 border-error-300 data-[hover=true]:bg-error-600 data-[hover=true]:border-error-400 data-[active=true]:bg-error-700 data-[active=true]:border-error-500 data-[focus-visible=true]:web:ring-indicator-info",
-            default: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+            primary: "bg-primary-500 border-primary-300 {}-[android_ripple.color]/color:color-primary-700",
+            secondary: "bg-secondary-500 border-secondary-300 {}-[android_ripple.color]/color:color-secondary-700",
+            positive: "bg-success-500 border-success-300 {}-[android_ripple.color]/color:color-success-700",
+            negative: "bg-error-500 border-error-300 {}-[android_ripple.color]/color:color-error-700",
+            default: "bg-transparent {}-[android_ripple.color]/color:color-background-100",
         },
         variant: {
             link: "px-0",
-            outline: "bg-transparent border data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+            outline: "bg-transparent border {}-[android_ripple.color]/color:color-background-100",
             solid: "",
         },
 
@@ -32,42 +29,42 @@ export const buttonStyle = tva({
         {
             action: "primary",
             variant: "link",
-            class: "px-0 bg-transparent data-[hover=true]:bg-transparent data-[active=true]:bg-transparent",
+            class: "px-0 bg-transparent",
         },
         {
             action: "secondary",
             variant: "link",
-            class: "px-0 bg-transparent data-[hover=true]:bg-transparent data-[active=true]:bg-transparent",
+            class: "px-0 bg-transparent",
         },
         {
             action: "positive",
             variant: "link",
-            class: "px-0 bg-transparent data-[hover=true]:bg-transparent data-[active=true]:bg-transparent",
+            class: "px-0 bg-transparent",
         },
         {
             action: "negative",
             variant: "link",
-            class: "px-0 bg-transparent data-[hover=true]:bg-transparent data-[active=true]:bg-transparent",
+            class: "px-0 bg-transparent",
         },
         {
             action: "primary",
             variant: "outline",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+            class: "bg-transparent {}-[android_ripple.color]/color:color-primary-100",
         },
         {
             action: "secondary",
             variant: "outline",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+            class: "bg-transparent {}-[android_ripple.color]/color:color-secondary-100",
         },
         {
             action: "positive",
             variant: "outline",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+            class: "bg-transparent {}-[android_ripple.color]/color:color-positive-100",
         },
         {
             action: "negative",
             variant: "outline",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+            class: "bg-transparent {}-[android_ripple.color]/color:color-negative-100",
         },
     ],
 });
@@ -124,7 +121,7 @@ export const buttonTextStyle = tva({
         {
             variant: "outline",
             action: "secondary",
-            class: "text-typography-500 data-[hover=true]:text-primary-600 data-[active=true]:text-typography-700",
+            class: "text-typography-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
         },
         {
             variant: "outline",

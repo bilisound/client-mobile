@@ -14,7 +14,7 @@ import {
     AlertDialogFooter,
     AlertDialogBody,
 } from "~/components/ui/alert-dialog";
-import { Button, ButtonText } from "~/components/ui/button";
+import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { Heading } from "~/components/ui/heading";
 import React from "react";
@@ -51,12 +51,16 @@ export default function Page() {
                     <Text size="sm">确定要清空历史记录吗？</Text>
                 </AlertDialogBody>
                 <AlertDialogFooter className="">
-                    <Button variant="outline" action="secondary" onPress={handleClose}>
-                        <ButtonText>取消</ButtonText>
-                    </Button>
-                    <Button onPress={handleClose}>
-                        <ButtonText>确定</ButtonText>
-                    </Button>
+                    <ButtonOuter>
+                        <Button variant="outline" action="secondary" onPress={handleClose}>
+                            <ButtonText>取消</ButtonText>
+                        </Button>
+                    </ButtonOuter>
+                    <ButtonOuter>
+                        <Button onPress={handleClose}>
+                            <ButtonText>确定</ButtonText>
+                        </Button>
+                    </ButtonOuter>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
