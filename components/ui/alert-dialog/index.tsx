@@ -62,7 +62,7 @@ const alertDialogHeaderStyle = tva({
 });
 
 const alertDialogFooterStyle = tva({
-    base: "flex-row justify-end items-center gap-2.5",
+    base: "flex-row justify-end items-center gap-2",
 });
 
 const alertDialogBodyStyle = tva({ base: "" });
@@ -224,11 +224,9 @@ const AlertDialogBackdrop = React.forwardRef<
             }}
             transition={{
                 type: "spring",
-                damping: 18,
-                stiffness: 250,
                 opacity: {
                     type: "timing",
-                    duration: 250,
+                    duration: 300,
                 },
             }}
             {...props}

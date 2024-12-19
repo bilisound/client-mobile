@@ -18,6 +18,8 @@ import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { Heading } from "~/components/ui/heading";
 import React from "react";
+import { Toast, ToastDescription, ToastIcon, ToastTitle, useToast } from "~/components/ui/toast";
+import { View } from "react-native";
 
 export default function Page() {
     // 历史记录信息
@@ -38,6 +40,38 @@ export default function Page() {
     const handleClose = () => setShowAlertDialog(false);
     const handleOpen = () => setShowAlertDialog(true);
 
+    const toast = useToast();
+    const [toastId, setToastId] = useState(0);
+
+    const handleToast = () => {
+        clearHistoryList();
+        if (!toast.isActive(toastId + "")) {
+            showNewToast();
+        }
+    };
+
+    const showNewToast = () => {
+        const newId = Math.random();
+        setToastId(newId);
+        toast.show({
+            id: newId + "",
+            placement: "top",
+            duration: 5000,
+            render: ({ id }) => {
+                const uniqueToastId = "toast-" + id;
+                return (
+                    <Toast nativeID={uniqueToastId} variant={"outline2"} action={"success"}>
+                        <ToastIcon />
+                        <View className={"gap-1 flex-0"}>
+                            <ToastTitle>操作成功</ToastTitle>
+                            <ToastDescription>历史记录已经清除</ToastDescription>
+                        </View>
+                    </Toast>
+                );
+            },
+        });
+    };
+
     const dialogContent = (
         <AlertDialog isOpen={showAlertDialog} onClose={handleClose} size="md">
             <AlertDialogBackdrop />
@@ -52,12 +86,17 @@ export default function Page() {
                 </AlertDialogBody>
                 <AlertDialogFooter className="">
                     <ButtonOuter>
-                        <Button variant="outline" action="secondary" onPress={handleClose}>
+                        <Button variant="ghost" action="secondary" onPress={handleClose}>
                             <ButtonText>取消</ButtonText>
                         </Button>
                     </ButtonOuter>
                     <ButtonOuter>
-                        <Button onPress={handleClose}>
+                        <Button
+                            onPress={() => {
+                                handleToast();
+                                handleClose();
+                            }}
+                        >
                             <ButtonText>确定</ButtonText>
                         </Button>
                     </ButtonOuter>

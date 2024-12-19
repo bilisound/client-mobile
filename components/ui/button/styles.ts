@@ -18,6 +18,7 @@ export const buttonStyle = tva({
             link: "px-0",
             outline: "bg-transparent border data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
             solid: "",
+            ghost: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
         },
 
         size: {
@@ -67,6 +68,26 @@ export const buttonStyle = tva({
         {
             action: "negative",
             variant: "outline",
+            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+        },
+        {
+            action: "primary",
+            variant: "ghost",
+            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+        },
+        {
+            action: "secondary",
+            variant: "ghost",
+            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+        },
+        {
+            action: "positive",
+            variant: "ghost",
+            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+        },
+        {
+            action: "negative",
+            variant: "ghost",
             class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
         },
     ],
@@ -133,6 +154,26 @@ export const buttonTextStyle = tva({
         },
         {
             variant: "outline",
+            action: "negative",
+            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+        },
+        {
+            variant: "ghost",
+            action: "primary",
+            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+        },
+        {
+            variant: "ghost",
+            action: "secondary",
+            class: "text-typography-500 data-[hover=true]:text-primary-600 data-[active=true]:text-typography-700",
+        },
+        {
+            variant: "ghost",
+            action: "positive",
+            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+        },
+        {
+            variant: "ghost",
             action: "negative",
             class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
         },

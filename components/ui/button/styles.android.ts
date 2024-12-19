@@ -15,6 +15,7 @@ export const buttonStyle = tva({
             link: "px-0",
             outline: "bg-transparent border {}-[android_ripple.color]/color:color-background-100",
             solid: "",
+            ghost: "bg-transparent {}-[android_ripple.color]/color:color-background-100",
         },
 
         size: {
@@ -66,6 +67,26 @@ export const buttonStyle = tva({
             variant: "outline",
             class: "bg-transparent {}-[android_ripple.color]/color:color-negative-100",
         },
+        {
+            action: "primary",
+            variant: "ghost",
+            class: "bg-transparent {}-[android_ripple.color]/color:color-primary-100",
+        },
+        {
+            action: "secondary",
+            variant: "ghost",
+            class: "bg-transparent {}-[android_ripple.color]/color:color-secondary-100",
+        },
+        {
+            action: "positive",
+            variant: "ghost",
+            class: "bg-transparent {}-[android_ripple.color]/color:color-positive-100",
+        },
+        {
+            action: "negative",
+            variant: "ghost",
+            class: "bg-transparent {}-[android_ripple.color]/color:color-negative-100",
+        },
     ],
 });
 
@@ -83,6 +104,7 @@ export const buttonTextStyle = tva({
             link: "data-[hover=true]:underline data-[active=true]:underline",
             outline: "",
             solid: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+            ghost: "",
         },
         size: {
             xs: "text-xs",
@@ -133,6 +155,26 @@ export const buttonTextStyle = tva({
             action: "negative",
             class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
         },
+        {
+            variant: "ghost",
+            action: "primary",
+            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+        },
+        {
+            variant: "ghost",
+            action: "secondary",
+            class: "text-typography-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+        },
+        {
+            variant: "ghost",
+            action: "positive",
+            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+        },
+        {
+            variant: "ghost",
+            action: "negative",
+            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+        },
     ],
 });
 
@@ -176,6 +218,26 @@ export const buttonIconStyle = tva({
         },
         {
             variant: "solid",
+            action: "negative",
+            class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+        },
+        {
+            variant: "ghost",
+            action: "primary",
+            class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+        },
+        {
+            variant: "ghost",
+            action: "secondary",
+            class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+        },
+        {
+            variant: "ghost",
+            action: "positive",
+            class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+        },
+        {
+            variant: "ghost",
             action: "negative",
             class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
         },

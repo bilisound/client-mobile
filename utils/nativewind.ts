@@ -1,4 +1,4 @@
-import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome5, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { cssInterop, remapProps } from "nativewind";
@@ -14,6 +14,14 @@ cssInterop(FontAwesome5, {
     },
 });
 cssInterop(FontAwesome6, {
+    className: {
+        target: "style",
+        nativeStyleToProp: {
+            color: true,
+        },
+    },
+});
+cssInterop(Ionicons, {
     className: {
         target: "style",
         nativeStyleToProp: {
