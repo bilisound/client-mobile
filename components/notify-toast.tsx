@@ -14,7 +14,7 @@ export function NotifyToast({ type, title, description }: NotifyToastProps) {
     return (
         <View
             style={{ boxShadow: shadow.xl }}
-            className="bg-background-0 border-background-100 border min-h-[50px] rounded-[25px] pl-3 pr-[1.125rem] py-[0.8125rem] flex-row gap-3 w-full max-w-[400px]"
+            className="bg-background-0 border-background-100 border min-h-[50px] rounded-[25px] pl-3 pr-[1.125rem] py-[0.8125rem] flex-row gap-3 mx-6 my-2 max-w-[400px]"
         >
             {type === "success" && (
                 <Ionicons name="checkmark-circle" size={24} className="flex-0 basis-auto color-green-500" />

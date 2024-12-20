@@ -1,7 +1,6 @@
 "use client";
 import { setFlushStyles } from "@gluestack-ui/nativewind-utils/flush";
 import { OverlayProvider } from "@gluestack-ui/overlay";
-import { ToastProvider } from "@gluestack-ui/toast";
 import React from "react";
 
 import { config, ConfigName, parsedConfig } from "./config";
@@ -43,9 +42,7 @@ export function GluestackUIProvider({ mode = "light", ...props }: { mode?: "ligh
                 mode,
             }}
         >
-            <OverlayProvider>
-                <ToastProvider>{props.children}</ToastProvider>
-            </OverlayProvider>
+            <OverlayProvider>{props.children}</OverlayProvider>
         </ThemeValueProvider.Provider>
     );
 }

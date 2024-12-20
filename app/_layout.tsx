@@ -11,11 +11,15 @@ import log from "~/utils/logger";
 import init from "~/utils/init";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { Poppins_700Bold } from "@expo-google-fonts/poppins";
+import { ToastConfig } from "react-native-toast-message/lib/src/types";
 
 import "~/utils/polyfill";
 import "~/utils/nativewind";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { registerBackgroundEventListener } from "@bilisound/player";
+import { NotifyToast } from "~/components/notify-toast";
+import Toast from "react-native-toast-message";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 registerBackgroundEventListener(() => {});
 
@@ -35,6 +39,13 @@ export const unstable_settings = {
     initialRouteName: "(main)",
 };
 
+const toastConfig: ToastConfig = {
+    success: ({ text1, text2 }) => <NotifyToast type="success" title={text1 ?? ""} description={text2} />,
+    info: ({ text1, text2 }) => <NotifyToast type="info" title={text1 ?? ""} description={text2} />,
+    warning: ({ text1, text2 }) => <NotifyToast type="warning" title={text1 ?? ""} description={text2} />,
+    error: ({ text1, text2 }) => <NotifyToast type="error" title={text1 ?? ""} description={text2} />,
+};
+
 export default function RootLayout() {
     const [loaded, error] = useFonts({
         Roboto_400Regular,
@@ -44,6 +55,7 @@ export default function RootLayout() {
 
     const isInitializing = useRef(false);
     const colorScheme = useColorScheme();
+    const edgeInsets = useSafeAreaInsets();
 
     // Expo Router uses Error Boundaries to catch errors in the navigation tree.
     useEffect(() => {
@@ -123,6 +135,7 @@ export default function RootLayout() {
                             }}
                         />
                     </Stack>
+                    <Toast config={toastConfig} topOffset={edgeInsets.top} />
                 </ThemeProvider>
             </GluestackUIProvider>
         </QueryClientProvider>

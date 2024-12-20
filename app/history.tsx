@@ -18,8 +18,7 @@ import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { Heading } from "~/components/ui/heading";
 import React from "react";
-import { Toast, ToastDescription, ToastIcon, ToastTitle, useToast } from "~/components/ui/toast";
-import { useWindowDimensions, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 export default function Page() {
     // 历史记录信息
@@ -40,38 +39,11 @@ export default function Page() {
     const handleClose = () => setShowAlertDialog(false);
     const handleOpen = () => setShowAlertDialog(true);
 
-    const toast = useToast();
-    const { width } = useWindowDimensions();
-    const [toastId, setToastId] = useState(0);
-
     const handleToast = () => {
-        // clearHistoryList();
-        if (!toast.isActive(toastId + "")) {
-            showNewToast();
-        }
-    };
-
-    const showNewToast = () => {
-        const newId = Math.random();
-        setToastId(newId);
-        toast.show({
-            id: newId + "",
-            placement: "top",
-            duration: 30000,
-            render: ({ id }) => {
-                const uniqueToastId = "toast-" + id;
-                return (
-                    <Toast nativeID={uniqueToastId} variant={"outline2"} action={"success"}>
-                        <ToastIcon />
-                        <View className={"gap-1 flex-1"}>
-                            <ToastTitle>操作成功</ToastTitle>
-                            <ToastDescription size={"sm"} className={"text-wrap"}>
-                                历史记录已经清除历史记录已经清除历史记录已经清除历史记录已经清除历史记录已经清除历史记录已经清除历史记录已经清除历史记录已经清除历史记录已经清除历史记录已经清除历史记录已经清除历史记录已经清除
-                            </ToastDescription>
-                        </View>
-                    </Toast>
-                );
-            },
+        clearHistoryList();
+        Toast.show({
+            type: "success",
+            text1: "已清空历史记录",
         });
     };
 
