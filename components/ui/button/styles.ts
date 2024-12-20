@@ -73,22 +73,22 @@ export const buttonStyle = tva({
         {
             action: "primary",
             variant: "ghost",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-background-100",
         },
         {
             action: "secondary",
             variant: "ghost",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-background-100",
         },
         {
             action: "positive",
             variant: "ghost",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-background-100",
         },
         {
             action: "negative",
             variant: "ghost",
-            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent",
+            class: "bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-background-100",
         },
     ],
 });

@@ -117,7 +117,7 @@ const AlertDialogContent = React.forwardRef<
             pointerEvents="auto"
             ref={ref}
             initial={{
-                scale: 0.9,
+                scale: 0.95,
                 opacity: 0,
             }}
             animate={{
@@ -125,15 +125,12 @@ const AlertDialogContent = React.forwardRef<
                 opacity: 1,
             }}
             exit={{
-                scale: 0.9,
+                scale: 0.95,
                 opacity: 0,
             }}
             transition={{
-                type: "spring",
-                opacity: {
-                    type: "timing",
-                    duration: 300,
-                },
+                type: "timing",
+                duration: 250,
             }}
             {...props}
             className={alertDialogContentStyle({
@@ -223,11 +220,8 @@ const AlertDialogBackdrop = React.forwardRef<
                 opacity: 0,
             }}
             transition={{
-                type: "spring",
-                opacity: {
-                    type: "timing",
-                    duration: 300,
-                },
+                type: "timing",
+                duration: 250,
             }}
             {...props}
             className={alertDialogBackdropStyle({

@@ -6,7 +6,7 @@ import { SystemBars, SystemBarStyle } from "react-native-edge-to-edge";
 import { Button, useColorScheme as useColorSchemeRN } from "react-native";
 import { shadow } from "~/constants/styles";
 
-export default function Index2() {
+export default function Test() {
     const colorScheme = useColorScheme();
     const [theme, setTheme] = useState<SystemBarStyle>("auto");
     const [nativeWindShadow, setNativeWindShadow] = useState(1);

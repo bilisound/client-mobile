@@ -29,7 +29,7 @@ const toastStyle = tva({
             solid: "",
             outline: "border bg-background-0",
             outline2:
-                "border bg-background-0 border-background-100 min-h-[50px] rounded-[25px] pl-3 pr-[1.125rem] py-[0.8125rem] flex-row gap-3 w-full max-w-[400px]",
+                "m-0 border bg-background-0 border-background-100 min-h-[50px] rounded-[25px] pl-3 pr-[1.125rem] py-[0.8125rem] flex-row gap-3 w-full max-w-[400px]",
         },
     },
     compoundVariants: [
@@ -134,7 +134,7 @@ const toastTitleStyle = tva({
 });
 
 const toastDescriptionStyle = tva({
-    base: "font-normal font-body tracking-md text-left",
+    base: "font-normal font-body tracking-md text-left break-words bg-red-500",
     variants: {
         isTruncated: {
             true: "",
@@ -166,7 +166,7 @@ const toastDescriptionStyle = tva({
         variant: {
             solid: "text-typography-50",
             outline: "text-typography-900",
-            outline2: "text-typography-700 text-sm leading-normal",
+            outline2: "text-typography-700 leading-normal",
         },
     },
 });
