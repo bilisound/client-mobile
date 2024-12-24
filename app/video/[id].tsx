@@ -24,6 +24,8 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { decodeHTML } from "entities";
 import { addTrackFromDetail } from "~/business/playlist/handler";
+import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
+import { Monicon } from "@monicon/native";
 
 interface MetaDataProps {
     data?: GetBilisoundMetadataResponse;
@@ -90,6 +92,24 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                 ) : (
                     <SkeletonText lineSize={6} fontSize={14} lineHeight={21} />
                 )}
+                <View className={"mt-4 flex-row gap-2"}>
+                    <ButtonOuter className={"rounded-full"}>
+                        <Button className={"rounded-full"}>
+                            <View className={"size-4 items-center justify-center"}>
+                                <Monicon name={"fa6-solid:play"} color={"white"} size={16} />
+                            </View>
+                            <ButtonText>全部播放</ButtonText>
+                        </Button>
+                    </ButtonOuter>
+                    <ButtonOuter className={"rounded-full"}>
+                        <Button className={"rounded-full"} variant={"outline"}>
+                            <View className={"size-4 items-center justify-center"}>
+                                <Monicon name={"fa6-solid:list"} color={"#66ccff"} size={16} />
+                            </View>
+                            <ButtonText>查看所属合集</ButtonText>
+                        </Button>
+                    </ButtonOuter>
+                </View>
             </View>
         </View>
     );

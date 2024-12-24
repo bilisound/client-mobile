@@ -25,7 +25,7 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
         <Pressable
             onPress={onPress}
             className={
-                "max-md:flex-1 md:basis-auto h-16 gap-2 w-full flex-col items-center justify-center " +
+                "{}-[android_ripple.color]/color:color-background-200 max-md:flex-1 md:basis-auto h-16 gap-2 w-full flex-col items-center justify-center " +
                 "md:w-16 " +
                 "xl:flex-row xl:gap-3 xl:h-12 xl:justify-start xl:px-5 xl:w-56 xl:rounded-full " +
                 (isFocused ? "xl:bg-background-0" : "")
