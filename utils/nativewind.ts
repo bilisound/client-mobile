@@ -4,6 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { cssInterop, remapProps } from "nativewind";
 
 import LogViewer from "~/components/dom/LogViewer";
+import { Monicon } from "@monicon/native";
 
 cssInterop(FontAwesome5, {
     className: {
@@ -38,3 +39,12 @@ remapProps(LinearGradient, {
     className: "style",
 });
 cssInterop(LogViewer, { className: "style" });
+cssInterop(Monicon, {
+    className: {
+        // @ts-ignore
+        target: "style",
+        nativeStyleToProp: {
+            color: true,
+        },
+    },
+});

@@ -5,11 +5,11 @@ export const buttonStyle = tva({
     base: "group/button rounded-lg bg-primary-500 flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2 {}-[android_ripple.color]/color:color-background-100",
     variants: {
         action: {
-            primary: "bg-primary-500 border-primary-300 {}-[android_ripple.color]/color:color-primary-700",
-            secondary: "bg-secondary-500 border-secondary-300 {}-[android_ripple.color]/color:color-secondary-700",
-            positive: "bg-success-500 border-success-300 {}-[android_ripple.color]/color:color-success-700",
-            negative: "bg-error-500 border-error-300 {}-[android_ripple.color]/color:color-error-700",
-            default: "bg-transparent {}-[android_ripple.color]/color:color-background-100",
+            primary: "bg-primary-500 border-primary-300",
+            secondary: "bg-secondary-500 border-secondary-300",
+            positive: "bg-success-500 border-success-300",
+            negative: "bg-error-500 border-error-300",
+            default: "bg-transparent",
         },
         variant: {
             link: "px-0",
@@ -27,6 +27,26 @@ export const buttonStyle = tva({
         },
     },
     compoundVariants: [
+        {
+            action: "primary",
+            variant: "solid",
+            class: "{}-[android_ripple.color]/color:color-primary-700",
+        },
+        {
+            action: "secondary",
+            variant: "solid",
+            class: "{}-[android_ripple.color]/color:color-secondary-700",
+        },
+        {
+            action: "positive",
+            variant: "solid",
+            class: "{}-[android_ripple.color]/color:color-success-700",
+        },
+        {
+            action: "negative",
+            variant: "solid",
+            class: "{}-[android_ripple.color]/color:color-error-700",
+        },
         {
             action: "primary",
             variant: "link",
@@ -221,7 +241,7 @@ export const buttonIconStyle = tva({
             action: "negative",
             class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
         },
-        {
+        /*{
             variant: "ghost",
             action: "primary",
             class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
@@ -240,7 +260,7 @@ export const buttonIconStyle = tva({
             variant: "ghost",
             action: "negative",
             class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
-        },
+        },*/
     ],
 });
 
