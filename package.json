@@ -37,6 +37,7 @@
     "@gorhom/bottom-sheet": "^5.0.6",
     "@iconify-json/fa6-regular": "^1.2.2",
     "@iconify-json/fa6-solid": "^1.2.2",
+    "@iconify-json/tabler": "^1.2.13",
     "@legendapp/motion": "^2.4.0",
     "@monicon/babel-plugin": "^1.1.0",
     "@monicon/metro": "^1.1.0",

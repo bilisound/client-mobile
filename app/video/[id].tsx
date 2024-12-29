@@ -26,6 +26,7 @@ import { decodeHTML } from "entities";
 import { addTrackFromDetail } from "~/business/playlist/handler";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Monicon } from "@monicon/native";
+import { ErrorContent } from "~/components/error-content";
 
 interface MetaDataProps {
     data?: GetBilisoundMetadataResponse;
@@ -191,8 +192,8 @@ export default function Page() {
         <GestureHandlerRootView>
             <Layout title={"查看详情"} leftAccessories={"BACK_BUTTON"} disableContentPadding={true}>
                 {error ? (
-                    <View>
-                        <Text>{error.message}</Text>
+                    <View className={"flex-1 items-center justify-center"}>
+                        <ErrorContent message={error.message} />
                     </View>
                 ) : (
                     <View className={"flex-1 flex-row"}>
