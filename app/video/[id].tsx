@@ -93,32 +93,42 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                     <SkeletonText lineSize={6} fontSize={14} lineHeight={21} />
                 )}
                 <View className={"mt-4 flex-row gap-2"}>
-                    <ButtonOuter className={"rounded-full"}>
-                        <Button className={"rounded-full"}>
-                            <View className={"size-4 items-center justify-center"}>
-                                <Monicon name={"fa6-solid:play"} className={"color-typography-0"} size={16} />
-                            </View>
-                            <ButtonText>全部播放</ButtonText>
-                        </Button>
-                    </ButtonOuter>
-                    {data?.seasonId ? (
-                        <ButtonOuter className={"rounded-full"}>
-                            <Button
-                                className={"rounded-full"}
-                                variant={"outline"}
-                                onPress={() => {
-                                    router.navigate(
-                                        `/collection?userId=${data?.owner.mid}&listId=${data?.seasonId}&mode=season`,
-                                    );
-                                }}
-                            >
-                                <View className={"size-4 items-center justify-center"}>
-                                    <Monicon name={"fa6-solid:list"} className={"color-primary-500"} size={16} />
-                                </View>
-                                <ButtonText>查看所属合集</ButtonText>
-                            </Button>
-                        </ButtonOuter>
-                    ) : null}
+                    {data ? (
+                        <>
+                            <ButtonOuter className={"rounded-full"}>
+                                <Button className={"rounded-full"}>
+                                    <View className={"size-4 items-center justify-center"}>
+                                        <Monicon name={"fa6-solid:play"} className={"color-typography-0"} size={16} />
+                                    </View>
+                                    <ButtonText>全部播放</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                            {data?.seasonId ? (
+                                <ButtonOuter className={"rounded-full"}>
+                                    <Button
+                                        className={"rounded-full"}
+                                        variant={"outline"}
+                                        onPress={() => {
+                                            router.navigate(
+                                                `/remote-list?userId=${data?.owner.mid}&listId=${data?.seasonId}&mode=season`,
+                                            );
+                                        }}
+                                    >
+                                        <View className={"size-4 items-center justify-center"}>
+                                            <Monicon
+                                                name={"fa6-solid:list"}
+                                                className={"color-primary-500"}
+                                                size={16}
+                                            />
+                                        </View>
+                                        <ButtonText>查看所属合集</ButtonText>
+                                    </Button>
+                                </ButtonOuter>
+                            ) : null}
+                        </>
+                    ) : (
+                        <Skeleton className={"w-[120px] h-[40px] rounded-full"} />
+                    )}
                 </View>
             </View>
         </View>
