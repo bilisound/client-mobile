@@ -75,7 +75,10 @@ export async function parseB23(id: string) {
 export async function getBilisoundMetadata(data: { id: string }): Promise<Wrap<GetBilisoundMetadataResponse>> {
     if (Platform.OS === "web") {
         const response = await fetch(BILISOUND_API_PREFIX + `/internal/metadata?id=${data.id}`);
-        return response.json();
+        const outData = await response.json();
+        if (outData.code !== 200) {
+            throw new Error(outData.msg);
+        }
     }
 
     const { id } = data;

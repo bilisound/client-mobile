@@ -1,6 +1,6 @@
 import { Layout } from "~/components/layout";
 import { Text } from "~/components/ui/text";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
@@ -101,14 +101,24 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                             <ButtonText>全部播放</ButtonText>
                         </Button>
                     </ButtonOuter>
-                    <ButtonOuter className={"rounded-full"}>
-                        <Button className={"rounded-full"} variant={"outline"}>
-                            <View className={"size-4 items-center justify-center"}>
-                                <Monicon name={"fa6-solid:list"} className={"color-primary-500"} size={16} />
-                            </View>
-                            <ButtonText>查看所属合集</ButtonText>
-                        </Button>
-                    </ButtonOuter>
+                    {data?.seasonId ? (
+                        <ButtonOuter className={"rounded-full"}>
+                            <Button
+                                className={"rounded-full"}
+                                variant={"outline"}
+                                onPress={() => {
+                                    router.navigate(
+                                        `/collection?userId=${data?.owner.mid}&listId=${data?.seasonId}&mode=season`,
+                                    );
+                                }}
+                            >
+                                <View className={"size-4 items-center justify-center"}>
+                                    <Monicon name={"fa6-solid:list"} className={"color-primary-500"} size={16} />
+                                </View>
+                                <ButtonText>查看所属合集</ButtonText>
+                            </Button>
+                        </ButtonOuter>
+                    ) : null}
                 </View>
             </View>
         </View>
@@ -170,55 +180,61 @@ export default function Page() {
     return (
         <GestureHandlerRootView>
             <Layout title={"查看详情"} leftAccessories={"BACK_BUTTON"} disableContentPadding={true}>
-                <View className={"flex-1 flex-row"}>
-                    <ScrollView className={"hidden md:flex flex-1"}>
-                        <View
-                            style={{
-                                paddingLeft: edgeInsets.left + 16,
-                                paddingRight: 16,
-                                paddingBottom: edgeInsets.bottom + 16,
+                {error ? (
+                    <View>
+                        <Text>{error.message}</Text>
+                    </View>
+                ) : (
+                    <View className={"flex-1 flex-row"}>
+                        <ScrollView className={"hidden md:flex flex-1"}>
+                            <View
+                                style={{
+                                    paddingLeft: edgeInsets.left + 16,
+                                    paddingRight: 16,
+                                    paddingBottom: edgeInsets.bottom + 16,
+                                }}
+                            >
+                                {/*<MetaData />*/}
+                                <MetaData data={data?.data} />
+                            </View>
+                        </ScrollView>
+                        <FlashList
+                            estimatedItemSize={64}
+                            contentContainerStyle={{
+                                paddingLeft: 0,
+                                paddingRight: edgeInsets.right,
+                                paddingBottom: edgeInsets.bottom,
                             }}
-                        >
-                            {/*<MetaData />*/}
-                            <MetaData data={data?.data} />
-                        </View>
-                    </ScrollView>
-                    <FlashList
-                        estimatedItemSize={64}
-                        contentContainerStyle={{
-                            paddingLeft: 0,
-                            paddingRight: edgeInsets.right,
-                            paddingBottom: edgeInsets.bottom,
-                        }}
-                        // ListHeaderComponent={<MetaData className={"flex md:hidden px-4 pb-4"} />}
-                        ListHeaderComponent={
-                            <MetaData
-                                data={data?.data}
-                                className={"flex md:hidden px-4 pb-4"}
-                                onOpenModal={() => {
-                                    sheetRef.current?.snapToIndex(0);
-                                }}
-                            />
-                        }
-                        renderItem={e => (
-                            <SongItem
-                                onRequestPlay={() => addTrackFromDetail(data!.data.bvid, e.item.page)}
-                                data={{
-                                    author: data!.data.owner.name,
-                                    bvid: data!.data.bvid,
-                                    duration: e.item.duration,
-                                    episode: e.item.page,
-                                    title: e.item.part,
-                                    imgUrl: data!.data.pic,
-                                    id: 0,
-                                    playlistId: 0,
-                                    extendedData: null,
-                                }}
-                            />
-                        )}
-                        data={data?.data.pages ?? []}
-                    />
-                </View>
+                            // ListHeaderComponent={<MetaData className={"flex md:hidden px-4 pb-4"} />}
+                            ListHeaderComponent={
+                                <MetaData
+                                    data={data?.data}
+                                    className={"flex md:hidden px-4 pb-4"}
+                                    onOpenModal={() => {
+                                        sheetRef.current?.snapToIndex(0);
+                                    }}
+                                />
+                            }
+                            renderItem={e => (
+                                <SongItem
+                                    onRequestPlay={() => addTrackFromDetail(data!.data.bvid, e.item.page)}
+                                    data={{
+                                        author: data!.data.owner.name,
+                                        bvid: data!.data.bvid,
+                                        duration: e.item.duration,
+                                        episode: e.item.page,
+                                        title: e.item.part,
+                                        imgUrl: data!.data.pic,
+                                        id: 0,
+                                        playlistId: 0,
+                                        extendedData: null,
+                                    }}
+                                />
+                            )}
+                            data={data?.data.pages ?? []}
+                        />
+                    </View>
+                )}
             </Layout>
             <Animated.View
                 style={{
