@@ -272,6 +272,11 @@ export interface GetEpisodeUserResponse {
 
 export type UserListMode = "season" | "series" | "favourite";
 
+/**
+ * 尝试一次性获取完整合集列表
+ * @param userId
+ * @param listId
+ */
 async function tryGetFullSection(userId: Numberish, listId: Numberish): Promise<GetEpisodeUserResponse | null> {
     log.info("尝试一次获取完整合集");
     log.debug(`userId: ${userId}, listId: ${listId}`);
@@ -327,6 +332,13 @@ async function tryGetFullSection(userId: Numberish, listId: Numberish): Promise<
     };
 }
 
+/**
+ * 获取用户列表（合集/列表）
+ * @param mode
+ * @param userId
+ * @param listId
+ * @param page
+ */
 export async function getUserList(
     mode: UserListMode,
     userId: Numberish,
@@ -393,6 +405,13 @@ export async function getUserList(
     };
 }
 
+/**
+ * 一次性拉取完整用户列表（合集/列表）
+ * @param mode
+ * @param userId
+ * @param listId
+ * @param progressCallback
+ */
 export async function getUserListFull(
     mode: UserListMode,
     userId: Numberish,
