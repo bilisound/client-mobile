@@ -272,6 +272,61 @@ export interface GetEpisodeUserResponse {
 
 export type UserListMode = "season" | "series" | "favourite";
 
+async function tryGetFullSection(userId: Numberish, listId: Numberish): Promise<GetEpisodeUserResponse | null> {
+    log.info("尝试一次获取完整合集");
+    log.debug(`userId: ${userId}, listId: ${listId}`);
+
+    const { data } = await getUserSeason(userId, listId, 1);
+    if (data.page.total <= data.page.page_size) {
+        log.warn("一次获取完整合集取消：视频总数小于单页展示数量，无需进行此操作");
+        return null;
+    }
+
+    const name = data.meta.name;
+    const description = data.meta.description;
+    const cover = data.meta.cover;
+    const firstVideoId = data.archives[0]?.bvid;
+    if (!firstVideoId) {
+        log.warn("一次获取完整合集失败：列表中没有找到第一个视频 ID");
+        return null;
+    }
+
+    const firstVideoResponse = await getVideo({ id: firstVideoId });
+    if (firstVideoResponse.type !== "regular") {
+        log.warn("一次获取完整合集失败：非常规视频");
+        return null;
+    }
+
+    const sections = firstVideoResponse.initialState.sectionsInfo?.sections ?? [];
+    const episodes = sections.flatMap(section => section.episodes ?? []);
+    if (episodes.length <= 0) {
+        log.warn("一次获取完整合集失败：列表中没有找到视频");
+        return null;
+    }
+
+    const rows = episodes.map(e => ({
+        bvid: e.bvid,
+        title: e.title,
+        cover: e.arc.pic,
+        duration: e.arc.duration,
+    }));
+
+    log.debug(`一次获取完整合集成功：${rows.length} 条记录`);
+    return {
+        pageSize: rows.length,
+        pageNum: 1,
+        total: rows.length,
+        rows,
+        meta: {
+            name,
+            description,
+            cover,
+            userId,
+            seasonId: listId,
+        },
+    };
+}
+
 export async function getUserList(
     mode: UserListMode,
     userId: Numberish,
@@ -293,6 +348,12 @@ export async function getUserList(
     let description = "";
     let cover = "";
     if (mode === "season") {
+        // 首先尝试从任意一个视频详情页面抓取完整的合集列表
+        const fullResult = await tryGetFullSection(userId, listId);
+        if (fullResult) {
+            return fullResult;
+        }
+
         response = await getUserSeason(userId, listId, page);
         const data = response.data;
         pageSize = data.page.page_size;

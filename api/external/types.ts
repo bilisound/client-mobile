@@ -293,7 +293,7 @@ export type InitialStateResponse = {
             follower: number;
             label_style: number;
         }[];
-        ugc_season?: SectionsInfo;
+        ugc_season?: Partial<SectionsInfo>;
         is_season_display: boolean;
         user_garb: {
             url_image_ani_cut: string;
