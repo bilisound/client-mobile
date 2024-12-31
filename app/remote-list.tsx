@@ -1,16 +1,82 @@
 import { Layout } from "~/components/layout";
 import { Text } from "~/components/ui/text";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getUserList, UserListMode } from "~/api/bilisound";
+import { GetEpisodeUserResponse, getUserList, UserListMode } from "~/api/bilisound";
+import { twMerge } from "tailwind-merge";
+import { getImageProxyUrl } from "~/utils/constant-helper";
+import { Skeleton } from "~/components/ui/skeleton";
+import { formatSecond } from "~/utils/datetime";
+import { decodeHTML } from "entities";
+import { SkeletonText } from "~/components/skeleton-text";
+import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
+import { ScrollView, View, ViewStyle } from "react-native";
+import { Image } from "expo-image";
+import React from "react";
+import Monicon from "@monicon/native";
+import { ErrorContent } from "~/components/error-content";
+import { FlashList } from "@shopify/flash-list";
+import { VideoItem } from "~/components/video-item";
+
+interface MetaDataProps {
+    data?: GetEpisodeUserResponse["meta"];
+    className?: string;
+    style?: ViewStyle;
+}
+
+function MetaData({ data, className, style }: MetaDataProps) {
+    return (
+        <View className={twMerge("gap-4", className)} style={style}>
+            {data ? (
+                <Image source={getImageProxyUrl(data.cover)} className="aspect-[16/9] rounded-lg" />
+            ) : (
+                <Skeleton className="aspect-[16/9] rounded-lg w-[unset] h-[unset]" />
+            )}
+            <View>
+                {data ? (
+                    <Text className="text-base font-bold mb-4 leading-6 text-typography-700" selectable>
+                        {data.name}
+                    </Text>
+                ) : (
+                    <View className="gap-2 py-1 mb-4">
+                        <Skeleton className="rounded-full h-4 w-2/3" />
+                    </View>
+                )}
+                {data ? (
+                    !!data.description.trim() && (
+                        <Text className={"text-sm leading-normal break-words"}>{decodeHTML(data.description)}</Text>
+                    )
+                ) : (
+                    <SkeletonText lineSize={6} fontSize={14} lineHeight={21} />
+                )}
+                <View className={"mt-4 flex-row gap-2"}>
+                    {data ? (
+                        <>
+                            <ButtonOuter className={"rounded-full"}>
+                                <Button className={"rounded-full"}>
+                                    <View className={"size-4 items-center justify-center"}>
+                                        <Monicon name={"fa6-solid:plus"} className={"color-typography-0"} size={16} />
+                                    </View>
+                                    <ButtonText>创建歌单</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                        </>
+                    ) : (
+                        <Skeleton className={"w-[120px] h-[40px] rounded-full"} />
+                    )}
+                </View>
+            </View>
+        </View>
+    );
+}
 
 export default function Page() {
     const { userId, listId, mode } = useLocalSearchParams<{ userId: string; listId: string; mode: UserListMode }>();
 
     const edgeInsets = useSafeAreaInsets();
 
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, error } = useInfiniteQuery({
         initialPageParam: 1,
         queryKey: [`getEpisodeUser_${mode}_${userId}_${listId}`],
         queryFn: ({ pageParam = 1 }) => getUserList(mode!, userId!, listId!, pageParam),
@@ -22,9 +88,60 @@ export default function Page() {
         },
     });
 
+    const loadMore = () => {
+        if (hasNextPage) {
+            fetchNextPage();
+        }
+    };
+
     return (
-        <Layout title={"查看合集详情"} leftAccessories={"BACK_BUTTON"}>
-            <Text>合集详情</Text>
+        <Layout title={"合集详情"} leftAccessories={"BACK_BUTTON"}>
+            {error ? (
+                <View className={"flex-1 items-center justify-center"}>
+                    <ErrorContent message={error.message} />
+                </View>
+            ) : (
+                <View className={"flex-1 flex-row"}>
+                    <ScrollView className={"hidden md:flex flex-1"}>
+                        <View
+                            style={{
+                                paddingLeft: edgeInsets.left + 16,
+                                paddingRight: 16,
+                                paddingBottom: edgeInsets.bottom + 16,
+                            }}
+                        >
+                            {/*<MetaData />*/}
+                            <MetaData data={data?.pages[0].meta} />
+                        </View>
+                    </ScrollView>
+                    <FlashList
+                        estimatedItemSize={64}
+                        contentContainerStyle={{
+                            paddingLeft: 0,
+                            paddingRight: edgeInsets.right,
+                            paddingBottom: edgeInsets.bottom,
+                        }}
+                        ListHeaderComponent={
+                            <MetaData data={data?.pages[0].meta} className={"flex md:hidden px-4 pb-4"} />
+                        }
+                        renderItem={e => (
+                            <VideoItem
+                                image={e.item.cover}
+                                text1={e.item.title}
+                                text2={formatSecond(e.item.duration)}
+                                onPress={() => {
+                                    router.navigate(`/video/${e.item.bvid}`);
+                                }}
+                            />
+                        )}
+                        data={data?.pages.flatMap(page => page.rows) || []}
+                        keyExtractor={item => item.bvid}
+                        onEndReached={loadMore}
+                        onEndReachedThreshold={0.5}
+                    />
+                </View>
+            )}
+            {/*<MetaData data={data?.pages[0].meta} className={"flex md:hidden px-4 pb-4"} />*/}
         </Layout>
     );
 }

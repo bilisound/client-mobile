@@ -272,7 +272,12 @@ export interface GetEpisodeUserResponse {
 
 export type UserListMode = "season" | "series" | "favourite";
 
-export async function getUserList(mode: UserListMode, userId: Numberish, listId: Numberish, page = 1) {
+export async function getUserList(
+    mode: UserListMode,
+    userId: Numberish,
+    listId: Numberish,
+    page = 1,
+): Promise<GetEpisodeUserResponse> {
     if (Platform.OS === "web") {
         const res = await fetch(
             `${BILISOUND_API_PREFIX}/internal/user-list?mode=${mode}&userId=${userId}&listId=${listId}&page=${page}`,
