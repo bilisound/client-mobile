@@ -21,9 +21,9 @@ export interface PlaylistItemProps {
 export function PlaylistItem({ item, onPress, onLongPress, className, style }: PlaylistItemProps) {
     let title = item.title;
 
-    if (process.env.NODE_ENV !== "production") {
+    /*if (process.env.NODE_ENV !== "production") {
         title = `[${item.id}] ${title}`;
-    }
+    }*/
 
     return (
         <Pressable
