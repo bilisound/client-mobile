@@ -56,8 +56,10 @@ export default function Page() {
                         操作确认
                     </Heading>
                 </AlertDialogHeader>
-                <AlertDialogBody className="mt-3 mb-6">
-                    <Text size="sm">确定要清空历史记录吗？</Text>
+                <AlertDialogBody className="mt-4 mb-6">
+                    <Text size="sm" className="leading-normal">
+                        确定要清空历史记录吗？
+                    </Text>
                 </AlertDialogBody>
                 <AlertDialogFooter className="">
                     <ButtonOuter>

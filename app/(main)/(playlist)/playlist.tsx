@@ -28,6 +28,16 @@ import log from "~/utils/logger";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
 import Toast from "react-native-toast-message";
 import { router } from "expo-router";
+import {
+    AlertDialog,
+    AlertDialogBackdrop,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+} from "~/components/ui/alert-dialog";
+import { Heading } from "~/components/ui/heading";
+import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
@@ -285,6 +295,35 @@ export default function Page() {
                         }
                     }}
                 />
+
+                {/* 对话框 */}
+                <AlertDialog isOpen={modalVisible} onClose={() => handleClose(false)} size="md">
+                    <AlertDialogBackdrop />
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <Heading className="text-typography-950 font-semibold" size="md">
+                                {dialogInfo.title}
+                            </Heading>
+                        </AlertDialogHeader>
+                        <AlertDialogBody className="mt-4 mb-6">
+                            <Text size="sm" className="leading-normal">
+                                {dialogInfo.description}
+                            </Text>
+                        </AlertDialogBody>
+                        <AlertDialogFooter>
+                            <ButtonOuter>
+                                <Button variant="ghost" onPress={() => handleClose(false)}>
+                                    <ButtonText>{dialogInfo.cancel}</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                            <ButtonOuter>
+                                <Button onPress={() => handleClose(true)}>
+                                    <ButtonText>{dialogInfo.ok}</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </Layout>
         </PlaylistContext.Provider>
     );
