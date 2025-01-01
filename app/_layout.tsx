@@ -115,6 +115,12 @@ export default function RootLayout() {
                             }}
                         />
                         <Stack.Screen
+                            name={"apply-playlist"}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
                             name={"history"}
                             options={{
                                 headerShown: false,

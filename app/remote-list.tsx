@@ -3,7 +3,13 @@ import { Text } from "~/components/ui/text";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { GetEpisodeUserResponse, getUserList, UserListMode } from "~/api/bilisound";
+import {
+    getBilisoundMetadata,
+    GetEpisodeUserResponse,
+    getUserList,
+    getUserListFull,
+    UserListMode,
+} from "~/api/bilisound";
 import { twMerge } from "tailwind-merge";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -11,21 +17,79 @@ import { formatSecond } from "~/utils/datetime";
 import { decodeHTML } from "entities";
 import { SkeletonText } from "~/components/skeleton-text";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
-import { ScrollView, View, ViewStyle } from "react-native";
+import { ActivityIndicator, ScrollView, View, ViewStyle } from "react-native";
 import { Image } from "expo-image";
-import React from "react";
+import React, { useState } from "react";
 import Monicon from "@monicon/native";
 import { ErrorContent } from "~/components/error-content";
 import { FlashList } from "@shopify/flash-list";
 import { VideoItem } from "~/components/video-item";
+import useApplyPlaylistStore from "~/store/apply-playlist";
+import Toast from "react-native-toast-message";
 
 interface MetaDataProps {
     data?: GetEpisodeUserResponse["meta"];
     className?: string;
     style?: ViewStyle;
+    mode: UserListMode;
 }
 
-function MetaData({ data, className, style }: MetaDataProps) {
+function MetaData({ data, className, style, mode }: MetaDataProps) {
+    const [loading, setLoading] = useState(false);
+
+    // 添加歌单
+    const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
+        setPlaylistDetail: state.setPlaylistDetail,
+        setName: state.setName,
+        setDescription: state.setDescription,
+        setSource: state.setSource,
+        setCover: state.setCover,
+    }));
+
+    async function handleCreatePlaylist() {
+        if (!data) {
+            return;
+        }
+        setLoading(true);
+        try {
+            const list = await getUserListFull(mode, data.userId, data.seasonId);
+            const firstEpisode = await getBilisoundMetadata({ id: list[0].bvid });
+            setPlaylistDetail(
+                list.map(e => ({
+                    author: firstEpisode.data.owner.name,
+                    bvid: e.bvid ?? "",
+                    duration: e.duration,
+                    episode: 1,
+                    title: e.title,
+                    imgUrl: e.cover ?? "",
+                    id: 0,
+                    playlistId: 0,
+                    extendedData: null,
+                })),
+            );
+            setName(data.name);
+            setDescription(data.description);
+            setSource({
+                type: "playlist",
+                originalTitle: data.name,
+                lastSyncAt: new Date().getTime(),
+                subType: mode,
+                userId: data.userId,
+                listId: data.seasonId,
+            });
+            setCover(data.cover);
+            router.push(`/apply-playlist`);
+        } catch (e) {
+            Toast.show({
+                type: "error",
+                text1: "歌单创建操作失败",
+                text2: (e as Error)?.message || `${e}`,
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <View className={twMerge("gap-4", className)} style={style}>
             {data ? (
@@ -54,9 +118,17 @@ function MetaData({ data, className, style }: MetaDataProps) {
                     {data ? (
                         <>
                             <ButtonOuter className={"rounded-full"}>
-                                <Button className={"rounded-full"}>
+                                <Button className={"rounded-full"} onPress={handleCreatePlaylist}>
                                     <View className={"size-4 items-center justify-center"}>
-                                        <Monicon name={"fa6-solid:plus"} className={"color-typography-0"} size={16} />
+                                        {loading ? (
+                                            <ActivityIndicator className={"color-typography-0 size-4"} />
+                                        ) : (
+                                            <Monicon
+                                                name={"fa6-solid:plus"}
+                                                className={"color-typography-0"}
+                                                size={16}
+                                            />
+                                        )}
                                     </View>
                                     <ButtonText>创建歌单</ButtonText>
                                 </Button>
@@ -111,7 +183,7 @@ export default function Page() {
                             }}
                         >
                             {/*<MetaData />*/}
-                            <MetaData data={data?.pages[0].meta} />
+                            <MetaData mode={mode} data={data?.pages[0].meta} />
                         </View>
                     </ScrollView>
                     <FlashList
@@ -122,8 +194,9 @@ export default function Page() {
                             paddingBottom: edgeInsets.bottom,
                         }}
                         ListHeaderComponent={
-                            <MetaData data={data?.pages[0].meta} className={"flex md:hidden px-4 pb-4"} />
+                            <MetaData mode={mode} data={data?.pages[0].meta} className={"flex md:hidden px-4 pb-4"} />
                         }
+                        ListFooterComponent={isFetchingNextPage ? <ActivityIndicator /> : null}
                         renderItem={e => (
                             <VideoItem
                                 image={e.item.cover}
@@ -141,7 +214,6 @@ export default function Page() {
                     />
                 </View>
             )}
-            {/*<MetaData data={data?.pages[0].meta} className={"flex md:hidden px-4 pb-4"} />*/}
         </Layout>
     );
 }

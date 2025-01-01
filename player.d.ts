@@ -7,6 +7,7 @@ declare module "@bilisound/player" {
         id: string;
         episode: number;
         isLoaded: boolean;
+        expireAt: number;
     }
 }
 

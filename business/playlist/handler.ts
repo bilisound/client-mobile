@@ -16,8 +16,11 @@ import { getCacheAudioPath } from "~/utils/file";
 import { getBilisoundMetadata, getBilisoundResourceUrl } from "~/api/bilisound";
 import { undefined } from "zod";
 import log from "~/utils/logger";
+import { PlaylistDetail } from "~/storage/sqlite/schema";
+import { cacheStatusStorage } from "~/storage/cache-status";
+import { PLACEHOLDER_AUDIO, URI_EXPIRE_DURATION } from "~/constants/playback";
 
-export interface TrackDataOld {
+interface TrackDataOld {
     /** The track title */
     title?: string;
     /** The track album */
@@ -129,6 +132,7 @@ export async function loadTrackData() {
                     id: e.bilisoundId,
                     episode: Number(e.bilisoundEpisode),
                     isLoaded: e.bilisoundIsLoaded,
+                    expireAt: 0,
                 },
             }));
             break;
@@ -146,7 +150,7 @@ export async function loadTrackData() {
         if (e.extendedData.isLoaded) {
             e.uri = getCacheAudioPath(e.extendedData.id, e.extendedData.episode);
         } else {
-            e.uri = require("../../assets/placeholder.mp3");
+            e.uri = PLACEHOLDER_AUDIO;
         }
     });
 
@@ -180,6 +184,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
             id,
             episode,
             isLoaded: false,
+            expireAt: new Date().getTime() + URI_EXPIRE_DURATION,
         },
         headers: {
             referer: getVideoUrl(id, episode),
@@ -191,4 +196,29 @@ export async function addTrackFromDetail(id: string, episode: number) {
 
     await Player.jump(existing.length); // existing.length - 1 + 1
     await Player.play();
+}
+
+export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
+    return playlist.map(e => {
+        const isLoaded = !!cacheStatusStorage.getBoolean(e.bvid + "_" + e.episode);
+
+        return {
+            uri: PLACEHOLDER_AUDIO,
+            artist: e.author,
+            artworkUri: e.imgUrl,
+            duration: e.duration,
+            extendedData: {
+                id: e.bvid,
+                episode: e.episode,
+                isLoaded,
+                expireAt: 0,
+            },
+            headers: {
+                referer: getVideoUrl(e.bvid, e.episode),
+                "user-agent": USER_AGENT_BILIBILI,
+            },
+            id: e.bvid + "_" + e.episode,
+            title: e.title,
+        };
+    });
 }
