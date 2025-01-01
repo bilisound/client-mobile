@@ -198,6 +198,25 @@ export async function addTrackFromDetail(id: string, episode: number) {
     await Player.play();
 }
 
+export async function refreshCurrentTrack() {
+    const trackData = await Player.getCurrentTrack();
+    const trackIndex = await Player.getCurrentTrackIndex();
+    if (!trackData) {
+        log.error("没有曲目可供替换！");
+        return;
+    }
+
+    // 拉取最新的 URL
+    const id = trackData.extendedData!.id;
+    const episode = trackData.extendedData!.episode;
+    log.info("开始拉取最新的 URL");
+    log.debug(`id: ${id}, episode: ${episode}`);
+    const url = await getBilisoundResourceUrl({ id, episode });
+    trackData.uri = url.url;
+    trackData.extendedData!.expireAt = new Date().getTime() + URI_EXPIRE_DURATION;
+    await Player.replaceTrack(trackIndex, trackData);
+}
+
 export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
     return playlist.map(e => {
         const isLoaded = !!cacheStatusStorage.getBoolean(e.bvid + "_" + e.episode);

@@ -12,7 +12,7 @@ import init from "~/utils/init";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { Poppins_700Bold } from "@expo-google-fonts/poppins";
 import { ToastConfig } from "react-native-toast-message/lib/src/types";
-
+import * as Player from "@bilisound/player";
 import "~/utils/polyfill";
 import "~/utils/nativewind";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -20,8 +20,20 @@ import { registerBackgroundEventListener } from "@bilisound/player";
 import { NotifyToast } from "~/components/notify-toast";
 import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { refreshCurrentTrack } from "~/business/playlist/handler";
 
-registerBackgroundEventListener(() => {});
+registerBackgroundEventListener(async ({ event }) => {
+    if (event === "onTrackChange") {
+        const trackData = await Player.getCurrentTrack();
+        console.log(trackData);
+        if (!trackData) {
+            return;
+        }
+        if (!trackData.extendedData?.isLoaded && (trackData.extendedData?.expireAt ?? 0) <= new Date().getTime()) {
+            await refreshCurrentTrack();
+        }
+    }
+});
 
 // todo 把它们放到主题管理模块里
 const defaultTheme = structuredClone(DefaultTheme);
