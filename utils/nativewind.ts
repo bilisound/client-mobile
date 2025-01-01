@@ -1,4 +1,4 @@
-import { Entypo, FontAwesome5, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { Entypo, FontAwesome5, FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { cssInterop, remapProps } from "nativewind";
@@ -31,6 +31,14 @@ cssInterop(Ionicons, {
     },
 });
 cssInterop(Entypo, {
+    className: {
+        target: "style",
+        nativeStyleToProp: {
+            color: true,
+        },
+    },
+});
+cssInterop(MaterialIcons, {
     className: {
         target: "style",
         nativeStyleToProp: {
