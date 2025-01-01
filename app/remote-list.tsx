@@ -177,7 +177,7 @@ export default function Page() {
                     <ScrollView className={"hidden md:flex flex-1"}>
                         <View
                             style={{
-                                paddingLeft: edgeInsets.left + 16,
+                                paddingLeft: 16,
                                 paddingRight: 16,
                                 paddingBottom: edgeInsets.bottom + 16,
                             }}
