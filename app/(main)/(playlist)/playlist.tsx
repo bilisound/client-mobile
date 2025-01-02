@@ -221,7 +221,6 @@ export default function Page() {
             <Layout
                 edgeInsets={{ ...edgeInsets, bottom: 0 }}
                 title={"歌单"}
-                leftAccessories={"BACK_BUTTON"}
                 rightAccessories={
                     <>
                         <LayoutButton

@@ -24,7 +24,7 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { decodeHTML } from "entities";
 import { addTrackFromDetail } from "~/business/playlist/handler";
-import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
+import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Monicon } from "@monicon/native";
 import { ErrorContent } from "~/components/error-content";
 import { DualScrollView } from "~/components/dual-scroll-view";
@@ -99,9 +99,7 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                         <>
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"}>
-                                    <View className={"size-4 items-center justify-center"}>
-                                        <Monicon name={"fa6-solid:play"} className={"color-typography-0"} size={16} />
-                                    </View>
+                                    <ButtonMonIcon name={"fa6-solid:play"} size={16} />
                                     <ButtonText>全部播放</ButtonText>
                                 </Button>
                             </ButtonOuter>
@@ -116,13 +114,7 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                                             );
                                         }}
                                     >
-                                        <View className={"size-4 items-center justify-center"}>
-                                            <Monicon
-                                                name={"fa6-solid:list"}
-                                                className={"color-primary-500"}
-                                                size={16}
-                                            />
-                                        </View>
+                                        <ButtonMonIcon name={"fa6-solid:list"} size={16} />
                                         <ButtonText>查看所属合集</ButtonText>
                                     </Button>
                                 </ButtonOuter>

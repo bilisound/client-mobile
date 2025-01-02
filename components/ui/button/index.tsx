@@ -8,7 +8,15 @@ import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 import { PrimitiveIcon, UIIcon } from "@gluestack-ui/icon";
 import { twMerge } from "tailwind-merge";
 import { boxStyle } from "~/components/ui/box/styles";
-import { buttonStyle, buttonGroupStyle, buttonIconStyle, buttonTextStyle } from "./styles";
+import {
+    buttonStyle,
+    buttonGroupStyle,
+    buttonIconStyle,
+    buttonTextStyle,
+    buttonMonIconStyle,
+    buttonMonIconInternalStyle,
+} from "./styles";
+import { Monicon } from "@monicon/native";
 
 const SCOPE = "BUTTON";
 
@@ -142,11 +150,53 @@ const ButtonOuter = React.forwardRef<React.ElementRef<typeof View>, IButtonOuter
     },
 );
 
+type IButtonMonIcon = React.ComponentPropsWithoutRef<typeof View> &
+    VariantProps<typeof buttonMonIconStyle> & {
+        className?: string | undefined;
+        name: string;
+        size?: number;
+    };
+
+const ButtonMonIcon = React.forwardRef<React.ElementRef<typeof View>, IButtonMonIcon>(
+    ({ className, name, size = 16, ...props }, ref) => {
+        const { variant: parentVariant, size: parentSize, action: parentAction } = useStyleContext(SCOPE);
+
+        return (
+            <View
+                {...props}
+                style={{ width: size, height: size }}
+                className={buttonMonIconStyle({
+                    parentVariants: {
+                        size: parentSize,
+                        variant: parentVariant,
+                        action: parentAction,
+                    },
+                    class: className,
+                })}
+                ref={ref}
+            >
+                <Monicon
+                    name={name}
+                    size={size}
+                    className={buttonMonIconInternalStyle({
+                        parentVariants: {
+                            variant: parentVariant,
+                            action: parentAction,
+                        },
+                        class: className,
+                    })}
+                />
+            </View>
+        );
+    },
+);
+
 Button.displayName = "Button";
 ButtonText.displayName = "ButtonText";
 ButtonSpinner.displayName = "ButtonSpinner";
 ButtonIcon.displayName = "ButtonIcon";
 ButtonGroup.displayName = "ButtonGroup";
 ButtonOuter.displayName = "ButtonOuter";
+ButtonMonIcon.displayName = "ButtonMonIcon";
 
-export { Button, ButtonText, ButtonSpinner, ButtonIcon, ButtonGroup, ButtonOuter };
+export { Button, ButtonText, ButtonSpinner, ButtonIcon, ButtonGroup, ButtonOuter, ButtonMonIcon };
