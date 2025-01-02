@@ -21,7 +21,7 @@ import { cssInterop } from "nativewind";
 import Toast from "react-native-toast-message";
 import { twMerge } from "tailwind-merge";
 import log from "~/utils/logger";
-import { Button, ButtonText } from "~/components/ui/button";
+import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Modal, ModalBackdrop, ModalContent, ModalBody } from "~/components/ui/modal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -165,10 +165,21 @@ function Header({
                     </View>
                     {showPlayButton && (
                         <View className="flex-row mt-4 gap-2">
-                            <Button onPress={onPlay}>
-                                <ButtonText>播放</ButtonText>
-                            </Button>
-                            {meta.source ? <Button onPress={handleSync} disabled={syncing} aria-label="同步" /> : null}
+                            <ButtonOuter className={"rounded-full"}>
+                                <Button className={"rounded-full"} onPress={onPlay}>
+                                    <ButtonText>播放</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                            {meta.source ? (
+                                <ButtonOuter className={"rounded-full"}>
+                                    <Button
+                                        className={"rounded-full"}
+                                        onPress={handleSync}
+                                        disabled={syncing}
+                                        aria-label="同步"
+                                    />
+                                </ButtonOuter>
+                            ) : null}
                         </View>
                     )}
                 </View>
