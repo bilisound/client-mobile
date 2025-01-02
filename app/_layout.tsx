@@ -133,6 +133,12 @@ export default function RootLayout() {
                             }}
                         />
                         <Stack.Screen
+                            name={"barcode"}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
                             name={"history"}
                             options={{
                                 headerShown: false,

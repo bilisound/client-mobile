@@ -42,7 +42,14 @@ export default function MainScreen() {
             edgeInsets={edgeInsets}
             rightAccessories={
                 <>
-                    <LayoutButton iconName={"uil:qrcode-scan"} aria-label={"扫描二维码"} iconSize={22} />
+                    <LayoutButton
+                        iconName={"uil:qrcode-scan"}
+                        aria-label={"扫描二维码"}
+                        iconSize={22}
+                        onPress={() => {
+                            router.navigate("/barcode");
+                        }}
+                    />
                     <LayoutButton
                         iconName={"fa6-solid:clock-rotate-left"}
                         aria-label={"历史记录"}

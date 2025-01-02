@@ -224,7 +224,14 @@ export default function Page() {
                 leftAccessories={"BACK_BUTTON"}
                 rightAccessories={
                     <>
-                        <LayoutButton iconName={"uil:qrcode-scan"} aria-label={"扫描二维码"} iconSize={22} />
+                        <LayoutButton
+                            iconName={"uil:qrcode-scan"}
+                            aria-label={"扫描二维码"}
+                            iconSize={22}
+                            onPress={() => {
+                                router.navigate("/barcode");
+                            }}
+                        />
                         <Menu
                             placement="bottom right"
                             offset={5}
