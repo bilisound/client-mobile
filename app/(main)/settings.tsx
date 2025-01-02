@@ -77,7 +77,8 @@ const Settings: React.FC = () => {
                         title="导出日志"
                         subTitle="对开发者真的太有用了"
                         onPress={async () => {
-                            router.push("/settings/log-show");
+                            // todo
+                            // router.push("/settings/log-show");
                         }}
                     />
                 </>
@@ -137,7 +138,8 @@ const Settings: React.FC = () => {
                         title="数据管理"
                         subTitle="管理离线缓存和数据备份"
                         onPress={async () => {
-                            router.push("/settings/data");
+                            // todo
+                            // router.push("/settings/data");
                         }}
                     />
                 )}
@@ -147,7 +149,8 @@ const Settings: React.FC = () => {
                     title="关于 Bilisound"
                     subTitle={`版本 ${VERSION}`}
                     onPress={async () => {
-                        router.push("/settings/about");
+                        // todo
+                        // router.push("/settings/about");
                     }}
                 />
                 <SettingMenuItem

@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { CameraView, Camera, PermissionStatus } from "expo-camera";
 import { BarcodeScanningResult } from "expo-camera/build/Camera.types";
 import { router } from "expo-router";
@@ -25,7 +24,6 @@ import { Monicon } from "@monicon/native";
 
 export default function Page() {
     const [hasPermission, setHasPermission] = useState<PermissionStatus | null>(null);
-    // const [scanned, setScanned] = useState(false);
     const scanned = useRef(false);
     const safeAreaInsets = useSafeAreaInsets();
 
