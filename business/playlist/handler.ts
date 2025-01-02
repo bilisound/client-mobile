@@ -19,6 +19,7 @@ import log from "~/utils/logger";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { cacheStatusStorage } from "~/storage/cache-status";
 import { PLACEHOLDER_AUDIO, URI_EXPIRE_DURATION } from "~/constants/playback";
+import { getPlaylistDetail } from "~/storage/sqlite/playlist";
 
 interface TrackDataOld {
     /** The track title */
@@ -240,4 +241,13 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
             title: e.title,
         };
     });
+}
+
+export async function replaceQueueWithPlaylist(id: number, index = 0) {
+    const data = await getPlaylistDetail(id);
+    const tracks = playlistToTracks(data);
+    // todo 删除干净 queue 里面的所有 tracks
+    await Player.addTracks(tracks, 0);
+    await Player.jump(index);
+    await Player.play();
 }

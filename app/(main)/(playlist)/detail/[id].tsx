@@ -24,6 +24,7 @@ import log from "~/utils/logger";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Modal, ModalBackdrop, ModalContent, ModalBody } from "~/components/ui/modal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { replaceQueueWithPlaylist } from "~/business/playlist/handler";
 
 cssInterop(OrigCircle, {
     className: {
@@ -252,6 +253,10 @@ export default function Page() {
         queryFn: () => getPlaylistDetail(Number(id)),
     });
 
+    async function handlePlay() {
+        await replaceQueueWithPlaylist(Number(id));
+    }
+
     const loaded = meta && playlistDetail;
 
     return (
@@ -264,7 +269,7 @@ export default function Page() {
                             meta={meta}
                             images={extractAndProcessImgUrls(playlistDetail)}
                             showPlayButton={playlistDetail.length > 0}
-                            onPlay={async () => {}}
+                            onPlay={handlePlay}
                         />
                     }
                     headerContainerStyle={{
@@ -285,7 +290,7 @@ export default function Page() {
                                     meta={meta}
                                     images={extractAndProcessImgUrls(playlistDetail)}
                                     showPlayButton={playlistDetail.length > 0}
-                                    onPlay={async () => {}}
+                                    onPlay={handlePlay}
                                 />
                             }
                         />
