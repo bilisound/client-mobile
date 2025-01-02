@@ -27,6 +27,7 @@ import { addTrackFromDetail } from "~/business/playlist/handler";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Monicon } from "@monicon/native";
 import { ErrorContent } from "~/components/error-content";
+import { DualScrollView } from "~/components/dual-scroll-view";
 
 interface MetaDataProps {
     data?: GetBilisoundMetadataResponse;
@@ -196,55 +197,42 @@ export default function Page() {
                         <ErrorContent message={error.message} />
                     </View>
                 ) : (
-                    <View className={"flex-1 flex-row"}>
-                        <ScrollView className={"hidden md:flex flex-1"}>
-                            <View
-                                style={{
-                                    paddingLeft: edgeInsets.left + 16,
-                                    paddingRight: 16,
-                                    paddingBottom: edgeInsets.bottom + 16,
-                                }}
-                            >
-                                {/*<MetaData />*/}
-                                <MetaData data={data?.data} />
-                            </View>
-                        </ScrollView>
-                        <FlashList
-                            estimatedItemSize={64}
-                            contentContainerStyle={{
-                                paddingLeft: 0,
-                                paddingRight: edgeInsets.right,
-                                paddingBottom: edgeInsets.bottom,
-                            }}
-                            // ListHeaderComponent={<MetaData className={"flex md:hidden px-4 pb-4"} />}
-                            ListHeaderComponent={
-                                <MetaData
-                                    data={data?.data}
-                                    className={"flex md:hidden px-4 pb-4"}
-                                    onOpenModal={() => {
-                                        sheetRef.current?.snapToIndex(0);
-                                    }}
-                                />
-                            }
-                            renderItem={e => (
-                                <SongItem
-                                    onRequestPlay={() => addTrackFromDetail(data!.data.bvid, e.item.page)}
-                                    data={{
-                                        author: data!.data.owner.name,
-                                        bvid: data!.data.bvid,
-                                        duration: e.item.duration,
-                                        episode: e.item.page,
-                                        title: e.item.part,
-                                        imgUrl: data!.data.pic,
-                                        id: 0,
-                                        playlistId: 0,
-                                        extendedData: null,
-                                    }}
-                                />
-                            )}
-                            data={data?.data.pages ?? []}
-                        />
-                    </View>
+                    <DualScrollView
+                        edgeInsets={edgeInsets}
+                        header={<MetaData data={data?.data} />}
+                        list={({ contentContainerStyle }) => (
+                            <FlashList
+                                estimatedItemSize={64}
+                                contentContainerStyle={contentContainerStyle}
+                                ListHeaderComponent={
+                                    <MetaData
+                                        data={data?.data}
+                                        className={"flex md:hidden px-4 pb-4"}
+                                        onOpenModal={() => {
+                                            sheetRef.current?.snapToIndex(0);
+                                        }}
+                                    />
+                                }
+                                renderItem={e => (
+                                    <SongItem
+                                        onRequestPlay={() => addTrackFromDetail(data!.data.bvid, e.item.page)}
+                                        data={{
+                                            author: data!.data.owner.name,
+                                            bvid: data!.data.bvid,
+                                            duration: e.item.duration,
+                                            episode: e.item.page,
+                                            title: e.item.part,
+                                            imgUrl: data!.data.pic,
+                                            id: 0,
+                                            playlistId: 0,
+                                            extendedData: null,
+                                        }}
+                                    />
+                                )}
+                                data={data?.data.pages ?? []}
+                            />
+                        )}
+                    />
                 )}
             </Layout>
             <Animated.View

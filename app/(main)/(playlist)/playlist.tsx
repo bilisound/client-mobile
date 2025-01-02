@@ -219,7 +219,7 @@ export default function Page() {
     return (
         <PlaylistContext.Provider value={{ onLongPress: handleLongPress, width, columns }}>
             <Layout
-                edgeInsets={edgeInsets}
+                edgeInsets={{ ...edgeInsets, bottom: 0 }}
                 title={"歌单"}
                 leftAccessories={"BACK_BUTTON"}
                 rightAccessories={
@@ -273,6 +273,9 @@ export default function Page() {
                     numColumns={columns}
                     onLayout={e => {
                         setWidth(e.nativeEvent.layout.width);
+                    }}
+                    contentContainerStyle={{
+                        paddingBottom: edgeInsets.bottom,
                     }}
                 />
 
