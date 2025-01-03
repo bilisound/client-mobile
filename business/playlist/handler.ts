@@ -20,6 +20,7 @@ import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { cacheStatusStorage } from "~/storage/cache-status";
 import { PLACEHOLDER_AUDIO, URI_EXPIRE_DURATION } from "~/constants/playback";
 import { getPlaylistDetail } from "~/storage/sqlite/playlist";
+import { Platform } from "react-native";
 
 interface TrackDataOld {
     /** The track title */
@@ -238,6 +239,9 @@ export async function refreshTrack(trackData: TrackData) {
 }
 
 export async function refreshCurrentTrack() {
+    if (Platform.OS === "web") {
+        return;
+    }
     log.debug("检查当前曲目是否可能需要替换");
     const trackData = await Player.getCurrentTrack();
     const trackIndex = await Player.getCurrentTrackIndex();
@@ -253,6 +257,9 @@ export async function refreshCurrentTrack() {
 }
 
 export async function refreshNextTrack() {
+    if (Platform.OS === "web") {
+        return;
+    }
     log.debug("检查下一首曲目是否可能需要替换");
     const trackIndex = (await Player.getCurrentTrackIndex()) + 1;
     const trackData = (await Player.getTracks())[trackIndex];
