@@ -124,7 +124,7 @@ export default function Page() {
                             {dialogInfo.description}
                         </Text>
                     </AlertDialogBody>
-                    <AlertDialogFooter className="gap-2">
+                    <AlertDialogFooter>
                         <Button onPress={() => handleClose(true)}>{dialogInfo.ok}</Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>

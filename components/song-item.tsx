@@ -115,8 +115,6 @@ export function SongItem({
         data.bvid === activeTrack?.extendedData?.id && data.episode === activeTrack?.extendedData?.episode;
     const [exists] = useMMKVBoolean(data.bvid + "_" + data.episode, cacheStatusStorage);
 
-    // console.log(data.bvid, activeTrack?.extendedData?.id, data.episode, activeTrack?.extendedData?.episode);
-
     return (
         <Pressable
             onPress={async () => {

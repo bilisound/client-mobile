@@ -8,7 +8,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import useHistoryStore from "~/store/history";
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
-import { ScrollView, View, ViewStyle, Animated } from "react-native";
+import { View, ViewStyle, Animated } from "react-native";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "~/components/ui/skeleton";
 import { getImageProxyUrl } from "~/utils/constant-helper";
@@ -25,7 +25,6 @@ import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { decodeHTML } from "entities";
 import { addTrackFromDetail } from "~/business/playlist/handler";
 import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
-import { Monicon } from "@monicon/native";
 import { ErrorContent } from "~/components/error-content";
 import { DualScrollView } from "~/components/dual-scroll-view";
 

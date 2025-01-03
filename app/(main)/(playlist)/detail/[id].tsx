@@ -25,6 +25,16 @@ import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/
 import { Modal, ModalBackdrop, ModalContent, ModalBody } from "~/components/ui/modal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { replaceQueueWithPlaylist } from "~/business/playlist/handler";
+import { useConfirm } from "~/hooks/useConfirm";
+import {
+    AlertDialog,
+    AlertDialogBackdrop,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+} from "~/components/ui/alert-dialog";
+import { Heading } from "~/components/ui/heading";
 
 cssInterop(OrigCircle, {
     className: {
@@ -257,9 +267,51 @@ export default function Page() {
         queryFn: () => getPlaylistDetail(Number(id)),
     });
 
-    async function handlePlay() {
-        await replaceQueueWithPlaylist(Number(id));
+    // 模态框管理
+    const { dialogInfo, setDialogInfo, modalVisible, setModalVisible, handleClose, dialogCallback } = useConfirm();
+
+    async function handlePlay(index = 0) {
+        setDialogInfo(prevState => ({
+            ...prevState,
+            title: "替换播放队列确认",
+            description: "播放本歌单中的歌曲，将会把当前播放队列替换为本歌单。确定要继续吗？",
+        }));
+        setModalVisible(true);
+        dialogCallback.current = async () => {
+            await replaceQueueWithPlaylist(Number(id), index);
+        };
     }
+
+    /*async function handleRequestPlay(index: number) {
+        // 前提条件：
+        // playlistOnQueue 的 id 是这个歌单的 id
+        // 有 activeTrack
+        // 当前 queue 对应 index 的 bvid 和 episode 与请求播放的一致
+        const from = (await TrackPlayer.getQueue())[index];
+        const to = playlistDetail[index];
+        if (
+            playlistOnQueue.value?.id === Number(id) &&
+            activeTrack &&
+            from.bilisoundId === to.bvid &&
+            from.bilisoundEpisode === to.episode
+        ) {
+            log.debug("当前队列中的内容来自本歌单，就地跳转");
+            await TrackPlayer.skip(index);
+            return;
+        }
+        if (playlistOnQueue.value || (await TrackPlayer.getQueue()).length <= 0) {
+            return handleRequestPlayConfirm(index);
+        }
+        dialogCallback.current = () => {
+            return handleRequestPlayConfirm(index);
+        };
+        setDialogInfo(prevState => ({
+            ...prevState,
+            title: "替换播放队列确认",
+            description: "播放本歌单中的歌曲，将会把当前播放队列替换为本歌单。确定要继续吗？",
+        }));
+        setModalVisible(true);
+    }*/
 
     const loaded = meta && playlistDetail;
 
@@ -273,7 +325,7 @@ export default function Page() {
                             meta={meta}
                             images={extractAndProcessImgUrls(playlistDetail)}
                             showPlayButton={playlistDetail.length > 0}
-                            onPlay={handlePlay}
+                            onPlay={() => handlePlay()}
                         />
                     }
                     headerContainerStyle={{
@@ -286,7 +338,15 @@ export default function Page() {
                                 paddingBottom: tabSafeAreaEdgeInsets.bottom,
                             }}
                             data={playlistDetail}
-                            renderItem={e => <SongItem data={e.item} index={e.index + 1} />}
+                            renderItem={e => (
+                                <SongItem
+                                    data={e.item}
+                                    index={e.index + 1}
+                                    onRequestPlay={() => {
+                                        handlePlay(e.index);
+                                    }}
+                                />
+                            )}
                             estimatedItemSize={64}
                             ListHeaderComponent={
                                 <Header
@@ -294,13 +354,40 @@ export default function Page() {
                                     meta={meta}
                                     images={extractAndProcessImgUrls(playlistDetail)}
                                     showPlayButton={playlistDetail.length > 0}
-                                    onPlay={handlePlay}
+                                    onPlay={() => handlePlay()}
                                 />
                             }
                         />
                     )}
                 />
             ) : null}
+            <AlertDialog isOpen={modalVisible} onClose={() => handleClose(false)} size="md">
+                <AlertDialogBackdrop />
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <Heading className="text-typography-950 font-semibold" size="lg">
+                            {dialogInfo.title}
+                        </Heading>
+                    </AlertDialogHeader>
+                    <AlertDialogBody className="mt-4 mb-6">
+                        <Text size="sm" className="leading-normal">
+                            {dialogInfo.description}
+                        </Text>
+                    </AlertDialogBody>
+                    <AlertDialogFooter>
+                        <ButtonOuter>
+                            <Button variant="ghost" onPress={() => handleClose(false)}>
+                                <ButtonText>{dialogInfo.cancel}</ButtonText>
+                            </Button>
+                        </ButtonOuter>
+                        <ButtonOuter>
+                            <Button onPress={() => handleClose(true)}>
+                                <ButtonText>{dialogInfo.ok}</ButtonText>
+                            </Button>
+                        </ButtonOuter>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Layout>
     );
 }

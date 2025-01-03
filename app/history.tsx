@@ -61,7 +61,7 @@ export default function Page() {
                         确定要清空历史记录吗？
                     </Text>
                 </AlertDialogBody>
-                <AlertDialogFooter className="">
+                <AlertDialogFooter>
                     <ButtonOuter>
                         <Button variant="ghost" action="secondary" onPress={handleClose}>
                             <ButtonText>取消</ButtonText>
