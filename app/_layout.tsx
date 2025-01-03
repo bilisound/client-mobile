@@ -20,18 +20,16 @@ import { registerBackgroundEventListener } from "@bilisound/player";
 import { NotifyToast } from "~/components/notify-toast";
 import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { refreshCurrentTrack } from "~/business/playlist/handler";
+import { refreshCurrentTrack, refreshNextTrack } from "~/business/playlist/handler";
 
 registerBackgroundEventListener(async ({ event }) => {
     if (event === "onTrackChange") {
         const trackData = await Player.getCurrentTrack();
-        // console.log(trackData);
         if (!trackData) {
             return;
         }
-        if (!trackData.extendedData?.isLoaded && (trackData.extendedData?.expireAt ?? 0) <= new Date().getTime()) {
-            await refreshCurrentTrack();
-        }
+        await refreshCurrentTrack();
+        await refreshNextTrack();
     }
 });
 

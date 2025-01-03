@@ -238,14 +238,33 @@ export async function refreshTrack(trackData: TrackData) {
 }
 
 export async function refreshCurrentTrack() {
+    log.debug("检查当前曲目是否可能需要替换");
     const trackData = await Player.getCurrentTrack();
     const trackIndex = await Player.getCurrentTrackIndex();
-    if (!trackData) {
-        log.error("没有曲目可供替换！");
+    if (
+        trackData &&
+        !trackData.extendedData?.isLoaded &&
+        (trackData.extendedData?.expireAt ?? 0) <= new Date().getTime()
+    ) {
+        log.debug("进行曲目替换操作");
+        await Player.replaceTrack(trackIndex, await refreshTrack(trackData));
         return;
     }
+}
 
-    await Player.replaceTrack(trackIndex, await refreshTrack(trackData));
+export async function refreshNextTrack() {
+    log.debug("检查下一首曲目是否可能需要替换");
+    const trackIndex = (await Player.getCurrentTrackIndex()) + 1;
+    const trackData = (await Player.getTracks())[trackIndex];
+    if (
+        trackData &&
+        !trackData.extendedData?.isLoaded &&
+        (trackData.extendedData?.expireAt ?? 0) <= new Date().getTime()
+    ) {
+        log.debug("进行下一首曲目替换操作");
+        await Player.replaceTrack(trackIndex, await refreshTrack(trackData));
+        return;
+    }
 }
 
 export async function replaceQueueWithPlaylist(id: number, index = 0) {
