@@ -17,7 +17,6 @@ export const buttonStyle = tva({
             solid: "",
             ghost: "bg-transparent {}-[android_ripple.color]/color:color-background-100",
         },
-
         size: {
             xs: "px-3.5 h-8",
             sm: "px-4 h-9",
@@ -25,8 +24,37 @@ export const buttonStyle = tva({
             lg: "px-6 h-11",
             xl: "px-7 h-12",
         },
+        icon: {
+            false: "",
+            true: "px-0",
+        },
     },
     compoundVariants: [
+        {
+            size: "xs",
+            icon: true,
+            class: "w-8",
+        },
+        {
+            size: "sm",
+            icon: true,
+            class: "w-9",
+        },
+        {
+            size: "md",
+            icon: true,
+            class: "w-10",
+        },
+        {
+            size: "lg",
+            icon: true,
+            class: "w-11",
+        },
+        {
+            size: "xl",
+            icon: true,
+            class: "w-12",
+        },
         {
             action: "primary",
             variant: "solid",

@@ -9,7 +9,7 @@ import { FlashList } from "@shopify/flash-list";
 import { SongItem } from "~/components/song-item";
 import { DualScrollView } from "~/components/dual-scroll-view";
 import { PlaylistDetail, PlaylistMeta } from "~/storage/sqlite/schema";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
 import { convertToRelativeTime } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
@@ -21,7 +21,7 @@ import { cssInterop } from "nativewind";
 import Toast from "react-native-toast-message";
 import { twMerge } from "tailwind-merge";
 import log from "~/utils/logger";
-import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
+import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Modal, ModalBackdrop, ModalContent, ModalBody } from "~/components/ui/modal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { replaceQueueWithPlaylist } from "~/business/playlist/handler";
@@ -168,6 +168,7 @@ function Header({
                         <View className="flex-row mt-4 gap-2">
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"} onPress={onPlay}>
+                                    <ButtonMonIcon name={"fa6-solid:play"} size={16} />
                                     <ButtonText>播放</ButtonText>
                                 </Button>
                             </ButtonOuter>
@@ -178,7 +179,10 @@ function Header({
                                         onPress={handleSync}
                                         disabled={syncing}
                                         aria-label="同步"
-                                    />
+                                        icon={true}
+                                    >
+                                        <ButtonMonIcon name={"fa6-solid:arrow-rotate-left"} size={16} />
+                                    </Button>
                                 </ButtonOuter>
                             ) : null}
                         </View>
