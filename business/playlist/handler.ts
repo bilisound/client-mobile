@@ -65,6 +65,31 @@ interface TrackDataOld {
     // [key: string]: any;
 }
 
+export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
+    return playlist.map(e => {
+        const isLoaded = !!cacheStatusStorage.getBoolean(e.bvid + "_" + e.episode);
+
+        return {
+            uri: PLACEHOLDER_AUDIO,
+            artist: e.author,
+            artworkUri: e.imgUrl,
+            duration: e.duration,
+            extendedData: {
+                id: e.bvid,
+                episode: e.episode,
+                isLoaded,
+                expireAt: 0,
+            },
+            headers: {
+                referer: getVideoUrl(e.bvid, e.episode),
+                "user-agent": USER_AGENT_BILIBILI,
+            },
+            id: e.bvid + "_" + e.episode,
+            title: e.title,
+        };
+    });
+}
+
 export async function saveTrackData() {
     await Promise.all([
         (async () => {
@@ -218,36 +243,10 @@ export async function refreshCurrentTrack() {
     await Player.replaceTrack(trackIndex, trackData);
 }
 
-export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
-    return playlist.map(e => {
-        const isLoaded = !!cacheStatusStorage.getBoolean(e.bvid + "_" + e.episode);
-
-        return {
-            uri: PLACEHOLDER_AUDIO,
-            artist: e.author,
-            artworkUri: e.imgUrl,
-            duration: e.duration,
-            extendedData: {
-                id: e.bvid,
-                episode: e.episode,
-                isLoaded,
-                expireAt: 0,
-            },
-            headers: {
-                referer: getVideoUrl(e.bvid, e.episode),
-                "user-agent": USER_AGENT_BILIBILI,
-            },
-            id: e.bvid + "_" + e.episode,
-            title: e.title,
-        };
-    });
-}
-
 export async function replaceQueueWithPlaylist(id: number, index = 0) {
     const data = await getPlaylistDetail(id);
     const tracks = playlistToTracks(data);
-    // todo 删除干净 queue 里面的所有 tracks
-    await Player.addTracks(tracks, 0);
+    await Player.setQueue(tracks);
     await Player.jump(index);
     await Player.play();
 }

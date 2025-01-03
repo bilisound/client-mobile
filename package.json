@@ -20,7 +20,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@bilisound/player": "0.1.8",
+    "@bilisound/player": "0.1.9",
     "@expo-google-fonts/poppins": "^0.2.3",
     "@expo-google-fonts/roboto": "^0.2.3",
     "@expo/html-elements": "0.4.2",
