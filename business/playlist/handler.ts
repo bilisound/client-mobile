@@ -224,14 +224,8 @@ export async function addTrackFromDetail(id: string, episode: number) {
     await Player.play();
 }
 
-export async function refreshCurrentTrack() {
-    const trackData = await Player.getCurrentTrack();
-    const trackIndex = await Player.getCurrentTrackIndex();
-    if (!trackData) {
-        log.error("没有曲目可供替换！");
-        return;
-    }
-
+export async function refreshTrack(trackData: TrackData) {
+    // todo 考虑有缓存的情况
     // 拉取最新的 URL
     const id = trackData.extendedData!.id;
     const episode = trackData.extendedData!.episode;
@@ -240,12 +234,24 @@ export async function refreshCurrentTrack() {
     const url = await getBilisoundResourceUrl({ id, episode });
     trackData.uri = url.url;
     trackData.extendedData!.expireAt = new Date().getTime() + URI_EXPIRE_DURATION;
-    await Player.replaceTrack(trackIndex, trackData);
+    return trackData;
+}
+
+export async function refreshCurrentTrack() {
+    const trackData = await Player.getCurrentTrack();
+    const trackIndex = await Player.getCurrentTrackIndex();
+    if (!trackData) {
+        log.error("没有曲目可供替换！");
+        return;
+    }
+
+    await Player.replaceTrack(trackIndex, await refreshTrack(trackData));
 }
 
 export async function replaceQueueWithPlaylist(id: number, index = 0) {
     const data = await getPlaylistDetail(id);
     const tracks = playlistToTracks(data);
+    await refreshTrack(tracks[index]);
     await Player.setQueue(tracks);
     await Player.jump(index);
     await Player.play();
