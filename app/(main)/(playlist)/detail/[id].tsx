@@ -35,6 +35,8 @@ import {
     AlertDialogHeader,
 } from "~/components/ui/alert-dialog";
 import { Heading } from "~/components/ui/heading";
+import * as Player from "@bilisound/player";
+import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
 
 cssInterop(OrigCircle, {
     className: {
@@ -248,9 +250,9 @@ function Header({
 }
 
 export default function Page() {
-    const edgeInsets = useSafeAreaInsets();
     const tabSafeAreaEdgeInsets = useTabSafeAreaInsets();
     const { id } = useLocalSearchParams<{ id: string }>();
+    const activeTrack = Player.useCurrentTrack();
 
     const [playlistOnQueue = {}, setPlaylistOnQueue] = usePlaylistOnQueue();
 
@@ -270,7 +272,33 @@ export default function Page() {
     // 模态框管理
     const { dialogInfo, setDialogInfo, modalVisible, setModalVisible, handleClose, dialogCallback } = useConfirm();
 
+    // 播放请求
     async function handlePlay(index = 0) {
+        const from = (await Player.getTracks())[index];
+        const to = playlistDetail?.[index];
+
+        // 前提条件：
+        // playlistOnQueue 的 id 是这个歌单的 id
+        // 有 activeTrack
+        // 当前 queue 对应 index 的 bvid 和 episode 与请求播放的一致
+        if (
+            playlistOnQueue.value?.id === Number(id) &&
+            activeTrack &&
+            from?.extendedData?.id === to?.bvid &&
+            from?.extendedData?.episode === to?.episode
+        ) {
+            log.debug("当前队列中的内容来自本歌单，就地跳转");
+            await Player.jump(index);
+            return;
+        }
+        if (playlistOnQueue.value || (await Player.getTracks()).length <= 0) {
+            return handlePlayConfirm(index);
+        }
+        dialogCallback.current = () => {
+            return handlePlayConfirm(index);
+        };
+
+        // 播放列表可能是脏的，需要进行替换操作
         setDialogInfo(prevState => ({
             ...prevState,
             title: "替换播放队列确认",
@@ -278,40 +306,18 @@ export default function Page() {
         }));
         setModalVisible(true);
         dialogCallback.current = async () => {
-            await replaceQueueWithPlaylist(Number(id), index);
+            return handlePlayConfirm(index);
         };
     }
 
-    /*async function handleRequestPlay(index: number) {
-        // 前提条件：
-        // playlistOnQueue 的 id 是这个歌单的 id
-        // 有 activeTrack
-        // 当前 queue 对应 index 的 bvid 和 episode 与请求播放的一致
-        const from = (await TrackPlayer.getQueue())[index];
-        const to = playlistDetail[index];
-        if (
-            playlistOnQueue.value?.id === Number(id) &&
-            activeTrack &&
-            from.bilisoundId === to.bvid &&
-            from.bilisoundEpisode === to.episode
-        ) {
-            log.debug("当前队列中的内容来自本歌单，就地跳转");
-            await TrackPlayer.skip(index);
-            return;
-        }
-        if (playlistOnQueue.value || (await TrackPlayer.getQueue()).length <= 0) {
-            return handleRequestPlayConfirm(index);
-        }
-        dialogCallback.current = () => {
-            return handleRequestPlayConfirm(index);
-        };
-        setDialogInfo(prevState => ({
-            ...prevState,
-            title: "替换播放队列确认",
-            description: "播放本歌单中的歌曲，将会把当前播放队列替换为本歌单。确定要继续吗？",
-        }));
-        setModalVisible(true);
-    }*/
+    // 播放请求确认
+    async function handlePlayConfirm(index: number) {
+        log.debug("将队列中的内容设置为本歌单");
+        await replaceQueueWithPlaylist(Number(id), index);
+        queueStorage.set(QUEUE_IS_RANDOMIZED, false);
+        queueStorage.set(QUEUE_PLAYING_MODE, "normal");
+        setPlaylistOnQueue({ value: meta });
+    }
 
     const loaded = meta && playlistDetail;
 
