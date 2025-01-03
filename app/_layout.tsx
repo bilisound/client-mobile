@@ -25,7 +25,7 @@ import { refreshCurrentTrack } from "~/business/playlist/handler";
 registerBackgroundEventListener(async ({ event }) => {
     if (event === "onTrackChange") {
         const trackData = await Player.getCurrentTrack();
-        console.log(trackData);
+        // console.log(trackData);
         if (!trackData) {
             return;
         }

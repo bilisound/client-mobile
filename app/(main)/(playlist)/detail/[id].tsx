@@ -1,7 +1,7 @@
 import { Text } from "~/components/ui/text";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
 import { useLocalSearchParams } from "expo-router";
-import { usePlaylistOnQueue } from "~/storage/playlist";
+import { PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
 import { getPlaylistDetail, getPlaylistMeta } from "~/storage/sqlite/playlist";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Layout } from "~/components/layout";
@@ -23,7 +23,6 @@ import { twMerge } from "tailwind-merge";
 import log from "~/utils/logger";
 import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Modal, ModalBackdrop, ModalContent, ModalBody } from "~/components/ui/modal";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { replaceQueueWithPlaylist } from "~/business/playlist/handler";
 import { useConfirm } from "~/hooks/useConfirm";
 import {
@@ -252,9 +251,8 @@ function Header({
 export default function Page() {
     const tabSafeAreaEdgeInsets = useTabSafeAreaInsets();
     const { id } = useLocalSearchParams<{ id: string }>();
-    const activeTrack = Player.useCurrentTrack();
 
-    const [playlistOnQueue = {}, setPlaylistOnQueue] = usePlaylistOnQueue();
+    const [, setPlaylistOnQueue] = usePlaylistOnQueue();
 
     const { data: metaRaw } = useQuery({
         queryKey: [`playlist_meta_${id}`],
@@ -263,7 +261,6 @@ export default function Page() {
 
     const meta = metaRaw?.[0];
 
-    const queryClient = useQueryClient();
     const { data: playlistDetail } = useQuery({
         queryKey: [`playlist_detail_${id}`],
         queryFn: () => getPlaylistDetail(Number(id)),
@@ -276,13 +273,15 @@ export default function Page() {
     async function handlePlay(index = 0) {
         const from = (await Player.getTracks())[index];
         const to = playlistDetail?.[index];
+        const activeTrack = await Player.getCurrentTrack();
+        const onQueue = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) ?? "{}")?.value;
 
         // 前提条件：
         // playlistOnQueue 的 id 是这个歌单的 id
         // 有 activeTrack
         // 当前 queue 对应 index 的 bvid 和 episode 与请求播放的一致
         if (
-            playlistOnQueue.value?.id === Number(id) &&
+            onQueue.id === Number(id) &&
             activeTrack &&
             from?.extendedData?.id === to?.bvid &&
             from?.extendedData?.episode === to?.episode
@@ -291,7 +290,7 @@ export default function Page() {
             await Player.jump(index);
             return;
         }
-        if (playlistOnQueue.value || (await Player.getTracks()).length <= 0) {
+        if (onQueue || (await Player.getTracks()).length <= 0) {
             return handlePlayConfirm(index);
         }
         dialogCallback.current = () => {
