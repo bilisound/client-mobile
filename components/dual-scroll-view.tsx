@@ -13,10 +13,15 @@ export interface DualScrollViewProps {
 export function DualScrollView({ edgeInsets, header, list, headerContainerStyle }: DualScrollViewProps) {
     return (
         <View className={"flex-1 flex-row"}>
-            <ScrollView className={"hidden md:flex flex-1"}>
+            <ScrollView
+                className={"hidden md:flex flex-1"}
+                style={{
+                    paddingLeft: edgeInsets.left,
+                }}
+            >
                 <View
                     style={{
-                        paddingLeft: edgeInsets.left + 16,
+                        paddingLeft: 16,
                         paddingRight: 16,
                         paddingBottom: edgeInsets.bottom + 16,
                         ...headerContainerStyle,
