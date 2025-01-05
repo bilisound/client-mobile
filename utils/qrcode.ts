@@ -13,9 +13,9 @@ export async function handleQrCode(input: string) {
                 return "这个二维码已经过期了，重新获取一下吧。";
             }
             useApplyPlaylistStore.getState().setPlaylistDetail(transferList.data);
-            useApplyPlaylistStore
-                .getState()
-                .setName(`从 PC 端导入的播放队列 (${new Date().toLocaleString("zh-Hans-CN")})`);
+            const state = useApplyPlaylistStore.getState();
+            state.setName(`从 PC 端导入的播放队列 (${new Date().toLocaleString("zh-Hans-CN")})`);
+            state.setSource(undefined);
             router.replace(`/apply-playlist`);
             return "";
         }
