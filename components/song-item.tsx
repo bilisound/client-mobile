@@ -17,6 +17,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 import useDownloadStore from "~/store/download";
 import { Pressable } from "~/components/ui/pressable";
 import { useCurrentTrack, useIsPlaying, usePlaybackState } from "@bilisound/player";
+import { shadow } from "~/constants/styles";
 
 // 加载进度条
 function ProgressBar({ item }: { item: string }) {
@@ -132,7 +133,10 @@ export function SongItem({
             className="px-4 h-16 flex-row gap-3 items-center"
         >
             <View className="flex-row flex-1 gap-3 justify-start">
-                <View className={trackNumberStyle({ isActiveTrack })}>
+                <View
+                    className={trackNumberStyle({ isActiveTrack })}
+                    style={{ boxShadow: isActiveTrack ? shadow.lg : undefined }}
+                >
                     <Text
                         className="text-sm text-white tabular-nums"
                         style={{ fontFamily: isActiveTrack ? "Roboto_700Bold" : "Roboto_400Regular" }}
