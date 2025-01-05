@@ -1,6 +1,6 @@
 import { Text } from "~/components/ui/text";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
 import {
     deletePlaylistDetail,
@@ -9,7 +9,7 @@ import {
     syncPlaylistAmount,
 } from "~/storage/sqlite/playlist";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Layout } from "~/components/layout";
+import { Layout, LayoutButton } from "~/components/layout";
 import { FlashList } from "@shopify/flash-list";
 import { SongItem } from "~/components/song-item";
 import { DualScrollView } from "~/components/dual-scroll-view";
@@ -20,7 +20,7 @@ import { convertToRelativeTime } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
-import { Vibration, View } from "react-native";
+import { useWindowDimensions, Vibration, View } from "react-native";
 import { Image } from "expo-image";
 import { cssInterop } from "nativewind";
 import Toast from "react-native-toast-message";
@@ -42,6 +42,7 @@ import { Heading } from "~/components/ui/heading";
 import * as Player from "@bilisound/player";
 import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
 import useMultiSelect from "~/hooks/useMultiSelect";
+import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
 
 cssInterop(OrigCircle, {
     className: {
@@ -403,7 +404,23 @@ export default function Page() {
     const loaded = meta && playlistDetail;
 
     return (
-        <Layout title={"查看详情"} leftAccessories={"BACK_BUTTON"} edgeInsets={{ ...tabSafeAreaEdgeInsets, bottom: 0 }}>
+        <Layout
+            title={"查看详情"}
+            leftAccessories={"BACK_BUTTON"}
+            rightAccessories={
+                editing ? (
+                    <LayoutButton
+                        iconName={"fa6-solid:check"}
+                        aria-label={"完成"}
+                        onPress={() => {
+                            setEditing(false);
+                            clear();
+                        }}
+                    />
+                ) : null
+            }
+            edgeInsets={{ ...tabSafeAreaEdgeInsets, bottom: 0 }}
+        >
             {/* 内容区 */}
             {loaded ? (
                 <DualScrollView
@@ -471,6 +488,7 @@ export default function Page() {
                                     onPress={() =>
                                         setAll(Array.from({ length: playlistDetail.length }).map((_, i) => i))
                                     }
+                                    className={"px-4"}
                                 >
                                     <ButtonMonIcon name={"fa6-solid:check-double"} />
                                     <ButtonText>全选</ButtonText>
@@ -482,29 +500,22 @@ export default function Page() {
                                     onPress={() =>
                                         reverse(Array.from({ length: playlistDetail.length }).map((_, i) => i))
                                     }
+                                    className={"px-4"}
                                 >
                                     <ButtonMonIcon name={"fa6-solid:circle-half-stroke"} />
                                     <ButtonText>反选</ButtonText>
                                 </Button>
                             </ButtonOuter>
-                            {/* todo 待实现 */}
-                            <ButtonOuter>
-                                <Button variant={"ghost"}>
-                                    <ButtonMonIcon name={"fa6-solid:file-arrow-down"} />
-                                    <ButtonText>创建新歌单</ButtonText>
-                                </Button>
-                            </ButtonOuter>
-                            <ButtonOuter>
-                                <Button variant={"ghost"} onPress={() => handleDelete()}>
-                                    <ButtonMonIcon name={"fa6-solid:trash-can"} />
-                                    <ButtonText>删除</ButtonText>
-                                </Button>
-                            </ButtonOuter>
                         </View>
+                        {/* todo 增加菜单，放置删除和创建新歌单功能 */}
                         <ButtonOuter>
-                            <Button variant={"ghost"} onPress={() => setEditing(false)}>
-                                <ButtonMonIcon name={"fa6-solid:xmark"} />
-                                <ButtonText>取消</ButtonText>
+                            <Button
+                                variant={"ghost"}
+                                icon={true}
+                                onPress={() => setEditing(false)}
+                                aria-label={"更多操作"}
+                            >
+                                <ButtonMonIcon name={"fa6-solid:ellipsis-vertical"} size={18} />
                             </Button>
                         </ButtonOuter>
                     </View>

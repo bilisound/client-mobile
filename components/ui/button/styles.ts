@@ -198,12 +198,12 @@ export const buttonTextStyle = tva({
         {
             variant: "ghost",
             action: "positive",
-            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+            class: "text-success-500 data-[hover=true]:text-success-500 data-[active=true]:text-success-500",
         },
         {
             variant: "ghost",
             action: "negative",
-            class: "text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500",
+            class: "text-error-500 data-[hover=true]:text-error-500 data-[active=true]:text-error-500",
         },
     ],
 });

@@ -238,6 +238,7 @@ export async function refreshTrack(trackData: TrackData) {
     return trackData;
 }
 
+// 预先刷新下一首曲目。目前已知问题：会导致上一首歌播放完毕并切歌以后不会自动启动播放
 export async function refreshCurrentTrack() {
     if (Platform.OS === "web") {
         return;

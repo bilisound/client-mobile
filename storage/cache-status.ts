@@ -1,5 +1,11 @@
 import { MMKV } from "react-native-mmkv";
 
+export interface CacheStatusNew {
+    name: string;
+}
+
+export type CacheStatus = boolean | CacheStatusNew;
+
 export const CACHE_STATUS_VERSION = "cache_status_version";
 
 // 键格式：[BV 号]_[分 P 编号]
