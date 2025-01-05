@@ -1,8 +1,13 @@
 import { Text } from "~/components/ui/text";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
-import { getPlaylistDetail, getPlaylistMeta } from "~/storage/sqlite/playlist";
+import {
+    deletePlaylistDetail,
+    getPlaylistDetail,
+    getPlaylistMeta,
+    syncPlaylistAmount,
+} from "~/storage/sqlite/playlist";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Layout } from "~/components/layout";
 import { FlashList } from "@shopify/flash-list";
@@ -15,7 +20,7 @@ import { convertToRelativeTime } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
-import { View } from "react-native";
+import { Vibration, View } from "react-native";
 import { Image } from "expo-image";
 import { cssInterop } from "nativewind";
 import Toast from "react-native-toast-message";
@@ -36,6 +41,7 @@ import {
 import { Heading } from "~/components/ui/heading";
 import * as Player from "@bilisound/player";
 import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
+import useMultiSelect from "~/hooks/useMultiSelect";
 
 cssInterop(OrigCircle, {
     className: {
@@ -249,6 +255,7 @@ function Header({
 }
 
 export default function Page() {
+    const queryClient = useQueryClient();
     const tabSafeAreaEdgeInsets = useTabSafeAreaInsets();
     const { id } = useLocalSearchParams<{ id: string }>();
 
@@ -318,6 +325,80 @@ export default function Page() {
         setPlaylistOnQueue({ value: meta });
     }
 
+    // 多选管理
+    const isEditLocked = !meta || !!meta?.source;
+    const { clear, toggle, selected, setAll, reverse } = useMultiSelect<number>();
+    const [editing, setEditing] = useState(false);
+
+    // 多选按动操作
+    function handleLongPress(index: number) {
+        if (isEditLocked) {
+            Toast.show({
+                type: "info",
+                text1: "当前歌单已绑定在线播放列表",
+                text2: "如需进行本地编辑，请先进入「修改信息」页面进行解绑操作",
+            });
+            return;
+        }
+        if (!editing) {
+            Vibration.vibrate(25);
+            setEditing(true);
+            toggle(index);
+        }
+    }
+
+    // 删除项目操作
+    function handleDelete() {
+        dialogCallback.current = async () => {
+            if (!playlistDetail) {
+                return;
+            }
+            const onQueue = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) ?? "{}")?.value;
+
+            // 注意，这里的 selected 是数组的 index，不是项目在数据库中的 id！！
+            for (const e of selected) {
+                await deletePlaylistDetail(playlistDetail[e].id);
+            }
+            await syncPlaylistAmount(Number(id));
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["playlist_meta"] }),
+                queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] }),
+                queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] }),
+                queryClient.invalidateQueries({ queryKey: [`playlist_detail_${id}`] }),
+            ]);
+            if (onQueue?.id === Number(id)) {
+                setPlaylistOnQueue(undefined);
+            }
+            clear();
+        };
+        setDialogInfo(prevState => ({
+            ...prevState,
+            title: "删除曲目确认",
+            description: `确定要从本歌单中删除 ${selected.size} 首曲目吗？`,
+        }));
+        setModalVisible(true);
+    }
+
+    // 返回时先关闭编辑模式
+    const navigation = useNavigation();
+    useEffect(() => {
+        const handler = (e: any) => {
+            if (!editing) {
+                return;
+            }
+            e.preventDefault();
+            setEditing(false);
+            clear();
+            navigation.removeListener("beforeRemove", handler);
+        };
+        if (editing) {
+            navigation.addListener("beforeRemove", handler);
+        }
+        return () => {
+            navigation.removeListener("beforeRemove", handler);
+        };
+    }, [clear, editing, navigation]);
+
     const loaded = meta && playlistDetail;
 
     return (
@@ -343,13 +424,16 @@ export default function Page() {
                                 paddingBottom: tabSafeAreaEdgeInsets.bottom,
                             }}
                             data={playlistDetail}
-                            renderItem={e => (
+                            extraData={[editing, selected.size]}
+                            renderItem={({ item, index }) => (
                                 <SongItem
-                                    data={e.item}
-                                    index={e.index + 1}
-                                    onRequestPlay={() => {
-                                        handlePlay(e.index);
-                                    }}
+                                    data={item}
+                                    index={index + 1}
+                                    onRequestPlay={() => handlePlay(index)}
+                                    onToggle={() => toggle(index)}
+                                    onLongPress={() => handleLongPress(index)}
+                                    isChecking={editing}
+                                    isChecked={selected.has(index)}
                                 />
                             )}
                             estimatedItemSize={64}
