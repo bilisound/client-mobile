@@ -29,7 +29,7 @@ export function Layout({
         resultEdgeInsets = edgeInsets;
     }
     return (
-        <View className={"flex-1 items-center"}>
+        <View className={"flex-1 items-center relative"}>
             <View
                 style={{
                     paddingTop: resultEdgeInsets.top,

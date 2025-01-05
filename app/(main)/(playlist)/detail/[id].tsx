@@ -403,6 +403,7 @@ export default function Page() {
 
     return (
         <Layout title={"查看详情"} leftAccessories={"BACK_BUTTON"} edgeInsets={{ ...tabSafeAreaEdgeInsets, bottom: 0 }}>
+            {/* 内容区 */}
             {loaded ? (
                 <DualScrollView
                     edgeInsets={{ left: 0, right: 0, top: 0, bottom: 0 }}
@@ -450,6 +451,17 @@ export default function Page() {
                     )}
                 />
             ) : null}
+
+            <View
+                className={"absolute left-0 bottom-0 w-full bg-blue-300"}
+                style={{ height: tabSafeAreaEdgeInsets.bottom + 64 }}
+            >
+                <View className={"h-16 bg-green-500"}>
+                    <Text>多选操作区（安全区内）</Text>
+                </View>
+            </View>
+
+            {/* 用户警告框 */}
             <AlertDialog isOpen={modalVisible} onClose={() => handleClose(false)} size="md">
                 <AlertDialogBackdrop />
                 <AlertDialogContent>
