@@ -328,7 +328,7 @@ export default function Page() {
     const isEditLocked = !meta || !!meta?.source;
     const { clear, toggle, selected, setAll, reverse } = useMultiSelect<number>();
     const [editing, setEditing] = useState(false);
-    const editingHeight = 64;
+    const editingHeight = 56;
 
     // 多选按动操作
     function handleLongPress(index: number) {
@@ -453,14 +453,63 @@ export default function Page() {
                 />
             ) : null}
 
-            <View
-                className={`${editing ? "flex" : "hidden"} absolute left-0 bottom-0 w-full bg-blue-300`}
-                style={{ height: tabSafeAreaEdgeInsets.bottom + editingHeight }}
-            >
-                <View className={"h-16 bg-green-500"}>
-                    <Text>多选操作区（安全区内）</Text>
+            {loaded ? (
+                <View
+                    className={`${editing ? "flex" : "hidden"} absolute left-0 bottom-0 w-full bg-blue-300`}
+                    style={{ height: tabSafeAreaEdgeInsets.bottom + editingHeight }}
+                >
+                    <View
+                        className={
+                            "bg-background-0 border-t border-background-50 flex-row items-center justify-between gap-2 p-2"
+                        }
+                    >
+                        {/* todo 移动端布局！！ */}
+                        <View className={"flex-row items-center gap-2"}>
+                            <ButtonOuter>
+                                <Button
+                                    variant={"ghost"}
+                                    onPress={() =>
+                                        setAll(Array.from({ length: playlistDetail.length }).map((_, i) => i))
+                                    }
+                                >
+                                    <ButtonMonIcon name={"fa6-solid:check-double"} />
+                                    <ButtonText>全选</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                            <ButtonOuter>
+                                <Button
+                                    variant={"ghost"}
+                                    onPress={() =>
+                                        reverse(Array.from({ length: playlistDetail.length }).map((_, i) => i))
+                                    }
+                                >
+                                    <ButtonMonIcon name={"fa6-solid:circle-half-stroke"} />
+                                    <ButtonText>反选</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                            {/* todo 待实现 */}
+                            <ButtonOuter>
+                                <Button variant={"ghost"}>
+                                    <ButtonMonIcon name={"fa6-solid:file-arrow-down"} />
+                                    <ButtonText>创建新歌单</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                            <ButtonOuter>
+                                <Button variant={"ghost"} onPress={() => handleDelete()}>
+                                    <ButtonMonIcon name={"fa6-solid:trash-can"} />
+                                    <ButtonText>删除</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                        </View>
+                        <ButtonOuter>
+                            <Button variant={"ghost"} onPress={() => setEditing(false)}>
+                                <ButtonMonIcon name={"fa6-solid:xmark"} />
+                                <ButtonText>取消</ButtonText>
+                            </Button>
+                        </ButtonOuter>
+                    </View>
                 </View>
-            </View>
+            ) : null}
 
             {/* 用户警告框 */}
             <AlertDialog isOpen={modalVisible} onClose={() => handleClose(false)} size="md">
