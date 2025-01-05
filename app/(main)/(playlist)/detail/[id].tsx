@@ -282,13 +282,12 @@ export default function Page() {
         const to = playlistDetail?.[index];
         const activeTrack = await Player.getCurrentTrack();
         const onQueue = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) ?? "{}")?.value;
-
         // 前提条件：
         // playlistOnQueue 的 id 是这个歌单的 id
         // 有 activeTrack
         // 当前 queue 对应 index 的 bvid 和 episode 与请求播放的一致
         if (
-            onQueue.id === Number(id) &&
+            onQueue?.id === Number(id) &&
             activeTrack &&
             from?.extendedData?.id === to?.bvid &&
             from?.extendedData?.episode === to?.episode
@@ -329,6 +328,7 @@ export default function Page() {
     const isEditLocked = !meta || !!meta?.source;
     const { clear, toggle, selected, setAll, reverse } = useMultiSelect<number>();
     const [editing, setEditing] = useState(false);
+    const editingHeight = 64;
 
     // 多选按动操作
     function handleLongPress(index: number) {
@@ -399,6 +399,7 @@ export default function Page() {
         };
     }, [clear, editing, navigation]);
 
+    // 全部数据是否已经完成加载
     const loaded = meta && playlistDetail;
 
     return (
@@ -422,7 +423,7 @@ export default function Page() {
                         <FlashList
                             contentContainerStyle={{
                                 ...contentContainerStyle,
-                                paddingBottom: tabSafeAreaEdgeInsets.bottom,
+                                paddingBottom: tabSafeAreaEdgeInsets.bottom + (editing ? editingHeight : 0),
                             }}
                             data={playlistDetail}
                             extraData={[editing, selected.size]}
@@ -453,8 +454,8 @@ export default function Page() {
             ) : null}
 
             <View
-                className={"absolute left-0 bottom-0 w-full bg-blue-300"}
-                style={{ height: tabSafeAreaEdgeInsets.bottom + 64 }}
+                className={`${editing ? "flex" : "hidden"} absolute left-0 bottom-0 w-full bg-blue-300`}
+                style={{ height: tabSafeAreaEdgeInsets.bottom + editingHeight }}
             >
                 <View className={"h-16 bg-green-500"}>
                     <Text>多选操作区（安全区内）</Text>
