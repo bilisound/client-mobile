@@ -477,8 +477,9 @@ export default function Page() {
                 >
                     <View
                         className={
-                            "bg-background-0 border-t border-background-50 flex-row items-center justify-between gap-2 p-2"
+                            "bg-background-0 border-t border-background-50 flex-row items-center justify-between gap-2 px-2"
                         }
+                        style={{ height: editingHeight }}
                     >
                         {/* todo 移动端布局！！ */}
                         <View className={"flex-row items-center gap-2"}>
