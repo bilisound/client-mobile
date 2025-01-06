@@ -1,6 +1,6 @@
 import { Text } from "~/components/ui/text";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
 import {
     deletePlaylistDetail,
@@ -43,6 +43,7 @@ import * as Player from "@bilisound/player";
 import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
+import useApplyPlaylistStore from "~/store/apply-playlist";
 // import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
 // import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
 // import { Box } from "~/components/ui/box";
@@ -329,6 +330,9 @@ export default function Page() {
         setPlaylistOnQueue({ value: meta });
     }
 
+    // 全部数据是否已经完成加载
+    const loaded = meta && playlistDetail;
+
     // 多选管理
     const isEditLocked = !meta || !!meta?.source;
     const { clear, toggle, selected, setAll, reverse } = useMultiSelect<number>();
@@ -384,6 +388,18 @@ export default function Page() {
         setModalVisible(true);
     }
 
+    // 复制项目操作
+    function handleCopy() {
+        if (!loaded) {
+            return;
+        }
+        const state = useApplyPlaylistStore.getState();
+        state.setName(meta.title + "（副本）");
+        state.setPlaylistDetail([...selected].map(e => playlistDetail[e]));
+        state.setSource(undefined);
+        router.push("/apply-playlist");
+    }
+
     // 返回时先关闭编辑模式
     const navigation = useNavigation();
     useEffect(() => {
@@ -403,9 +419,6 @@ export default function Page() {
             navigation.removeListener("beforeRemove", handler);
         };
     }, [clear, editing, navigation]);
-
-    // 全部数据是否已经完成加载
-    const loaded = meta && playlistDetail;
 
     const isDeleteButtonIcon = useBreakpointValue({
         default: true,
@@ -515,7 +528,7 @@ export default function Page() {
                             </ButtonOuter>
                             {/* todo */}
                             <ButtonOuter>
-                                <Button variant={"ghost"} onPress={() => {}} className={"px-4"}>
+                                <Button variant={"ghost"} onPress={() => handleCopy()} className={"px-4"}>
                                     <ButtonMonIcon name={"fa6-solid:copy"} />
                                     <ButtonText>复制</ButtonText>
                                 </Button>
