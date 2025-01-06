@@ -481,13 +481,11 @@ export default function Page() {
 
             {loaded ? (
                 <View
-                    className={`${editing ? "flex" : "hidden"} absolute left-0 bottom-0 w-full`}
+                    className={`bg-background-0 border-t border-background-50 ${editing ? "flex" : "hidden"} absolute left-0 bottom-0 w-full`}
                     style={{ height: tabSafeAreaEdgeInsets.bottom + editingHeight }}
                 >
                     <View
-                        className={
-                            "bg-background-0 border-t border-background-50 flex-row items-center justify-between gap-2 px-2"
-                        }
+                        className={"flex-row items-center justify-between gap-2 px-2"}
                         style={{ height: editingHeight }}
                     >
                         <View className={"flex-row items-center gap-2"}>
