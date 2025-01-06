@@ -1,6 +1,6 @@
 import { Text } from "~/components/ui/text";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
 import {
     deletePlaylistDetail,
@@ -20,7 +20,7 @@ import { convertToRelativeTime } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
-import { useWindowDimensions, Vibration, View } from "react-native";
+import { Vibration, View } from "react-native";
 import { Image } from "expo-image";
 import { cssInterop } from "nativewind";
 import Toast from "react-native-toast-message";
@@ -43,6 +43,10 @@ import * as Player from "@bilisound/player";
 import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
+// import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
+// import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
+// import { Box } from "~/components/ui/box";
+// import { Monicon } from "@monicon/native";
 
 cssInterop(OrigCircle, {
     className: {
@@ -333,14 +337,14 @@ export default function Page() {
 
     // 多选按动操作
     function handleLongPress(index: number) {
-        if (isEditLocked) {
+        /*if (isEditLocked) {
             Toast.show({
                 type: "info",
                 text1: "当前歌单已绑定在线播放列表",
                 text2: "如需进行本地编辑，请先进入「修改信息」页面进行解绑操作",
             });
             return;
-        }
+        }*/
         if (!editing) {
             Vibration.vibrate(25);
             setEditing(true);
@@ -402,6 +406,11 @@ export default function Page() {
 
     // 全部数据是否已经完成加载
     const loaded = meta && playlistDetail;
+
+    const isDeleteButtonIcon = useBreakpointValue({
+        default: true,
+        md: false,
+    });
 
     return (
         <Layout
@@ -472,7 +481,7 @@ export default function Page() {
 
             {loaded ? (
                 <View
-                    className={`${editing ? "flex" : "hidden"} absolute left-0 bottom-0 w-full bg-blue-300`}
+                    className={`${editing ? "flex" : "hidden"} absolute left-0 bottom-0 w-full`}
                     style={{ height: tabSafeAreaEdgeInsets.bottom + editingHeight }}
                 >
                     <View
@@ -481,7 +490,6 @@ export default function Page() {
                         }
                         style={{ height: editingHeight }}
                     >
-                        {/* todo 移动端布局！！ */}
                         <View className={"flex-row items-center gap-2"}>
                             <ButtonOuter>
                                 <Button
@@ -507,24 +515,29 @@ export default function Page() {
                                     <ButtonText>反选</ButtonText>
                                 </Button>
                             </ButtonOuter>
+                            {/* todo */}
                             <ButtonOuter>
                                 <Button variant={"ghost"} onPress={() => {}} className={"px-4"}>
-                                    <ButtonMonIcon name={"fa6-solid:trash"} />
-                                    <ButtonText>删除</ButtonText>
+                                    <ButtonMonIcon name={"fa6-solid:copy"} />
+                                    <ButtonText>复制</ButtonText>
                                 </Button>
                             </ButtonOuter>
                         </View>
-                        {/* todo 增加菜单，放置删除和创建新歌单功能 */}
-                        <ButtonOuter>
-                            <Button
-                                variant={"ghost"}
-                                icon={true}
-                                onPress={() => setEditing(false)}
-                                aria-label={"更多操作"}
-                            >
-                                <ButtonMonIcon name={"fa6-solid:ellipsis-vertical"} size={18} />
-                            </Button>
-                        </ButtonOuter>
+                        {isEditLocked ? null : (
+                            <ButtonOuter>
+                                <Button
+                                    variant={"ghost"}
+                                    onPress={() => handleDelete()}
+                                    className={"px-4"}
+                                    disabled={selected.size <= 0}
+                                    icon={isDeleteButtonIcon}
+                                    aria-label={"删除"}
+                                >
+                                    <ButtonMonIcon name={"fa6-solid:trash"} />
+                                    <ButtonText className={"hidden md:flex"}>删除</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                        )}
                     </View>
                 </View>
             ) : null}

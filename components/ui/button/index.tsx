@@ -47,12 +47,16 @@ type IButtonProps = Omit<React.ComponentPropsWithoutRef<typeof UIButton>, "conte
     VariantProps<typeof buttonStyle> & { className?: string };
 
 const Button = React.forwardRef<React.ElementRef<typeof UIButton>, IButtonProps>(
-    ({ className, variant = "solid", size = "md", action = "primary", icon = false, ...props }, ref) => {
+    (
+        { className, variant = "solid", size = "md", action = "primary", icon = false, disabled = false, ...props },
+        ref,
+    ) => {
         return (
             <UIButton
                 ref={ref}
                 {...props}
-                className={buttonStyle({ variant, size, action, icon, class: className })}
+                disabled={disabled}
+                className={buttonStyle({ variant, size, action, icon, disabled, class: className })}
                 context={{ variant, size, action }}
             />
         );

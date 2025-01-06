@@ -28,6 +28,10 @@ export const buttonStyle = tva({
             false: "",
             true: "px-0",
         },
+        disabled: {
+            false: "",
+            true: "opacity-50",
+        },
     },
     compoundVariants: [
         {
