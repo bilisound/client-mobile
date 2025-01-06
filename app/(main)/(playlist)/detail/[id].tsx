@@ -507,6 +507,12 @@ export default function Page() {
                                     <ButtonText>反选</ButtonText>
                                 </Button>
                             </ButtonOuter>
+                            <ButtonOuter>
+                                <Button variant={"ghost"} onPress={() => {}} className={"px-4"}>
+                                    <ButtonMonIcon name={"fa6-solid:trash"} />
+                                    <ButtonText>删除</ButtonText>
+                                </Button>
+                            </ButtonOuter>
                         </View>
                         {/* todo 增加菜单，放置删除和创建新歌单功能 */}
                         <ButtonOuter>

@@ -18,6 +18,7 @@ import useDownloadStore from "~/store/download";
 import { Pressable } from "~/components/ui/pressable";
 import { useCurrentTrack, useIsPlaying, usePlaybackState } from "@bilisound/player";
 import { shadow } from "~/constants/styles";
+import { Monicon } from "@monicon/native";
 
 // 加载进度条
 function ProgressBar({ item }: { item: string }) {
@@ -161,11 +162,12 @@ export function SongItem({
             {isChecking ? (
                 <View className="flex-basis-auto">
                     <View
-                        className={`w-7 h-7 rounded-full border-2 border-primary-500 dark:border-primary-500 items-center justify-center ${
+                        className={`w-7 h-7 rounded-full border-2 border-primary-500 dark:border-primary-400 items-center justify-center ${
                             isChecked ? "bg-primary-500 dark:bg-primary-400" : "bg-transparent"
                         }`}
                     >
-                        <Entypo name="check" size={18} color={isChecked ? "white" : "transparent"} />
+                        {/*<Entypo name="check" size={18} color={isChecked ? "white" : "transparent"} />*/}
+                        <Monicon name={"fa6-solid:check"} size={16} color={isChecked ? "white" : "transparent"} />
                     </View>
                 </View>
             ) : isActiveTrack ? (
