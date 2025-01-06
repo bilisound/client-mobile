@@ -526,7 +526,6 @@ export default function Page() {
                                     <ButtonText>反选</ButtonText>
                                 </Button>
                             </ButtonOuter>
-                            {/* todo */}
                             <ButtonOuter>
                                 <Button variant={"ghost"} onPress={() => handleCopy()} className={"px-4"}>
                                     <ButtonMonIcon name={"fa6-solid:copy"} />
