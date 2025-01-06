@@ -3,7 +3,7 @@ import * as SystemUI from "expo-system-ui";
 import "~/global.css";
 import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
 import React, { useEffect, useRef } from "react";
-import { useColorScheme } from "react-native";
+import { Platform, useColorScheme } from "react-native";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { SystemBars } from "react-native-edge-to-edge";
 import { useFonts } from "expo-font";
@@ -21,6 +21,7 @@ import { NotifyToast } from "~/components/notify-toast";
 import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { refreshCurrentTrack } from "~/business/playlist/handler";
+import * as NavigationBar from "expo-navigation-bar";
 
 registerBackgroundEventListener(async ({ event }) => {
     if (event === "onTrackChange") {
@@ -87,6 +88,20 @@ export default function RootLayout() {
 
     useEffect(() => {
         SystemUI.setBackgroundColorAsync(colorScheme === "dark" ? "#121212" : "#ffffff");
+    }, [colorScheme]);
+
+    // 解决在 Xiaomi HyperOS 上底部 navigation bar 亮色模式下始终为半透明白色背景的问题。在「原生安卓」下其实不需要这一步
+    useEffect(() => {
+        (async () => {
+            // https://stackoverflow.com/questions/74999835/trying-to-make-the-android-navigation-bar-transparent-in-expo
+            if (Platform.OS === "android") {
+                await NavigationBar.setPositionAsync("absolute");
+                await NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#17171701" : "#ffffff01");
+            }
+            await SystemUI.setBackgroundColorAsync(
+                colorScheme === "dark" || Platform.OS === "ios" ? "#171717" : "#ffffff",
+            );
+        })();
     }, [colorScheme]);
 
     if (!loaded) {
