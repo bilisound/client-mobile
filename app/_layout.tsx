@@ -20,7 +20,7 @@ import { registerBackgroundEventListener } from "@bilisound/player";
 import { NotifyToast } from "~/components/notify-toast";
 import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { refreshCurrentTrack } from "~/business/playlist/handler";
+import { refreshCurrentTrack, saveTrackData } from "~/business/playlist/handler";
 import * as NavigationBar from "expo-navigation-bar";
 
 registerBackgroundEventListener(async ({ event }) => {
@@ -30,6 +30,7 @@ registerBackgroundEventListener(async ({ event }) => {
             return;
         }
         await refreshCurrentTrack();
+        await saveTrackData();
     }
 });
 

@@ -9,7 +9,7 @@ import {
     queueStorage,
 } from "~/storage/queue";
 import { TrackData } from "@bilisound/player/build/types";
-import { getOnlineUrl, getVideoUrl } from "~/utils/constant-helper";
+import { getVideoUrl } from "~/utils/constant-helper";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { handleLegacyQueue } from "~/utils/migration/legacy-queue";
 import { getCacheAudioPath } from "~/utils/file";
@@ -92,6 +92,7 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
 }
 
 export async function saveTrackData() {
+    log.debug("正在自动保存播放队列");
     await Promise.all([
         (async () => {
             const tracks = await Player.getTracks();
@@ -99,7 +100,7 @@ export async function saveTrackData() {
             queueStorage.set(
                 QUEUE_LIST,
                 JSON.stringify(tracks, (key, value) => {
-                    if (key === "uri" || key === "headers") {
+                    if (key === "uri" || key === "headers" || key === "expireAt") {
                         return undefined;
                     }
                     return value;
@@ -109,7 +110,7 @@ export async function saveTrackData() {
                 queueStorage.set(
                     QUEUE_LIST_BACKUP,
                     JSON.stringify(tracks, (key, value) => {
-                        if (key === "uri" || key === "headers") {
+                        if (key === "uri" || key === "headers" || key === "expireAt") {
                             return undefined;
                         }
                         return value;
@@ -171,7 +172,7 @@ export async function loadTrackData() {
             return;
         }
         e.headers = {
-            referer: getOnlineUrl(e.extendedData.id, e.extendedData.episode),
+            referer: getVideoUrl(e.extendedData.id, e.extendedData.episode),
             "user-agent": USER_AGENT_BILIBILI,
         };
         if (e.extendedData.isLoaded) {
@@ -267,6 +268,8 @@ export async function refreshCurrentTrack() {
     log.debug("检查当前曲目是否可能需要替换");
     const trackData = await Player.getCurrentTrack();
     const trackIndex = await Player.getCurrentTrackIndex();
+    // console.log(JSON.stringify(trackData, null, 4));
+    // console.log(trackIndex);
     if (
         trackData &&
         !trackData.extendedData?.isLoaded &&
