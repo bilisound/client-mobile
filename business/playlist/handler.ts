@@ -17,7 +17,7 @@ import { getBilisoundMetadata, getBilisoundResourceUrl } from "~/api/bilisound";
 import { undefined } from "zod";
 import log from "~/utils/logger";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
-import { CacheStatus, cacheStatusStorage } from "~/storage/cache-status";
+import { cacheStatusStorage } from "~/storage/cache-status";
 import { PLACEHOLDER_AUDIO, URI_EXPIRE_DURATION } from "~/constants/playback";
 import { getPlaylistDetail } from "~/storage/sqlite/playlist";
 import { Platform } from "react-native";
@@ -72,7 +72,7 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
         const isLoaded = !!cacheStatusStorage.getBoolean(e.bvid + "_" + e.episode);
 
         return {
-            uri: PLACEHOLDER_AUDIO,
+            uri: isLoaded ? getCacheAudioPath(e.bvid, e.episode, true) : PLACEHOLDER_AUDIO,
             artist: e.author,
             artworkUri: e.imgUrl,
             duration: e.duration,
@@ -235,19 +235,9 @@ export async function refreshTrack(trackData: TrackData) {
     log.debug(`id: ${id}, episode: ${episode}`);
 
     // 处理本地缓存
-    const got = cacheStatusStorage.getString(`${id}_${episode}`);
-    if (got) {
+    const got = cacheStatusStorage.getBoolean(`${id}_${episode}`);
+    if (got && trackData.extendedData?.isLoaded) {
         log.info("有缓存，应用缓存");
-        let cacheData: CacheStatus = JSON.parse(got);
-
-        // 升级旧的缓存状态数据
-        if (typeof cacheData === "boolean") {
-            cacheData = {
-                name: `${trackData.title}`,
-            };
-            cacheStatusStorage.set(`${id}_${episode}`, JSON.stringify(cacheData));
-        }
-
         // url 设置为缓存数据
         trackData.uri = getCacheAudioPath(id, episode, true);
         trackData.extendedData!.isLoaded = true;
@@ -283,29 +273,12 @@ export async function refreshCurrentTrack() {
     }
 }
 
-// 预先刷新下一首曲目。目前已知问题：会导致上一首歌播放完毕并切歌以后不会自动启动播放
-export async function refreshNextTrack() {
-    if (Platform.OS === "web") {
-        return;
-    }
-    log.debug("检查下一首曲目是否可能需要替换");
-    const trackIndex = (await Player.getCurrentTrackIndex()) + 1;
-    const trackData = (await Player.getTracks())[trackIndex];
-    if (
-        trackData &&
-        !trackData.extendedData?.isLoaded &&
-        (trackData.extendedData?.expireAt ?? 0) <= new Date().getTime()
-    ) {
-        log.debug("进行下一首曲目替换操作");
-        await Player.replaceTrack(trackIndex, await refreshTrack(trackData));
-        return;
-    }
-}
-
 export async function replaceQueueWithPlaylist(id: number, index = 0) {
     const data = await getPlaylistDetail(id);
     const tracks = playlistToTracks(data);
-    await refreshTrack(tracks[index]);
+    if (!tracks[index].extendedData?.isLoaded) {
+        await refreshTrack(tracks[index]);
+    }
     await Player.setQueue(tracks);
     await Player.jump(index);
     await Player.play();

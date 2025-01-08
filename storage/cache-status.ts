@@ -1,10 +1,9 @@
 import { MMKV } from "react-native-mmkv";
 
-export interface CacheStatusNew {
+export interface CacheMetadata {
     name: string;
+    subName: string;
 }
-
-export type CacheStatus = boolean | CacheStatusNew;
 
 export const CACHE_STATUS_VERSION = "cache_status_version";
 
