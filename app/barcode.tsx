@@ -19,7 +19,7 @@ import { Text } from "~/components/ui/text";
 import { useConfirm } from "~/hooks/useConfirm";
 import log from "~/utils/logger";
 import { handleQrCode } from "~/utils/qrcode";
-import { Button } from "~/components/ui/button";
+import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Monicon } from "@monicon/native";
 
 export default function Page() {
@@ -125,7 +125,11 @@ export default function Page() {
                         </Text>
                     </AlertDialogBody>
                     <AlertDialogFooter>
-                        <Button onPress={() => handleClose(true)}>{dialogInfo.ok}</Button>
+                        <ButtonOuter>
+                            <Button onPress={() => handleClose(true)}>
+                                <ButtonText>{dialogInfo.ok}</ButtonText>
+                            </Button>
+                        </ButtonOuter>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
