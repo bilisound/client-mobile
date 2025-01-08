@@ -75,7 +75,10 @@ export async function parseB23(id: string) {
 export async function getBilisoundMetadata(data: { id: string }): Promise<Wrap<GetBilisoundMetadataResponse>> {
     if (Platform.OS === "web") {
         const response = await fetch(BILISOUND_API_PREFIX + `/internal/metadata?id=${data.id}`);
-        return response.json();
+        const outData = await response.json();
+        if (outData.code !== 200) {
+            throw new Error(outData.msg);
+        }
     }
 
     const { id } = data;
@@ -97,7 +100,7 @@ export async function getBilisoundMetadata(data: { id: string }): Promise<Wrap<G
             }
 
             // 没有分 P 的视频，将第一个视频的标题替换成投稿标题
-            if (pages.length === 1) {
+            if (pages.length === 1 && pages[0].part.trim().length <= 0) {
                 pages[0].part = videoData.title;
             }
 
@@ -163,7 +166,10 @@ export async function getBilisoundResourceUrl(data: {
     filterResourceURL?: boolean;
 }): Promise<{ url: string; isAudio: boolean }> {
     if (Platform.OS === "web") {
-        throw new Error("getBilisoundResourceUrl 在 web 端未实现");
+        return {
+            url: BILISOUND_API_PREFIX + `/internal/resource?id=${data.id}&episode=${data.episode}`,
+            isAudio: true,
+        };
     }
 
     const { id, episode } = data;
@@ -266,7 +272,79 @@ export interface GetEpisodeUserResponse {
 
 export type UserListMode = "season" | "series" | "favourite";
 
-export async function getUserList(mode: UserListMode, userId: Numberish, listId: Numberish, page = 1) {
+/**
+ * 尝试一次性获取完整合集列表
+ * @param userId
+ * @param listId
+ */
+async function tryGetFullSection(userId: Numberish, listId: Numberish): Promise<GetEpisodeUserResponse | null> {
+    log.info("尝试一次获取完整合集");
+    log.debug(`userId: ${userId}, listId: ${listId}`);
+
+    const { data } = await getUserSeason(userId, listId, 1);
+    if (data.page.total <= data.page.page_size) {
+        log.warn("一次获取完整合集取消：视频总数小于单页展示数量，无需进行此操作");
+        return null;
+    }
+
+    const name = data.meta.name;
+    const description = data.meta.description;
+    const cover = data.meta.cover;
+    const firstVideoId = data.archives[0]?.bvid;
+    if (!firstVideoId) {
+        log.warn("一次获取完整合集失败：列表中没有找到第一个视频 ID");
+        return null;
+    }
+
+    const firstVideoResponse = await getVideo({ id: firstVideoId });
+    if (firstVideoResponse.type !== "regular") {
+        log.warn("一次获取完整合集失败：非常规视频");
+        return null;
+    }
+
+    const sections = firstVideoResponse.initialState.sectionsInfo?.sections ?? [];
+    const episodes = sections.flatMap(section => section.episodes ?? []);
+    if (episodes.length <= 0) {
+        log.warn("一次获取完整合集失败：列表中没有找到视频");
+        return null;
+    }
+
+    const rows = episodes.map(e => ({
+        bvid: e.bvid,
+        title: e.title,
+        cover: e.arc.pic,
+        duration: e.arc.duration,
+    }));
+
+    log.debug(`一次获取完整合集成功：${rows.length} 条记录`);
+    return {
+        pageSize: rows.length,
+        pageNum: 1,
+        total: rows.length,
+        rows,
+        meta: {
+            name,
+            description,
+            cover,
+            userId,
+            seasonId: listId,
+        },
+    };
+}
+
+/**
+ * 获取用户列表（合集/列表）
+ * @param mode
+ * @param userId
+ * @param listId
+ * @param page
+ */
+export async function getUserList(
+    mode: UserListMode,
+    userId: Numberish,
+    listId: Numberish,
+    page = 1,
+): Promise<GetEpisodeUserResponse> {
     if (Platform.OS === "web") {
         const res = await fetch(
             `${BILISOUND_API_PREFIX}/internal/user-list?mode=${mode}&userId=${userId}&listId=${listId}&page=${page}`,
@@ -282,6 +360,12 @@ export async function getUserList(mode: UserListMode, userId: Numberish, listId:
     let description = "";
     let cover = "";
     if (mode === "season") {
+        // 首先尝试从任意一个视频详情页面抓取完整的合集列表
+        const fullResult = await tryGetFullSection(userId, listId);
+        if (fullResult) {
+            return fullResult;
+        }
+
         response = await getUserSeason(userId, listId, page);
         const data = response.data;
         pageSize = data.page.page_size;
@@ -321,6 +405,13 @@ export async function getUserList(mode: UserListMode, userId: Numberish, listId:
     };
 }
 
+/**
+ * 一次性拉取完整用户列表（合集/列表）
+ * @param mode
+ * @param userId
+ * @param listId
+ * @param progressCallback
+ */
 export async function getUserListFull(
     mode: UserListMode,
     userId: Numberish,
