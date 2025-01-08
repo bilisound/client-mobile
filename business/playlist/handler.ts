@@ -244,6 +244,11 @@ export async function refreshTrack(trackData: TrackData) {
             };
             cacheStatusStorage.set(`${id}_${episode}`, JSON.stringify(cacheData));
         }
+
+        // url 设置为缓存数据
+        trackData.uri = getCacheAudioPath(id, episode, true);
+        trackData.extendedData!.isLoaded = true;
+        return trackData;
     }
 
     // 拉取最新的 URL
@@ -254,7 +259,7 @@ export async function refreshTrack(trackData: TrackData) {
     return trackData;
 }
 
-// 预先刷新下一首曲目。目前已知问题：会导致上一首歌播放完毕并切歌以后不会自动启动播放
+// 预先刷新现在播放的曲目
 export async function refreshCurrentTrack() {
     if (Platform.OS === "web") {
         return;
@@ -273,6 +278,7 @@ export async function refreshCurrentTrack() {
     }
 }
 
+// 预先刷新下一首曲目。目前已知问题：会导致上一首歌播放完毕并切歌以后不会自动启动播放
 export async function refreshNextTrack() {
     if (Platform.OS === "web") {
         return;
