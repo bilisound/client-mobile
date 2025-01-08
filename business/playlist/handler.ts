@@ -17,7 +17,7 @@ import { getBilisoundMetadata, getBilisoundResourceUrl } from "~/api/bilisound";
 import { undefined } from "zod";
 import log from "~/utils/logger";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
-import { cacheStatusStorage } from "~/storage/cache-status";
+import { CacheStatus, cacheStatusStorage } from "~/storage/cache-status";
 import { PLACEHOLDER_AUDIO, URI_EXPIRE_DURATION } from "~/constants/playback";
 import { getPlaylistDetail } from "~/storage/sqlite/playlist";
 import { Platform } from "react-native";
@@ -226,12 +226,28 @@ export async function addTrackFromDetail(id: string, episode: number) {
 }
 
 export async function refreshTrack(trackData: TrackData) {
-    // todo 考虑有缓存的情况
-    // 拉取最新的 URL
     const id = trackData.extendedData!.id;
     const episode = trackData.extendedData!.episode;
-    log.info("开始拉取最新的 URL");
+    log.info("正在进行刷新 Track 操作");
     log.debug(`id: ${id}, episode: ${episode}`);
+
+    // 处理本地缓存
+    const got = cacheStatusStorage.getString(`${id}_${episode}`);
+    if (got) {
+        log.info("有缓存，应用缓存");
+        let cacheData: CacheStatus = JSON.parse(got);
+
+        // 升级旧的缓存状态数据
+        if (typeof cacheData === "boolean") {
+            cacheData = {
+                name: `${trackData.title}`,
+            };
+            cacheStatusStorage.set(`${id}_${episode}`, JSON.stringify(cacheData));
+        }
+    }
+
+    // 拉取最新的 URL
+    log.info("开始拉取最新的 URL");
     const url = await getBilisoundResourceUrl({ id, episode });
     trackData.uri = url.url;
     trackData.extendedData!.expireAt = new Date().getTime() + URI_EXPIRE_DURATION;

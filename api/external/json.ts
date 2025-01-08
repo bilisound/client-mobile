@@ -35,7 +35,7 @@ export const getUserSeason = promiseMemoize(
                 page_size: 30,
             },
             headers: {
-                referer: `https://space.bilibili.com/${userId}/channel/collectiondetail?sid=${seasonId}`,
+                referer: `https://space.bilibili.com/${userId}/lists/${seasonId}?type=season`,
             },
         });
     },
@@ -55,7 +55,7 @@ export const getUserSeries = promiseMemoize(
                 ps: 30,
             },
             headers: {
-                referer: `https://space.bilibili.com/${userId}/channel/seriesdetail?sid=${seriesId}&ctype=0`,
+                referer: `https://space.bilibili.com/${userId}/lists/${seriesId}?type=series`,
             },
         });
     },

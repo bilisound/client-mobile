@@ -8,6 +8,7 @@ import log from "~/utils/logger";
 
 export const B23_REGEX = /https?:\/\/b23\.tv\/([a-zA-Z0-9]+)/;
 export const USER_LIST_URL_REGEX = /^\/(\d+)\/channel\/(seriesdetail|collectiondetail)$/;
+export const USER_LIST_URL_REGEX_2 = /^\/(\d+)\/lists\/(\d+)/;
 
 export interface UserListParseResult {
     type: "userList";
@@ -29,6 +30,8 @@ export interface UserListParseResult {
  * - `https://b23.tv/k37TjOT`（需要调接口解析）
  * - `https://space.bilibili.com/701522855/channel/seriesdetail?sid=747414`
  * - `https://space.bilibili.com/1741301/channel/collectiondetail?sid=49333`
+ * - `https://space.bilibili.com/9283084/lists/537652?type=series`
+ * - `https://space.bilibili.com/1464161420/lists/2654915?type=season`
  * @param input
  */
 export async function resolveVideo(input: string): Promise<string | UserListParseResult> {
@@ -51,26 +54,45 @@ export async function resolveVideo(input: string): Promise<string | UserListPars
     // 可能是链接
     const url = new URL(input);
 
-    // 两种列表视频链接
     if (url.hostname === "space.bilibili.com") {
+        // 两种列表视频链接
         const match = USER_LIST_URL_REGEX.exec(url.pathname);
-        if (!match) {
-            throw new Error("不是合法的视频列表 ID");
+        if (match) {
+            if (match[2] === "seriesdetail") {
+                return {
+                    type: "userList",
+                    mode: "series",
+                    userId: match[1],
+                    listId: url.searchParams.get("sid") ?? "",
+                };
+            } else {
+                return {
+                    type: "userList",
+                    mode: "season",
+                    userId: match[1],
+                    listId: url.searchParams.get("sid") ?? "",
+                };
+            }
         }
-        if (match[2] === "seriesdetail") {
-            return {
-                type: "userList",
-                mode: "series",
-                userId: match[1],
-                listId: url.searchParams.get("sid") ?? "",
-            };
-        } else {
-            return {
-                type: "userList",
-                mode: "season",
-                userId: match[1],
-                listId: url.searchParams.get("sid") ?? "",
-            };
+
+        // 两种列表视频链接・新版
+        const match2 = USER_LIST_URL_REGEX_2.exec(url.pathname);
+        if (match2) {
+            if (url.searchParams.get("type") === "series") {
+                return {
+                    type: "userList",
+                    mode: "series",
+                    userId: match2[1],
+                    listId: match2[2],
+                };
+            } else {
+                return {
+                    type: "userList",
+                    mode: "season",
+                    userId: match2[1],
+                    listId: match2[2],
+                };
+            }
         }
     }
 
