@@ -21,6 +21,7 @@ import { CacheStatus, cacheStatusStorage } from "~/storage/cache-status";
 import { PLACEHOLDER_AUDIO, URI_EXPIRE_DURATION } from "~/constants/playback";
 import { getPlaylistDetail } from "~/storage/sqlite/playlist";
 import { Platform } from "react-native";
+import { invalidateOnQueueStatus } from "~/storage/playlist";
 
 interface TrackDataOld {
     /** The track title */
@@ -224,6 +225,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
 
     await Player.jump(existing.length); // existing.length - 1 + 1
     await Player.play();
+    invalidateOnQueueStatus();
 }
 
 export async function refreshTrack(trackData: TrackData) {
