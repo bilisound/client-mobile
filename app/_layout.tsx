@@ -23,8 +23,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { refreshCurrentTrack, saveTrackData } from "~/business/playlist/handler";
 import * as NavigationBar from "expo-navigation-bar";
 
-registerBackgroundEventListener(async ({ event }) => {
+registerBackgroundEventListener(async ({ event, data }) => {
     if (event === "onTrackChange") {
+        console.log(event, data);
         const trackData = await Player.getCurrentTrack();
         if (!trackData) {
             return;

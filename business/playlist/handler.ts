@@ -22,6 +22,7 @@ import { PLACEHOLDER_AUDIO, URI_EXPIRE_DURATION } from "~/constants/playback";
 import { getPlaylistDetail } from "~/storage/sqlite/playlist";
 import { Platform } from "react-native";
 import { invalidateOnQueueStatus } from "~/storage/playlist";
+import { convertToHTTPS } from "~/utils/string";
 
 interface TrackDataOld {
     /** The track title */
@@ -74,7 +75,7 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
         return {
             uri: isLoaded ? getCacheAudioPath(e.bvid, e.episode, true) : PLACEHOLDER_AUDIO,
             artist: e.author,
-            artworkUri: e.imgUrl,
+            artworkUri: convertToHTTPS(e.imgUrl),
             duration: e.duration,
             extendedData: {
                 id: e.bvid,
@@ -153,7 +154,7 @@ export async function loadTrackData() {
             trackData = tracks.map(e => ({
                 id: e.bilisoundUniqueId,
                 uri: "",
-                artworkUri: e.artwork,
+                artworkUri: convertToHTTPS(e.artwork ?? ""),
                 title: e.title,
                 artist: e.artist,
                 duration: e.duration,
@@ -178,6 +179,7 @@ export async function loadTrackData() {
         };
         if (e.extendedData.isLoaded) {
             e.uri = getCacheAudioPath(e.extendedData.id, e.extendedData.episode);
+            e.mimeType = "video/mp4";
         } else {
             e.uri = PLACEHOLDER_AUDIO;
         }
@@ -207,8 +209,9 @@ export async function addTrackFromDetail(id: string, episode: number) {
     await Player.addTrack({
         uri: url.url,
         artist: data.owner.name,
-        artworkUri: data.pic,
+        artworkUri: convertToHTTPS(data.pic),
         duration: currentEpisode.duration,
+        mimeType: "video/mp4",
         extendedData: {
             id,
             episode,
@@ -249,6 +252,7 @@ export async function refreshTrack(trackData: TrackData) {
     const url = await getBilisoundResourceUrl({ id, episode });
     trackData.uri = url.url;
     trackData.extendedData!.expireAt = new Date().getTime() + URI_EXPIRE_DURATION;
+    trackData.mimeType = "video/mp4";
     return trackData;
 }
 
