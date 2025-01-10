@@ -199,7 +199,7 @@ export default function Page() {
                         ListFooterComponent={isFetchingNextPage ? <ActivityIndicator /> : null}
                         renderItem={e => (
                             <VideoItem
-                                image={e.item.cover}
+                                image={getImageProxyUrl(e.item.cover)}
                                 text1={e.item.title}
                                 text2={formatSecond(e.item.duration)}
                                 onPress={() => {

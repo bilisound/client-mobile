@@ -98,8 +98,8 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                         <>
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"}>
-                                    <ButtonMonIcon name={"fa6-solid:play"} size={16} />
-                                    <ButtonText>全部播放</ButtonText>
+                                    <ButtonMonIcon name={"fa6-solid:plus"} size={16} />
+                                    <ButtonText>创建歌单</ButtonText>
                                 </Button>
                             </ButtonOuter>
                             {data?.seasonId ? (
