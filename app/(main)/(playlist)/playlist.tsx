@@ -173,7 +173,7 @@ export default function Page() {
 
     // 布局管理
     const windowDimensions = useWindowDimensions();
-    const columns = windowDimensions.width > 768 ? 2 : 1;
+    const columns = windowDimensions.width > 1024 ? 2 : 1;
     const [width, setWidth] = useState(0);
 
     // 模态框管理
