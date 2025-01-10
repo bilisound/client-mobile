@@ -200,7 +200,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
     }
 
     const { data } = await getBilisoundMetadata({ id });
-    const url = await getBilisoundResourceUrl({ id, episode });
+    const url = await getBilisoundResourceUrl(id, episode);
     const currentEpisode = data.pages.find(e => e.page === episode);
     if (!currentEpisode) {
         throw new Error("指定视频没有指定的分 P 信息");
@@ -249,7 +249,7 @@ export async function refreshTrack(trackData: TrackData) {
 
     // 拉取最新的 URL
     log.info("开始拉取最新的 URL");
-    const url = await getBilisoundResourceUrl({ id, episode });
+    const url = await getBilisoundResourceUrl(id, episode);
     trackData.uri = url.url;
     trackData.extendedData!.expireAt = new Date().getTime() + URI_EXPIRE_DURATION;
     trackData.mimeType = "video/mp4";

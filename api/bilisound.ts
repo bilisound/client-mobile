@@ -6,7 +6,6 @@ import { getVideo } from "./external/direct";
 import { getUserSeason, getUserSeries, getUserSeriesMeta } from "~/api/external/json";
 import {
     BILIBILI_GOOD_CDN_REGEX,
-    BILIBILI_VIDEO_URL_PREFIX,
     BILISOUND_API_PREFIX,
     USER_AGENT_BILIBILI,
     USER_AGENT_BILISOUND,
@@ -158,21 +157,17 @@ export async function getBilisoundMetadata(data: { id: string }): Promise<Wrap<G
 
 /**
  * 获取音频资源 URL
- * @param data
+ * @param id
+ * @param episode
+ * @param filterResourceURL
  */
-export async function getBilisoundResourceUrl(data: {
-    id: string;
-    episode: number | string;
-    filterResourceURL?: boolean;
-}): Promise<{ url: string; isAudio: boolean }> {
+export async function getBilisoundResourceUrl(id: string, episode: number | string, filterResourceURL = false) {
     if (Platform.OS === "web") {
         return {
-            url: BILISOUND_API_PREFIX + `/internal/resource?id=${data.id}&episode=${data.episode}`,
+            url: BILISOUND_API_PREFIX + `/internal/resource?id=${id}&episode=${episode}`,
             isAudio: true,
         };
     }
-
-    const { id, episode } = data;
 
     // 获取视频
     const { playInfo } = await getVideo({ id, episode });
@@ -182,7 +177,7 @@ export async function getBilisoundResourceUrl(data: {
     // [dash] 遍历获取最佳音质视频
     if (Array.isArray(dashAudio) && dashAudio.length > 0) {
         let maxQualityIndex = 0;
-        dashAudio.forEach((value, index, array) => {
+        dashAudio.forEach((_, index, array) => {
             if (array[maxQualityIndex].codecid < maxQualityIndex) {
                 maxQualityIndex = index;
             }
@@ -194,7 +189,7 @@ export async function getBilisoundResourceUrl(data: {
             urlList.push(...backupUrl);
         }
 
-        if (!data.filterResourceURL) {
+        if (!filterResourceURL) {
             log.debug(`没有进行过滤。来源域名列表: ${filterHostname(urlList).join(", ")}`);
             return { url: urlList[0], isAudio: true };
         }
@@ -222,7 +217,7 @@ export async function getBilisoundResourceUrl(data: {
     if (Array.isArray(legacyVideo) && legacyVideo.length > 0) {
         const videoItem = legacyVideo[0];
         const urlList = [videoItem.url, ...videoItem.backup_url];
-        if (!data.filterResourceURL) {
+        if (!filterResourceURL) {
             log.debug(`没有进行过滤。来源域名列表: ${filterHostname(urlList).join(", ")}`);
             return { url: urlList[0], isAudio: false };
         }
@@ -432,15 +427,6 @@ export async function getUserListFull(
         results = results.concat(newResults);
     }
     return results;
-}
-
-/**
- * 获取视频的 Web 页面地址
- * @param id
- * @param episode
- */
-export function getVideoUrl(id: string, episode: Numberish) {
-    return `${BILIBILI_VIDEO_URL_PREFIX}${id}/?p=${episode}`;
 }
 
 /**
