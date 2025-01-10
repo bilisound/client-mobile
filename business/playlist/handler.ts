@@ -283,7 +283,6 @@ export async function replaceQueueWithPlaylist(id: number, index = 0) {
     if (!tracks[index].extendedData?.isLoaded) {
         await refreshTrack(tracks[index]);
     }
-    await Player.setQueue(tracks);
-    await Player.jump(index);
+    await Player.setQueue(tracks, index);
     await Player.play();
 }
