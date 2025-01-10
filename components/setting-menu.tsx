@@ -1,9 +1,10 @@
 import React from "react";
-import { GestureResponderEvent, Pressable, View } from "react-native";
+import { GestureResponderEvent, View } from "react-native";
 
 import { IconComponent } from "~/components/icon";
 import { Text } from "~/components/ui/text";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { Pressable } from "~/components/ui/pressable";
 
 export interface SettingMenuItemProps {
     title: string;
@@ -49,14 +50,5 @@ export function SettingMenuItem({
         return inner;
     }
 
-    return (
-        <Pressable
-            onPress={onPress}
-            android_ripple={{
-                color: colorValue("--color-background-100"),
-            }}
-        >
-            {inner}
-        </Pressable>
-    );
+    return <Pressable onPress={onPress}>{inner}</Pressable>;
 }
