@@ -244,7 +244,13 @@ export default function Page() {
                                 );
                             }}
                         >
-                            <MenuItem key="create" textValue="创建新歌单">
+                            <MenuItem
+                                key="create"
+                                textValue="创建新歌单"
+                                onPress={() => {
+                                    router.navigate("/(main)/(playlist)/meta/new");
+                                }}
+                            >
                                 <Box className={"size-4 items-center justify-center mr-3"}>
                                     <Monicon name={"fa6-solid:plus"} size={16} className={"text-typography-700"} />
                                 </Box>
