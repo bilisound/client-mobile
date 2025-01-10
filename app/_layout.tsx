@@ -135,6 +135,12 @@ export default function RootLayout() {
                             }}
                         />
                         <Stack.Screen
+                            name={"settings/about"}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
                             name={"remote-list"}
                             options={{
                                 headerShown: false,

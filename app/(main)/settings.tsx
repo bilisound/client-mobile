@@ -42,7 +42,7 @@ const Settings: React.FC = () => {
                     icon={DeveloperIcon}
                     title="组件测试页面"
                     onPress={() => {
-                        router.push("/test");
+                        router.navigate("/test");
                     }}
                 />
             ) : null}
@@ -51,7 +51,7 @@ const Settings: React.FC = () => {
                 icon={LabIcon}
                 title="实验性功能"
                 onPress={() => {
-                    router.push("/settings/lab");
+                    router.navigate("/settings/lab");
                 }}
             />*/}
             {Platform.OS === "web" ? null : (
@@ -78,7 +78,7 @@ const Settings: React.FC = () => {
                         subTitle="对开发者真的太有用了"
                         onPress={async () => {
                             // todo
-                            // router.push("/settings/log-show");
+                            // router.navigate("/settings/log-show");
                         }}
                     />
                 </>
@@ -128,7 +128,7 @@ const Settings: React.FC = () => {
                     title="外观设置"
                     subTitle="切换应用主题和看板娘显示"
                     onPress={async () => {
-                        router.push("/settings/theme");
+                        router.navigate("/settings/theme");
                     }}
                 />
                 {Platform.OS === "web" ? null : (
@@ -139,7 +139,7 @@ const Settings: React.FC = () => {
                         subTitle="管理离线缓存和数据备份"
                         onPress={async () => {
                             // todo
-                            // router.push("/settings/data");
+                            // router.navigate("/settings/data");
                         }}
                     />
                 )}
@@ -149,8 +149,7 @@ const Settings: React.FC = () => {
                     title="关于 Bilisound"
                     subTitle={`版本 ${VERSION}`}
                     onPress={async () => {
-                        // todo
-                        // router.push("/settings/about");
+                        router.navigate("/settings/about");
                     }}
                 />
                 <SettingMenuItem
