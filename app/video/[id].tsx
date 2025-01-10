@@ -4,7 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import useHistoryStore from "~/store/history";
 import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
@@ -14,7 +14,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { formatDate } from "~/utils/datetime";
+import { formatDate, formatSecond } from "~/utils/datetime";
 import { FlashList } from "@shopify/flash-list";
 import { SongItem } from "~/components/song-item";
 import { SkeletonText } from "~/components/skeleton-text";
@@ -27,6 +27,78 @@ import { addTrackFromDetail } from "~/business/playlist/handler";
 import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { ErrorContent } from "~/components/error-content";
 import { DualScrollView } from "~/components/dual-scroll-view";
+import {
+    Actionsheet,
+    ActionsheetBackdrop,
+    ActionsheetContent,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper,
+    ActionsheetItem,
+    ActionsheetItemText,
+} from "~/components/ui/actionsheet";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import log from "~/utils/logger";
+
+type PageItem = GetBilisoundMetadataResponse["pages"][number];
+
+interface LongPressActionsProps {
+    showActionSheet: boolean;
+    displayTrack?: PageItem;
+    onClose: () => void;
+    onAction: (action: "addPlaylist" | "addPlaylistRecent" | "close") => void;
+}
+
+/**
+ * 长按操作
+ */
+function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
+    const edgeInsets = useSafeAreaInsets();
+
+    return (
+        <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
+            <ActionsheetBackdrop />
+            <ActionsheetContent style={{ zIndex: 999, paddingBottom: edgeInsets.bottom }}>
+                <ActionsheetDragIndicatorWrapper>
+                    <ActionsheetDragIndicator />
+                </ActionsheetDragIndicatorWrapper>
+                {!!displayTrack && (
+                    <View className="flex items-start w-full px-4 py-4 gap-1">
+                        <Text className="font-bold" isTruncated>
+                            {displayTrack.part}
+                        </Text>
+                        <Text className="text-sm opacity-60">{formatSecond(displayTrack.duration)}</Text>
+                    </View>
+                )}
+                <ActionsheetItem onPress={() => onAction("addPlaylist")}>
+                    <View
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Entypo name="add-to-list" size={20} className="color-typography-700" />
+                    </View>
+                    <ActionsheetItemText>添加到歌单</ActionsheetItemText>
+                </ActionsheetItem>
+                <ActionsheetItem onPress={() => onAction("close")}>
+                    <View
+                        style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <MaterialIcons name="cancel" size={22} className="color-typography-700" />
+                    </View>
+                    <ActionsheetItemText>取消</ActionsheetItemText>
+                </ActionsheetItem>
+            </ActionsheetContent>
+        </Actionsheet>
+    );
+}
 
 interface MetaDataProps {
     data?: GetBilisoundMetadataResponse;
@@ -36,6 +108,40 @@ interface MetaDataProps {
 }
 
 function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
+    const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
+        setPlaylistDetail: state.setPlaylistDetail,
+        setName: state.setName,
+        setDescription: state.setDescription,
+        setSource: state.setSource,
+        setCover: state.setCover,
+    }));
+
+    function handleCreatePlaylist() {
+        const meta = data;
+        if (!meta) {
+            log.error("使用 handleCreatePlaylist 函数时，meta 没有准备就绪！");
+            return;
+        }
+        setPlaylistDetail(
+            meta.pages.map(e => ({
+                author: meta.owner.name ?? "",
+                bvid: meta.bvid ?? "",
+                duration: e.duration,
+                episode: e.page,
+                title: e.part,
+                imgUrl: meta.pic ?? "",
+                id: 0,
+                playlistId: 0,
+                extendedData: null,
+            })),
+        );
+        setName(meta.title);
+        setDescription(meta.desc);
+        setSource({ type: "video", bvid: meta.bvid, originalTitle: meta.title, lastSyncAt: new Date().getTime() });
+        setCover(meta.pic);
+        router.push(`/apply-playlist`);
+    }
+
     return (
         <View className={twMerge("gap-4", className)} style={style}>
             {data ? (
@@ -97,7 +203,7 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                     {data ? (
                         <>
                             <ButtonOuter className={"rounded-full"}>
-                                <Button className={"rounded-full"}>
+                                <Button className={"rounded-full"} onPress={handleCreatePlaylist}>
                                     <ButtonMonIcon name={"fa6-solid:plus"} size={16} />
                                     <ButtonText>创建歌单</ButtonText>
                                 </Button>
@@ -142,8 +248,15 @@ export default function Page() {
         setCover: state.setCover,
     }));
 
+    // 添加歌单 UI 部分
+    const [showActionSheet, setShowActionSheet] = useState(false);
+    const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
+    const handleClose = () => {
+        setShowActionSheet(false);
+    };
+
     // 数据请求
-    const { isLoading, data, error } = useQuery({
+    const { data, error } = useQuery({
         queryKey: [id],
         queryFn: () => {
             if (!id) {
@@ -207,6 +320,10 @@ export default function Page() {
                                 renderItem={e => (
                                     <SongItem
                                         onRequestPlay={() => addTrackFromDetail(data!.data.bvid, e.item.page)}
+                                        onLongPress={() => {
+                                            setDisplayTrack(e.item);
+                                            setShowActionSheet(true);
+                                        }}
                                         data={{
                                             author: data!.data.owner.name,
                                             bvid: data!.data.bvid,
@@ -226,6 +343,8 @@ export default function Page() {
                     />
                 )}
             </Layout>
+
+            {/* 详情内容 */}
             <Animated.View
                 style={{
                     opacity: backdropOpacity,
@@ -292,6 +411,44 @@ export default function Page() {
                     </Text>
                 </BottomSheetScrollView>
             </BottomSheet>
+
+            {/* 曲目操作 */}
+            <LongPressActions
+                showActionSheet={showActionSheet}
+                onClose={handleClose}
+                onAction={action => {
+                    handleClose();
+                    if (!displayTrack) {
+                        log.error("/query/[id]", `用户在没有指定操作目标的情况下，执行了菜单操作 ${action}`);
+                        return;
+                    }
+                    switch (action) {
+                        case "addPlaylist":
+                            setName(data?.data.title ?? "");
+                            setDescription(data?.data.desc ?? "");
+                            setPlaylistDetail([
+                                {
+                                    author: data?.data.owner.name ?? "",
+                                    bvid: data?.data.bvid ?? "",
+                                    duration: displayTrack.duration,
+                                    episode: displayTrack.page,
+                                    title: displayTrack.part,
+                                    imgUrl: data?.data.pic ?? "",
+                                    id: 0,
+                                    playlistId: 0,
+                                    extendedData: null,
+                                },
+                            ]);
+                            setSource();
+                            setCover();
+                            router.push(`/apply-playlist`);
+                            break;
+                        case "close":
+                            break;
+                    }
+                }}
+                displayTrack={displayTrack}
+            />
         </GestureHandlerRootView>
     );
 }
