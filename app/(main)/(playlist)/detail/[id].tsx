@@ -20,7 +20,7 @@ import { convertToRelativeTime } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
-import { Vibration, View } from "react-native";
+import { Platform, Vibration, View } from "react-native";
 import { Image } from "expo-image";
 import { cssInterop } from "nativewind";
 import Toast from "react-native-toast-message";
@@ -350,7 +350,9 @@ export default function Page() {
             return;
         }*/
         if (!editing) {
-            Vibration.vibrate(25);
+            if (Platform.OS === "android") {
+                Vibration.vibrate(25);
+            }
             setEditing(true);
             toggle(index);
         }
