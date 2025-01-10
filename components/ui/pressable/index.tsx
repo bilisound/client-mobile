@@ -3,18 +3,14 @@ import React from "react";
 import { createPressable } from "@gluestack-ui/pressable";
 import { Pressable as RNPressable, Platform } from "react-native";
 
-import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import { withStyleContext } from "@gluestack-ui/nativewind-utils/withStyleContext";
 import { withStyleContextAndStates } from "@gluestack-ui/nativewind-utils/withStyleContextAndStates";
 import { cssInterop } from "nativewind";
 import type { VariantProps } from "@gluestack-ui/nativewind-utils";
+import { pressableStyle } from "./styles";
 
 const UIPressable = createPressable({
     Root: Platform.OS === "web" ? withStyleContext(RNPressable) : withStyleContextAndStates(RNPressable),
-});
-
-const pressableStyle = tva({
-    base: "{}-[android_ripple.color]/color:color-background-100 data-[focus-visible=true]:outline-none data-[focus-visible=true]:ring-indicator-info data-[focus-visible=true]:ring-2 data-[disabled=true]:opacity-40",
 });
 
 cssInterop(UIPressable, { className: "style" });
