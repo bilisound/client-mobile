@@ -7,6 +7,7 @@ import { Button, ButtonOuter } from "~/components/ui/button";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { twMerge } from "tailwind-merge";
 import { router } from "expo-router";
+import { Pressable } from "~/components/ui/pressable";
 
 export interface LayoutProps {
     leftAccessories?: ReactNode | "BACK_BUTTON";
@@ -102,14 +103,13 @@ export const LayoutButton = forwardRef<React.ElementRef<typeof Button>, LayoutBu
 
         return (
             <ButtonOuter>
-                <Button
-                    action={"default"}
+                <Pressable
                     {...props}
-                    className={twMerge("w-[2.75rem] h-[2.75rem] px-0", className)}
+                    className={twMerge("w-[2.75rem] h-[2.75rem] px-0 items-center justify-center", className)}
                     ref={ref}
                 >
                     <Monicon size={iconSize} color={colorValue("--color-primary-500")} name={iconName} />
-                </Button>
+                </Pressable>
             </ButtonOuter>
         );
     },
