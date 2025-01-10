@@ -1,6 +1,6 @@
 import { Text } from "~/components/ui/text";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
 import {
     deletePlaylistDetail,
@@ -44,6 +44,7 @@ import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage
 import useMultiSelect from "~/hooks/useMultiSelect";
 import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
 import useApplyPlaylistStore from "~/store/apply-playlist";
+import { usePreventRemove } from "@react-navigation/native";
 // import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
 // import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
 // import { Box } from "~/components/ui/box";
@@ -403,24 +404,10 @@ export default function Page() {
     }
 
     // 返回时先关闭编辑模式
-    const navigation = useNavigation();
-    useEffect(() => {
-        const handler = (e: any) => {
-            if (!editing) {
-                return;
-            }
-            e.preventDefault();
-            setEditing(false);
-            clear();
-            navigation.removeListener("beforeRemove", handler);
-        };
-        if (editing) {
-            navigation.addListener("beforeRemove", handler);
-        }
-        return () => {
-            navigation.removeListener("beforeRemove", handler);
-        };
-    }, [clear, editing, navigation]);
+    usePreventRemove(editing, () => {
+        setEditing(false);
+        clear();
+    });
 
     const isDeleteButtonIcon = useBreakpointValue({
         default: true,
