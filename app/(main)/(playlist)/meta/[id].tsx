@@ -32,12 +32,14 @@ import { PlaylistSource } from "~/typings/playlist";
 import log from "~/utils/logger";
 import { Layout } from "~/components/layout";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
+import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
 
 const MAGIC_ID_NEW_ENTRY = "new";
 
 type PlaylistMetaFrom = PlaylistMeta & { createFromQueue: boolean };
 
 export default function Page() {
+    const edgeInsets = useTabSafeAreaInsets();
     const { id } = useLocalSearchParams<{ id: string }>();
     const queryClient = useQueryClient();
     const { data } = useQuery({
@@ -76,7 +78,7 @@ export default function Page() {
         setValue("source", data[0].source);
         setValue("imgUrl", data[0].imgUrl);
         setValue("id", data[0].id);
-    }, [data, setValue]);
+    }, [data, id, setValue]);
 
     async function handleClone() {
         log.info("用户进行歌单克隆操作");
@@ -152,7 +154,8 @@ export default function Page() {
     return (
         <Layout title={id === MAGIC_ID_NEW_ENTRY ? "新建歌单" : "修改歌单信息"} leftAccessories="BACK_BUTTON">
             <ScrollView className="flex-1">
-                <View className="p-4 gap-4">
+                <View className="p-4 gap-4" style={{ paddingBottom: edgeInsets.bottom }}>
+                    {/*<View className={"h-[400px] w-16 bg-yellow-500"}></View>*/}
                     <FormControl isRequired isInvalid={"title" in errors}>
                         <FormControlLabel>
                             <FormControlLabelText className="text-sm">歌单名称</FormControlLabelText>
