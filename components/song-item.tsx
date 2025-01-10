@@ -1,4 +1,4 @@
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import { ActivityIndicator, View } from "react-native";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -34,8 +34,12 @@ function PlayingIcon() {
     }
 
     return (
-        <View className="items-center justify-center">
-            <FontAwesome5 name={isPlaying ? "pause" : "play"} size={20} color={accentColor} />
+        <View className="items-center justify-center size-6">
+            <Monicon
+                name={isPlaying ? "fa6-solid:pause" : "fa6-solid:play"}
+                size={isPlaying ? 24 : 20}
+                color={accentColor}
+            />
         </View>
     );
 }

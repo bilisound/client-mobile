@@ -5,11 +5,12 @@ import { IconComponent } from "~/components/icon";
 import { Text } from "~/components/ui/text";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Pressable } from "~/components/ui/pressable";
+import { Monicon } from "@monicon/native";
 
 export interface SettingMenuItemProps {
     title: string;
     subTitle?: string;
-    icon: IconComponent;
+    icon: IconComponent | string;
     iconSize?: number;
     rightAccessories?: React.ReactNode;
     onPress?: (event: GestureResponderEvent) => void;
@@ -20,7 +21,7 @@ export function SettingMenuItem({
     title,
     subTitle,
     icon,
-    iconSize = 24,
+    iconSize,
     rightAccessories,
     onPress,
     disabled,
@@ -34,7 +35,11 @@ export function SettingMenuItem({
             <View className="flex-1">
                 <View className="flex-row items-center gap-3">
                     <View className="size-6 items-center justify-center">
-                        <Icon size={iconSize} color={colorValue("--color-typography-700")} />
+                        {typeof icon === "string" ? (
+                            <Monicon name={icon} size={iconSize ?? 20} color={colorValue("--color-typography-700")} />
+                        ) : (
+                            <Icon size={iconSize ?? 24} color={colorValue("--color-typography-700")} />
+                        )}
                     </View>
                     <Text className="font-semibold text-[0.9375rem]">{title}</Text>
                 </View>

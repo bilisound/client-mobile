@@ -1,17 +1,16 @@
-import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import React from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { twMerge } from "tailwind-merge";
 
 import { SettingMenuItem } from "~/components/setting-menu";
-import { createIcon } from "~/components/icon";
 import { HStack } from "~/components/ui/hstack";
 import { Switch } from "~/components/ui/switch";
 import { Text } from "~/components/ui/text";
 import { VStack } from "~/components/ui/vstack";
 import useSettingsStore from "~/store/settings";
 import { Layout } from "~/components/layout";
+import { Monicon } from "@monicon/native";
 
 interface ThemeButtonProps {
     selected?: boolean;
@@ -38,9 +37,6 @@ function ThemeButton({ selected = false, name, onPress, yuruChara }: ThemeButton
     );
 }
 
-const PaintBrushIcon = createIcon(FontAwesome5, "paint-brush");
-const BackgroundIcon = createIcon(FontAwesome6, "image");
-
 export default function Page() {
     const { theme, update, showYuruChara, toggle } = useSettingsStore(state => ({
         theme: state.theme,
@@ -55,7 +51,7 @@ export default function Page() {
                 <VStack space="xl" className="p-4">
                     <HStack space="md" className="items-center">
                         <View className="justify-center items-center size-[1.5rem]">
-                            <PaintBrushIcon size={20} className="color-typography-700" />
+                            <Monicon name={"fa6-solid:paintbrush"} size={20} className="color-typography-700" />
                         </View>
                         <Text className="text-[0.9375rem] font-semibold">App 界面主题</Text>
                     </HStack>
@@ -75,8 +71,7 @@ export default function Page() {
                     </VStack>
                 </VStack>
                 <SettingMenuItem
-                    icon={BackgroundIcon}
-                    iconSize={20}
+                    icon={"fa6-solid:image"}
                     title="在首页右下角展示看板娘"
                     rightAccessories={
                         <Switch

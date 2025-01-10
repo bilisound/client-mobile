@@ -1,4 +1,3 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
@@ -10,17 +9,16 @@ import Toast from "react-native-toast-message";
 import { PlaylistItem } from "~/components/playlist-item";
 import { VideoItem } from "~/components/video-item";
 import { Text } from "~/components/ui/text";
-// import useTracks from "~/hooks/useTracks";
 import { usePlaylistOnQueue } from "~/storage/playlist";
 import { addToQueueListBackup, getQueuePlayingMode } from "~/storage/queue";
 import { addToPlaylist, getPlaylistMetas, quickCreatePlaylist, syncPlaylistAmount } from "~/storage/sqlite/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { getImageProxyUrl } from "~/utils/constant-helper";
-// import { playlistToTracks } from "~/utils/track-data";
 import { Layout } from "~/components/layout";
 import { Pressable } from "~/components/ui/pressable";
 import { playlistToTracks } from "~/business/playlist/handler";
 import * as Player from "@bilisound/player";
+import { Monicon } from "@monicon/native";
 
 export default function Page() {
     const [playlistOnQueue = {}] = usePlaylistOnQueue();
@@ -110,7 +108,9 @@ export default function Page() {
                         }}
                     >
                         <View className="flex-row items-center gap-3">
-                            <MaterialIcons name="add" size={24} color="red" />
+                            <View className={"items-center justify-center size-6"}>
+                                <Monicon name="fa6-solid:plus" size={18} color="red" />
+                            </View>
                             <Text className="text-base leading-normal flex-1" isTruncated>
                                 {name}
                             </Text>
