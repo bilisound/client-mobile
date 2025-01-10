@@ -285,6 +285,42 @@ export const buttonGroupStyle = tva({
 
 export const buttonMonIconStyle = tva({
     base: "items-center justify-center",
+    // 尽管这里的样式不会在 Native 端被应用到子元素，但是能够缓解 Monicon 图标在 Web 端上色不生效的问题
+    parentVariants: {
+        variant: {
+            link: "",
+            outline: "",
+            solid: "text-typography-0",
+        },
+        action: {
+            primary: "text-primary-600 data-[hover=true]:text-primary-600 data-[active=true]:text-primary-700",
+            secondary: "text-secondary-600 data-[hover=true]:text-secondary-600 data-[active=true]:text-secondary-700",
+            positive: "text-success-600 data-[hover=true]:text-success-600 data-[active=true]:text-success-700",
+            negative: "text-error-600 data-[hover=true]:text-error-600 data-[active=true]:text-error-700",
+        },
+    },
+    parentCompoundVariants: [
+        {
+            variant: "solid",
+            action: "primary",
+            class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+        },
+        {
+            variant: "solid",
+            action: "secondary",
+            class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+        },
+        {
+            variant: "solid",
+            action: "positive",
+            class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+        },
+        {
+            variant: "solid",
+            action: "negative",
+            class: "text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0",
+        },
+    ],
 });
 
 export const buttonMonIconInternalStyle = tva({
