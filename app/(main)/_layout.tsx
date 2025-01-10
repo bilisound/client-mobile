@@ -45,6 +45,18 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
     );
 });
 
+// todo
+function CurrentPlaying() {
+    return (
+        <View
+            className={"absolute left-0 top-0 w-full h-16 border-b border-background-200"}
+            onLayout={e => console.log(e.nativeEvent.layout)}
+        >
+            <Text>内容区</Text>
+        </View>
+    );
+}
+
 export default function TabLayout() {
     const edgeInsets = useSafeAreaInsets();
     const edgeInsetsTab = simpleCopy(edgeInsets);
@@ -54,7 +66,7 @@ export default function TabLayout() {
     }));
 
     if (windowDimensions.width < breakpoints.md) {
-        edgeInsetsTab.bottom = edgeInsets.bottom + 64;
+        edgeInsetsTab.bottom = edgeInsets.bottom + 64 + 64;
     }
     if (windowDimensions.width >= breakpoints.md) {
         edgeInsetsTab.left = edgeInsets.left + 64;
@@ -69,11 +81,12 @@ export default function TabLayout() {
                 <TabSlot />
                 <TabList
                     className={
-                        "absolute left-0 bottom-0 px-safe pb-safe !flex-row !justify-around bg-background-50 " +
+                        "absolute left-0 bottom-0 px-safe pb-safe !flex-row !justify-around bg-background-50 pt-16 " +
                         "max-md:w-full md:h-full md:!flex-col md:pr-0 md:pt-safe md:!justify-start " +
                         "xl:w-64 xl:items-center"
                     }
                 >
+                    <CurrentPlaying />
                     <View className={"hidden md:flex h-3 xl:h-4"} aria-hidden={true} />
                     <TabTrigger asChild name="playlist" href="/(main)/(playlist)/playlist">
                         <TabTriggerChild IconComponent={FontAwesome5} iconName={"list"} title={"歌单"} />
