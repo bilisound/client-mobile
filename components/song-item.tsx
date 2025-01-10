@@ -1,4 +1,4 @@
-import { Entypo, FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import { ActivityIndicator, View } from "react-native";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -11,58 +11,25 @@ import { formatSecond } from "~/utils/datetime";
 
 import * as Player from "@bilisound/player";
 
-import React, { useEffect } from "react";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-
-import useDownloadStore from "~/store/download";
+import React from "react";
 import { Pressable } from "~/components/ui/pressable";
 import { useCurrentTrack, useIsPlaying, usePlaybackState } from "@bilisound/player";
 import { shadow } from "~/constants/styles";
 import { Monicon } from "@monicon/native";
-
-// 加载进度条
-function ProgressBar({ item }: { item: string }) {
-    const { downloadList } = useDownloadStore(state => ({
-        downloadList: state.downloadList,
-    }));
-    const downloadEntry = downloadList.get(item);
-
-    const progress = useSharedValue(0);
-
-    useEffect(() => {
-        let progressWidth = 0;
-        if (downloadEntry) {
-            progressWidth =
-                (downloadEntry.progress.totalBytesWritten / downloadEntry.progress.totalBytesExpectedToWrite) * 100;
-        }
-        // NaN 去除操作
-        if (!progressWidth) {
-            progressWidth = 0;
-        }
-        progress.value = withTiming(progressWidth, { duration: 200 });
-    }, [downloadEntry, progress]);
-
-    const animatedStyle = useAnimatedStyle(() => {
-        return {
-            width: `${progress.value}%`,
-        };
-    });
-
-    if (!downloadEntry) {
-        return null;
-    }
-
-    return <Animated.View style={animatedStyle} className="h-[3px] absolute left-0 bottom-0 bg-accent-500" />;
-}
+import { PLACEHOLDER_AUDIO } from "~/constants/playback";
 
 // 播放状态图标
 function PlayingIcon() {
+    const activeTrack = useCurrentTrack();
     const playbackState = usePlaybackState();
     const isPlaying = useIsPlaying();
     const { colorValue } = useRawThemeValues();
     const accentColor = colorValue("--color-accent-500");
 
-    if (playbackState === "STATE_BUFFERING") {
+    // 解决 placeholder 音频还没替换时不恰当的状态显示
+    const isPlaceholderTrack = activeTrack?.uri === PLACEHOLDER_AUDIO;
+
+    if (playbackState === "STATE_BUFFERING" || isPlaceholderTrack) {
         return <ActivityIndicator color={accentColor} />;
     }
 
