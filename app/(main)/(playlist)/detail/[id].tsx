@@ -214,7 +214,7 @@ function Header({
                 </View>
             </View>
             {(meta.description ?? "").trim() && (
-                <Text className="text-base leading-normal opacity-80 pb-2" selectable>
+                <Text className="text-sm leading-normal opacity-80 pb-2" selectable>
                     {meta.description}
                 </Text>
             )}
