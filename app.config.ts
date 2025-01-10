@@ -78,7 +78,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
                     enableProguardInReleaseBuilds: true,
                 },
                 ios: {
-                    deploymentTarget: "15.1",
+                    deploymentTarget: "17.0",
                 },
             },
         ],
