@@ -3,7 +3,7 @@ import * as SystemUI from "expo-system-ui";
 import "~/global.css";
 import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
 import React, { useEffect, useRef } from "react";
-import { Platform, useColorScheme } from "react-native";
+import { Platform, useColorScheme, useWindowDimensions } from "react-native";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { SystemBars } from "react-native-edge-to-edge";
 import { useFonts } from "expo-font";
@@ -68,6 +68,7 @@ export default function RootLayout() {
     const isInitializing = useRef(false);
     const colorScheme = useColorScheme();
     const edgeInsets = useSafeAreaInsets();
+    const { width, height } = useWindowDimensions();
 
     // Expo Router uses Error Boundaries to catch errors in the navigation tree.
     useEffect(() => {
@@ -104,7 +105,7 @@ export default function RootLayout() {
                 colorScheme === "dark" || Platform.OS === "ios" ? "#171717" : "#ffffff",
             );
         })();
-    }, [colorScheme]);
+    }, [colorScheme, width, height]);
 
     if (!loaded) {
         return null;
