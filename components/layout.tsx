@@ -41,7 +41,7 @@ export function Layout({
             >
                 <View className={"h-16 relative items-center justify-center w-full max-w-screen-xl"}>
                     {leftAccessories ? (
-                        <View className={"absolute left-0 top-0 h-full flex-row items-center px-2 gap-1"}>
+                        <View className={"absolute left-0 top-0 h-full flex-row items-center px-2.5 gap-1"}>
                             {leftAccessories === "BACK_BUTTON" ? (
                                 <LayoutButton
                                     iconName={"fa6-solid:arrow-left"}
@@ -67,7 +67,7 @@ export function Layout({
                         )}
                     </View>
                     {rightAccessories ? (
-                        <View className={"absolute right-0 top-0 h-full flex-row items-center px-2 gap-1"}>
+                        <View className={"absolute right-0 top-0 h-full flex-row items-center px-2.5 gap-1"}>
                             {rightAccessories}
                         </View>
                     ) : null}
