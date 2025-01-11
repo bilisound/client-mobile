@@ -140,7 +140,7 @@ export default function TabLayout() {
                 <TabSlot />
                 <TabList
                     className={
-                        "absolute left-0 bottom-0 px-safe pb-safe !flex-row !justify-around bg-background-50 pt-16 " +
+                        "pointer-events-box-none absolute left-0 bottom-0 px-safe pb-safe !flex-row !justify-around bg-background-50 pt-16 " +
                         "max-md:w-full md:h-full md:!flex-col md:pr-0 md:pt-safe md:!justify-start " +
                         "xl:w-64 xl:items-center"
                     }
