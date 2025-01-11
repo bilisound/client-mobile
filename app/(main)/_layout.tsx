@@ -1,7 +1,7 @@
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from "expo-router/ui";
 import { Text } from "~/components/ui/text";
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
-import { ActivityIndicator, useWindowDimensions, View, Pressable } from "react-native";
+import { ActivityIndicator, useWindowDimensions, View, Pressable, Platform } from "react-native";
 import { ComponentType, forwardRef, Ref } from "react";
 import { twMerge } from "tailwind-merge";
 import { TabSafeAreaContext } from "~/hooks/useTabSafeAreaInsets";
@@ -91,7 +91,7 @@ function CurrentPlaying() {
     return (
         <View
             className={
-                "absolute left-0 top-0 w-full h-16 border-b border-background-100 flex-row items-center px-3 gap-4"
+                "absolute left-0 top-0 w-full h-16 border-b border-typography-700/10 flex-row items-center px-3 gap-4"
             }
             onLayout={e => console.log(e.nativeEvent.layout)}
         >
@@ -105,7 +105,10 @@ function CurrentPlaying() {
             <ButtonOuter className={"rounded-lg flex-0 basis-auto"}>
                 <Pressable
                     className={
-                        "{}-[android_ripple.color]/color:color-background-200 size-10 items-center justify-center"
+                        (Platform.OS === "android"
+                            ? "{}-[android_ripple.color]/color:color-background-200"
+                            : "hover:bg-background-100 active:bg-background-200") +
+                        " size-10 items-center justify-center"
                     }
                     onPress={() => toggle()}
                 >

@@ -3,8 +3,7 @@ import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
 import { View } from "react-native";
 import { Layout, LayoutButton } from "~/components/layout";
 import { useIsNarrowWidth } from "~/hooks/useIsNarrowWidth";
-import { useState } from "react";
-import { resolveVideoAndJump } from "~/utils/format";
+import { useForm, Controller } from "react-hook-form";
 import {
     FormControl,
     FormControlError,
@@ -17,25 +16,35 @@ import { AlertCircleIcon } from "~/components/ui/icon";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import { router } from "expo-router";
+import { resolveVideo, resolveVideoAndJump } from "~/utils/format";
 
 export default function MainScreen() {
     const edgeInsets = useTabSafeAreaInsets();
     const isNarrowWidth = useIsNarrowWidth();
 
-    const [value, setValue] = useState("");
-    const [inputError, setInputError] = useState(false);
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+        setValue: setFormValue,
+        watch,
+    } = useForm({
+        defaultValues: {
+            videoUrl: "",
+        },
+    });
 
-    async function handleSubmitEditing() {
+    const videoUrl = watch("videoUrl");
+
+    const onSubmit = async (data: { videoUrl: string }) => {
         log.info("用户执行查询操作");
-        log.debug(`查询关键词: ${value}`);
+        log.debug(`查询关键词: ${data.videoUrl}`);
         try {
-            setInputError(false);
-            await resolveVideoAndJump(value);
+            await resolveVideoAndJump(data.videoUrl);
         } catch (error) {
-            setInputError(true);
             log.info(`无法执行搜索操作，因此不响应用户提交。原因：${error}`);
         }
-    }
+    };
 
     return (
         <Layout
@@ -73,30 +82,42 @@ export default function MainScreen() {
             <View className="px-4 items-center">
                 <FormControl
                     isDisabled={false}
-                    isInvalid={inputError}
+                    isInvalid={!!errors.videoUrl}
                     isReadOnly={false}
                     isRequired={false}
                     size="md"
                     className="w-full sm:w-[560px] bg-transparent"
                 >
                     <Input variant="outline" size="md" className="w-full h-12 rounded-lg">
-                        <InputField
-                            placeholder="粘贴完整链接或带前缀 ID 至此"
-                            className="text-base"
-                            value={value}
-                            onChangeText={nextValue => {
-                                setInputError(false);
-                                setValue(nextValue);
+                        <Controller
+                            control={control}
+                            name="videoUrl"
+                            rules={{
+                                validate: async value => {
+                                    try {
+                                        await resolveVideo(value);
+                                        return true;
+                                    } catch {
+                                        return false;
+                                    }
+                                },
                             }}
-                            onSubmitEditing={handleSubmitEditing}
+                            render={({ field: { onChange, value } }) => (
+                                <InputField
+                                    placeholder="粘贴完整链接或带前缀 ID 至此"
+                                    className="text-base"
+                                    value={value}
+                                    onChangeText={onChange}
+                                    onSubmitEditing={handleSubmit(onSubmit)}
+                                />
+                            )}
                         />
-                        {value && (
+                        {videoUrl && (
                             <View className={"flex-row items-center"}>
                                 <InputSlot
                                     className="h-12 px-3 items-center justify-center"
                                     onPress={() => {
-                                        setInputError(false);
-                                        setValue("");
+                                        setFormValue("videoUrl", "");
                                     }}
                                 >
                                     <FontAwesome6 name="xmark" size={20} className="color-typography-700" />
@@ -104,9 +125,7 @@ export default function MainScreen() {
                                 <View className={"w-[1px] h-6 bg-background-100"}></View>
                                 <InputSlot
                                     className="h-12 px-3 items-center justify-center"
-                                    onPress={() => {
-                                        handleSubmitEditing();
-                                    }}
+                                    onPress={handleSubmit(onSubmit)}
                                 >
                                     <Text className={"text-accent-500"}>查询</Text>
                                 </InputSlot>
