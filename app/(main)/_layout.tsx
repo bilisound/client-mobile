@@ -1,7 +1,7 @@
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from "expo-router/ui";
 import { Text } from "~/components/ui/text";
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
-import { Pressable, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, useWindowDimensions, View, Pressable } from "react-native";
 import { ComponentType, forwardRef, Ref } from "react";
 import { twMerge } from "tailwind-merge";
 import { TabSafeAreaContext } from "~/hooks/useTabSafeAreaInsets";
@@ -10,6 +10,12 @@ import { breakpoints } from "~/constants/styles";
 import { simpleCopy } from "~/utils/misc";
 import { YuruChara } from "~/components/yuru-chara";
 import useSettingsStore from "~/store/settings";
+import { toggle, useCurrentTrack, useIsPlaying, usePlaybackState } from "@bilisound/player";
+import { Image } from "expo-image";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { PLACEHOLDER_AUDIO } from "~/constants/playback";
+import { Monicon } from "@monicon/native";
+import { ButtonOuter } from "~/components/ui/button";
 
 type TabTriggerChildProps = TabTriggerSlotProps & {
     IconComponent: ComponentType<any>;
@@ -45,14 +51,67 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
     );
 });
 
-// todo
+// 播放状态图标
+function PlayingIcon() {
+    const activeTrack = useCurrentTrack();
+    const playbackState = usePlaybackState();
+    const isPlaying = useIsPlaying();
+    const { colorValueMode } = useRawThemeValues();
+    const accentColor = colorValueMode({
+        light: { color: "--color-accent-500" },
+        dark: { color: "--color-typography-700" },
+    });
+
+    // 解决 placeholder 音频还没替换时不恰当的状态显示
+    const isPlaceholderTrack = activeTrack?.uri === PLACEHOLDER_AUDIO;
+
+    if (playbackState === "STATE_BUFFERING" || isPlaceholderTrack) {
+        return <ActivityIndicator color={accentColor} />;
+    }
+
+    return (
+        <View className="items-center justify-center size-6 flex-0">
+            <Monicon
+                name={isPlaying ? "fa6-solid:pause" : "fa6-solid:play"}
+                size={isPlaying ? 24 : 20}
+                color={accentColor}
+            />
+        </View>
+    );
+}
+
+// todo 平板样式
 function CurrentPlaying() {
+    const currentTrack = useCurrentTrack();
+
+    if (!currentTrack) {
+        return null;
+    }
+
     return (
         <View
-            className={"absolute left-0 top-0 w-full h-16 border-b border-background-200"}
+            className={
+                "absolute left-0 top-0 w-full h-16 border-b border-background-100 flex-row items-center px-3 gap-4"
+            }
             onLayout={e => console.log(e.nativeEvent.layout)}
         >
-            <Text>内容区</Text>
+            <Image
+                source={currentTrack.artworkUri}
+                className={"h-10 aspect-video rounded-lg flex-0 basis-auto"}
+            ></Image>
+            <Text className={"flex-1"} isTruncated>
+                {currentTrack.title}
+            </Text>
+            <ButtonOuter className={"rounded-lg flex-0 basis-auto"}>
+                <Pressable
+                    className={
+                        "{}-[android_ripple.color]/color:color-background-200 size-10 items-center justify-center"
+                    }
+                    onPress={() => toggle()}
+                >
+                    <PlayingIcon />
+                </Pressable>
+            </ButtonOuter>
         </View>
     );
 }
