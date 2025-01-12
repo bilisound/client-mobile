@@ -97,27 +97,19 @@ export async function saveTrackData() {
     log.debug("正在自动保存播放队列");
     await Promise.all([
         (async () => {
-            const tracks = await Player.getTracks();
+            const tracks: any[] = await Player.getTracks();
+            tracks.forEach(e => {
+                delete e.uri;
+                delete e.headers;
+                delete e.mimeType;
+                if (e.extendedData) {
+                    delete e.extendedData.expireAt;
+                }
+            });
             queueStorage.set(QUEUE_LIST_VERSION, 2);
-            queueStorage.set(
-                QUEUE_LIST,
-                JSON.stringify(tracks, (key, value) => {
-                    if (key === "uri" || key === "headers" || key === "expireAt") {
-                        return undefined;
-                    }
-                    return value;
-                }),
-            );
+            queueStorage.set(QUEUE_LIST, JSON.stringify(tracks));
             if (!queueStorage.getBoolean(QUEUE_IS_RANDOMIZED)) {
-                queueStorage.set(
-                    QUEUE_LIST_BACKUP,
-                    JSON.stringify(tracks, (key, value) => {
-                        if (key === "uri" || key === "headers" || key === "expireAt") {
-                            return undefined;
-                        }
-                        return value;
-                    }),
-                );
+                queueStorage.set(QUEUE_LIST_BACKUP, JSON.stringify(tracks));
             }
         })(),
         (async () => {
