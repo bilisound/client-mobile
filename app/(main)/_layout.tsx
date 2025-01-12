@@ -90,9 +90,7 @@ function CurrentPlaying() {
 
     return (
         <View
-            className={
-                "absolute left-0 top-0 w-full h-16 border-b border-typography-700/10 flex-row items-center px-3 gap-4"
-            }
+            className={"w-full h-16 border-b border-typography-700/10 flex-row items-center px-3 gap-4"}
             onLayout={e => console.log(e.nativeEvent.layout)}
         >
             <Image
@@ -128,27 +126,24 @@ export default function TabLayout() {
     }));
 
     if (windowDimensions.width < breakpoints.md) {
-        edgeInsetsTab.bottom = edgeInsets.bottom + 64 + 64;
+        edgeInsetsTab.bottom = 0;
     }
     if (windowDimensions.width >= breakpoints.md) {
-        edgeInsetsTab.left = edgeInsets.left + 64;
-    }
-    if (windowDimensions.width >= breakpoints.xl) {
-        edgeInsetsTab.left = edgeInsets.left + 256;
+        edgeInsetsTab.left = 0;
     }
 
     return (
         <TabSafeAreaContext.Provider value={edgeInsetsTab}>
-            <Tabs>
+            <Tabs className={"md:flex-row-reverse"}>
                 <TabSlot />
                 <TabList
                     className={
-                        "pointer-events-box-none absolute left-0 bottom-0 px-safe pb-safe !flex-row !justify-around bg-background-50 pt-16 " +
-                        "max-md:w-full md:h-full md:!flex-col md:pr-0 md:pt-safe md:!justify-start " +
+                        "flex-0 basis-auto px-safe pb-safe !flex-row !justify-around bg-background-50 " +
+                        "max-md:w-full md:h-full md:!flex-col md:pl-safe md:pr-0 md:pt-safe md:!justify-start " +
                         "xl:w-64 xl:items-center"
                     }
                 >
-                    <CurrentPlaying />
+                    {/*<CurrentPlaying />*/}
                     <View className={"hidden md:flex h-3 xl:h-4"} aria-hidden={true} />
                     <TabTrigger asChild name="playlist" href="/(main)/(playlist)/playlist">
                         <TabTriggerChild IconComponent={FontAwesome5} iconName={"list"} title={"歌单"} />
