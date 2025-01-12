@@ -185,8 +185,10 @@ export async function loadTrackData() {
         }
     });
 
-    await Player.addTracks(trackData);
-    await Player.jump(current);
+    // 提前 refreshTrack 是为了缓解 Bilisound 播放器 iOS 版本（？）的一个 Bug：
+    // 如果用户退出应用时上次播放的是没有加载过的音频，重新启动应用后会自动跳转到下一首曲目
+    trackData[current] = await refreshTrack(trackData[current]);
+    await Player.setQueue(trackData, current);
 }
 
 export async function addTrackFromDetail(id: string, episode: number) {

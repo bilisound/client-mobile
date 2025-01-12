@@ -102,12 +102,13 @@ export default function MainScreen() {
                                     }
                                 },
                             }}
-                            render={({ field: { onChange, value } }) => (
+                            render={({ field: { onChange, value, onBlur } }) => (
                                 <InputField
                                     placeholder="粘贴完整链接或带前缀 ID 至此"
                                     className="text-base"
                                     value={value}
                                     onChangeText={onChange}
+                                    onBlur={onBlur}
                                     onSubmitEditing={handleSubmit(onSubmit)}
                                 />
                             )}
