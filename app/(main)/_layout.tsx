@@ -136,7 +136,9 @@ export default function TabLayout() {
     return (
         <TabSafeAreaContext.Provider value={edgeInsetsTab}>
             <Tabs className={"md:flex-row-reverse"}>
-                <TabSlot />
+                <View className={"flex-1"}>
+                    <TabSlot />
+                </View>
                 <TabList
                     className={
                         "flex-0 basis-auto pl-safe pr-safe pb-safe !flex-row !justify-around bg-background-50 " +
