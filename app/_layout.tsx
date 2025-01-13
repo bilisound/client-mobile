@@ -22,19 +22,9 @@ import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { refreshCurrentTrack, saveTrackData } from "~/business/playlist/handler";
 import * as NavigationBar from "expo-navigation-bar";
-// import * as ScreenOrientation from "expo-screen-orientation";
-
-registerBackgroundEventListener(async ({ event, data }) => {
-    if (event === "onTrackChange") {
-        console.log(event, data);
-        const trackData = await Player.getCurrentTrack();
-        if (!trackData) {
-            return;
-        }
-        await refreshCurrentTrack();
-        await saveTrackData();
-    }
-});
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { MainBottomSheet } from "~/components/main-bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // todo 把它们放到主题管理模块里
 const defaultTheme = structuredClone(DefaultTheme);
@@ -59,20 +49,19 @@ const toastConfig: ToastConfig = {
     error: ({ text1, text2 }) => <NotifyToast type="error" title={text1 ?? ""} description={text2} />,
 };
 
-export default function RootLayout() {
-    /*useEffect(() => {
-        if (Platform.OS === "ios") {
-            const platform = Platform;
-            const lockOrientation = async () => {
-                const isPad = platform.isPad;
-                if (!isPad) {
-                    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
-                }
-            };
-            lockOrientation();
+registerBackgroundEventListener(async ({ event, data }) => {
+    if (event === "onTrackChange") {
+        console.log(event, data);
+        const trackData = await Player.getCurrentTrack();
+        if (!trackData) {
+            return;
         }
-    }, []);*/
+        await refreshCurrentTrack();
+        await saveTrackData();
+    }
+});
 
+export default function RootLayout() {
     const [loaded, error] = useFonts({
         Roboto_400Regular,
         Roboto_700Bold,
@@ -129,72 +118,81 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
             <GluestackUIProvider mode={(colorScheme ?? "light") as "light" | "dark"}>
                 <ThemeProvider value={colorScheme === "dark" ? darkTheme : defaultTheme}>
-                    <SystemBars style={colorScheme === "dark" ? "light" : "dark"} />
-                    <Stack>
-                        <Stack.Screen
-                            name={"(main)"}
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name={"video/[id]"}
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name={"settings/theme"}
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name={"settings/about"}
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name={"remote-list"}
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name={"apply-playlist"}
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name={"barcode"}
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name={"history"}
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name={"test"}
-                            options={{
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name="description"
-                            options={{
-                                presentation: "formSheet",
-                                sheetAllowedDetents: "fitToContents",
-                                gestureEnabled: false,
-                            }}
-                        />
-                    </Stack>
-                    <Toast config={toastConfig} topOffset={edgeInsets.top} />
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                        <BottomSheetModalProvider>
+                            <SystemBars style={colorScheme === "dark" ? "light" : "dark"} />
+                            <Stack
+                                screenOptions={{
+                                    headerShown: false,
+                                }}
+                            >
+                                <Stack.Screen
+                                    name={"(main)"}
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name={"video/[id]"}
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name={"settings/theme"}
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name={"settings/about"}
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name={"remote-list"}
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name={"apply-playlist"}
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name={"barcode"}
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name={"history"}
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name={"test"}
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name="description"
+                                    options={{
+                                        presentation: "formSheet",
+                                        sheetAllowedDetents: "fitToContents",
+                                        gestureEnabled: false,
+                                    }}
+                                />
+                            </Stack>
+                            <MainBottomSheet />
+                            <Toast config={toastConfig} topOffset={edgeInsets.top} />
+                        </BottomSheetModalProvider>
+                    </GestureHandlerRootView>
                 </ThemeProvider>
             </GluestackUIProvider>
         </QueryClientProvider>

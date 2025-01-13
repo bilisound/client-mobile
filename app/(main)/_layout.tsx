@@ -15,6 +15,7 @@ import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { PLACEHOLDER_AUDIO } from "~/constants/playback";
 import { Monicon } from "@monicon/native";
 import { ButtonOuter } from "~/components/ui/button";
+import { useBottomSheetStore } from "~/store/bottom-sheet";
 
 type TabTriggerChildProps = TabTriggerSlotProps & {
     iconName: string;
@@ -77,6 +78,10 @@ function PlayingIcon() {
 // todo 平板样式
 function CurrentPlaying() {
     const currentTrack = useCurrentTrack();
+    const { open, isOpen } = useBottomSheetStore(state => ({
+        open: state.open,
+        isOpen: state.isOpen,
+    }));
 
     if (!currentTrack) {
         return null;
@@ -85,18 +90,28 @@ function CurrentPlaying() {
     return (
         <View
             className={
-                "bg-background-50 w-full h-16 border-b border-typography-700/10 flex-row items-center px-3 gap-4 " +
+                "bg-background-50 w-full h-16 border-b border-typography-700/10 flex-row items-center pr-3 gap-4 " +
                 "md:hidden"
             }
             onLayout={e => console.log(e.nativeEvent.layout)}
         >
-            <Image
-                source={currentTrack.artworkUri}
-                className={"h-10 aspect-video rounded-lg flex-0 basis-auto"}
-            ></Image>
-            <Text className={"flex-1"} isTruncated>
-                {currentTrack.title}
-            </Text>
+            <Pressable
+                className={
+                    (Platform.OS === "android"
+                        ? "{}-[android_ripple.color]/color:color-background-200"
+                        : "hover:bg-background-100 active:bg-background-200") +
+                    " flex-1 flex-row items-center pl-3 gap-4 h-16"
+                }
+                onPress={() => open()}
+            >
+                <Image
+                    source={currentTrack.artworkUri}
+                    className={"h-10 aspect-video rounded-lg flex-0 basis-auto"}
+                ></Image>
+                <Text className={"flex-1"} isTruncated>
+                    {isOpen + "" + currentTrack.title}
+                </Text>
+            </Pressable>
             <ButtonOuter className={"rounded-lg flex-0 basis-auto"}>
                 <Pressable
                     className={
