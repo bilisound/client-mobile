@@ -84,7 +84,10 @@ function CurrentPlaying() {
 
     return (
         <View
-            className={"w-full h-16 border-b border-typography-700/10 flex-row items-center px-3 gap-4"}
+            className={
+                "bg-background-50 w-full h-16 border-b border-typography-700/10 flex-row items-center px-3 gap-4 " +
+                "md:hidden"
+            }
             onLayout={e => console.log(e.nativeEvent.layout)}
         >
             <Image
@@ -133,6 +136,7 @@ export default function TabLayout() {
                 <View className={"flex-1"}>
                     <TabSlot />
                 </View>
+                <CurrentPlaying />
                 <TabList
                     className={
                         "flex-0 basis-auto pl-safe pr-safe pb-safe !flex-row !justify-around bg-background-50 " +
@@ -140,7 +144,6 @@ export default function TabLayout() {
                         "xl:w-64 xl:items-center"
                     }
                 >
-                    {/*<CurrentPlaying />*/}
                     <View className={"hidden md:flex h-3 xl:h-4"} aria-hidden={true} />
                     <TabTrigger asChild name="playlist" href="/(main)/(playlist)/playlist">
                         <TabTriggerChild iconName={"fa6-solid:list"} title={"歌单"} />

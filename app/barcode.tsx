@@ -76,12 +76,22 @@ export default function Page() {
     return (
         <View style={styles.container}>
             <SystemBars style="light" />
-            <View style={[styles.header, { height: safeAreaInsets.top + 64, paddingTop: safeAreaInsets.top }]}>
+            <View
+                style={[
+                    styles.header,
+                    {
+                        height: safeAreaInsets.top + 64,
+                        paddingTop: safeAreaInsets.top,
+                        paddingLeft: safeAreaInsets.left,
+                        paddingRight: safeAreaInsets.right,
+                    },
+                ]}
+            >
                 <Pressable
                     onPress={() => {
                         router.back();
                     }}
-                    style={[styles.backButton, { top: 10 + safeAreaInsets.top }]}
+                    style={[styles.backButton, { top: 10 + safeAreaInsets.top, left: 10 + safeAreaInsets.left }]}
                 >
                     <Monicon name="fa6-solid:arrow-left" size={20} color="#fff" />
                 </Pressable>
