@@ -90,7 +90,7 @@ function CurrentPlaying() {
     return (
         <View
             className={
-                "bg-background-50 w-full h-16 border-b border-typography-700/10 flex-row items-center pr-3 gap-4 " +
+                "bg-background-50 w-full h-16 border-b border-typography-700/10 flex-row items-center pr-3 gap-3 " +
                 "md:hidden"
             }
             onLayout={e => console.log(e.nativeEvent.layout)}
@@ -100,7 +100,7 @@ function CurrentPlaying() {
                     (Platform.OS === "android"
                         ? "{}-[android_ripple.color]/color:color-background-200"
                         : "hover:bg-background-100 active:bg-background-200") +
-                    " flex-1 flex-row items-center pl-3 gap-4 h-16"
+                    " flex-1 flex-row items-center px-3 gap-4 h-16"
                 }
                 onPress={() => open()}
             >
@@ -109,7 +109,7 @@ function CurrentPlaying() {
                     className={"h-10 aspect-video rounded-lg flex-0 basis-auto"}
                 ></Image>
                 <Text className={"flex-1"} isTruncated>
-                    {isOpen + "" + currentTrack.title}
+                    {currentTrack.title}
                 </Text>
             </Pressable>
             <ButtonOuter className={"rounded-lg flex-0 basis-auto"}>
