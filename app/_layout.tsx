@@ -22,6 +22,7 @@ import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { refreshCurrentTrack, saveTrackData } from "~/business/playlist/handler";
 import * as NavigationBar from "expo-navigation-bar";
+// import * as ScreenOrientation from "expo-screen-orientation";
 
 registerBackgroundEventListener(async ({ event, data }) => {
     if (event === "onTrackChange") {
@@ -59,6 +60,19 @@ const toastConfig: ToastConfig = {
 };
 
 export default function RootLayout() {
+    /*useEffect(() => {
+        if (Platform.OS === "ios") {
+            const platform = Platform;
+            const lockOrientation = async () => {
+                const isPad = platform.isPad;
+                if (!isPad) {
+                    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+                }
+            };
+            lockOrientation();
+        }
+    }, []);*/
+
     const [loaded, error] = useFonts({
         Roboto_400Regular,
         Roboto_700Bold,
