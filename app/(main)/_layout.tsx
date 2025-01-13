@@ -1,8 +1,7 @@
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from "expo-router/ui";
 import { Text } from "~/components/ui/text";
-import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import { ActivityIndicator, useWindowDimensions, View, Pressable, Platform } from "react-native";
-import { ComponentType, forwardRef, Ref } from "react";
+import { forwardRef, Ref } from "react";
 import { twMerge } from "tailwind-merge";
 import { TabSafeAreaContext } from "~/hooks/useTabSafeAreaInsets";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,13 +17,12 @@ import { Monicon } from "@monicon/native";
 import { ButtonOuter } from "~/components/ui/button";
 
 type TabTriggerChildProps = TabTriggerSlotProps & {
-    IconComponent: ComponentType<any>;
     iconName: string;
     title: string;
 };
 
 const TabTriggerChild = forwardRef(function TabTriggerChild(
-    { isFocused, onPress, IconComponent, iconName, title, style, className, ...props }: TabTriggerChildProps,
+    { isFocused, onPress, iconName, title, style, className, ...props }: TabTriggerChildProps,
     ref: Ref<View>,
 ) {
     return (
@@ -39,11 +37,7 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
             {...props}
             ref={ref}
         >
-            <IconComponent
-                name={iconName}
-                className={twMerge("text-[16px]", isFocused ? "color-accent-500" : "color-typography-700/40")}
-                size={-1}
-            />
+            <Monicon name={iconName} className={isFocused ? "color-accent-500" : "color-typography-700/40"} size={16} />
             <Text className={twMerge("text-xs xl:text-sm", isFocused ? "color-accent-500 font-semibold" : "")}>
                 {title}
             </Text>
@@ -149,13 +143,13 @@ export default function TabLayout() {
                     {/*<CurrentPlaying />*/}
                     <View className={"hidden md:flex h-3 xl:h-4"} aria-hidden={true} />
                     <TabTrigger asChild name="playlist" href="/(main)/(playlist)/playlist">
-                        <TabTriggerChild IconComponent={FontAwesome5} iconName={"list"} title={"歌单"} />
+                        <TabTriggerChild iconName={"fa6-solid:list"} title={"歌单"} />
                     </TabTrigger>
                     <TabTrigger asChild name="index" href="/(main)">
-                        <TabTriggerChild IconComponent={FontAwesome5} iconName={"search"} title={"查询"} />
+                        <TabTriggerChild iconName={"fa6-solid:magnifying-glass"} title={"查询"} />
                     </TabTrigger>
                     <TabTrigger asChild name="settings" href="/(main)/settings">
-                        <TabTriggerChild IconComponent={FontAwesome6} iconName={"gear"} title={"设置"} />
+                        <TabTriggerChild iconName={"fa6-solid:gear"} title={"设置"} />
                     </TabTrigger>
                 </TabList>
                 {showYuruChara && <YuruChara />}
