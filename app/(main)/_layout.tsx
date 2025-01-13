@@ -90,10 +90,9 @@ function CurrentPlaying() {
     return (
         <View
             className={
-                "bg-background-50 w-full h-16 border-b border-typography-700/10 flex-row items-center pr-3 gap-3 " +
-                "md:hidden"
+                "bg-background-50 w-full h-16 border-b border-typography-700/10 flex-row items-center pr-3 gap-3 " + ""
             }
-            onLayout={e => console.log(e.nativeEvent.layout)}
+            // onLayout={e => console.log(e.nativeEvent.layout)}
         >
             <Pressable
                 className={

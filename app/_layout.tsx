@@ -51,7 +51,7 @@ const toastConfig: ToastConfig = {
 
 registerBackgroundEventListener(async ({ event, data }) => {
     if (event === "onTrackChange") {
-        console.log(event, data);
+        // console.log(event, data);
         const trackData = await Player.getCurrentTrack();
         if (!trackData) {
             return;
