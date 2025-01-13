@@ -77,7 +77,7 @@ const ModalFooterStyle = tva({
 const ModalBodyStyle = tva({ base: "" });
 
 const ModalBackdropStyle = tva({
-    base: "absolute left-0 top-0 right-0 bottom-0 bg-black web:cursor-default",
+    base: "absolute left-0 top-0 right-0 bottom-0 bg-background-dark web:cursor-default",
 });
 
 type IModalProps = React.ComponentPropsWithoutRef<typeof UIModal> & VariantProps<typeof ModalStyle>;
@@ -213,7 +213,7 @@ const ModalBackdrop = React.forwardRef<React.ElementRef<typeof UIModal.Backdrop>
                     opacity: 0,
                 }}
                 animate={{
-                    opacity: 0.5,
+                    opacity: 0.7,
                 }}
                 exit={{
                     opacity: 0,
