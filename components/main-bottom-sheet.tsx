@@ -4,7 +4,7 @@ import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { Text } from "~/components/ui/text";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import { seek, useCurrentTrack, useProgress } from "@bilisound/player";
+import { seek, toggle, useCurrentTrack, useIsPlaying, useProgress } from "@bilisound/player";
 import { Image } from "expo-image";
 import { useWindowDimensions, View } from "react-native";
 import { shadow } from "~/constants/styles";
@@ -12,6 +12,7 @@ import { Pressable } from "~/components/ui/pressable";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
 import { Slider } from "@miblanchard/react-native-slider";
 import Animated, {
+    Easing,
     ReduceMotion,
     useAnimatedStyle,
     useSharedValue,
@@ -20,6 +21,57 @@ import Animated, {
 } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import { PLACEHOLDER_AUDIO } from "~/constants/playback";
+import { Monicon } from "@monicon/native";
+import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
+import { Button, ButtonOuter } from "~/components/ui/button";
+
+function PlayButtonIcon() {
+    const duration = 200;
+    const isPlaying = useIsPlaying();
+    const { colorValue } = useRawThemeValues();
+
+    const pauseScale = useSharedValue(isPlaying ? 1 : 0);
+    const pauseOpacity = useSharedValue(isPlaying ? 1 : 0);
+    const playScale = useSharedValue(isPlaying ? 0 : 1);
+    const playOpacity = useSharedValue(isPlaying ? 0 : 1);
+
+    useEffect(() => {
+        pauseScale.value = withTiming(isPlaying ? 1 : 0, { duration, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
+        pauseOpacity.value = withTiming(isPlaying ? 1 : 0, {
+            duration,
+            easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+        });
+        playScale.value = withTiming(isPlaying ? 0 : 1, { duration, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
+        playOpacity.value = withTiming(isPlaying ? 0 : 1, { duration, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
+    }, [isPlaying, pauseOpacity, pauseScale, playOpacity, playScale]);
+
+    const pauseAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ scale: pauseScale.value }],
+            opacity: pauseOpacity.value,
+        };
+    });
+
+    const playAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ scale: playScale.value }],
+            opacity: playOpacity.value,
+        };
+    });
+
+    const iconSize = 30;
+
+    return (
+        <View className="relative size-[1.5rem] @md:size-[1.875rem]">
+            <Animated.View style={pauseAnimatedStyle} className="absolute size-full items-center justify-center">
+                <Monicon name="fa6-solid:pause" size={iconSize} color={colorValue("--color-background-0")} />
+            </Animated.View>
+            <Animated.View style={playAnimatedStyle} className="absolute size-full items-center justify-center">
+                <Monicon name="fa6-solid:play" size={iconSize} color={colorValue("--color-background-0")} />
+            </Animated.View>
+        </View>
+    );
+}
 
 function PlayerProgressBar() {
     const { colorValue } = useRawThemeValues();
@@ -122,8 +174,20 @@ function PlayerProgressBar() {
     );
 }
 
-// const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500"];
-const DEBUG_COLOR = ["", ""];
+function PlayerControlButtons() {
+    return (
+        <View className={"flex-row justify-center pt-4 " + DEBUG_COLOR[1]}>
+            <ButtonOuter className={"rounded-full size-16"}>
+                <Button className={"w-16 h-16"} onPress={() => toggle()}>
+                    <PlayButtonIcon />
+                </Button>
+            </ButtonOuter>
+        </View>
+    );
+}
+
+// const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
+const DEBUG_COLOR = ["", "", ""];
 
 function PlayerControl() {
     const currentTrack = useCurrentTrack();
@@ -148,7 +212,7 @@ function PlayerControl() {
                 </View>
             </View>
 
-            <View className={"flex-0 basis-auto md:flex-1 " + DEBUG_COLOR[0]}>
+            <View className={"flex-0 basis-auto md:flex-1 md:justify-center " + DEBUG_COLOR[0]}>
                 {/* 曲目信息，可点击 */}
                 <Pressable className={"gap-2 py-4 px-8 " + DEBUG_COLOR[1]}>
                     <Text className={"leading-normal text-xl font-extrabold color-typography-700"} isTruncated>
@@ -161,6 +225,9 @@ function PlayerControl() {
                 <View className={"flex-row items-center h-4 px-5 mt-2 " + DEBUG_COLOR[1]}>
                     <PlayerProgressBar />
                 </View>
+
+                {/* 曲目控制按钮 */}
+                <PlayerControlButtons />
             </View>
         </View>
     );
@@ -210,7 +277,7 @@ export function MainBottomSheet() {
             failOffsetX={[-5, 5]}
         >
             <BottomSheetView
-                className={"p-safe"}
+                className={"p-safe " + DEBUG_COLOR[2]}
                 // 缓解 bottom sheet 无法正确处理横屏的情况
                 style={{ width: windowDimensions.width, height: windowDimensions.height }}
             >
