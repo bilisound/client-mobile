@@ -22,7 +22,6 @@ import Animated, {
 import { LinearGradient } from "expo-linear-gradient";
 import { PLACEHOLDER_AUDIO } from "~/constants/playback";
 import { Monicon } from "@monicon/native";
-import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
 import { Button, ButtonOuter } from "~/components/ui/button";
 
 function PlayButtonIcon() {
@@ -59,12 +58,12 @@ function PlayButtonIcon() {
         };
     });
 
-    const iconSize = 30;
+    const iconSize = 28;
 
     return (
         <View className="relative size-[1.5rem] @md:size-[1.875rem]">
             <Animated.View style={pauseAnimatedStyle} className="absolute size-full items-center justify-center">
-                <Monicon name="fa6-solid:pause" size={iconSize} color={colorValue("--color-background-0")} />
+                <Monicon name="fa6-solid:pause" size={iconSize * 1.15} color={colorValue("--color-background-0")} />
             </Animated.View>
             <Animated.View style={playAnimatedStyle} className="absolute size-full items-center justify-center">
                 <Monicon name="fa6-solid:play" size={iconSize} color={colorValue("--color-background-0")} />
@@ -212,7 +211,7 @@ function PlayerControl() {
                 </View>
             </View>
 
-            <View className={"flex-0 basis-auto md:flex-1 md:justify-center " + DEBUG_COLOR[0]}>
+            <View className={"flex-0 basis-auto md:flex-1 md:justify-center gap-4 " + DEBUG_COLOR[0]}>
                 {/* 曲目信息，可点击 */}
                 <Pressable className={"gap-2 py-4 px-8 " + DEBUG_COLOR[1]}>
                     <Text className={"leading-normal text-xl font-extrabold color-typography-700"} isTruncated>
@@ -222,7 +221,7 @@ function PlayerControl() {
                 </Pressable>
 
                 {/* 进度条 */}
-                <View className={"flex-row items-center h-4 px-5 mt-2 " + DEBUG_COLOR[1]}>
+                <View className={"flex-row items-center h-4 px-5 " + DEBUG_COLOR[1]}>
                     <PlayerProgressBar />
                 </View>
 
