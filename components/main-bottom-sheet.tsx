@@ -179,8 +179,8 @@ function PlayerControlButtons() {
         <View className={"flex-row justify-center gap-4 pt-4 pb-6 " + DEBUG_COLOR[1]}>
             <ButtonOuter className={"rounded-full size-16"}>
                 <Button aria-label={"上一首"} className={"w-16 h-16"} onPress={() => prev()} variant={"ghost"}>
-                    <View className={"size-[28px] items-center justify-center"}>
-                        <Monicon name={"ri:skip-back-mini-fill"} size={28} color={colorValue("--color-primary-500")} />
+                    <View className={"size-[44px] items-center justify-center"}>
+                        <Monicon name={"ri:skip-back-mini-fill"} size={44} color={colorValue("--color-primary-500")} />
                     </View>
                 </Button>
             </ButtonOuter>
@@ -191,8 +191,8 @@ function PlayerControlButtons() {
             </ButtonOuter>
             <ButtonOuter className={"rounded-full size-16"}>
                 <Button aria-label={"下一首"} className={"w-16 h-16"} onPress={() => next()} variant={"ghost"}>
-                    <View className={"size-[28px] items-center justify-center rotate-180"}>
-                        <Monicon name={"ri:skip-back-mini-fill"} size={28} color={colorValue("--color-primary-500")} />
+                    <View className={"size-[44px] items-center justify-center rotate-180"}>
+                        <Monicon name={"ri:skip-back-mini-fill"} size={44} color={colorValue("--color-primary-500")} />
                     </View>
                 </Button>
             </ButtonOuter>
