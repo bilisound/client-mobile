@@ -188,8 +188,8 @@ function PlayerProgressTimer() {
 
     return (
         <View className={"flex-row justify-between px-8"}>
-            <Text className={"text-xs text-typography-500"}>{from}</Text>
-            <Text className={"text-xs text-typography-500"}>{to}</Text>
+            <Text className={"text-sm text-typography-500"}>{from}</Text>
+            <Text className={"text-sm text-typography-500"}>{to}</Text>
         </View>
     );
 }
