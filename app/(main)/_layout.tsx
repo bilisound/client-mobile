@@ -134,7 +134,6 @@ function CurrentPlaying() {
     );
 }
 
-// todo TabLayout 用的 edgeInsets 需要拆分为外圈（ScrollView 之外）和内圈（ScrollView 之内）的
 export default function TabLayout() {
     const edgeInsets = useSafeAreaInsets();
     const edgeInsetsTab = simpleCopy(edgeInsets);

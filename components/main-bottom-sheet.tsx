@@ -25,6 +25,7 @@ import { Monicon } from "@monicon/native";
 import { Button, ButtonOuter } from "~/components/ui/button";
 import { useProgressSecond } from "~/hooks/useProgressSecond";
 import { formatSecond } from "~/utils/datetime";
+import { router } from "expo-router";
 
 function PlayButtonIcon() {
     const duration = 200;
@@ -229,6 +230,17 @@ const DEBUG_COLOR = ["", "", ""];
 function PlayerControl() {
     const currentTrack = useCurrentTrack();
     const [imageSize, setImageSize] = useState(0);
+    const { close } = useBottomSheetStore(state => ({
+        close: state.close,
+    }));
+
+    function handleJump() {
+        if (!currentTrack) {
+            return;
+        }
+        close();
+        router.navigate(`/video/${currentTrack.extendedData?.id}`);
+    }
 
     return (
         <View className={"flex-1 flex-col md:flex-row"}>
@@ -251,7 +263,7 @@ function PlayerControl() {
 
             <View className={"flex-0 basis-auto md:flex-1 md:justify-center gap-4 " + DEBUG_COLOR[0]}>
                 {/* 曲目信息，可点击 */}
-                <Pressable className={"gap-2 py-4 px-8 " + DEBUG_COLOR[1]}>
+                <Pressable className={"gap-2 py-4 px-8 " + DEBUG_COLOR[1]} onPress={handleJump}>
                     <Text className={"leading-normal text-xl font-extrabold color-typography-700"} isTruncated>
                         {currentTrack?.title}
                     </Text>
