@@ -56,11 +56,6 @@ remapProps(LinearGradient, {
 });
 cssInterop(LogViewer, { className: "style" });
 cssInterop(Monicon, {
-    className: {
-        // @ts-ignore
-        target: "style",
-        nativeStyleToProp: {
-            color: true,
-        },
-    },
+    // @ts-ignore
+    className: "style",
 });

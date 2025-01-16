@@ -78,6 +78,7 @@ export async function getBilisoundMetadata(data: { id: string }): Promise<Wrap<G
         if (outData.code !== 200) {
             throw new Error(outData.msg);
         }
+        return outData;
     }
 
     const { id } = data;
