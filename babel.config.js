@@ -24,7 +24,6 @@ module.exports = function (api) {
                     },
                 },
             ],
-            ["@monicon/babel-plugin"],
         ],
     };
 };
