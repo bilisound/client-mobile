@@ -23,6 +23,7 @@ import { getPlaylistDetail } from "~/storage/sqlite/playlist";
 import { Platform } from "react-native";
 import { invalidateOnQueueStatus } from "~/storage/playlist";
 import { convertToHTTPS } from "~/utils/string";
+import useSettingsStore from "~/store/settings";
 
 interface TrackDataOld {
     /** The track title */
@@ -194,7 +195,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
     }
 
     const { data } = await getBilisoundMetadata({ id });
-    const url = await getBilisoundResourceUrl(id, episode);
+    const url = await getBilisoundResourceUrl(id, episode, useSettingsStore.getState().filterResourceURL);
     const currentEpisode = data.pages.find(e => e.page === episode);
     if (!currentEpisode) {
         throw new Error("指定视频没有指定的分 P 信息");
@@ -243,7 +244,7 @@ export async function refreshTrack(trackData: TrackData) {
 
     // 拉取最新的 URL
     log.info("开始拉取最新的 URL");
-    const url = await getBilisoundResourceUrl(id, episode);
+    const url = await getBilisoundResourceUrl(id, episode, useSettingsStore.getState().filterResourceURL);
     trackData.uri = url.url;
     trackData.extendedData!.expireAt = new Date().getTime() + URI_EXPIRE_DURATION;
     trackData.mimeType = "video/mp4";
