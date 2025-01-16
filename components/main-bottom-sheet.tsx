@@ -23,6 +23,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { PLACEHOLDER_AUDIO } from "~/constants/playback";
 import { Monicon } from "@monicon/native";
 import { Button, ButtonOuter } from "~/components/ui/button";
+import { useProgressSecond } from "~/hooks/useProgressSecond";
+import { formatSecond } from "~/utils/datetime";
 
 function PlayButtonIcon() {
     const duration = 200;
@@ -93,7 +95,7 @@ function PlayerProgressBar() {
 
     // 播放状态
     const activeTrack = useCurrentTrack();
-    const { position, buffered, duration } = useProgress();
+    const { position, buffered, duration } = useProgressSecond();
 
     useEffect(() => {
         if (!holding) {
@@ -132,7 +134,7 @@ function PlayerProgressBar() {
     return (
         <NativeViewGestureHandler disallowInterruption={true}>
             <View className="h-4 justify-center flex-1 relative">
-                <View className="left-[0.625rem] right-[0.625rem] top-[6.5px] h-[0.1875rem] rounded-full absolute overflow-hidden bg-neutral-200 dark:bg-primary-100">
+                <View className="left-[8px] right-[8px] top-[6.5px] h-[0.1875rem] rounded-full absolute overflow-hidden bg-neutral-200 dark:bg-primary-100">
                     <View
                         style={{ width: `${(buffered / duration) * 100}%` }}
                         className="h-full absolute bg-neutral-200 dark:bg-primary-100"
@@ -168,6 +170,27 @@ function PlayerProgressBar() {
                 </View>
             </View>
         </NativeViewGestureHandler>
+    );
+}
+
+function PlayerProgressTimer() {
+    // 播放状态
+    const activeTrack = useCurrentTrack();
+    const { position, duration } = useProgressSecond();
+
+    let from = formatSecond(position);
+    let to = formatSecond(duration);
+
+    if (activeTrack?.uri === PLACEHOLDER_AUDIO) {
+        from = "--:--";
+        to = "--:--";
+    }
+
+    return (
+        <View className={"flex-row justify-between px-8"}>
+            <Text className={"text-xs text-typography-500"}>{from}</Text>
+            <Text className={"text-xs text-typography-500"}>{to}</Text>
+        </View>
     );
 }
 
@@ -235,9 +258,14 @@ function PlayerControl() {
                     <Text className={"leading-normal text-sm color-typography-500"}>{currentTrack?.artist}</Text>
                 </Pressable>
 
-                {/* 进度条 */}
-                <View className={"flex-row items-center h-4 px-5 " + DEBUG_COLOR[1]}>
-                    <PlayerProgressBar />
+                <View className={"gap-1.5"}>
+                    {/* 进度条 */}
+                    <View className={"flex-row items-center h-4 px-6 " + DEBUG_COLOR[1]}>
+                        <PlayerProgressBar />
+                    </View>
+
+                    {/* 播放状态 */}
+                    <PlayerProgressTimer />
                 </View>
 
                 {/* 曲目控制按钮 */}
