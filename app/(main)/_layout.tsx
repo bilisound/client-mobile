@@ -26,6 +26,8 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
     { isFocused, onPress, iconName, title, style, className, ...props }: TabTriggerChildProps,
     ref: Ref<View>,
 ) {
+    const { colorValue } = useRawThemeValues();
+
     return (
         <Pressable
             onPress={onPress}
@@ -38,7 +40,11 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
             {...props}
             ref={ref}
         >
-            <Monicon name={iconName} className={isFocused ? "color-accent-500" : "color-typography-700/40"} size={16} />
+            <Monicon
+                name={iconName}
+                color={isFocused ? colorValue("--color-accent-500") : colorValue("--color-typography-700", 0.4)}
+                size={16}
+            />
             <Text className={twMerge("text-xs xl:text-sm", isFocused ? "color-accent-500 font-semibold" : "")}>
                 {title}
             </Text>
