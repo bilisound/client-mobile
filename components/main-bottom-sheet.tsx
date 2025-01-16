@@ -4,9 +4,9 @@ import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { Text } from "~/components/ui/text";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import { next, prev, seek, toggle, useCurrentTrack, useIsPlaying, useProgress } from "@bilisound/player";
+import { next, prev, seek, toggle, useCurrentTrack, useIsPlaying } from "@bilisound/player";
 import { Image } from "expo-image";
-import { useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { shadow } from "~/constants/styles";
 import { Pressable } from "~/components/ui/pressable";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
@@ -26,6 +26,11 @@ import { Button, ButtonOuter } from "~/components/ui/button";
 import { useProgressSecond } from "~/hooks/useProgressSecond";
 import { formatSecond } from "~/utils/datetime";
 import { router } from "expo-router";
+import { TrackData } from "@bilisound/player/build/types";
+
+function isLoading(activeTrack: TrackData | null | undefined, duration: number) {
+    return activeTrack?.uri === PLACEHOLDER_AUDIO || duration <= 0;
+}
 
 function PlayButtonIcon() {
     const duration = 200;
@@ -61,13 +66,17 @@ function PlayButtonIcon() {
         };
     });
 
+    if (isLoading(useCurrentTrack(), useProgressSecond().duration)) {
+        return <ActivityIndicator size={28} className={"size-8 color-background-0"} />;
+    }
+
     return (
-        <View className="relative size-[28px]">
+        <View className="relative size-8">
             <Animated.View style={pauseAnimatedStyle} className="absolute size-full items-center justify-center">
-                <Monicon name="fa6-solid:pause" className={"{}-[size]:size-[32px] {}-[color]:color-background-0"} />
+                <Monicon name="fa6-solid:pause" size={32} color={colorValue("--color-background-0")} />
             </Animated.View>
             <Animated.View style={playAnimatedStyle} className="absolute size-full items-center justify-center">
-                <Monicon name="fa6-solid:play" className={"{}-[size]:size-[28px] {}-[color]:color-background-0"} />
+                <Monicon name="fa6-solid:play" size={28} color={colorValue("--color-background-0")} />
             </Animated.View>
         </View>
     );
@@ -108,7 +117,7 @@ function PlayerProgressBar() {
         transform: [{ translateX: glowPosition.value - glowWidth }],
     }));
 
-    if (activeTrack?.uri === PLACEHOLDER_AUDIO || duration <= 0) {
+    if (isLoading(activeTrack, duration)) {
         return (
             <View
                 onLayout={e => setGlowTotalWidth(e.nativeEvent.layout.width - 20)}
