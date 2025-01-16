@@ -4,7 +4,7 @@ import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { Text } from "~/components/ui/text";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import { seek, toggle, useCurrentTrack, useIsPlaying, useProgress } from "@bilisound/player";
+import { next, prev, seek, toggle, useCurrentTrack, useIsPlaying, useProgress } from "@bilisound/player";
 import { Image } from "expo-image";
 import { useWindowDimensions, View } from "react-native";
 import { shadow } from "~/constants/styles";
@@ -58,15 +58,13 @@ function PlayButtonIcon() {
         };
     });
 
-    const iconSize = 28;
-
     return (
-        <View className="relative size-[1.5rem] @md:size-[1.875rem]">
+        <View className="relative size-[28px]">
             <Animated.View style={pauseAnimatedStyle} className="absolute size-full items-center justify-center">
-                <Monicon name="fa6-solid:pause" size={iconSize * 1.15} color={colorValue("--color-background-0")} />
+                <Monicon name="fa6-solid:pause" className={"{}-[size]:size-[32px] {}-[color]:color-background-0"} />
             </Animated.View>
             <Animated.View style={playAnimatedStyle} className="absolute size-full items-center justify-center">
-                <Monicon name="fa6-solid:play" size={iconSize} color={colorValue("--color-background-0")} />
+                <Monicon name="fa6-solid:play" className={"{}-[size]:size-[28px] {}-[color]:color-background-0"} />
             </Animated.View>
         </View>
     );
@@ -174,11 +172,28 @@ function PlayerProgressBar() {
 }
 
 function PlayerControlButtons() {
+    const { colorValue } = useRawThemeValues();
+    const isPlaying = useIsPlaying();
+
     return (
-        <View className={"flex-row justify-center pt-4 " + DEBUG_COLOR[1]}>
+        <View className={"flex-row justify-center gap-4 pt-4 pb-6 " + DEBUG_COLOR[1]}>
             <ButtonOuter className={"rounded-full size-16"}>
-                <Button className={"w-16 h-16"} onPress={() => toggle()}>
+                <Button aria-label={"上一首"} className={"w-16 h-16"} onPress={() => prev()} variant={"ghost"}>
+                    <View className={"size-[28px] items-center justify-center"}>
+                        <Monicon name={"ri:skip-back-mini-fill"} size={28} color={colorValue("--color-primary-500")} />
+                    </View>
+                </Button>
+            </ButtonOuter>
+            <ButtonOuter className={"rounded-full size-16"}>
+                <Button aria-label={isPlaying ? "暂停" : "播放"} className={"w-16 h-16"} onPress={() => toggle()}>
                     <PlayButtonIcon />
+                </Button>
+            </ButtonOuter>
+            <ButtonOuter className={"rounded-full size-16"}>
+                <Button aria-label={"下一首"} className={"w-16 h-16"} onPress={() => next()} variant={"ghost"}>
+                    <View className={"size-[28px] items-center justify-center rotate-180"}>
+                        <Monicon name={"ri:skip-back-mini-fill"} size={28} color={colorValue("--color-primary-500")} />
+                    </View>
                 </Button>
             </ButtonOuter>
         </View>
@@ -235,7 +250,6 @@ function PlayerControl() {
 export function MainBottomSheet() {
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const { isOpen, close } = useBottomSheetStore();
-    const windowDimensions = useWindowDimensions();
 
     // 主题色调用
     const { colorValue } = useRawThemeValues();
@@ -259,8 +273,6 @@ export function MainBottomSheet() {
         }
     }, [isOpen]);
 
-    // console.log("windowDimensions " + JSON.stringify(windowDimensions));
-
     return (
         <BottomSheetModal
             ref={bottomSheetRef}
@@ -275,11 +287,7 @@ export function MainBottomSheet() {
             activeOffsetY={[-1, 1]}
             failOffsetX={[-5, 5]}
         >
-            <BottomSheetView
-                className={"p-safe " + DEBUG_COLOR[2]}
-                // 缓解 bottom sheet 无法正确处理横屏的情况
-                style={{ width: windowDimensions.width, height: windowDimensions.height }}
-            >
+            <BottomSheetView className={"w-full h-full p-safe flex-1 " + DEBUG_COLOR[2]}>
                 <PlayerControl />
             </BottomSheetView>
         </BottomSheetModal>
