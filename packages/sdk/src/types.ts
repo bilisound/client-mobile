@@ -1,7 +1,10 @@
+import { WebPlayInfo } from "./types-vendor";
+
 export interface Logger {
     info(...msg: any[]): void;
     warn(...msg: any[]): void;
     error(...msg: any[]): void;
+    debug(...msg: any[]): void;
 }
 
 export type GetMetadataResponse = {
@@ -25,6 +28,8 @@ export type GetMetadataResponse = {
 };
 
 export type VideoType = "regular" | "festival";
+
+export type Numberish = string | number;
 
 export interface VideoInitialState {
     videoData?: {
@@ -70,22 +75,9 @@ export interface VideoInitialState {
     }[];
 }
 
-export interface VideoPlayInfo {
-    data?: {
-        dash?: {
-            audio?: {
-                codecid: number;
-                baseUrl: string;
-                backupUrl?: string[];
-            }[];
-        };
-        durl?: any[];
-    };
-}
-
 export interface VideoResponse {
     initialState: VideoInitialState;
-    playInfo: VideoPlayInfo;
+    playInfo: WebPlayInfo;
     type: VideoType;
 }
 
@@ -93,4 +85,5 @@ export interface SDKOptions {
     logger?: Logger;
     userAgent?: string;
     apiPrefix?: string;
+    sitePrefix?: string;
 }

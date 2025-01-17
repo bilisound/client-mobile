@@ -8,6 +8,10 @@
     "tsup": "^8.3.5",
     "typescript": "~5.7.3"
   },
+  "peerDependencies": {
+    "axios": "^1.7.9",
+    "md5": "^2.3.0"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "exports": {

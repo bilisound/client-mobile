@@ -32,7 +32,8 @@ export type GetBilisoundMetadataResponse = {
 
 const sdk = new BilisoundSDK({
     userAgent: USER_AGENT_BILIBILI,
-    apiPrefix: BILISOUND_API_PREFIX,
+    apiPrefix: "https://api.bilibili.com/",
+    sitePrefix: "https://www.bilibili.com/",
 });
 
 /**
