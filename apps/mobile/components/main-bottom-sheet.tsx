@@ -121,7 +121,7 @@ function PlayerProgressBar() {
         return (
             <View
                 onLayout={e => setGlowTotalWidth(e.nativeEvent.layout.width - 20)}
-                className="h-4 justify-center flex-1 relative px-[0.625rem]"
+                className="h-4 justify-center flex-1 relative px-2"
             >
                 <View className="h-[0.1875rem] rounded-full overflow-hidden bg-primary-100 dark:bg-primary-100">
                     <Animated.View style={[{ width: glowWidth, height: 3 }, animatedStyle]}>
@@ -280,7 +280,7 @@ export function PlayerControl() {
 
     return (
         <View className={"flex-1 flex-col md:flex-row"}>
-            {/* 曲目图片 */}
+            {/* 左侧：曲目图片 */}
             <View
                 className={"flex-1 items-center justify-center overflow-hidden"}
                 onLayout={event => {
@@ -297,10 +297,16 @@ export function PlayerControl() {
                 </View>
             </View>
 
-            <View className={"flex-0 basis-auto md:flex-1 md:justify-center gap-4 " + DEBUG_COLOR[0]}>
+            {/* 右侧：播放控制 */}
+            <View
+                className={"@container flex-0 basis-auto md:flex-1 md:justify-center gap-3 @sm:gap-4 " + DEBUG_COLOR[0]}
+            >
                 {/* 曲目信息，可点击 */}
-                <Pressable className={"gap-2 py-4 px-8 " + DEBUG_COLOR[1]} onPress={handleJump}>
-                    <Text className={"leading-normal text-xl font-extrabold color-typography-700"} isTruncated>
+                <Pressable className={"gap-1.5 @sm:gap-2 py-2 @sm:py-4 px-8 " + DEBUG_COLOR[1]} onPress={handleJump}>
+                    <Text
+                        className={"leading-normal text-lg @sm:text-xl font-extrabold color-typography-700"}
+                        isTruncated
+                    >
                         {currentTrack?.title}
                     </Text>
                     <Text className={"leading-normal text-sm color-typography-500"}>{currentTrack?.artist}</Text>

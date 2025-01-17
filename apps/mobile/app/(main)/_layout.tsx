@@ -86,7 +86,11 @@ function PlayingIcon() {
 function CurrentPlayingTablet() {
     const currentTrack = useCurrentTrack();
     const isPlaying = useIsPlaying();
+    const playbackState = usePlaybackState();
     const { open } = useBottomSheetStore();
+
+    // 解决 placeholder 音频还没替换时不恰当的状态显示
+    const isPlaceholderTrack = currentTrack?.uri === PLACEHOLDER_AUDIO;
 
     if (!currentTrack) {
         return null;
@@ -97,10 +101,14 @@ function CurrentPlayingTablet() {
             <View className={"w-16 h-12 items-center"}>
                 <ButtonOuter>
                     <Button icon variant={"ghost"} onPress={() => toggle()}>
-                        <ButtonMonIcon
-                            name={isPlaying ? "fa6-solid:pause" : "fa6-solid:play"}
-                            size={isPlaying ? 22 : 18}
-                        />
+                        {playbackState === "STATE_BUFFERING" || isPlaceholderTrack ? (
+                            <ActivityIndicator className={"color-primary-500"} size={22} />
+                        ) : (
+                            <ButtonMonIcon
+                                name={isPlaying ? "fa6-solid:pause" : "fa6-solid:play"}
+                                size={isPlaying ? 22 : 18}
+                            />
+                        )}
                     </Button>
                 </ButtonOuter>
             </View>
