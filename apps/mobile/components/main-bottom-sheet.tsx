@@ -32,7 +32,7 @@ function isLoading(activeTrack: TrackData | null | undefined, duration: number) 
     return activeTrack?.uri === PLACEHOLDER_AUDIO || duration <= 0;
 }
 
-function PlayButtonIcon() {
+function PlayButtonIcon({ size = 28 }: { size?: number }) {
     const duration = 200;
     const isPlaying = useIsPlaying();
     const { colorValue } = useRawThemeValues();
@@ -67,16 +67,16 @@ function PlayButtonIcon() {
     });
 
     if (isLoading(useCurrentTrack(), useProgressSecond().duration)) {
-        return <ActivityIndicator size={28} className={"size-8 color-background-0"} />;
+        return <ActivityIndicator size={size} className={"size-8 color-background-0"} />;
     }
 
     return (
         <View className="relative size-8">
             <Animated.View style={pauseAnimatedStyle} className="absolute size-full items-center justify-center">
-                <Monicon name="fa6-solid:pause" size={32} color={colorValue("--color-background-0")} />
+                <Monicon name="fa6-solid:pause" size={size / 0.875} color={colorValue("--color-background-0")} />
             </Animated.View>
             <Animated.View style={playAnimatedStyle} className="absolute size-full items-center justify-center">
-                <Monicon name="fa6-solid:play" size={28} color={colorValue("--color-background-0")} />
+                <Monicon name="fa6-solid:play" size={size} color={colorValue("--color-background-0")} />
             </Animated.View>
         </View>
     );
@@ -207,24 +207,43 @@ function PlayerControlButtons() {
     const { colorValue } = useRawThemeValues();
     const isPlaying = useIsPlaying();
 
+    const [layoutWidth, setLayoutWidth] = useState(384);
+    const isNarrow = layoutWidth < 384;
+    const iconSize = isNarrow ? 24 : 28;
+    const iconJumpSize = isNarrow ? 38 : 44;
+    const buttonSize = isNarrow ? "w-14 h-14" : "w-16 h-16";
+
+    console.log("layoutWidth", layoutWidth);
+
     return (
-        <View className={"flex-row justify-center gap-4 pt-2 pb-8 md:pb-0 " + DEBUG_COLOR[1]}>
-            <ButtonOuter className={"rounded-full size-16"}>
-                <Button aria-label={"上一首"} className={"w-16 h-16"} onPress={() => prev()} variant={"ghost"}>
+        <View
+            className={`flex-row justify-center ${isNarrow ? "gap-3" : "gap-4"} pt-2 pb-8 md:pb-0 ` + DEBUG_COLOR[1]}
+            onLayout={e => setLayoutWidth(e.nativeEvent.layout.width)}
+        >
+            <ButtonOuter className={`rounded-full ${buttonSize}`}>
+                <Button aria-label={"上一首"} className={buttonSize} onPress={() => prev()} variant={"ghost"}>
                     <View className={"size-[44px] items-center justify-center"}>
-                        <Monicon name={"ri:skip-back-mini-fill"} size={44} color={colorValue("--color-primary-500")} />
+                        <Monicon
+                            name={"ri:skip-back-mini-fill"}
+                            size={iconJumpSize}
+                            color={colorValue("--color-primary-500")}
+                        />
                     </View>
                 </Button>
             </ButtonOuter>
-            <ButtonOuter className={"rounded-full size-16"}>
-                <Button aria-label={isPlaying ? "暂停" : "播放"} className={"w-16 h-16"} onPress={() => toggle()}>
-                    <PlayButtonIcon />
+            <ButtonOuter className={`rounded-full ${buttonSize}`}>
+                <Button aria-label={isPlaying ? "暂停" : "播放"} className={buttonSize} onPress={() => toggle()}>
+                    <PlayButtonIcon size={iconSize} />
                 </Button>
             </ButtonOuter>
-            <ButtonOuter className={"rounded-full size-16"}>
-                <Button aria-label={"下一首"} className={"w-16 h-16"} onPress={() => next()} variant={"ghost"}>
+            <ButtonOuter className={`rounded-full ${buttonSize}`}>
+                <Button aria-label={"下一首"} className={buttonSize} onPress={() => next()} variant={"ghost"}>
                     <View className={"size-[44px] items-center justify-center rotate-180"}>
-                        <Monicon name={"ri:skip-back-mini-fill"} size={44} color={colorValue("--color-primary-500")} />
+                        <Monicon
+                            name={"ri:skip-back-mini-fill"}
+                            size={iconJumpSize}
+                            color={colorValue("--color-primary-500")}
+                        />
                     </View>
                 </Button>
             </ButtonOuter>
