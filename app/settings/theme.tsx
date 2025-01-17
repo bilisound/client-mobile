@@ -11,6 +11,7 @@ import { VStack } from "~/components/ui/vstack";
 import useSettingsStore from "~/store/settings";
 import { Layout } from "~/components/layout";
 import { Monicon } from "@monicon/native";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 interface ThemeButtonProps {
     selected?: boolean;
@@ -38,6 +39,7 @@ function ThemeButton({ selected = false, name, onPress, yuruChara }: ThemeButton
 }
 
 export default function Page() {
+    const { colorValue } = useRawThemeValues();
     const { theme, update, showYuruChara, toggle } = useSettingsStore(state => ({
         theme: state.theme,
         update: state.update,
@@ -51,7 +53,11 @@ export default function Page() {
                 <VStack space="xl" className="p-4">
                     <HStack space="md" className="items-center">
                         <View className="justify-center items-center size-[1.5rem]">
-                            <Monicon name={"fa6-solid:paintbrush"} size={20} className="color-typography-700" />
+                            <Monicon
+                                name={"fa6-solid:paintbrush"}
+                                size={20}
+                                color={colorValue("--color-typography-700")}
+                            />
                         </View>
                         <Text className="text-[0.9375rem] font-semibold">App 界面主题</Text>
                     </HStack>

@@ -163,7 +163,7 @@ type IButtonMonIcon = React.ComponentPropsWithoutRef<typeof View> &
 
 const ButtonMonIcon = React.forwardRef<React.ElementRef<typeof View>, IButtonMonIcon>(
     ({ className, name, size = 16, ...props }, ref) => {
-        const { variant: parentVariant, size: parentSize, action: parentAction } = useStyleContext(SCOPE);
+        const { variant: parentVariant, action: parentAction } = useStyleContext(SCOPE);
 
         return (
             <View
@@ -171,7 +171,6 @@ const ButtonMonIcon = React.forwardRef<React.ElementRef<typeof View>, IButtonMon
                 style={{ width: size, height: size }}
                 className={buttonMonIconStyle({
                     parentVariants: {
-                        size: parentSize,
                         variant: parentVariant,
                         action: parentAction,
                     },
