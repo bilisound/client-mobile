@@ -197,7 +197,7 @@ function PlayerProgressTimer() {
     }
 
     return (
-        <View className={"flex-row justify-between px-8"}>
+        <View className={"flex-row justify-between px-8 " + DEBUG_COLOR[1]}>
             <Text className={"text-sm text-typography-500"}>{from}</Text>
             <Text className={"text-sm text-typography-500"}>{to}</Text>
         </View>
@@ -209,7 +209,7 @@ function PlayerControlButtons() {
     const isPlaying = useIsPlaying();
 
     return (
-        <View className={"flex-row justify-center gap-4 pt-4 pb-6 " + DEBUG_COLOR[1]}>
+        <View className={"flex-row justify-center gap-4 pt-2 pb-8 md:pb-0 " + DEBUG_COLOR[1]}>
             <ButtonOuter className={"rounded-full size-16"}>
                 <Button aria-label={"上一首"} className={"w-16 h-16"} onPress={() => prev()} variant={"ghost"}>
                     <View className={"size-[44px] items-center justify-center"}>
