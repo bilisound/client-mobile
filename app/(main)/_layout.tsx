@@ -16,6 +16,7 @@ import { PLACEHOLDER_AUDIO } from "~/constants/playback";
 import { Monicon } from "@monicon/native";
 import { ButtonOuter } from "~/components/ui/button";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
+import { usePreventRemove } from "@react-navigation/native";
 
 type TabTriggerChildProps = TabTriggerSlotProps & {
     iconName: string;
@@ -148,6 +149,12 @@ export default function TabLayout() {
     if (windowDimensions.width >= breakpoints.md) {
         edgeInsetsTab.left = 0;
     }
+
+    const { isOpen, close } = useBottomSheetStore();
+
+    usePreventRemove(isOpen, () => {
+        close();
+    });
 
     return (
         <TabSafeAreaContext.Provider value={edgeInsetsTab}>
