@@ -274,10 +274,10 @@ export default function Page() {
     useEffect(() => {
         if (data && !noHistory) {
             appendHistoryList({
-                authorName: data.data.owner.name,
-                id: data.data.bvid,
-                name: data.data.title,
-                thumbnailUrl: convertToHTTPS(data.data.pic),
+                authorName: data.owner.name,
+                id: data.bvid,
+                name: data.title,
+                thumbnailUrl: convertToHTTPS(data.pic),
                 visitedAt: new Date(),
                 key: v4(),
             });
@@ -303,14 +303,14 @@ export default function Page() {
                 ) : (
                     <DualScrollView
                         edgeInsets={edgeInsets}
-                        header={<MetaData data={data?.data} />}
+                        header={<MetaData data={data} />}
                         list={({ contentContainerStyle }) => (
                             <FlashList
                                 estimatedItemSize={64}
                                 contentContainerStyle={contentContainerStyle}
                                 ListHeaderComponent={
                                     <MetaData
-                                        data={data?.data}
+                                        data={data}
                                         className={"flex md:hidden px-4 pb-4"}
                                         onOpenModal={() => {
                                             sheetRef.current?.snapToIndex(0);
@@ -319,25 +319,25 @@ export default function Page() {
                                 }
                                 renderItem={e => (
                                     <SongItem
-                                        onRequestPlay={() => addTrackFromDetail(data!.data.bvid, e.item.page)}
+                                        onRequestPlay={() => addTrackFromDetail(data!.bvid, e.item.page)}
                                         onLongPress={() => {
                                             setDisplayTrack(e.item);
                                             setShowActionSheet(true);
                                         }}
                                         data={{
-                                            author: data!.data.owner.name,
-                                            bvid: data!.data.bvid,
+                                            author: data!.owner.name,
+                                            bvid: data!.bvid,
                                             duration: e.item.duration,
                                             episode: e.item.page,
                                             title: e.item.part,
-                                            imgUrl: data!.data.pic,
+                                            imgUrl: data!.pic,
                                             id: 0,
                                             playlistId: 0,
                                             extendedData: null,
                                         }}
                                     />
                                 )}
-                                data={data?.data.pages ?? []}
+                                data={data?.pages ?? []}
                             />
                         )}
                     />
@@ -407,7 +407,7 @@ export default function Page() {
                 >
                     <Text className={"text-lg leading-normal font-semibold mb-2"}>视频简介</Text>
                     <Text className={"text-sm leading-normal break-words"} selectable>
-                        {decodeHTML(data?.data.desc ?? "")}
+                        {decodeHTML(data?.desc ?? "")}
                     </Text>
                 </BottomSheetScrollView>
             </BottomSheet>
@@ -424,16 +424,16 @@ export default function Page() {
                     }
                     switch (action) {
                         case "addPlaylist":
-                            setName(data?.data.title ?? "");
-                            setDescription(data?.data.desc ?? "");
+                            setName(data?.title ?? "");
+                            setDescription(data?.desc ?? "");
                             setPlaylistDetail([
                                 {
-                                    author: data?.data.owner.name ?? "",
-                                    bvid: data?.data.bvid ?? "",
+                                    author: data?.owner.name ?? "",
+                                    bvid: data?.bvid ?? "",
                                     duration: displayTrack.duration,
                                     episode: displayTrack.page,
                                     title: displayTrack.part,
-                                    imgUrl: data?.data.pic ?? "",
+                                    imgUrl: data?.pic ?? "",
                                     id: 0,
                                     playlistId: 0,
                                     extendedData: null,

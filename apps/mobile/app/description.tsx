@@ -23,7 +23,7 @@ export default function Page() {
     return (
         <View className={"bg-background-0"} style={{ maxHeight: height * 0.75 }}>
             <ScrollView className={"px-safe pb-safe"}>
-                <Text className={"text-sm leading-normal p-4"}>{data?.data.desc}</Text>
+                <Text className={"text-sm leading-normal p-4"}>{data?.desc}</Text>
             </ScrollView>
         </View>
     );

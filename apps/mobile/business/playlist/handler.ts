@@ -194,7 +194,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
         return;
     }
 
-    const { data } = await getBilisoundMetadata({ id });
+    const data = await getBilisoundMetadata({ id });
     const url = await getBilisoundResourceUrl(id, episode, useSettingsStore.getState().filterResourceURL);
     const currentEpisode = data.pages.find(e => e.page === episode);
     if (!currentEpisode) {

@@ -1,8 +1,18 @@
 const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require("nativewind/metro");
 const { withMonicon } = require("@monicon/metro");
+const { mergeConfig } = require("axios");
+const path = require("path");
 
-const config = getDefaultConfig(__dirname);
+const config = mergeConfig(getDefaultConfig(__dirname), {
+    projectRoot: path.resolve(__dirname, ".."),
+    resolver: {
+        unstable_enableSymlinks: true,
+        unstable_enablePackageExports: true,
+    },
+});
+
+config.resolver.unstable_conditionNames = ["browser", "require", "react-native"];
 
 const configWithNativeWind = withNativeWind(config, { input: "./global.css", inlineRem: 16 });
 

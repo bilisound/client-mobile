@@ -23,6 +23,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@bilisound/sdk": "workspace:*",
     "@bilisound/player": "0.1.14",
     "@expo-google-fonts/poppins": "^0.2.3",
     "@expo-google-fonts/roboto": "^0.2.3",

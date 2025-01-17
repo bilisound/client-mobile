@@ -18,7 +18,7 @@ export async function updatePlaylist(id: number, source: PlaylistSource, progres
             });
             const firstEpisode = await getBilisoundMetadata({ id: list[0].bvid });
             const builtList: PlaylistDetailInsert[] = list.map(e => ({
-                author: firstEpisode.data.owner.name,
+                author: firstEpisode.owner.name,
                 bvid: e.bvid ?? "",
                 duration: e.duration,
                 episode: 1,
@@ -41,7 +41,7 @@ export async function updatePlaylist(id: number, source: PlaylistSource, progres
         }
         case "video": {
             progressCallback?.(0);
-            const { data } = await getBilisoundMetadata({ id: source.bvid });
+            const data = await getBilisoundMetadata({ id: source.bvid });
             const builtList: PlaylistDetailInsert[] = data.pages.map(e => ({
                 author: data.owner.name,
                 bvid: data.bvid,

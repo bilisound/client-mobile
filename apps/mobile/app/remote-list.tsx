@@ -56,7 +56,7 @@ function MetaData({ data, className, style, mode }: MetaDataProps) {
             const firstEpisode = await getBilisoundMetadata({ id: list[0].bvid });
             setPlaylistDetail(
                 list.map(e => ({
-                    author: firstEpisode.data.owner.name,
+                    author: firstEpisode.owner.name,
                     bvid: e.bvid ?? "",
                     duration: e.duration,
                     episode: 1,
