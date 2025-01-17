@@ -14,9 +14,10 @@ import { Image } from "expo-image";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { PLACEHOLDER_AUDIO } from "~/constants/playback";
 import { Monicon } from "@monicon/native";
-import { ButtonOuter } from "~/components/ui/button";
+import { Button, ButtonMonIcon, ButtonOuter } from "~/components/ui/button";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { usePreventRemove } from "@react-navigation/native";
+import { getImageProxyUrl } from "~/utils/constant-helper";
 
 type TabTriggerChildProps = TabTriggerSlotProps & {
     iconName: string;
@@ -92,8 +93,25 @@ function CurrentPlayingTablet() {
     }
 
     return (
-        <View className={"hidden md:flex absolute left-safe bottom-safe w-16 xl:w-64 bg-green-500 items-center"}>
-            <Text>wip</Text>
+        <View className={"hidden md:flex absolute left-safe bottom-safe w-16 xl:w-64 items-center"}>
+            <View className={"w-16 h-12 items-center"}>
+                <ButtonOuter>
+                    <Button icon variant={"ghost"} onPress={() => toggle()}>
+                        <ButtonMonIcon
+                            name={isPlaying ? "fa6-solid:pause" : "fa6-solid:play"}
+                            size={isPlaying ? 22 : 18}
+                        />
+                    </Button>
+                </ButtonOuter>
+            </View>
+            <Pressable
+                className={
+                    "w-12 h-12 hover:bg-background-0/50 active:bg-background-0 items-center justify-center rounded-[12px]"
+                }
+                onPress={() => open()}
+            >
+                <Image source={getImageProxyUrl(currentTrack.artworkUri!)} className={"w-10 h-10 rounded-lg"} />
+            </Pressable>
         </View>
     );
 }
