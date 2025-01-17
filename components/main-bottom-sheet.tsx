@@ -186,14 +186,13 @@ function PlayerProgressBar() {
 function PlayerProgressTimer() {
     // 播放状态
     const activeTrack = useCurrentTrack();
-    const { position, duration } = useProgressSecond();
+    const { position } = useProgressSecond();
 
     let from = formatSecond(position);
-    let to = formatSecond(duration);
+    let to = activeTrack ? formatSecond(activeTrack.duration || 0) : "--:--";
 
     if (activeTrack?.uri === PLACEHOLDER_AUDIO) {
-        from = "--:--";
-        to = "--:--";
+        from = "00:00";
     }
 
     return (
@@ -236,19 +235,28 @@ function PlayerControlButtons() {
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
 
-function PlayerControl() {
+// 可能在其它形式的页面复用
+export function PlayerControl() {
     const currentTrack = useCurrentTrack();
     const [imageSize, setImageSize] = useState(0);
     const { close } = useBottomSheetStore(state => ({
         close: state.close,
     }));
+    const [closing, setClosing] = useState(false);
 
     function handleJump() {
+        if (closing) {
+            return;
+        }
         if (!currentTrack) {
             return;
         }
         close();
-        router.navigate(`/video/${currentTrack.extendedData?.id}`);
+        setClosing(true);
+        setTimeout(() => {
+            router.navigate(`/video/${currentTrack.extendedData?.id}`);
+            setClosing(false);
+        }, 250);
     }
 
     return (
