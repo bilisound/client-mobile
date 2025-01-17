@@ -340,7 +340,7 @@ export function MainBottomSheet() {
             onDismiss={close}
             handleComponent={null}
             enableDynamicSizing={false}
-            backgroundStyle={{ backgroundColor: colorValue("--color-background-0") }}
+            backgroundStyle={{ backgroundColor: colorValue("--color-background-0"), borderRadius: 0 }}
             activeOffsetY={[-1, 1]}
             failOffsetX={[-5, 5]}
         >
