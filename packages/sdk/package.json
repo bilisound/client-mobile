@@ -1,0 +1,20 @@
+{
+  "name": "@bilisound/sdk",
+  "description": "Runtime-agnostic core business logic",
+  "scripts": {
+    "build": "tsup-node ./src/index.ts --format esm --dts"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "~5.7.3"
+  },
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "type": "module"
+}
