@@ -1,4 +1,7 @@
-import { WebPlayInfo } from "./types-vendor";
+import { InitialStateResponse, WebPlayInfo } from "./types-vendor";
+import { InitialStateFestivalResponse } from "@bilisound/mobile/api/external/types";
+
+export type Numberish = string | number;
 
 export interface Logger {
     info(...msg: any[]): void;
@@ -7,7 +10,14 @@ export interface Logger {
     debug(...msg: any[]): void;
 }
 
-export type GetMetadataResponse = {
+export interface SDKOptions {
+    logger?: Logger;
+    userAgent?: string;
+    apiPrefix?: string;
+    sitePrefix?: string;
+}
+
+export interface GetMetadataResponse {
     bvid: string;
     aid: number;
     title: string;
@@ -25,65 +35,39 @@ export type GetMetadataResponse = {
         duration: number;
     }[];
     seasonId?: number;
-};
-
-export type VideoType = "regular" | "festival";
-
-export type Numberish = string | number;
-
-export interface VideoInitialState {
-    videoData?: {
-        bvid: string;
-        aid: number;
-        title: string;
-        pic: string;
-        owner: {
-            mid: number;
-            name: string;
-            face: string;
-        };
-        desc_v2?: { raw_text: string }[];
-        pubdate: number;
-        pages: {
-            page: number;
-            part: string;
-            duration: number;
-        }[];
-        season_id?: number;
-        is_upower_exclusive?: boolean;
-    };
-    videoInfo?: {
-        bvid: string;
-        aid: number;
-        title: string;
-        desc: string;
-        pubdate: number;
-        pages: {
-            page: number;
-            part: string;
-            duration: number;
-        }[];
-    };
-    sectionEpisodes?: {
-        bvid: string;
-        cover: string;
-        author: {
-            mid: number;
-            name: string;
-            face: string;
-        };
-    }[];
 }
 
-export interface VideoResponse {
-    initialState: VideoInitialState;
+export interface GetVideoResponse {
+    type: "regular";
+    initialState: InitialStateResponse;
     playInfo: WebPlayInfo;
-    type: VideoType;
 }
 
-export interface SDKOptions {
-    logger?: Logger;
-    userAgent?: string;
-    apiPrefix?: string;
-    sitePrefix?: string;
+export interface GetVideoFestivalResponse {
+    type: "festival";
+    initialState: InitialStateFestivalResponse;
+    playInfo: WebPlayInfo;
 }
+
+export interface EpisodeItem {
+    bvid: string;
+    title: string;
+    cover: string;
+    duration: number;
+}
+
+export interface GetEpisodeUserResponse {
+    pageSize: number;
+    pageNum: number;
+    total: number;
+    rows: EpisodeItem[];
+    meta: {
+        name: string;
+        description: string;
+        cover: string;
+        userId: Numberish;
+        seasonId: Numberish;
+    };
+}
+
+export type UserListMode = "season" | "series" | "favourite";

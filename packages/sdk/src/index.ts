@@ -1,4 +1,11 @@
-import { GetMetadataResponse, Logger, SDKOptions, VideoResponse } from "./types";
+import {
+    GetEpisodeUserResponse,
+    GetMetadataResponse,
+    Logger,
+    SDKOptions,
+    GetVideoFestivalResponse,
+    GetVideoResponse,
+} from "./types";
 import { filterCdnUrls } from "./cdn";
 import { InitialStateFestivalResponse, InitialStateResponse, WebPlayInfo } from "./types-vendor";
 import { extractJSON } from "./utils";
@@ -42,7 +49,7 @@ export class BilisoundSDK {
             async (req: InternalBiliRequestConfig) => {
                 if (!req.disableWbi) {
                     const params = req.params || {};
-                    const encodedParams = await signParam(params, this.sitePrefix, this.userAgent);
+                    const encodedParams = await signParam(params, this.apiPrefix, this.userAgent);
                     req.url = `${req.url}?${encodedParams}`;
                     delete req.params;
                 }
@@ -170,7 +177,7 @@ export class BilisoundSDK {
         });
     }
 
-    private parseVideoData(videoData: VideoResponse): GetMetadataResponse {
+    private parseVideoData(videoData: GetVideoResponse | GetVideoFestivalResponse): GetMetadataResponse {
         const { initialState, type } = videoData;
 
         switch (type) {
@@ -235,9 +242,64 @@ export class BilisoundSDK {
         }
     }
 
+    private async tryGetFullSection(userId: Numberish, listId: Numberish): Promise<GetEpisodeUserResponse | null> {
+        this.logger.info("尝试一次获取完整合集");
+        this.logger.debug(`userId: ${userId}, listId: ${listId}`);
+
+        const { data } = await this.getUserSeason(userId, listId, 1);
+        if (data.page.total <= data.page.page_size) {
+            this.logger.warn("一次获取完整合集取消：视频总数小于单页展示数量，无需进行此操作");
+            return null;
+        }
+
+        const name = data.meta.name;
+        const description = data.meta.description;
+        const cover = data.meta.cover;
+        const firstVideoId = data.archives[0]?.bvid;
+        if (!firstVideoId) {
+            this.logger.warn("一次获取完整合集失败：列表中没有找到第一个视频 ID");
+            return null;
+        }
+
+        const firstVideoResponse = await this.getVideo(firstVideoId, 1);
+        if (firstVideoResponse.type !== "regular") {
+            this.logger.warn("一次获取完整合集失败：非常规视频");
+            return null;
+        }
+
+        const sections = firstVideoResponse.initialState.sectionsInfo?.sections ?? [];
+        const episodes = sections.flatMap(section => section.episodes ?? []);
+        if (episodes.length <= 0) {
+            this.logger.warn("一次获取完整合集失败：列表中没有找到视频");
+            return null;
+        }
+
+        const rows = episodes.map(e => ({
+            bvid: e.bvid,
+            title: e.title,
+            cover: e.arc.pic,
+            duration: e.arc.duration,
+        }));
+
+        this.logger.debug(`一次获取完整合集成功：${rows.length} 条记录`);
+        return {
+            pageSize: rows.length,
+            pageNum: 1,
+            total: rows.length,
+            rows,
+            meta: {
+                name,
+                description,
+                cover,
+                userId,
+                seasonId: listId,
+            },
+        };
+    }
+
     // JSON 请求部分
 
-    private async getVideo(id: string, episode: number | string): Promise<VideoResponse> {
+    private async getVideo(id: string, episode: number | string): Promise<GetVideoResponse | GetVideoFestivalResponse> {
         const { finalUrl, response } = await this.fetchRaw(`${this.sitePrefix}${id}/?p=${episode}`);
 
         this.logger.debug(`最终跳转结果：${finalUrl}`);
@@ -248,6 +310,7 @@ export class BilisoundSDK {
                 /window\.__INITIAL_STATE__=(\{.+});\(function\(\)\{/,
                 response,
             );
+
             // 提取视频流信息
             const playInfo = await this.getVideoUrlFestival(
                 finalUrl,
@@ -255,6 +318,8 @@ export class BilisoundSDK {
                 initialState.videoInfo.bvid,
                 initialState.videoInfo.pages[0].cid,
             );
+
+            console.log(playInfo);
 
             return { type: "festival", initialState, playInfo };
         } else {
