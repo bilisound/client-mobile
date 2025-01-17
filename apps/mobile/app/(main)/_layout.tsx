@@ -82,12 +82,26 @@ function PlayingIcon() {
     );
 }
 
-// todo 平板样式
+function CurrentPlayingTablet() {
+    const currentTrack = useCurrentTrack();
+    const isPlaying = useIsPlaying();
+    const { open } = useBottomSheetStore();
+
+    if (!currentTrack) {
+        return null;
+    }
+
+    return (
+        <View className={"hidden md:flex absolute left-safe bottom-safe w-16 xl:w-64 bg-green-500 items-center"}>
+            <Text>wip</Text>
+        </View>
+    );
+}
+
 function CurrentPlaying() {
     const currentTrack = useCurrentTrack();
-    const { open, isOpen } = useBottomSheetStore(state => ({
+    const { open } = useBottomSheetStore(state => ({
         open: state.open,
-        isOpen: state.isOpen,
     }));
 
     if (!currentTrack) {
@@ -97,7 +111,8 @@ function CurrentPlaying() {
     return (
         <View
             className={
-                "bg-background-50 w-full h-16 border-b border-typography-700/10 flex-row items-center pr-3 gap-3 " + ""
+                "bg-background-50 w-full h-16 border-b border-typography-700/10 flex-row items-center pr-3 gap-3 " +
+                "md:hidden"
             }
             // onLayout={e => console.log(e.nativeEvent.layout)}
         >
@@ -180,6 +195,7 @@ export default function TabLayout() {
                     <TabTrigger asChild name="settings" href="/(main)/settings">
                         <TabTriggerChild iconName={"fa6-solid:gear"} title={"设置"} />
                     </TabTrigger>
+                    <CurrentPlayingTablet />
                 </TabList>
                 {showYuruChara && <YuruChara />}
             </Tabs>
