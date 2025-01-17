@@ -5,6 +5,8 @@ import {
     SDKOptions,
     GetVideoFestivalResponse,
     GetVideoResponse,
+    UserListMode,
+    EpisodeItem,
 } from "./types";
 import { filterCdnUrls } from "./cdn";
 import { InitialStateFestivalResponse, InitialStateResponse, WebPlayInfo } from "./types-vendor";
@@ -152,6 +154,77 @@ export class BilisoundSDK {
         }
 
         throw new Error("找不到可用的音频资源");
+    }
+
+    async getUserList(mode: UserListMode, userId: Numberish, listId: Numberish, page = 1): Promise<GetEpisodeUserResponse> {
+        let response;
+        let pageSize;
+        let pageNum;
+        let total;
+        let name = "";
+        let description = "";
+        let cover = "";
+        if (mode === "season") {
+            // 首先尝试从任意一个视频详情页面抓取完整的合集列表
+            const fullResult = await this.tryGetFullSection(userId, listId);
+            if (fullResult) {
+                return fullResult;
+            }
+
+            response = await this.getUserSeason(userId, listId, page);
+            const data = response.data;
+            pageSize = data.page.page_size;
+            pageNum = data.page.page_num;
+            total = data.page.total;
+            name = data.meta.name;
+            description = data.meta.description;
+            cover = data.meta.cover;
+        } else {
+            response = await this.getUserSeries(userId, listId, page);
+            const meta = await this.getUserSeriesMeta(listId);
+            pageSize = response.data.page.size;
+            pageNum = response.data.page.num;
+            total = response.data.page.total;
+            name = meta.data.meta.name;
+            description = meta.data.meta.description;
+            cover = response.data.archives[0].pic;
+        }
+        const rows = response.data.archives.map(e => ({
+            bvid: e.bvid,
+            title: e.title,
+            cover: e.pic,
+            duration: e.duration,
+        }));
+        return {
+            pageSize,
+            pageNum,
+            total,
+            rows,
+            meta: {
+                name,
+                description,
+                cover,
+                userId,
+                seasonId: listId,
+            },
+        };
+    }
+
+    async getUserListFull(mode: UserListMode, userId: Numberish, listId: Numberish, progressCallback?: (progress: number) => void): Promise<EpisodeItem[]> {
+        progressCallback?.(0);
+        const firstResponse = await this.getUserList(mode, userId, listId, 1);
+        const totalPages = Math.ceil(firstResponse.total / firstResponse.pageSize);
+        progressCallback?.(1 / totalPages);
+        let results: EpisodeItem[] = firstResponse.rows;
+        if (firstResponse.total <= firstResponse.pageSize) {
+            return results;
+        }
+        for (let i = 1; i < totalPages; i++) {
+            const newResults = (await this.getUserList(mode, userId, listId, i + 1)).rows;
+            progressCallback?.((i + 1) / totalPages);
+            results = results.concat(newResults);
+        }
+        return results;
     }
 
     // 工具部分

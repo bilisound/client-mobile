@@ -3,13 +3,7 @@ import { Text } from "~/components/ui/text";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import {
-    getBilisoundMetadata,
-    GetEpisodeUserResponse,
-    getUserList,
-    getUserListFull,
-    UserListMode,
-} from "~/api/bilisound";
+import { getBilisoundMetadata, getUserList, getUserListFull } from "~/api/bilisound";
 import { twMerge } from "tailwind-merge";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -26,6 +20,8 @@ import { FlashList } from "@shopify/flash-list";
 import { VideoItem } from "~/components/video-item";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import Toast from "react-native-toast-message";
+import { GetEpisodeUserResponse } from "@bilisound/sdk";
+import { UserListMode } from "@bilisound/sdk";
 
 interface MetaDataProps {
     data?: GetEpisodeUserResponse["meta"];

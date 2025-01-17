@@ -1,5 +1,5 @@
-import { UserListMode } from "~/api/bilisound";
 import { Numberish } from "~/typings/common";
+import { UserListMode } from "@bilisound/sdk";
 
 export type PlaylistSource =
     | {

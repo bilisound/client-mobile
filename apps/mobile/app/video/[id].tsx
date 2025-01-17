@@ -6,7 +6,7 @@ import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import useHistoryStore from "~/store/history";
-import { getBilisoundMetadata, GetBilisoundMetadataResponse } from "~/api/bilisound";
+import { getBilisoundMetadata } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
 import { View, ViewStyle, Animated } from "react-native";
 import { twMerge } from "tailwind-merge";
@@ -38,8 +38,9 @@ import {
 } from "~/components/ui/actionsheet";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import log from "~/utils/logger";
+import { GetMetadataResponse } from "@bilisound/sdk";
 
-type PageItem = GetBilisoundMetadataResponse["pages"][number];
+type PageItem = GetMetadataResponse["pages"][number];
 
 interface LongPressActionsProps {
     showActionSheet: boolean;
@@ -101,7 +102,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 }
 
 interface MetaDataProps {
-    data?: GetBilisoundMetadataResponse;
+    data?: GetMetadataResponse;
     className?: string;
     style?: ViewStyle;
     onOpenModal?: () => void;

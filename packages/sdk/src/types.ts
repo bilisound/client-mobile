@@ -1,5 +1,4 @@
-import { InitialStateResponse, WebPlayInfo } from "./types-vendor";
-import { InitialStateFestivalResponse } from "@bilisound/mobile/api/external/types";
+import { InitialStateResponse, WebPlayInfo, InitialStateFestivalResponse } from "./types-vendor";
 
 export type Numberish = string | number;
 

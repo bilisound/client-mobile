@@ -3,8 +3,9 @@ import sanitize from "sanitize-filename";
 
 import { bv2av } from "./vendors/av-bv";
 
-import { parseB23, UserListMode } from "~/api/bilisound";
+import { parseB23 } from "~/api/bilisound";
 import log from "~/utils/logger";
+import { UserListMode } from "@bilisound/sdk";
 
 export const B23_REGEX = /https?:\/\/b23\.tv\/([a-zA-Z0-9]+)/;
 export const USER_LIST_URL_REGEX = /^\/(\d+)\/channel\/(seriesdetail|collectiondetail)$/;
