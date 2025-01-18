@@ -267,7 +267,7 @@ function PlayerControlButtons() {
                     </Button>
                 </ButtonOuter>
             </View>
-            {/* todo */}s
+            {/* todo */}
             <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
                 <Button aria-label={"循环模式"} className={buttonToolSize} onPress={() => prev()} variant={"ghost"}>
                     <View className={"size-[44px] items-center justify-center"}>
