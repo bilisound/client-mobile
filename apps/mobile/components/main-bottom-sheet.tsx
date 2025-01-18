@@ -27,6 +27,7 @@ import { useProgressSecond } from "~/hooks/useProgressSecond";
 import { formatSecond } from "~/utils/datetime";
 import { router } from "expo-router";
 import { TrackData } from "@bilisound/player/build/types";
+import * as TabsPrimitive from "@rn-primitives/tabs";
 
 function isLoading(activeTrack: TrackData | null | undefined, duration: number) {
     return activeTrack?.uri === PLACEHOLDER_AUDIO || duration <= 0;
@@ -284,6 +285,7 @@ export function PlayerControl() {
         close: state.close,
     }));
     const [closing, setClosing] = useState(false);
+    const [value, setValue] = useState("account");
 
     function handleJump() {
         if (closing) {
@@ -303,7 +305,39 @@ export function PlayerControl() {
     return (
         <View className={"flex-1 flex-col md:flex-row"}>
             {/* 左侧：曲目图片 */}
-            <PlayerPicture />
+            <TabsPrimitive.Root value={value} onValueChange={setValue} className={"flex-1"}>
+                <View className={"items-center pt-4 px-4"}>
+                    <TabsPrimitive.List
+                        className={
+                            "flex-0 h-10 flex-row items-center justify-center rounded-md bg-background-100 px-1 w-48"
+                        }
+                    >
+                        <TabsPrimitive.Trigger
+                            value="account"
+                            className={"flex-1 items-center justify-center rounded-sm h-8 px-3 bg-background-0"}
+                            style={{ boxShadow: shadow["sm"] }}
+                        >
+                            <Text className={"text-sm font-medium text-typography-700 whitespace-nowrap"}>
+                                正在播放
+                            </Text>
+                        </TabsPrimitive.Trigger>
+                        <TabsPrimitive.Trigger
+                            value="password"
+                            className={"flex-1 items-center justify-center rounded-sm h-8 px-3"}
+                        >
+                            <Text className={"text-sm font-medium text-typography-500 whitespace-nowrap"}>
+                                播放队列
+                            </Text>
+                        </TabsPrimitive.Trigger>
+                    </TabsPrimitive.List>
+                </View>
+                <TabsPrimitive.Content value="account" className={"flex-1"}>
+                    <PlayerPicture />
+                </TabsPrimitive.Content>
+                <TabsPrimitive.Content value="password" className={"flex-1"}>
+                    <Text>Password content</Text>
+                </TabsPrimitive.Content>
+            </TabsPrimitive.Root>
 
             {/* 右侧：播放控制 */}
             <View
