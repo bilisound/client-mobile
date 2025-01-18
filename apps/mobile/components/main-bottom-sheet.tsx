@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useEffect, useState } from "react";
+import React, { useCallback, useMemo, useRef, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
@@ -285,7 +285,7 @@ export function PlayerControl() {
         close: state.close,
     }));
     const [closing, setClosing] = useState(false);
-    const [value, setValue] = useState("account");
+    const [value, setValue] = useState<"current" | "list">("current");
 
     function handleJump() {
         if (closing) {
@@ -307,7 +307,11 @@ export function PlayerControl() {
     return (
         <View className={"flex-1 flex-col md:flex-row"}>
             {/* 左侧：曲目图片 */}
-            <TabsPrimitive.Root value={value} onValueChange={setValue} className={"flex-1 md:flex-row"}>
+            <TabsPrimitive.Root
+                value={value}
+                onValueChange={setValue as Dispatch<SetStateAction<string>>}
+                className={"flex-1 md:flex-row"}
+            >
                 <View className={"items-center pt-4 px-4 " + "md:justify-center md:pb-4 md:pr-0"}>
                     <TabsPrimitive.List
                         className={
@@ -316,40 +320,49 @@ export function PlayerControl() {
                         }
                     >
                         <TabsPrimitive.Trigger
-                            value="account"
+                            value="current"
                             className={
                                 "flex-1 items-center justify-center rounded-sm max-md:h-8 px-3 py-0 " +
                                 "md:w-8 md:px-0 md:py-3 " +
-                                "bg-background-0"
+                                (value === "current" ? "bg-background-0" : "")
                             }
-                            style={{ boxShadow: shadow["sm"] }}
+                            style={{ boxShadow: value === "current" ? shadow["sm"] : undefined }}
+                            aria-label={"正在播放"}
                         >
                             <Text
-                                className={"text-sm font-medium text-typography-700 whitespace-nowrap md:leading-tight"}
+                                className={
+                                    "text-sm font-medium whitespace-nowrap md:leading-tight " +
+                                    (value === "current" ? "text-typography-700" : "text-typography-500")
+                                }
                             >
                                 {isHorizontal ? "正\n在\n播\n放" : "正在播放"}
                             </Text>
                         </TabsPrimitive.Trigger>
                         <TabsPrimitive.Trigger
-                            value="password"
+                            value="list"
                             className={
                                 "flex-1 items-center justify-center rounded-sm max-md:h-8 px-3 py-0 " +
                                 "md:w-8 md:px-0 md:py-3 " +
-                                ""
+                                (value === "list" ? "bg-background-0" : "")
                             }
+                            style={{ boxShadow: value === "list" ? shadow["sm"] : undefined }}
+                            aria-label={"播放队列"}
                         >
                             <Text
-                                className={"text-sm font-medium text-typography-500 whitespace-nowrap md:leading-tight"}
+                                className={
+                                    "text-sm font-medium whitespace-nowrap md:leading-tight " +
+                                    (value === "list" ? "text-typography-700" : "text-typography-500")
+                                }
                             >
                                 {isHorizontal ? "播\n放\n队\n列" : "播放队列"}
                             </Text>
                         </TabsPrimitive.Trigger>
                     </TabsPrimitive.List>
                 </View>
-                <TabsPrimitive.Content value="account" className={"flex-1"}>
+                <TabsPrimitive.Content value="current" className={"flex-1"}>
                     <PlayerPicture />
                 </TabsPrimitive.Content>
-                <TabsPrimitive.Content value="password" className={"flex-1"}>
+                <TabsPrimitive.Content value="list" className={"flex-1"}>
                     <Text>Password content</Text>
                 </TabsPrimitive.Content>
             </TabsPrimitive.Root>
