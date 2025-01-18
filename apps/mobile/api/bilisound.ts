@@ -6,11 +6,18 @@ import { BILISOUND_API_PREFIX, USER_AGENT_BILIBILI, USER_AGENT_BILISOUND } from 
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { Numberish } from "~/typings/common";
 import { BilisoundSDK, GetMetadataResponse, GetEpisodeUserResponse, UserListMode } from "@bilisound/sdk";
+import log from "~/utils/logger";
 
 const sdk = new BilisoundSDK({
     userAgent: USER_AGENT_BILIBILI,
     apiPrefix: "https://api.bilibili.com/",
     sitePrefix: "https://www.bilibili.com/",
+    logger: {
+        info: log.info.bind(log),
+        warn: log.warn.bind(log),
+        error: log.error.bind(log),
+        debug: log.debug.bind(log),
+    },
 });
 
 /**
