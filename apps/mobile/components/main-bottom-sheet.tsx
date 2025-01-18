@@ -280,7 +280,7 @@ function PlayerPicture() {
 function PlayerQueueList() {
     const queue = useQueue();
     return (
-        <View className={"py-4 md:py-0 flex-1"}>
+        <View className={"pt-4 pb-2 md:py-0 flex-1"}>
             <BottomSheetFlashList
                 data={queue}
                 renderItem={({ item, index }) => (
