@@ -251,13 +251,35 @@ function PlayerControlButtons() {
     );
 }
 
+function PlayerPicture() {
+    const currentTrack = useCurrentTrack();
+    const [imageSize, setImageSize] = useState(0);
+
+    return (
+        <View
+            className={"flex-1 items-center justify-center overflow-hidden"}
+            onLayout={event => {
+                const { width, height } = event.nativeEvent.layout;
+                // padding 是 32dp `p-8`
+                setImageSize(Math.min(width, height) - 64);
+            }}
+        >
+            <View
+                style={{ width: imageSize, height: imageSize, boxShadow: shadow["xl"] }}
+                className={"rounded-2xl overflow-hidden"}
+            >
+                <Image source={currentTrack?.artworkUri} className={"size-full"}></Image>
+            </View>
+        </View>
+    );
+}
+
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
 
 // 可能在其它形式的页面复用
 export function PlayerControl() {
     const currentTrack = useCurrentTrack();
-    const [imageSize, setImageSize] = useState(0);
     const { close } = useBottomSheetStore(state => ({
         close: state.close,
     }));
@@ -281,21 +303,7 @@ export function PlayerControl() {
     return (
         <View className={"flex-1 flex-col md:flex-row"}>
             {/* 左侧：曲目图片 */}
-            <View
-                className={"flex-1 items-center justify-center overflow-hidden"}
-                onLayout={event => {
-                    const { width, height } = event.nativeEvent.layout;
-                    // padding 是 32dp `p-8`
-                    setImageSize(Math.min(width, height) - 64);
-                }}
-            >
-                <View
-                    style={{ width: imageSize, height: imageSize, boxShadow: shadow["xl"] }}
-                    className={"rounded-2xl overflow-hidden"}
-                >
-                    <Image source={currentTrack?.artworkUri} className={"size-full"}></Image>
-                </View>
-            </View>
+            <PlayerPicture />
 
             {/* 右侧：播放控制 */}
             <View
