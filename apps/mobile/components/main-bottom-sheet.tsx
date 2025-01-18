@@ -282,6 +282,7 @@ function PlayerQueueList() {
     return (
         <View className={"pt-4 pb-2 md:py-0 flex-1"}>
             <BottomSheetFlashList
+                estimatedItemSize={64}
                 data={queue}
                 renderItem={({ item, index }) => (
                     <SongItem
