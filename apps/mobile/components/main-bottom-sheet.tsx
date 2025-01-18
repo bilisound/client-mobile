@@ -28,7 +28,6 @@ import { formatSecond } from "~/utils/datetime";
 import { router } from "expo-router";
 import { TrackData } from "@bilisound/player/build/types";
 import * as TabsPrimitive from "@rn-primitives/tabs";
-import { FlashList } from "@shopify/flash-list";
 import { SongItem } from "~/components/song-item";
 
 function isLoading(activeTrack: TrackData | null | undefined, duration: number) {
@@ -212,39 +211,69 @@ function PlayerControlButtons() {
 
     const [layoutWidth, setLayoutWidth] = useState(384);
     const isNarrow = layoutWidth < 384;
+
     const iconSize = isNarrow ? 24 : 28;
     const iconJumpSize = isNarrow ? 38 : 44;
+    const iconToolSize = 24;
+
     const buttonSize = isNarrow ? "w-14 h-14" : "w-16 h-16";
+    const buttonToolSize = "w-12 h-12";
 
     // console.log("layoutWidth", layoutWidth);
 
     return (
         <View
-            className={`flex-row justify-center ${isNarrow ? "gap-3" : "gap-4"} pt-2 pb-8 md:pb-0 ` + DEBUG_COLOR[1]}
+            className={`flex-row justify-between items-center pt-2 pb-8 px-4 md:pb-0 ` + DEBUG_COLOR[1]}
             onLayout={e => setLayoutWidth(e.nativeEvent.layout.width)}
         >
-            <ButtonOuter className={`rounded-full ${buttonSize}`}>
-                <Button aria-label={"上一首"} className={buttonSize} onPress={() => prev()} variant={"ghost"}>
+            {/* todo */}
+            <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
+                <Button aria-label={"重复模式"} className={buttonToolSize} onPress={() => prev()} variant={"ghost"}>
                     <View className={"size-[44px] items-center justify-center"}>
                         <Monicon
-                            name={"ri:skip-back-mini-fill"}
-                            size={iconJumpSize}
+                            name={"tabler:repeat-off"}
+                            size={iconToolSize}
                             color={colorValue("--color-primary-500")}
                         />
                     </View>
                 </Button>
             </ButtonOuter>
-            <ButtonOuter className={`rounded-full ${buttonSize}`}>
-                <Button aria-label={isPlaying ? "暂停" : "播放"} className={buttonSize} onPress={() => toggle()}>
-                    <PlayButtonIcon size={iconSize} />
-                </Button>
-            </ButtonOuter>
-            <ButtonOuter className={`rounded-full ${buttonSize}`}>
-                <Button aria-label={"下一首"} className={buttonSize} onPress={() => next()} variant={"ghost"}>
-                    <View className={"size-[44px] items-center justify-center rotate-180"}>
+            <View className={`flex-row justify-center ${isNarrow ? "gap-3" : "gap-4"} ` + DEBUG_COLOR[1]}>
+                <ButtonOuter className={`rounded-full ${buttonSize}`}>
+                    <Button aria-label={"上一首"} className={buttonSize} onPress={() => prev()} variant={"ghost"}>
+                        <View className={"size-[44px] items-center justify-center"}>
+                            <Monicon
+                                name={"ri:skip-back-mini-fill"}
+                                size={iconJumpSize}
+                                color={colorValue("--color-primary-500")}
+                            />
+                        </View>
+                    </Button>
+                </ButtonOuter>
+                <ButtonOuter className={`rounded-full ${buttonSize}`}>
+                    <Button aria-label={isPlaying ? "暂停" : "播放"} className={buttonSize} onPress={() => toggle()}>
+                        <PlayButtonIcon size={iconSize} />
+                    </Button>
+                </ButtonOuter>
+                <ButtonOuter className={`rounded-full ${buttonSize}`}>
+                    <Button aria-label={"下一首"} className={buttonSize} onPress={() => next()} variant={"ghost"}>
+                        <View className={"size-[44px] items-center justify-center rotate-180"}>
+                            <Monicon
+                                name={"ri:skip-back-mini-fill"}
+                                size={iconJumpSize}
+                                color={colorValue("--color-primary-500")}
+                            />
+                        </View>
+                    </Button>
+                </ButtonOuter>
+            </View>
+            {/* todo */}s
+            <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
+                <Button aria-label={"循环模式"} className={buttonToolSize} onPress={() => prev()} variant={"ghost"}>
+                    <View className={"size-[44px] items-center justify-center"}>
                         <Monicon
-                            name={"ri:skip-back-mini-fill"}
-                            size={iconJumpSize}
+                            name={"tabler:arrows-right"}
+                            size={iconToolSize}
                             color={colorValue("--color-primary-500")}
                         />
                     </View>

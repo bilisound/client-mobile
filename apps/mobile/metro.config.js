@@ -9,15 +9,23 @@ const config = mergeConfig(getDefaultConfig(__dirname), {
     resolver: {
         unstable_enableSymlinks: true,
         unstable_enablePackageExports: true,
+        unstable_conditionNames: ["browser", "require", "react-native"],
     },
 });
-
-config.resolver.unstable_conditionNames = ["browser", "require", "react-native"];
 
 const configWithNativeWind = withNativeWind(config, { input: "./global.css", inlineRem: 16 });
 
 const configWithMonicon = withMonicon(configWithNativeWind, {
-    icons: ["uil:qrcode-scan", "tabler:alert-square-rounded", "ri:skip-back-mini-fill"],
+    icons: [
+        "uil:qrcode-scan",
+        "ri:skip-back-mini-fill",
+        "tabler:alert-square-rounded",
+        "tabler:repeat-off",
+        "tabler:repeat",
+        "tabler:repeat-once",
+        "tabler:arrows-right",
+        "tabler:arrows-shuffle",
+    ],
     collections: ["fa6-solid", "fa6-regular"],
 });
 
