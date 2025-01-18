@@ -6,8 +6,8 @@ import { Text } from "~/components/ui/text";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { next, prev, seek, toggle, useCurrentTrack, useIsPlaying } from "@bilisound/player";
 import { Image } from "expo-image";
-import { ActivityIndicator, View } from "react-native";
-import { shadow } from "~/constants/styles";
+import { ActivityIndicator, useWindowDimensions, View } from "react-native";
+import { breakpoints, shadow } from "~/constants/styles";
 import { Pressable } from "~/components/ui/pressable";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
 import { Slider } from "@miblanchard/react-native-slider";
@@ -214,7 +214,7 @@ function PlayerControlButtons() {
     const iconJumpSize = isNarrow ? 38 : 44;
     const buttonSize = isNarrow ? "w-14 h-14" : "w-16 h-16";
 
-    console.log("layoutWidth", layoutWidth);
+    // console.log("layoutWidth", layoutWidth);
 
     return (
         <View
@@ -302,31 +302,46 @@ export function PlayerControl() {
         }, 250);
     }
 
+    const isHorizontal = useWindowDimensions().width >= breakpoints.md;
+
     return (
         <View className={"flex-1 flex-col md:flex-row"}>
             {/* 左侧：曲目图片 */}
-            <TabsPrimitive.Root value={value} onValueChange={setValue} className={"flex-1"}>
-                <View className={"items-center pt-4 px-4"}>
+            <TabsPrimitive.Root value={value} onValueChange={setValue} className={"flex-1 md:flex-row"}>
+                <View className={"items-center pt-4 px-4 " + "md:justify-center md:pb-4 md:pr-0"}>
                     <TabsPrimitive.List
                         className={
-                            "flex-0 h-10 flex-row items-center justify-center rounded-md bg-background-100 px-1 w-48"
+                            "flex-0 w-48 h-10 flex-row items-center justify-center rounded-md bg-background-100 px-1 py-0 " +
+                            "md:w-10 md:h-56 md:flex-col md:px-0 md:py-1"
                         }
                     >
                         <TabsPrimitive.Trigger
                             value="account"
-                            className={"flex-1 items-center justify-center rounded-sm h-8 px-3 bg-background-0"}
+                            className={
+                                "flex-1 items-center justify-center rounded-sm max-md:h-8 px-3 py-0 " +
+                                "md:w-8 md:px-0 md:py-3 " +
+                                "bg-background-0"
+                            }
                             style={{ boxShadow: shadow["sm"] }}
                         >
-                            <Text className={"text-sm font-medium text-typography-700 whitespace-nowrap"}>
-                                正在播放
+                            <Text
+                                className={"text-sm font-medium text-typography-700 whitespace-nowrap md:leading-tight"}
+                            >
+                                {isHorizontal ? "正\n在\n播\n放" : "正在播放"}
                             </Text>
                         </TabsPrimitive.Trigger>
                         <TabsPrimitive.Trigger
                             value="password"
-                            className={"flex-1 items-center justify-center rounded-sm h-8 px-3"}
+                            className={
+                                "flex-1 items-center justify-center rounded-sm max-md:h-8 px-3 py-0 " +
+                                "md:w-8 md:px-0 md:py-3 " +
+                                ""
+                            }
                         >
-                            <Text className={"text-sm font-medium text-typography-500 whitespace-nowrap"}>
-                                播放队列
+                            <Text
+                                className={"text-sm font-medium text-typography-500 whitespace-nowrap md:leading-tight"}
+                            >
+                                {isHorizontal ? "播\n放\n队\n列" : "播放队列"}
                             </Text>
                         </TabsPrimitive.Trigger>
                     </TabsPrimitive.List>
