@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useRef, useEffect, useState, Dispatch, SetStateAction } from "react";
-import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetFlashList, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { Text } from "~/components/ui/text";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import { next, prev, seek, toggle, useCurrentTrack, useIsPlaying } from "@bilisound/player";
+import { jump, next, prev, seek, toggle, useCurrentTrack, useIsPlaying, useQueue } from "@bilisound/player";
 import { Image } from "expo-image";
 import { ActivityIndicator, useWindowDimensions, View } from "react-native";
 import { breakpoints, shadow } from "~/constants/styles";
@@ -28,6 +28,8 @@ import { formatSecond } from "~/utils/datetime";
 import { router } from "expo-router";
 import { TrackData } from "@bilisound/player/build/types";
 import * as TabsPrimitive from "@rn-primitives/tabs";
+import { FlashList } from "@shopify/flash-list";
+import { SongItem } from "~/components/song-item";
 
 function isLoading(activeTrack: TrackData | null | undefined, duration: number) {
     return activeTrack?.uri === PLACEHOLDER_AUDIO || duration <= 0;
@@ -275,6 +277,35 @@ function PlayerPicture() {
     );
 }
 
+function PlayerQueueList() {
+    const queue = useQueue();
+    return (
+        <View className={"py-4 md:py-0 flex-1"}>
+            <BottomSheetFlashList
+                data={queue}
+                renderItem={({ item, index }) => (
+                    <SongItem
+                        data={{
+                            id: 0,
+                            title: item.title!,
+                            imgUrl: "",
+                            duration: item.duration!,
+                            extendedData: null,
+                            playlistId: 0,
+                            author: "",
+                            bvid: item.extendedData!.id,
+                            episode: item.extendedData!.episode,
+                        }}
+                        index={index + 1}
+                        onRequestPlay={() => jump(index)}
+                        onToggle={() => toggle()}
+                    />
+                )}
+            />
+        </View>
+    );
+}
+
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
 
@@ -323,7 +354,7 @@ export function PlayerControl() {
                 onValueChange={setValue as Dispatch<SetStateAction<string>>}
                 className={"flex-1 md:flex-row"}
             >
-                <View className={"items-center pt-4 px-4 " + "md:justify-center md:pb-4 md:pr-0"}>
+                <View className={"items-center pt-4 px-4 " + "md:justify-center md:pb-4"}>
                     <TabsPrimitive.List
                         className={
                             "flex-0 w-48 h-10 flex-row items-center justify-center rounded-md bg-background-100 px-1 py-0 " +
@@ -358,7 +389,7 @@ export function PlayerControl() {
                     <PlayerPicture />
                 </TabsPrimitive.Content>
                 <TabsPrimitive.Content value="list" className={"flex-1"}>
-                    <Text>Password content</Text>
+                    <PlayerQueueList />
                 </TabsPrimitive.Content>
             </TabsPrimitive.Root>
 
