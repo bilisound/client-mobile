@@ -278,6 +278,17 @@ function PlayerPicture() {
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
 
+const TABS = [
+    {
+        value: "current",
+        label: "正在播放",
+    },
+    {
+        value: "list",
+        label: "播放队列",
+    },
+];
+
 // 可能在其它形式的页面复用
 export function PlayerControl() {
     const currentTrack = useCurrentTrack();
@@ -319,44 +330,28 @@ export function PlayerControl() {
                             "md:w-10 md:h-56 md:flex-col md:px-0 md:py-1"
                         }
                     >
-                        <TabsPrimitive.Trigger
-                            value="current"
-                            className={
-                                "flex-1 items-center justify-center rounded-sm max-md:h-8 px-3 py-0 " +
-                                "md:w-8 md:px-0 md:py-3 " +
-                                (value === "current" ? "bg-background-0" : "")
-                            }
-                            style={{ boxShadow: value === "current" ? shadow["sm"] : undefined }}
-                            aria-label={"正在播放"}
-                        >
-                            <Text
+                        {TABS.map(tab => (
+                            <TabsPrimitive.Trigger
+                                key={tab.value}
+                                value={tab.value}
                                 className={
-                                    "text-sm font-medium whitespace-nowrap md:leading-tight " +
-                                    (value === "current" ? "text-typography-700" : "text-typography-500")
+                                    "flex-1 items-center justify-center rounded-sm max-md:h-8 px-3 py-0 " +
+                                    "md:w-8 md:px-0 md:py-3 " +
+                                    (value === tab.value ? "bg-background-0" : "")
                                 }
+                                style={{ boxShadow: value === tab.value ? shadow["sm"] : undefined }}
+                                aria-label={tab.label}
                             >
-                                {isHorizontal ? "正\n在\n播\n放" : "正在播放"}
-                            </Text>
-                        </TabsPrimitive.Trigger>
-                        <TabsPrimitive.Trigger
-                            value="list"
-                            className={
-                                "flex-1 items-center justify-center rounded-sm max-md:h-8 px-3 py-0 " +
-                                "md:w-8 md:px-0 md:py-3 " +
-                                (value === "list" ? "bg-background-0" : "")
-                            }
-                            style={{ boxShadow: value === "list" ? shadow["sm"] : undefined }}
-                            aria-label={"播放队列"}
-                        >
-                            <Text
-                                className={
-                                    "text-sm font-medium whitespace-nowrap md:leading-tight " +
-                                    (value === "list" ? "text-typography-700" : "text-typography-500")
-                                }
-                            >
-                                {isHorizontal ? "播\n放\n队\n列" : "播放队列"}
-                            </Text>
-                        </TabsPrimitive.Trigger>
+                                <Text
+                                    className={
+                                        "text-sm font-medium whitespace-nowrap md:leading-tight " +
+                                        (value === tab.value ? "text-typography-700" : "text-typography-500")
+                                    }
+                                >
+                                    {isHorizontal ? tab.label.split("").join("\n") : tab.label}
+                                </Text>
+                            </TabsPrimitive.Trigger>
+                        ))}
                     </TabsPrimitive.List>
                 </View>
                 <TabsPrimitive.Content value="current" className={"flex-1"}>
