@@ -1,0 +1,11 @@
+name = "bilisound"
+main = "index.ts"
+compatibility_date = "2024-03-19"
+
+kv_namespaces = [
+	{ binding = "bilisound", id = "3f0ac0aca22d44bfa9f6aee632daf778", preview_id = "102673e0a0674f4ba54cfae9bc3a09b4" }
+]
+
+[vars]
+ENDPOINT_BILI = ["https://www.bilibili.com"]
+DEBUG_KEY = "12345678"

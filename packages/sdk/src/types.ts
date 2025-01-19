@@ -14,6 +14,7 @@ export interface SDKOptions {
     userAgent?: string;
     apiPrefix?: string;
     sitePrefix?: string;
+    key?: string;
 }
 
 export interface GetMetadataResponse {

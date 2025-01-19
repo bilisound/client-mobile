@@ -10,8 +10,9 @@ import log from "~/utils/logger";
 
 const sdk = new BilisoundSDK({
     userAgent: USER_AGENT_BILIBILI,
-    apiPrefix: "https://api.bilibili.com/",
-    sitePrefix: "https://www.bilibili.com/",
+    apiPrefix: "https://api.bilibili.com",
+    sitePrefix: "https://www.bilibili.com",
+    key: "",
     logger: {
         info: log.info.bind(log),
         warn: log.warn.bind(log),

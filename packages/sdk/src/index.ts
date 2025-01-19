@@ -19,9 +19,10 @@ import { UserSeasonInfo, UserSeriesInfo, UserSeriesMetadata } from "./types-vend
 
 export class BilisoundSDK {
     logger: Logger;
-    userAgent: string = "";
-    sitePrefix: string = "";
-    apiPrefix: string = "";
+    userAgent = "";
+    sitePrefix = "";
+    apiPrefix = "";
+    key = "";
     request: <T>(cfg: BiliRequestConfig) => Promise<T>;
 
     constructor(options: SDKOptions = {}) {
@@ -34,6 +35,7 @@ export class BilisoundSDK {
         this.userAgent = options.userAgent;
         this.sitePrefix = options.sitePrefix;
         this.apiPrefix = options.apiPrefix;
+        this.key = options.key;
         this.initRequest();
     }
 
@@ -49,6 +51,9 @@ export class BilisoundSDK {
 
         instance.interceptors.request.use(
             async (req: InternalBiliRequestConfig) => {
+                if (this.key) {
+                    req.headers.set("Bilisound-Token", this.key);
+                }
                 if (!req.disableWbi) {
                     const params = req.params || {};
                     const encodedParams = await signParam(params, this.apiPrefix, this.userAgent);
@@ -230,10 +235,14 @@ export class BilisoundSDK {
     // 工具部分
 
     private async fetchRaw(url: string) {
+        const headers = {
+            "user-agent": this.userAgent,
+        };
+        if (this.key) {
+            headers["Bilisound-Token"] = this.key;
+        }
         const res = await fetch(url, {
-            headers: {
-                "user-agent": this.userAgent,
-            },
+            headers,
         });
         return { finalUrl: res.url, response: await res.text() };
     };
@@ -373,7 +382,7 @@ export class BilisoundSDK {
     // JSON 请求部分
 
     private async getVideo(id: string, episode: number | string): Promise<GetVideoResponse | GetVideoFestivalResponse> {
-        const { finalUrl, response } = await this.fetchRaw(`${this.sitePrefix}${id}/?p=${episode}`);
+        const { finalUrl, response } = await this.fetchRaw(`${this.sitePrefix}/${id}/?p=${episode}`);
 
         this.logger.debug(`最终跳转结果：${finalUrl}`);
         if (finalUrl.startsWith("https://www.bilibili.com/festival/")) {
