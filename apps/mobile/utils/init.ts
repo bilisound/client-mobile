@@ -8,6 +8,7 @@ import { BILISOUND_LOG_URI, BILISOUND_OFFLINE_URI } from "~/constants/file";
 import { handleCacheStatus } from "~/utils/migration/cache-status";
 import { handlePlaylist } from "~/utils/migration/playlist";
 import { loadTrackData } from "~/business/playlist/handler";
+import { loadPlaceholderAudio } from "~/constants/playback";
 
 export default async function init() {
     // 日志系统初始化
@@ -26,6 +27,14 @@ export default async function init() {
         log.debug("目录初始化成功");
     } catch (e) {
         log.error(`目录初始化失败。原因：${e}`);
+    }
+
+    // 占位资源初始化
+    try {
+        await loadPlaceholderAudio();
+        log.debug("占位资源初始化成功");
+    } catch (e) {
+        log.error(`占位资源初始化失败。原因：${e}`);
     }
 
     // 歌单数据库初始化
