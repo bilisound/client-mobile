@@ -5,6 +5,7 @@ import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { Text } from "~/components/ui/text";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import {
+    getRepeatMode,
     jump,
     next,
     prev,
@@ -41,6 +42,9 @@ import { TrackData } from "@bilisound/player/build/types";
 import * as TabsPrimitive from "@rn-primitives/tabs";
 import { SongItem } from "~/components/song-item";
 import { useRepeatMode } from "@bilisound/player/build/hooks/useRepeatMode";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "~/components/notify-toast";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
@@ -264,6 +268,10 @@ function PlayerControlButtons() {
                 await setRepeatMode(RepeatMode.OFF);
                 break;
         }
+        Toast.show({
+            type: "info",
+            text1: `使用${REPEAT_MODE[await getRepeatMode()].name}`,
+        });
     }
 
     return (
@@ -491,6 +499,7 @@ export function PlayerControl() {
 }
 
 export function MainBottomSheet() {
+    const edgeInsets = useSafeAreaInsets();
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const { isOpen, close } = useBottomSheetStore();
 
@@ -530,6 +539,7 @@ export function MainBottomSheet() {
             activeOffsetY={[-1, 1]}
             failOffsetX={[-5, 5]}
         >
+            <Toast config={toastConfig} topOffset={edgeInsets.top} />
             <BottomSheetView className={"w-full h-full p-safe flex-1 " + DEBUG_COLOR[2]}>
                 <PlayerControl />
             </BottomSheetView>

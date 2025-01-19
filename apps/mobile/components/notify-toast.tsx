@@ -3,6 +3,8 @@ import { View } from "react-native";
 
 import { Text } from "~/components/ui/text";
 import { shadow } from "~/constants/styles";
+import { ToastConfig } from "react-native-toast-message/lib/src/types";
+import React from "react";
 
 export interface NotifyToastProps {
     type: "success" | "info" | "warning" | "error";
@@ -40,3 +42,10 @@ export function NotifyToast({ type, title, description }: NotifyToastProps) {
         </View>
     );
 }
+
+export const toastConfig: ToastConfig = {
+    success: ({ text1, text2 }) => <NotifyToast type="success" title={text1 ?? ""} description={text2} />,
+    info: ({ text1, text2 }) => <NotifyToast type="info" title={text1 ?? ""} description={text2} />,
+    warning: ({ text1, text2 }) => <NotifyToast type="warning" title={text1 ?? ""} description={text2} />,
+    error: ({ text1, text2 }) => <NotifyToast type="error" title={text1 ?? ""} description={text2} />,
+};

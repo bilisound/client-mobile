@@ -17,7 +17,7 @@ import "~/utils/polyfill";
 import "~/utils/nativewind";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { registerBackgroundEventListener } from "@bilisound/player";
-import { NotifyToast } from "~/components/notify-toast";
+import { NotifyToast, toastConfig } from "~/components/notify-toast";
 import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { refreshCurrentTrack, saveTrackData } from "~/business/playlist/handler";
@@ -40,13 +40,6 @@ const queryClient = new QueryClient();
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_settings = {
     initialRouteName: "(main)",
-};
-
-const toastConfig: ToastConfig = {
-    success: ({ text1, text2 }) => <NotifyToast type="success" title={text1 ?? ""} description={text2} />,
-    info: ({ text1, text2 }) => <NotifyToast type="info" title={text1 ?? ""} description={text2} />,
-    warning: ({ text1, text2 }) => <NotifyToast type="warning" title={text1 ?? ""} description={text2} />,
-    error: ({ text1, text2 }) => <NotifyToast type="error" title={text1 ?? ""} description={text2} />,
 };
 
 registerBackgroundEventListener(async ({ event, data }) => {
