@@ -47,6 +47,18 @@ export default function bilisound(router: RouterType) {
     });
 
     router.get("/api/internal/metadata", async (request, env) => {
+        const id = request.query.id;
+        if (typeof id !== "string") {
+            return ajaxError("api usage error", 400);
+        }
+
+        try {
+            const sdk = getSDK(env);
+            const res = await sdk.getMetadata(id);
+            return ajaxSuccess(res);
+        } catch (e) {
+            return ajaxError(e);
+        }
     });
 
     router.get("/api/internal/resource", async (request, env) => {
