@@ -4,7 +4,18 @@ import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { Text } from "~/components/ui/text";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import { jump, next, prev, seek, toggle, useCurrentTrack, useIsPlaying, useQueue } from "@bilisound/player";
+import {
+    jump,
+    next,
+    prev,
+    RepeatMode,
+    seek,
+    setRepeatMode,
+    toggle,
+    useCurrentTrack,
+    useIsPlaying,
+    useQueue,
+} from "@bilisound/player";
 import { Image } from "expo-image";
 import { ActivityIndicator, useWindowDimensions, View } from "react-native";
 import { breakpoints, shadow } from "~/constants/styles";
@@ -29,6 +40,27 @@ import { router } from "expo-router";
 import { TrackData } from "@bilisound/player/build/types";
 import * as TabsPrimitive from "@rn-primitives/tabs";
 import { SongItem } from "~/components/song-item";
+import { useRepeatMode } from "@bilisound/player/build/hooks/useRepeatMode";
+
+// const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
+const DEBUG_COLOR = ["", "", ""];
+
+const TABS = [
+    {
+        value: "current",
+        label: "正在播放",
+    },
+    {
+        value: "list",
+        label: "播放队列",
+    },
+];
+
+const REPEAT_MODE = {
+    0: { name: "顺序播放", icon: "tabler:repeat-off" },
+    1: { name: "单曲循环", icon: "tabler:repeat-once" },
+    2: { name: "列表循环", icon: "tabler:repeat" },
+};
 
 function isLoading(activeTrack: TrackData | null | undefined, duration: number) {
     return activeTrack?.uri === PLACEHOLDER_AUDIO || duration <= 0;
@@ -208,6 +240,7 @@ function PlayerProgressTimer() {
 function PlayerControlButtons() {
     const { colorValue } = useRawThemeValues();
     const isPlaying = useIsPlaying();
+    const repeatMode = useRepeatMode();
 
     const [layoutWidth, setLayoutWidth] = useState(384);
     const isNarrow = layoutWidth < 384;
@@ -219,19 +252,35 @@ function PlayerControlButtons() {
     const buttonSize = isNarrow ? "w-14 h-14" : "w-16 h-16";
     const buttonToolSize = "w-12 h-12";
 
-    // console.log("layoutWidth", layoutWidth);
+    async function handleChangeRepeatMode() {
+        switch (repeatMode) {
+            case RepeatMode.OFF:
+                await setRepeatMode(RepeatMode.ONE);
+                break;
+            case RepeatMode.ONE:
+                await setRepeatMode(RepeatMode.ALL);
+                break;
+            case RepeatMode.ALL:
+                await setRepeatMode(RepeatMode.OFF);
+                break;
+        }
+    }
 
     return (
         <View
             className={`flex-row justify-between items-center pt-2 pb-8 px-4 md:pb-0 ` + DEBUG_COLOR[1]}
             onLayout={e => setLayoutWidth(e.nativeEvent.layout.width)}
         >
-            {/* todo */}
             <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
-                <Button aria-label={"重复模式"} className={buttonToolSize} onPress={() => prev()} variant={"ghost"}>
+                <Button
+                    aria-label={REPEAT_MODE[repeatMode].name}
+                    className={buttonToolSize}
+                    onPress={() => handleChangeRepeatMode()}
+                    variant={"ghost"}
+                >
                     <View className={"size-[44px] items-center justify-center"}>
                         <Monicon
-                            name={"tabler:repeat-off"}
+                            name={REPEAT_MODE[repeatMode].icon}
                             size={iconToolSize}
                             color={colorValue("--color-primary-500")}
                         />
@@ -335,20 +384,6 @@ function PlayerQueueList() {
         </View>
     );
 }
-
-// const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
-const DEBUG_COLOR = ["", "", ""];
-
-const TABS = [
-    {
-        value: "current",
-        label: "正在播放",
-    },
-    {
-        value: "list",
-        label: "播放队列",
-    },
-];
 
 // 可能在其它形式的页面复用
 export function PlayerControl() {
