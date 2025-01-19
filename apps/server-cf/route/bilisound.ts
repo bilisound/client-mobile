@@ -1,6 +1,7 @@
 import { RouterType } from "itty-router";
 import { getSDK } from "../utils/sdk";
 import { ajaxError, ajaxSuccess } from "../utils/misc";
+import { UserListMode } from "@bilisound/sdk";
 
 export default function bilisound(router: RouterType) {
     router.get("/api/internal/resolve-b23", async (request, env) => {
@@ -19,6 +20,30 @@ export default function bilisound(router: RouterType) {
     });
 
     router.get("/api/internal/user-list", async (request, env) => {
+        const { userId, listId, page, mode } = request.query;
+        if (
+            typeof userId !== "string" ||
+            typeof listId !== "string" ||
+            typeof page !== "string" ||
+            typeof mode !== "string"
+        ) {
+            return ajaxError("api usage error", 400);
+        }
+
+        const cache = env.bilisound as KVNamespace;
+        const cacheKey = `BILI_USER_LIST_${userId}_${listId}_${page}_${mode}`;
+        const got = await cache.get(cacheKey);
+        if (got) {
+            return ajaxSuccess(JSON.parse(got));
+        }
+
+        try {
+            const sdk = getSDK(env);
+            const url = await sdk.getUserList(mode as UserListMode, userId, listId, Number(page));
+            return ajaxSuccess(url);
+        } catch (e) {
+            return ajaxError(e);
+        }
     });
 
     router.get("/api/internal/metadata", async (request, env) => {
