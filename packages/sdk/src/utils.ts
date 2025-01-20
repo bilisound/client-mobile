@@ -1,3 +1,5 @@
+import { WebPlayInfo } from "@/types-vendor";
+
 export function filterHostname(list: string[]) {
     return list.map(e => {
         try {
@@ -29,4 +31,14 @@ export function extractJSON<T = any>(regex: RegExp, str: string, options: Extrac
 
 export function convertToHTTPS(url: string) {
     return url.replace(/^http:\/\//, "https://");
+}
+
+export function findBestAudio(dashAudio: WebPlayInfo["data"]["dash"]["audio"]) {
+    let maxQualityIndex = 0;
+    dashAudio.forEach((value, index, array) => {
+        if (array[maxQualityIndex].codecid < maxQualityIndex) {
+            maxQualityIndex = index;
+        }
+    });
+    return maxQualityIndex;
 }
