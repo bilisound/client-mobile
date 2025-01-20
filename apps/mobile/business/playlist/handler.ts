@@ -9,7 +9,7 @@ import {
     queueStorage,
 } from "~/storage/queue";
 import { TrackData } from "@bilisound/player/build/types";
-import { getVideoUrl } from "~/utils/constant-helper";
+import { getImageProxyUrl, getVideoUrl } from "~/utils/constant-helper";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { handleLegacyQueue } from "~/utils/migration/legacy-queue";
 import { getCacheAudioPath } from "~/utils/file";
@@ -76,7 +76,7 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
         return {
             uri: isLoaded ? getCacheAudioPath(e.bvid, e.episode, true) : PLACEHOLDER_AUDIO,
             artist: e.author,
-            artworkUri: convertToHTTPS(e.imgUrl),
+            artworkUri: getImageProxyUrl(e.imgUrl, "https://www.bilibili.com/video/" + e.bvid),
             duration: e.duration,
             extendedData: {
                 id: e.bvid,

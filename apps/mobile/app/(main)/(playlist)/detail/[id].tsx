@@ -213,7 +213,7 @@ function Header({
                     )}
                 </View>
             </View>
-            {(meta.description ?? "").trim() && (
+            {!!(meta.description ?? "").trim() && (
                 <Text className="text-sm leading-normal opacity-80 pb-2" selectable>
                     {meta.description}
                 </Text>

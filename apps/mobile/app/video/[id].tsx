@@ -146,7 +146,10 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
     return (
         <View className={twMerge("gap-4", className)} style={style}>
             {data ? (
-                <Image source={getImageProxyUrl(data.pic, data.bvid)} className="aspect-[16/9] rounded-lg" />
+                <Image
+                    source={getImageProxyUrl(data.pic, "https://www.bilibili.com/video/" + data.bvid)}
+                    className="aspect-[16/9] rounded-lg"
+                />
             ) : (
                 <Skeleton className="aspect-[16/9] rounded-lg w-[unset] h-[unset]" />
             )}
@@ -165,7 +168,10 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                     {data ? (
                         <>
                             <Image
-                                source={getImageProxyUrl(data.owner.face, data.bvid)}
+                                source={getImageProxyUrl(
+                                    data.owner.face,
+                                    "https://www.bilibili.com/video/" + data.bvid,
+                                )}
                                 className="w-9 h-9 rounded-full aspect-square flex-shrink-0"
                             />
                             <Text className="flex-grow text-sm font-bold text-typography-700" isTruncated>

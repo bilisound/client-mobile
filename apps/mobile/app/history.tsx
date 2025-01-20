@@ -101,7 +101,7 @@ export default function Page() {
                         <VideoItem
                             text1={item.name}
                             text2={item.authorName}
-                            image={getImageProxyUrl(item.thumbnailUrl, item.id)}
+                            image={getImageProxyUrl(item.thumbnailUrl, "https://www.bilibili.com/video/" + item.id)}
                             onPress={() => {
                                 router.navigate(`/video/${item.id}`);
                             }}

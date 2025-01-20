@@ -88,6 +88,34 @@ export default function bilisound(router: RouterType) {
         try {
             const sdk = getSDK(env);
             const url = await sdk.getUserList(mode as UserListMode, userId, listId, Number(page));
+            await cache.put(cacheKey, JSON.stringify(url), { expirationTtl: 3600 })
+            return ajaxSuccess(url);
+        } catch (e) {
+            return ajaxError(e);
+        }
+    });
+
+    router.get("/api/internal/user-list-all", async (request, env) => {
+        const { userId, listId, mode } = request.query;
+        if (
+            typeof userId !== "string" ||
+            typeof listId !== "string" ||
+            typeof mode !== "string"
+        ) {
+            return ajaxError("api usage error", 400);
+        }
+
+        const cache = env.bilisound as KVNamespace;
+        const cacheKey = `BILI_USER_LIST_FULL_${userId}_${listId}_${mode}`;
+        const got = await cache.get(cacheKey);
+        if (got) {
+            return ajaxSuccess(JSON.parse(got));
+        }
+
+        try {
+            const sdk = getSDK(env);
+            const url = await sdk.getUserListFull(mode as UserListMode, userId, listId);
+            await cache.put(cacheKey, JSON.stringify(url), { expirationTtl: 3600 })
             return ajaxSuccess(url);
         } catch (e) {
             return ajaxError(e);

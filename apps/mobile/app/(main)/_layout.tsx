@@ -17,7 +17,7 @@ import { Monicon } from "@monicon/native";
 import { Button, ButtonMonIcon, ButtonOuter } from "~/components/ui/button";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { usePreventRemove } from "@react-navigation/native";
-import { getImageProxyUrl } from "~/utils/constant-helper";
+import { convertToHTTPS } from "~/utils/string";
 
 type TabTriggerChildProps = TabTriggerSlotProps & {
     iconName: string;
@@ -118,7 +118,7 @@ function CurrentPlayingTablet() {
                 }
                 onPress={() => open()}
             >
-                <Image source={getImageProxyUrl(currentTrack.artworkUri!)} className={"w-10 h-10 rounded-lg"} />
+                <Image source={convertToHTTPS(currentTrack.artworkUri!)} className={"w-10 h-10 rounded-lg"} />
             </Pressable>
         </View>
     );

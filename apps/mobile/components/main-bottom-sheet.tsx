@@ -45,6 +45,7 @@ import { useRepeatMode } from "@bilisound/player/build/hooks/useRepeatMode";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/notify-toast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { convertToHTTPS } from "~/utils/string";
 
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
@@ -357,7 +358,7 @@ function PlayerPicture() {
                 style={{ width: imageSize, height: imageSize, boxShadow: shadow["xl"] }}
                 className={"rounded-2xl overflow-hidden"}
             >
-                <Image source={currentTrack?.artworkUri} className={"size-full"}></Image>
+                <Image source={convertToHTTPS(currentTrack?.artworkUri + "")} className={"size-full"}></Image>
             </View>
         </View>
     );

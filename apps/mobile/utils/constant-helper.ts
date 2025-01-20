@@ -11,7 +11,7 @@ export function getImageProxyUrl(url: string, referer = "https://www.bilibili.co
     if (Platform.OS === "web") {
         return (
             BILISOUND_API_PREFIX +
-            `/internal/img-proxy?url=${encodeURIComponent(url)}&referrer=${encodeURIComponent(referer)}`
+            `/internal/image?url=${encodeURIComponent(url)}&referer=${encodeURIComponent(referer)}`
         );
     }
     return convertToHTTPS(url);

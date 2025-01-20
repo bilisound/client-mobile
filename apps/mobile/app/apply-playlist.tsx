@@ -85,7 +85,10 @@ export default function Page() {
                 </Text>
                 {isSingle && (
                     <VideoItem
-                        image={getImageProxyUrl(playlistDetail[0].imgUrl, playlistDetail[0].bvid)}
+                        image={getImageProxyUrl(
+                            playlistDetail[0].imgUrl,
+                            "https://www.bilibili.com/video/" + playlistDetail[0].bvid,
+                        )}
                         text1={playlistDetail[0].title}
                         text2={playlistDetail[0].author}
                     />

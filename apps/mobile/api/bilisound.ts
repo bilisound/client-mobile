@@ -5,7 +5,7 @@ import { defineWrap } from "./common";
 import { BILISOUND_API_PREFIX, USER_AGENT_BILIBILI, USER_AGENT_BILISOUND } from "~/constants/network";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { Numberish } from "~/typings/common";
-import { BilisoundSDK, GetMetadataResponse, GetEpisodeUserResponse, UserListMode } from "@bilisound/sdk";
+import { BilisoundSDK, GetMetadataResponse, GetEpisodeUserResponse, UserListMode, EpisodeItem } from "@bilisound/sdk";
 import log from "~/utils/logger";
 
 const sdk = new BilisoundSDK({
@@ -103,7 +103,14 @@ export async function getUserListFull(
     userId: Numberish,
     listId: Numberish,
     progressCallback?: (progress: number) => void,
-) {
+): Promise<EpisodeItem[]> {
+    if (Platform.OS === "web") {
+        const res = await fetch(
+            `${BILISOUND_API_PREFIX}/internal/user-list-all?mode=${mode}&userId=${userId}&listId=${listId}`,
+        );
+        return (await res.json()).data;
+    }
+
     return sdk.getUserListFull(mode, userId, listId, progressCallback);
 }
 
