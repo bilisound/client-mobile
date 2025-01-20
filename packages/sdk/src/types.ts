@@ -71,3 +71,8 @@ export interface GetEpisodeUserResponse {
 }
 
 export type UserListMode = "season" | "series" | "favourite";
+
+export interface GetResourceOptions {
+    method?: string
+    range?: string
+}

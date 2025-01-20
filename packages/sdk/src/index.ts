@@ -7,10 +7,11 @@ import {
     GetVideoResponse,
     UserListMode,
     EpisodeItem,
+    GetResourceOptions,
 } from "./types";
 import { filterCdnUrls } from "./cdn";
 import { InitialStateFestivalResponse, InitialStateResponse, WebPlayInfo } from "./types-vendor";
-import { extractJSON } from "./utils";
+import { extractJSON, findBestAudio } from "./utils";
 import axiosClient from "axios";
 import { signParam } from "./wbi";
 import { BiliRequestConfig, InternalBiliRequestConfig } from "./request";
@@ -143,7 +144,9 @@ export class BilisoundSDK {
         // [legacy] 尝试获取传统方式的视频
         if (Array.isArray(legacyVideo) && legacyVideo.length > 0) {
             if (!filterResourceURL) {
-                this.logger.info(`没有进行过滤。来源域名列表: ${this.filterHostname(legacyVideo.map(e => e.url)).join(", ")}`);
+                this.logger.info(
+                    `没有进行过滤。来源域名列表: ${this.filterHostname(legacyVideo.map(e => e.url)).join(", ")}`,
+                );
                 return { url: legacyVideo[0].url, isAudio: false };
             }
 
@@ -161,7 +164,12 @@ export class BilisoundSDK {
         throw new Error("找不到可用的音频资源");
     }
 
-    async getUserList(mode: UserListMode, userId: Numberish, listId: Numberish, page = 1): Promise<GetEpisodeUserResponse> {
+    async getUserList(
+        mode: UserListMode,
+        userId: Numberish,
+        listId: Numberish,
+        page = 1,
+    ): Promise<GetEpisodeUserResponse> {
         let response;
         let pageSize;
         let pageNum;
@@ -215,7 +223,12 @@ export class BilisoundSDK {
         };
     }
 
-    async getUserListFull(mode: UserListMode, userId: Numberish, listId: Numberish, progressCallback?: (progress: number) => void): Promise<EpisodeItem[]> {
+    async getUserListFull(
+        mode: UserListMode,
+        userId: Numberish,
+        listId: Numberish,
+        progressCallback?: (progress: number) => void,
+    ): Promise<EpisodeItem[]> {
         progressCallback?.(0);
         const firstResponse = await this.getUserList(mode, userId, listId, 1);
         const totalPages = Math.ceil(firstResponse.total / firstResponse.pageSize);
@@ -232,6 +245,52 @@ export class BilisoundSDK {
         return results;
     }
 
+    async getResource(id: string, episode: number | string, options: GetResourceOptions = {}) {
+        // 获取视频
+        const { playInfo, initialState, type } = await this.getVideo(id, episode);
+        const dashAudio = playInfo?.data?.dash?.audio ?? [];
+
+        if (dashAudio.length < 1) {
+            throw new Error("找不到视频资源");
+        }
+
+        // 遍历获取最佳音质视频
+        const maxQualityIndex = findBestAudio(dashAudio);
+
+        // 将音频字节流进行转发
+        const headers = {
+            "User-Agent": this.userAgent,
+            Referer: `https://www.bilibili.com/video/` + id + "/?p=" + episode,
+            Range: options.range || "bytes=0-",
+        };
+        const res = await fetch(dashAudio[maxQualityIndex].baseUrl, {
+            headers,
+            method: options.method || "get",
+        });
+
+        let episodeName = "";
+        let aid = 0;
+        let bvid = "";
+        if (type === "regular") {
+            episodeName = initialState.videoData.title;
+            if (initialState.videoData.pages.length > 1) {
+                episodeName = initialState.videoData.pages.find(e => e.page === episode)?.part;
+            }
+            aid = initialState.aid;
+            bvid = initialState.bvid;
+        }
+        if (type === "festival") {
+            episodeName = initialState.videoInfo.title;
+            aid = initialState.videoInfo.aid;
+            bvid = initialState.videoInfo.bvid;
+        }
+        const data = await res.arrayBuffer();
+        const contentRange = res.headers.get("Content-Range");
+        const contentLength = res.headers.get("Content-Length");
+
+        return { aid, bvid, episodeName, data, contentRange, contentLength };
+    }
+
     // 工具部分
 
     private async fetchRaw(url: string) {
@@ -245,7 +304,7 @@ export class BilisoundSDK {
             headers,
         });
         return { finalUrl: res.url, response: await res.text() };
-    };
+    }
 
     private filterHostname(list: string[]): string[] {
         return list.map(e => {
@@ -413,7 +472,10 @@ export class BilisoundSDK {
             );
             let playInfo: WebPlayInfo;
             try {
-                playInfo = extractJSON(/window\.__playinfo__=(\{.+})<\/script><script>window.__INITIAL_STATE__=/, response);
+                playInfo = extractJSON(
+                    /window\.__playinfo__=(\{.+})<\/script><script>window.__INITIAL_STATE__=/,
+                    response,
+                );
             } catch (e) {
                 this.logger.debug(`匹配关键词失败：${e}`);
                 if (initialState.videoData.pages) {
