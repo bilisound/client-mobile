@@ -13,7 +13,7 @@ import { getImageProxyUrl, getVideoUrl } from "~/utils/constant-helper";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { handleLegacyQueue } from "~/utils/migration/legacy-queue";
 import { getCacheAudioPath } from "~/utils/file";
-import { getBilisoundMetadata, getBilisoundResourceUrl } from "~/api/bilisound";
+import { getBilisoundMetadata, getBilisoundResourceUrl, getBilisoundResourceUrlOnline } from "~/api/bilisound";
 import { undefined } from "zod";
 import log from "~/utils/logger";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
@@ -73,8 +73,13 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
     return playlist.map(e => {
         const isLoaded = !!cacheStatusStorage.getBoolean(e.bvid + "_" + e.episode);
 
+        let uri = isLoaded ? getCacheAudioPath(e.bvid, e.episode, true) : PLACEHOLDER_AUDIO;
+        if (Platform.OS === "web") {
+            uri = getBilisoundResourceUrlOnline(e.bvid, e.episode).url;
+        }
+
         return {
-            uri: isLoaded ? getCacheAudioPath(e.bvid, e.episode, true) : PLACEHOLDER_AUDIO,
+            uri,
             artist: e.author,
             artworkUri: getImageProxyUrl(e.imgUrl, "https://www.bilibili.com/video/" + e.bvid),
             duration: e.duration,
@@ -170,6 +175,10 @@ export async function loadTrackData() {
             referer: getVideoUrl(e.extendedData.id, e.extendedData.episode),
             "user-agent": USER_AGENT_BILIBILI,
         };
+        if (Platform.OS === "web") {
+            e.uri = getBilisoundResourceUrlOnline(e.extendedData!.id, e.extendedData!.episode).url;
+            return;
+        }
         if (e.extendedData.isLoaded) {
             e.uri = getCacheAudioPath(e.extendedData.id, e.extendedData.episode);
             e.mimeType = "video/mp4";

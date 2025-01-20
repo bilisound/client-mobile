@@ -51,6 +51,13 @@ export async function getBilisoundMetadata(data: { id: string }): Promise<GetMet
     return sdk.getMetadata(data.id);
 }
 
+export function getBilisoundResourceUrlOnline(id: string, episode: number | string) {
+    return {
+        url: BILISOUND_API_PREFIX + `/internal/resource?id=${id}&episode=${episode}`,
+        isAudio: true,
+    };
+}
+
 /**
  * 获取音频资源 URL
  * @param id
@@ -59,10 +66,7 @@ export async function getBilisoundMetadata(data: { id: string }): Promise<GetMet
  */
 export async function getBilisoundResourceUrl(id: string, episode: number | string, filterResourceURL = false) {
     if (Platform.OS === "web") {
-        return {
-            url: BILISOUND_API_PREFIX + `/internal/resource?id=${id}&episode=${episode}`,
-            isAudio: true,
-        };
+        return getBilisoundResourceUrlOnline(id, episode);
     }
 
     return sdk.getResourceUrl(id, episode, filterResourceURL);

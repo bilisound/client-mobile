@@ -449,7 +449,7 @@ export function PlayerControl() {
                             >
                                 <Text
                                     className={
-                                        "text-sm font-medium whitespace-nowrap md:leading-tight " +
+                                        "text-sm font-medium whitespace-nowrap whitespace-pre-wrap md:leading-tight " +
                                         (value === tab.value ? "text-typography-700" : "text-typography-500")
                                     }
                                 >
