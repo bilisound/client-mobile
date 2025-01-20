@@ -10,11 +10,10 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { formatSecond } from "~/utils/datetime";
 import { decodeHTML } from "entities";
 import { SkeletonText } from "~/components/skeleton-text";
-import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
+import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { ActivityIndicator, ScrollView, View, ViewStyle } from "react-native";
 import { Image } from "expo-image";
 import React, { useState } from "react";
-import Monicon from "@monicon/native";
 import { ErrorContent } from "~/components/error-content";
 import { FlashList } from "@shopify/flash-list";
 import { VideoItem } from "~/components/video-item";
@@ -22,6 +21,7 @@ import useApplyPlaylistStore from "~/store/apply-playlist";
 import Toast from "react-native-toast-message";
 import { GetEpisodeUserResponse } from "@bilisound/sdk";
 import { UserListMode } from "@bilisound/sdk";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 interface MetaDataProps {
     data?: GetEpisodeUserResponse["meta"];
@@ -32,6 +32,7 @@ interface MetaDataProps {
 
 function MetaData({ data, className, style, mode }: MetaDataProps) {
     const [loading, setLoading] = useState(false);
+    const { colorValue } = useRawThemeValues();
 
     // 添加歌单
     const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
@@ -115,17 +116,16 @@ function MetaData({ data, className, style, mode }: MetaDataProps) {
                         <>
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"} onPress={handleCreatePlaylist}>
-                                    <View className={"size-4 items-center justify-center"}>
-                                        {loading ? (
-                                            <ActivityIndicator className={"color-typography-0 size-4"} />
-                                        ) : (
-                                            <Monicon
-                                                name={"fa6-solid:plus"}
-                                                className={"color-typography-0"}
-                                                size={16}
+                                    {loading ? (
+                                        <View className={"size-4 items-center justify-center"}>
+                                            <ActivityIndicator
+                                                className={"size-4"}
+                                                color={colorValue("--color-typography-0")}
                                             />
-                                        )}
-                                    </View>
+                                        </View>
+                                    ) : (
+                                        <ButtonMonIcon name={"fa6-solid:plus"} />
+                                    )}
                                     <ButtonText>创建歌单</ButtonText>
                                 </Button>
                             </ButtonOuter>
@@ -143,6 +143,7 @@ export default function Page() {
     const { userId, listId, mode } = useLocalSearchParams<{ userId: string; listId: string; mode: UserListMode }>();
 
     const edgeInsets = useSafeAreaInsets();
+    const { colorValue } = useRawThemeValues();
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, error } = useInfiniteQuery({
         initialPageParam: 1,
@@ -192,7 +193,11 @@ export default function Page() {
                         ListHeaderComponent={
                             <MetaData mode={mode} data={data?.pages[0].meta} className={"flex md:hidden px-4 pb-4"} />
                         }
-                        ListFooterComponent={isFetchingNextPage ? <ActivityIndicator /> : null}
+                        ListFooterComponent={
+                            isFetchingNextPage ? (
+                                <ActivityIndicator color={colorValue("--color-typography-500")} />
+                            ) : null
+                        }
                         renderItem={e => (
                             <VideoItem
                                 image={getImageProxyUrl(e.item.cover)}

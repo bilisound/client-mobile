@@ -84,6 +84,7 @@ function PlayingIcon() {
 }
 
 function CurrentPlayingTablet() {
+    const { colorValue } = useRawThemeValues();
     const currentTrack = useCurrentTrack();
     const isPlaying = useIsPlaying();
     const playbackState = usePlaybackState();
@@ -102,7 +103,7 @@ function CurrentPlayingTablet() {
                 <ButtonOuter>
                     <Button icon variant={"ghost"} onPress={() => toggle()}>
                         {playbackState === "STATE_BUFFERING" || isPlaceholderTrack ? (
-                            <ActivityIndicator className={"color-primary-500"} size={22} />
+                            <ActivityIndicator color={colorValue("--color-primary-500")} size={22} />
                         ) : (
                             <ButtonMonIcon
                                 name={isPlaying ? "fa6-solid:pause" : "fa6-solid:play"}

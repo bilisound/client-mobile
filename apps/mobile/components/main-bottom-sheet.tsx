@@ -106,7 +106,7 @@ function PlayButtonIcon({ size = 28 }: { size?: number }) {
     });
 
     if (isLoading(useCurrentTrack(), useProgressSecond().duration)) {
-        return <ActivityIndicator size={size} className={"size-8 color-background-0"} />;
+        return <ActivityIndicator size={size} className={"size-8"} color={colorValue("--color-background-0")} />;
     }
 
     return (
@@ -449,7 +449,7 @@ export function PlayerControl() {
                             >
                                 <Text
                                     className={
-                                        "text-sm font-medium whitespace-nowrap whitespace-pre-wrap md:leading-tight " +
+                                        "text-sm font-medium md:leading-tight " +
                                         (value === tab.value ? "text-typography-700" : "text-typography-500")
                                     }
                                 >
