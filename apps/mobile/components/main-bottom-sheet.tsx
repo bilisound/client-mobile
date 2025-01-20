@@ -46,6 +46,7 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/notify-toast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { convertToHTTPS } from "~/utils/string";
+import { LayoutButton } from "~/components/layout";
 
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
@@ -351,7 +352,8 @@ function PlayerPicture() {
             onLayout={event => {
                 const { width, height } = event.nativeEvent.layout;
                 // padding 是 32dp `p-8`
-                setImageSize(Math.min(width, height) - 64);
+                const minSize = Math.min(width, height);
+                setImageSize(minSize - (minSize >= 384 ? 128 : 64));
             }}
         >
             <View
@@ -367,7 +369,7 @@ function PlayerPicture() {
 function PlayerQueueList() {
     const queue = useQueue();
     return (
-        <View className={"pt-4 pb-2 md:py-0 flex-1"}>
+        <View className={"pb-2 md:py-0 flex-1"}>
             <BottomSheetFlashList
                 estimatedItemSize={64}
                 data={queue}
@@ -428,7 +430,10 @@ export function PlayerControl() {
                 onValueChange={setValue as Dispatch<SetStateAction<string>>}
                 className={"flex-1 md:flex-row"}
             >
-                <View className={"items-center pt-4 px-4 " + "md:justify-center md:pb-4"}>
+                <View className={"items-center p-3 " + "md:justify-center"}>
+                    <View className={"left-[10px] top-[10px] absolute"}>
+                        <LayoutButton iconName={"fa6-solid:angle-down"} onPress={() => close()} />
+                    </View>
                     <TabsPrimitive.List
                         className={
                             "flex-0 w-48 h-10 flex-row items-center justify-center rounded-md bg-background-100 px-1 py-0 " +
