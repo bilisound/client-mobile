@@ -1,4 +1,5 @@
 import { BilisoundSDK } from "@bilisound/sdk";
+import { USER_AGENT } from "../constants/values";
 
 interface Endpoint {
     siteUrl: string;
@@ -14,6 +15,6 @@ export function getSDK(env: any) {
         sitePrefix: endpoint.siteUrl,
         apiPrefix: endpoint.apiUrl,
         key: endpoint.key,
-        userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        userAgent: USER_AGENT,
     })
 }

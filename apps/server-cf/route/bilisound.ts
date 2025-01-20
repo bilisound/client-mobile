@@ -3,6 +3,7 @@ import { getSDK } from "../utils/sdk";
 import { ajaxError, ajaxSuccess } from "../utils/misc";
 import { UserListMode } from "@bilisound/sdk";
 import CORS_HEADERS from "../constants/cors";
+import { USER_AGENT } from "../constants/values";
 
 function getHandleResource(method: string) {
     return async (request: IRequest, env: any) => {
@@ -112,11 +113,59 @@ export default function bilisound(router: RouterType) {
 
     router.head("/api/internal/resource", getHandleResource("head"));
 
-    router.get("/api/internal/resource-metadata", async (request, env) => {});
+    router.get("/api/internal/image", async request => {
+        const url = request.query.url;
+        const referer = request.query.referer;
+        if (!(typeof url === "string" && typeof referer === "string")) {
+            return new Response("", { status: 400 });
+        }
 
-    router.get("/api/internal/img-proxy", async request => {});
+        const URL_ALLOWED_SUFFIX = ["hdslb.com", "biliimg.com"];
+        const REFERER_ALLOWED_SUFFIX = ["bilibili.com"];
 
-    router.get("/api/internal/raw", async (request, env) => {});
+        try {
+            const urlHostname = new URL(url).hostname;
+            const refererHostname = new URL(referer).hostname;
+            let urlFound = false;
+            let refererFound = false;
+            for (let i = 0; i < URL_ALLOWED_SUFFIX.length; i++) {
+                const e = URL_ALLOWED_SUFFIX[i];
+                if (urlHostname.endsWith(e)) {
+                    urlFound = true;
+                    break;
+                }
+            }
+            for (let i = 0; i < REFERER_ALLOWED_SUFFIX.length; i++) {
+                const e = REFERER_ALLOWED_SUFFIX[i];
+                if (refererHostname.endsWith(e)) {
+                    refererFound = true;
+                    break;
+                }
+            }
+
+            if (!(urlFound && refererFound)) {
+                return new Response("", { status: 403 });
+            }
+
+            const res = await fetch(url, {
+                headers: {
+                    "User-Agent": USER_AGENT,
+                    referer,
+                },
+            });
+
+            return new Response(await res.arrayBuffer(), {
+                headers: {
+                    ...CORS_HEADERS,
+                    "Cache-Control": "max-age=604800",
+                    "Content-Type": res.headers.get("Content-Type"),
+                },
+            });
+        } catch (e) {
+            console.error(e);
+            return new Response("", { status: 500 });
+        }
+    });
 
     router.get("/api/internal/debug-request", async (request, env) => {});
 
