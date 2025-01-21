@@ -100,12 +100,13 @@ function processTrackDataForLoad(trackData: TrackData[]) {
         if (Platform.OS === "web") {
             e.uri = getBilisoundResourceUrlOnline(e.extendedData!.id, e.extendedData!.episode).url;
             return;
-        }
-        if (e.extendedData.isLoaded) {
-            e.uri = getCacheAudioPath(e.extendedData.id, e.extendedData.episode);
-            e.mimeType = "video/mp4";
         } else {
-            e.uri = PLACEHOLDER_AUDIO;
+            if (e.extendedData.isLoaded) {
+                e.uri = getCacheAudioPath(e.extendedData.id, e.extendedData.episode);
+                e.mimeType = "video/mp4";
+            } else {
+                e.uri = PLACEHOLDER_AUDIO;
+            }
         }
     });
     return trackData;
