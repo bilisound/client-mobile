@@ -14,7 +14,7 @@ import { Image } from "expo-image";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { PLACEHOLDER_AUDIO } from "~/constants/playback";
 import { Monicon } from "@monicon/native";
-import { Button, ButtonMonIcon, ButtonOuter } from "~/components/ui/button";
+import { ButtonOuter } from "~/components/ui/button";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { usePreventRemove } from "@react-navigation/native";
 import { convertToHTTPS } from "~/utils/string";
@@ -112,16 +112,25 @@ function CurrentPlayingTablet() {
         >
             <View className={"w-16 h-10 items-center xl:hidden"}>
                 <ButtonOuter>
-                    <Button icon variant={"ghost"} onPress={() => toggle()}>
+                    <Pressable
+                        className={
+                            "size-10 items-center justify-center " +
+                            (Platform.OS === "android"
+                                ? "{}-[android_ripple.color]/color:color-background-200"
+                                : "hover:bg-background-100 active:bg-background-200")
+                        }
+                        onPress={() => toggle()}
+                    >
                         {playbackState === "STATE_BUFFERING" || isPlaceholderTrack ? (
-                            <ActivityIndicator color={colorValue("--color-primary-500")} size={22} />
+                            <ActivityIndicator color={colorValue("--color-accent-500")} size={22} />
                         ) : (
-                            <ButtonMonIcon
+                            <Monicon
                                 name={isPlaying ? "fa6-solid:pause" : "fa6-solid:play"}
                                 size={isPlaying ? 22 : 18}
+                                color={colorValue("--color-accent-500")}
                             />
                         )}
-                    </Button>
+                    </Pressable>
                 </ButtonOuter>
             </View>
             <View className={"size-16 xl:hidden items-center justify-center"}>
