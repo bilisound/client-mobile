@@ -1,4 +1,14 @@
-import React, { useCallback, useMemo, useRef, useEffect, useState, Dispatch, SetStateAction } from "react";
+import React, {
+    useCallback,
+    useMemo,
+    useRef,
+    useEffect,
+    useState,
+    Dispatch,
+    SetStateAction,
+    createContext,
+    useContext,
+} from "react";
 import { BottomSheetBackdrop, BottomSheetFlashList, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
@@ -47,6 +57,7 @@ import { toastConfig } from "~/components/notify-toast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { convertToHTTPS } from "~/utils/string";
 import { LayoutButton } from "~/components/layout";
+import { FlashList } from "@shopify/flash-list";
 
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
@@ -67,6 +78,8 @@ const REPEAT_MODE = {
     1: { name: "单曲循环", icon: "tabler:repeat-once" },
     2: { name: "列表循环", icon: "tabler:repeat" },
 };
+
+export const InsidePageContext = createContext(false);
 
 function isLoading(activeTrack: TrackData | null | undefined, duration: number) {
     return activeTrack?.uri === PLACEHOLDER_AUDIO || duration <= 0;
@@ -367,10 +380,14 @@ function PlayerPicture() {
 }
 
 function PlayerQueueList() {
+    const isInsidePage = useContext(InsidePageContext);
     const queue = useQueue();
+
+    const FlashListComponent = isInsidePage ? FlashList : BottomSheetFlashList;
+
     return (
         <View className={"pb-2 md:py-0 flex-1"}>
-            <BottomSheetFlashList
+            <FlashListComponent
                 estimatedItemSize={64}
                 data={queue}
                 className={"md:py-2.5"}
@@ -397,8 +414,9 @@ function PlayerQueueList() {
     );
 }
 
-// 可能在其它形式的页面复用
+// 在页面版和 bottom sheet 版均有使用
 export function PlayerControl() {
+    const isInsidePage = useContext(InsidePageContext);
     const currentTrack = useCurrentTrack();
     const { close } = useBottomSheetStore(state => ({
         close: state.close,
@@ -411,6 +429,10 @@ export function PlayerControl() {
             return;
         }
         if (!currentTrack) {
+            return;
+        }
+        if (isInsidePage) {
+            router.replace(`/video/${currentTrack.extendedData?.id}`);
             return;
         }
         close();
@@ -433,7 +455,20 @@ export function PlayerControl() {
             >
                 <View className={"items-center p-3 " + "md:justify-center"}>
                     <View className={"left-[10px] top-[10px] absolute"}>
-                        <LayoutButton iconName={"fa6-solid:angle-down"} onPress={() => close()} />
+                        <LayoutButton
+                            iconName={"fa6-solid:angle-down"}
+                            onPress={() => {
+                                if (isInsidePage) {
+                                    if (router.canGoBack()) {
+                                        router.back();
+                                    } else {
+                                        router.replace("/");
+                                    }
+                                } else {
+                                    close();
+                                }
+                            }}
+                        />
                     </View>
                     <TabsPrimitive.List
                         className={

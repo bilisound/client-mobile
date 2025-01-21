@@ -18,6 +18,7 @@ import { Button, ButtonMonIcon, ButtonOuter } from "~/components/ui/button";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { usePreventRemove } from "@react-navigation/native";
 import { convertToHTTPS } from "~/utils/string";
+import { router } from "expo-router";
 
 type TabTriggerChildProps = TabTriggerSlotProps & {
     iconName: string;
@@ -93,6 +94,14 @@ function CurrentPlayingTablet() {
     // 解决 placeholder 音频还没替换时不恰当的状态显示
     const isPlaceholderTrack = currentTrack?.uri === PLACEHOLDER_AUDIO;
 
+    function handleOpen() {
+        if (Platform.OS === "web") {
+            router.navigate("/current");
+            return;
+        }
+        open();
+    }
+
     if (!currentTrack) {
         return null;
     }
@@ -120,7 +129,7 @@ function CurrentPlayingTablet() {
                     className={
                         "w-12 h-12 hover:bg-background-0/50 active:bg-background-0 items-center justify-center rounded-[12px]"
                     }
-                    onPress={() => open()}
+                    onPress={() => handleOpen()}
                 >
                     <Image source={convertToHTTPS(currentTrack.artworkUri!)} className={"w-10 h-10 rounded-lg"} />
                 </Pressable>
@@ -132,7 +141,7 @@ function CurrentPlayingTablet() {
                         : "hover:bg-background-100 active:bg-background-200") +
                     " flex-1 flex-row items-center px-3 gap-3 h-16 hidden xl:flex"
                 }
-                onPress={() => open()}
+                onPress={() => handleOpen()}
             >
                 <Image source={currentTrack.artworkUri} className={"h-10 w-10 rounded-lg flex-0 basis-auto"}></Image>
                 <Text className={"flex-1"} isTruncated>
@@ -164,6 +173,14 @@ function CurrentPlaying() {
         open: state.open,
     }));
 
+    function handleOpen() {
+        if (Platform.OS === "web") {
+            router.navigate("/current");
+            return;
+        }
+        open();
+    }
+
     if (!currentTrack) {
         return null;
     }
@@ -183,7 +200,7 @@ function CurrentPlaying() {
                         : "hover:bg-background-100 active:bg-background-200") +
                     " flex-1 flex-row items-center px-3 gap-4 h-16"
                 }
-                onPress={() => open()}
+                onPress={() => handleOpen()}
             >
                 <Image
                     source={currentTrack.artworkUri}
