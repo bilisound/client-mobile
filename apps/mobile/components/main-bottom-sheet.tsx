@@ -605,10 +605,10 @@ export function MainBottomSheet() {
             activeOffsetY={[-1, 1]}
             failOffsetX={[-5, 5]}
         >
-            <Toast config={toastConfig} topOffset={edgeInsets.top} />
             <BottomSheetView className={"w-full h-full p-safe flex-1 " + DEBUG_COLOR[2]}>
                 <PlayerControl />
             </BottomSheetView>
+            <Toast config={toastConfig} topOffset={edgeInsets.top} />
         </BottomSheetModal>
     );
 }
