@@ -110,7 +110,7 @@ function CurrentPlayingTablet() {
         <View
             className={"hidden absolute left-safe bottom-safe w-16 xl:w-64 items-center " + " md:flex" + " xl:flex-row"}
         >
-            <View className={"w-16 h-12 items-center xl:hidden"}>
+            <View className={"w-16 h-10 items-center xl:hidden"}>
                 <ButtonOuter>
                     <Button icon variant={"ghost"} onPress={() => toggle()}>
                         {playbackState === "STATE_BUFFERING" || isPlaceholderTrack ? (
