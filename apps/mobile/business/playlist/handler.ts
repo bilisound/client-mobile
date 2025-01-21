@@ -93,7 +93,8 @@ function processTrackDataForLoad(trackData: TrackData[]) {
             "user-agent": USER_AGENT_BILIBILI,
         };
         e.artworkUri = getImageProxyUrl(
-            e.extendedData.artworkUrl,
+            // 只有 Web 版需要分离原 URL 和实际 URL，且 Web 版在 v1 从未上线
+            e.extendedData.artworkUrl ?? e.artworkUri,
             "https://www.bilibili.com/video/" + e.extendedData.id,
         );
         if (Platform.OS === "web") {
@@ -141,7 +142,6 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
     });
 }
 
-// todo 存储读取时对 artworkUri 进行处理
 export async function saveTrackData() {
     log.debug("正在自动保存播放队列");
     await Promise.all([
