@@ -1,6 +1,6 @@
 import { Text } from "~/components/ui/text";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Layout, LayoutButton } from "~/components/layout";
 import { useIsNarrowWidth } from "~/hooks/useIsNarrowWidth";
 import { useForm, Controller } from "react-hook-form";
@@ -69,76 +69,79 @@ export default function MainScreen() {
                 </>
             }
         >
-            <View className={`${isNarrowWidth ? "pt-6 pb-8" : "pt-10 pb-12"} items-center`}>
-                <Text
-                    className="text-3xl text-primary-500 dark:text-primary-400 h-12 leading-12"
-                    style={{
-                        fontFamily: "Poppins_700Bold",
-                    }}
-                >
-                    BILISOUND
-                </Text>
-            </View>
-            <View className="px-4 items-center">
-                <FormControl
-                    isDisabled={false}
-                    isInvalid={!!errors.videoUrl}
-                    isReadOnly={false}
-                    isRequired={false}
-                    size="md"
-                    className="w-full sm:w-[560px] bg-transparent"
-                >
-                    <Input variant="outline" size="md" className="w-full h-12 rounded-lg">
-                        <Controller
-                            control={control}
-                            name="videoUrl"
-                            rules={{
-                                validate: async value => {
-                                    try {
-                                        await resolveVideo(value);
-                                        return true;
-                                    } catch {
-                                        return false;
-                                    }
-                                },
-                            }}
-                            render={({ field: { onChange, value, onBlur } }) => (
-                                <InputField
-                                    placeholder="粘贴完整链接或带前缀 ID 至此"
-                                    className="text-base"
-                                    value={value}
-                                    onChangeText={onChange}
-                                    onBlur={onBlur}
-                                    onSubmitEditing={handleSubmit(onSubmit)}
-                                />
+            {/* 解决键盘不收回的问题 */}
+            <ScrollView className={"flex-1"}>
+                <View className={`${isNarrowWidth ? "pt-6 pb-8" : "pt-10 pb-12"} items-center`}>
+                    <Text
+                        className="text-3xl text-primary-500 dark:text-primary-400 h-12 leading-12"
+                        style={{
+                            fontFamily: "Poppins_700Bold",
+                        }}
+                    >
+                        BILISOUND
+                    </Text>
+                </View>
+                <View className="px-4 items-center">
+                    <FormControl
+                        isDisabled={false}
+                        isInvalid={!!errors.videoUrl}
+                        isReadOnly={false}
+                        isRequired={false}
+                        size="md"
+                        className="w-full sm:w-[560px] bg-transparent"
+                    >
+                        <Input variant="outline" size="md" className="w-full h-12 rounded-lg">
+                            <Controller
+                                control={control}
+                                name="videoUrl"
+                                rules={{
+                                    validate: async value => {
+                                        try {
+                                            await resolveVideo(value);
+                                            return true;
+                                        } catch {
+                                            return false;
+                                        }
+                                    },
+                                }}
+                                render={({ field: { onChange, value, onBlur } }) => (
+                                    <InputField
+                                        placeholder="粘贴完整链接或带前缀 ID 至此"
+                                        className="text-base"
+                                        value={value}
+                                        onChangeText={onChange}
+                                        onBlur={onBlur}
+                                        onSubmitEditing={handleSubmit(onSubmit)}
+                                    />
+                                )}
+                            />
+                            {videoUrl && (
+                                <View className={"flex-row items-center"}>
+                                    <InputSlot
+                                        className="h-12 px-3 items-center justify-center"
+                                        onPress={() => {
+                                            setFormValue("videoUrl", "");
+                                        }}
+                                    >
+                                        <FontAwesome6 name="xmark" size={20} className="color-typography-700" />
+                                    </InputSlot>
+                                    <View className={"w-[1px] h-6 bg-background-100"}></View>
+                                    <InputSlot
+                                        className="h-12 px-3 items-center justify-center"
+                                        onPress={handleSubmit(onSubmit)}
+                                    >
+                                        <Text className={"text-accent-500"}>查询</Text>
+                                    </InputSlot>
+                                </View>
                             )}
-                        />
-                        {videoUrl && (
-                            <View className={"flex-row items-center"}>
-                                <InputSlot
-                                    className="h-12 px-3 items-center justify-center"
-                                    onPress={() => {
-                                        setFormValue("videoUrl", "");
-                                    }}
-                                >
-                                    <FontAwesome6 name="xmark" size={20} className="color-typography-700" />
-                                </InputSlot>
-                                <View className={"w-[1px] h-6 bg-background-100"}></View>
-                                <InputSlot
-                                    className="h-12 px-3 items-center justify-center"
-                                    onPress={handleSubmit(onSubmit)}
-                                >
-                                    <Text className={"text-accent-500"}>查询</Text>
-                                </InputSlot>
-                            </View>
-                        )}
-                    </Input>
-                    <FormControlError>
-                        <FormControlErrorIcon as={AlertCircleIcon} />
-                        <FormControlErrorText size="sm">请输入合法的地址或 ID</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
-            </View>
+                        </Input>
+                        <FormControlError>
+                            <FormControlErrorIcon as={AlertCircleIcon} />
+                            <FormControlErrorText size="sm">请输入合法的地址或 ID</FormControlErrorText>
+                        </FormControlError>
+                    </FormControl>
+                </View>
+            </ScrollView>
         </Layout>
     );
 }
