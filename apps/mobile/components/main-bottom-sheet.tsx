@@ -275,6 +275,8 @@ function PlayerControlButtons() {
     const buttonSize = isNarrow ? "w-14 h-14" : "w-16 h-16";
     const buttonToolSize = "w-12 h-12";
 
+    const buttonDisabled = isLoading(useCurrentTrack(), useProgressSecond().duration);
+
     async function handleChangeRepeatMode() {
         switch (repeatMode) {
             case RepeatMode.OFF:
@@ -319,6 +321,7 @@ function PlayerControlButtons() {
                     className={buttonToolSize}
                     onPress={() => handleChangeRepeatMode()}
                     variant={"ghost"}
+                    disabled={buttonDisabled}
                 >
                     <View className={"size-[44px] items-center justify-center"}>
                         <Monicon
@@ -342,7 +345,12 @@ function PlayerControlButtons() {
                     </Button>
                 </ButtonOuter>
                 <ButtonOuter className={`rounded-full ${buttonSize}`}>
-                    <Button aria-label={isPlaying ? "暂停" : "播放"} className={buttonSize} onPress={() => toggle()}>
+                    <Button
+                        disabled={buttonDisabled}
+                        aria-label={isPlaying ? "暂停" : "播放"}
+                        className={buttonSize}
+                        onPress={() => toggle()}
+                    >
                         <PlayButtonIcon size={iconSize} />
                     </Button>
                 </ButtonOuter>
@@ -365,6 +373,7 @@ function PlayerControlButtons() {
                     className={buttonToolSize}
                     onPress={() => handleChangeShuffle()}
                     variant={"ghost"}
+                    disabled={buttonDisabled}
                 >
                     <View className={"size-[44px] items-center justify-center"}>
                         <Monicon

@@ -301,6 +301,7 @@ export async function refreshCurrentTrack() {
     const trackIndex = await Player.getCurrentTrackIndex();
     // console.log(JSON.stringify(trackData, null, 4));
     // console.log(trackIndex);
+    // console.log(trackData, trackIndex);
     if (
         trackData &&
         !trackData.extendedData?.isLoaded &&
