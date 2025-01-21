@@ -101,7 +101,7 @@ function CurrentPlayingTablet() {
         <View
             className={"hidden absolute left-safe bottom-safe w-16 xl:w-64 items-center " + " md:flex" + " xl:flex-row"}
         >
-            <View className={"max-xl:w-16 max-xl:h-12 items-center xl:hidden"}>
+            <View className={"w-16 h-12 items-center xl:hidden"}>
                 <ButtonOuter>
                     <Button icon variant={"ghost"} onPress={() => toggle()}>
                         {playbackState === "STATE_BUFFERING" || isPlaceholderTrack ? (
@@ -115,14 +115,16 @@ function CurrentPlayingTablet() {
                     </Button>
                 </ButtonOuter>
             </View>
-            <Pressable
-                className={
-                    "w-12 h-12 hover:bg-background-0/50 active:bg-background-0 items-center justify-center rounded-[12px] xl:hidden"
-                }
-                onPress={() => open()}
-            >
-                <Image source={convertToHTTPS(currentTrack.artworkUri!)} className={"w-10 h-10 rounded-lg"} />
-            </Pressable>
+            <View className={"size-16 xl:hidden items-center justify-center"}>
+                <Pressable
+                    className={
+                        "w-12 h-12 hover:bg-background-0/50 active:bg-background-0 items-center justify-center rounded-[12px]"
+                    }
+                    onPress={() => open()}
+                >
+                    <Image source={convertToHTTPS(currentTrack.artworkUri!)} className={"w-10 h-10 rounded-lg"} />
+                </Pressable>
+            </View>
             <Pressable
                 className={
                     (Platform.OS === "android"
