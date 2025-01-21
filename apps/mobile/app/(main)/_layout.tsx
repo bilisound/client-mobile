@@ -98,8 +98,10 @@ function CurrentPlayingTablet() {
     }
 
     return (
-        <View className={"hidden md:flex absolute left-safe bottom-safe w-16 xl:w-64 items-center"}>
-            <View className={"w-16 h-12 items-center"}>
+        <View
+            className={"hidden absolute left-safe bottom-safe w-16 xl:w-64 items-center " + " md:flex" + " xl:flex-row"}
+        >
+            <View className={"max-xl:w-16 max-xl:h-12 items-center xl:hidden"}>
                 <ButtonOuter>
                     <Button icon variant={"ghost"} onPress={() => toggle()}>
                         {playbackState === "STATE_BUFFERING" || isPlaceholderTrack ? (
@@ -115,12 +117,41 @@ function CurrentPlayingTablet() {
             </View>
             <Pressable
                 className={
-                    "w-12 h-12 hover:bg-background-0/50 active:bg-background-0 items-center justify-center rounded-[12px]"
+                    "w-12 h-12 hover:bg-background-0/50 active:bg-background-0 items-center justify-center rounded-[12px] xl:hidden"
                 }
                 onPress={() => open()}
             >
                 <Image source={convertToHTTPS(currentTrack.artworkUri!)} className={"w-10 h-10 rounded-lg"} />
             </Pressable>
+            <Pressable
+                className={
+                    (Platform.OS === "android"
+                        ? "{}-[android_ripple.color]/color:color-background-200"
+                        : "hover:bg-background-100 active:bg-background-200") +
+                    " flex-1 flex-row items-center px-3 gap-3 h-16 hidden xl:flex"
+                }
+                onPress={() => open()}
+            >
+                <Image source={currentTrack.artworkUri} className={"h-10 w-10 rounded-lg flex-0 basis-auto"}></Image>
+                <Text className={"flex-1"} isTruncated>
+                    {currentTrack.title}
+                </Text>
+            </Pressable>
+            <View className={"flex-0 basis-auto px-3 hidden xl:flex"}>
+                <ButtonOuter className={"rounded-lg flex-0 basis-auto"}>
+                    <Pressable
+                        className={
+                            (Platform.OS === "android"
+                                ? "{}-[android_ripple.color]/color:color-background-200"
+                                : "hover:bg-background-100 active:bg-background-200") +
+                            " size-10 items-center justify-center"
+                        }
+                        onPress={() => toggle()}
+                    >
+                        <PlayingIcon />
+                    </Pressable>
+                </ButtonOuter>
+            </View>
         </View>
     );
 }

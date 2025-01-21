@@ -26,6 +26,14 @@
           color-scheme: dark;
         }
       }
+
+      /* Nativewind 的部分 class 在 Web 不工作的缓解方案 */
+      .left-safe {
+        left: env(safe-area-inset-left);
+      }
+      .bottom-safe {
+        bottom: env(safe-area-inset-bottom);
+      }
     </style>
   </head>
 
