@@ -53,6 +53,7 @@ export default async function init() {
         log.error(`缓存初始化失败。原因：${e}`);
     }
 
+    // 播放队列初始化
     await loadTrackData();
 
     // 隐藏 Splash Screen
