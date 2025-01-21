@@ -20,7 +20,7 @@ import { convertToRelativeTime } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
 import { getImageProxyUrl } from "~/utils/constant-helper";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
-import { Platform, Vibration, View } from "react-native";
+import { Platform, useWindowDimensions, Vibration, View } from "react-native";
 import { Image } from "expo-image";
 import { cssInterop } from "nativewind";
 import Toast from "react-native-toast-message";
@@ -42,13 +42,8 @@ import { Heading } from "~/components/ui/heading";
 import * as Player from "@bilisound/player";
 import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
 import useMultiSelect from "~/hooks/useMultiSelect";
-import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { usePreventRemove } from "@react-navigation/native";
-// import { useBreakpointValue } from "~/components/ui/utils/use-break-point-value";
-// import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
-// import { Box } from "~/components/ui/box";
-// import { Monicon } from "@monicon/native";
 
 cssInterop(OrigCircle, {
     className: {
@@ -409,10 +404,7 @@ export default function Page() {
         clear();
     });
 
-    const isDeleteButtonIcon = useBreakpointValue({
-        default: true,
-        md: false,
-    });
+    const isDeleteButtonIcon = useWindowDimensions().width < 768;
 
     return (
         <Layout
