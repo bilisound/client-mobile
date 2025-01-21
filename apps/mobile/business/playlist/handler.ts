@@ -14,7 +14,6 @@ import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { handleLegacyQueue } from "~/utils/migration/legacy-queue";
 import { getCacheAudioPath } from "~/utils/file";
 import { getBilisoundMetadata, getBilisoundResourceUrl, getBilisoundResourceUrlOnline } from "~/api/bilisound";
-import { undefined } from "zod";
 import log from "~/utils/logger";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { cacheStatusStorage } from "~/storage/cache-status";
