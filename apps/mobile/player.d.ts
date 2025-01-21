@@ -8,6 +8,7 @@ declare module "@bilisound/player" {
         episode: number;
         isLoaded: boolean;
         expireAt: number;
+        artworkUrl: string;
     }
 }
 

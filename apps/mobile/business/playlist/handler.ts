@@ -71,6 +71,45 @@ interface TrackDataOld {
     // [key: string]: any;
 }
 
+function processTrackDataForSave(trackData: any[]) {
+    trackData.forEach(e => {
+        delete e.uri;
+        delete e.headers;
+        delete e.mimeType;
+        if (e.extendedData) {
+            delete e.extendedData.expireAt;
+        }
+    });
+    return trackData;
+}
+
+function processTrackDataForLoad(trackData: TrackData[]) {
+    trackData.forEach(e => {
+        if (!e.extendedData) {
+            return;
+        }
+        e.headers = {
+            referer: getVideoUrl(e.extendedData.id, e.extendedData.episode),
+            "user-agent": USER_AGENT_BILIBILI,
+        };
+        e.artworkUri = getImageProxyUrl(
+            e.extendedData.artworkUrl,
+            "https://www.bilibili.com/video/" + e.extendedData.id,
+        );
+        if (Platform.OS === "web") {
+            e.uri = getBilisoundResourceUrlOnline(e.extendedData!.id, e.extendedData!.episode).url;
+            return;
+        }
+        if (e.extendedData.isLoaded) {
+            e.uri = getCacheAudioPath(e.extendedData.id, e.extendedData.episode);
+            e.mimeType = "video/mp4";
+        } else {
+            e.uri = PLACEHOLDER_AUDIO;
+        }
+    });
+    return trackData;
+}
+
 export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
     return playlist.map(e => {
         const isLoaded = !!cacheStatusStorage.getBoolean(e.bvid + "_" + e.episode);
@@ -90,6 +129,7 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
                 episode: e.episode,
                 isLoaded,
                 expireAt: 0,
+                artworkUrl: e.imgUrl,
             },
             headers: {
                 referer: getVideoUrl(e.bvid, e.episode),
@@ -101,19 +141,13 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
     });
 }
 
+// todo 存储读取时对 artworkUri 进行处理
 export async function saveTrackData() {
     log.debug("正在自动保存播放队列");
     await Promise.all([
         (async () => {
-            const tracks: any[] = await Player.getTracks();
-            tracks.forEach(e => {
-                delete e.uri;
-                delete e.headers;
-                delete e.mimeType;
-                if (e.extendedData) {
-                    delete e.extendedData.expireAt;
-                }
-            });
+            const tracks = await Player.getTracks();
+            processTrackDataForSave(tracks);
             queueStorage.set(QUEUE_LIST_VERSION, 2);
             queueStorage.set(QUEUE_LIST, JSON.stringify(tracks));
         })(),
@@ -142,10 +176,12 @@ export async function loadTrackData() {
             const trackRawData = queueStorage.getString(QUEUE_LIST) || "[]";
             let tracks: TrackDataOld[] = JSON.parse(trackRawData);
 
-            const tryMigrate = await handleLegacyQueue();
-            if (tryMigrate) {
-                tracks = tryMigrate.tracks;
-                current = tryMigrate.current;
+            if (Platform.OS !== "web") {
+                const tryMigrate = await handleLegacyQueue();
+                if (tryMigrate) {
+                    tracks = tryMigrate.tracks;
+                    current = tryMigrate.current;
+                }
             }
 
             trackData = tracks.map(e => ({
@@ -160,60 +196,26 @@ export async function loadTrackData() {
                     episode: Number(e.bilisoundEpisode),
                     isLoaded: e.bilisoundIsLoaded,
                     expireAt: 0,
+                    artworkUrl: e.artwork ?? "",
                 },
             }));
             break;
         }
     }
-
-    trackData.forEach(e => {
-        if (!e.extendedData) {
-            return;
-        }
-        e.headers = {
-            referer: getVideoUrl(e.extendedData.id, e.extendedData.episode),
-            "user-agent": USER_AGENT_BILIBILI,
-        };
-        if (Platform.OS === "web") {
-            e.uri = getBilisoundResourceUrlOnline(e.extendedData!.id, e.extendedData!.episode).url;
-            return;
-        }
-        if (e.extendedData.isLoaded) {
-            e.uri = getCacheAudioPath(e.extendedData.id, e.extendedData.episode);
-            e.mimeType = "video/mp4";
-        } else {
-            e.uri = PLACEHOLDER_AUDIO;
-        }
-    });
+    processTrackDataForLoad(trackData);
 
     // 提前 refreshTrack 是为了缓解 Bilisound 播放器 iOS 版本（？）的一个 Bug：
     // 如果用户退出应用时上次播放的是没有加载过的音频，重新启动应用后会自动跳转到下一首曲目
-    trackData[current] = await refreshTrack(trackData[current]);
-    await Player.setQueue(trackData, current);
+    if (trackData.length > 0) {
+        trackData[current] = await refreshTrack(trackData[current]);
+        await Player.setQueue(trackData, current);
+    }
 }
 
 export async function loadBackupTrackData() {
     const trackRawData = queueStorage.getString(QUEUE_LIST_BACKUP) || "[]";
     const trackData = JSON.parse(trackRawData) as TrackData[];
-    trackData.forEach(e => {
-        if (!e.extendedData) {
-            return;
-        }
-        e.headers = {
-            referer: getVideoUrl(e.extendedData.id, e.extendedData.episode),
-            "user-agent": USER_AGENT_BILIBILI,
-        };
-        if (Platform.OS === "web") {
-            e.uri = getBilisoundResourceUrlOnline(e.extendedData!.id, e.extendedData!.episode).url;
-            return;
-        }
-        if (e.extendedData.isLoaded) {
-            e.uri = getCacheAudioPath(e.extendedData.id, e.extendedData.episode);
-            e.mimeType = "video/mp4";
-        } else {
-            e.uri = PLACEHOLDER_AUDIO;
-        }
-    });
+    processTrackDataForLoad(trackData);
     return trackData;
 }
 
@@ -237,7 +239,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
     const trackData: TrackData = {
         uri: url.url,
         artist: data.owner.name,
-        artworkUri: convertToHTTPS(data.pic),
+        artworkUri: getImageProxyUrl(data.pic, "https://www.bilibili.com/video/" + id),
         duration: currentEpisode.duration,
         mimeType: "video/mp4",
         extendedData: {
@@ -245,6 +247,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
             episode,
             isLoaded: false,
             expireAt: new Date().getTime() + URI_EXPIRE_DURATION,
+            artworkUrl: data.pic,
         },
         headers: {
             referer: getVideoUrl(id, episode),
@@ -320,5 +323,5 @@ export async function replaceQueueWithPlaylist(id: number, index = 0) {
     // 恢复到非随机状态
     queueStorage.set(QUEUE_PLAYING_MODE, "normal");
     queueStorage.set(QUEUE_IS_RANDOMIZED, false);
-    queueStorage.set(QUEUE_LIST_BACKUP, JSON.stringify(tracks));
+    queueStorage.set(QUEUE_LIST_BACKUP, JSON.stringify(processTrackDataForSave(tracks)));
 }
