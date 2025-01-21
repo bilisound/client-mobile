@@ -1,11 +1,14 @@
 import * as Player from "@bilisound/player";
 
 import {
+    addToQueueListBackup,
+    getQueuePlayingMode,
     QUEUE_CURRENT_INDEX,
     QUEUE_IS_RANDOMIZED,
     QUEUE_LIST,
     QUEUE_LIST_BACKUP,
     QUEUE_LIST_VERSION,
+    QUEUE_PLAYING_MODE,
     queueStorage,
 } from "~/storage/queue";
 import { TrackData } from "@bilisound/player/build/types";
@@ -113,9 +116,6 @@ export async function saveTrackData() {
             });
             queueStorage.set(QUEUE_LIST_VERSION, 2);
             queueStorage.set(QUEUE_LIST, JSON.stringify(tracks));
-            if (!queueStorage.getBoolean(QUEUE_IS_RANDOMIZED)) {
-                queueStorage.set(QUEUE_LIST_BACKUP, JSON.stringify(tracks));
-            }
         })(),
         (async () => {
             const current = await Player.getCurrentTrackIndex();
@@ -192,6 +192,31 @@ export async function loadTrackData() {
     await Player.setQueue(trackData, current);
 }
 
+export async function loadBackupTrackData() {
+    const trackRawData = queueStorage.getString(QUEUE_LIST_BACKUP) || "[]";
+    const trackData = JSON.parse(trackRawData) as TrackData[];
+    trackData.forEach(e => {
+        if (!e.extendedData) {
+            return;
+        }
+        e.headers = {
+            referer: getVideoUrl(e.extendedData.id, e.extendedData.episode),
+            "user-agent": USER_AGENT_BILIBILI,
+        };
+        if (Platform.OS === "web") {
+            e.uri = getBilisoundResourceUrlOnline(e.extendedData!.id, e.extendedData!.episode).url;
+            return;
+        }
+        if (e.extendedData.isLoaded) {
+            e.uri = getCacheAudioPath(e.extendedData.id, e.extendedData.episode);
+            e.mimeType = "video/mp4";
+        } else {
+            e.uri = PLACEHOLDER_AUDIO;
+        }
+    });
+    return trackData;
+}
+
 export async function addTrackFromDetail(id: string, episode: number) {
     log.debug(`用户请求增加曲目：${id} / ${episode}`);
     const existing = await Player.getTracks();
@@ -209,7 +234,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
         throw new Error("指定视频没有指定的分 P 信息");
     }
 
-    await Player.addTrack({
+    const trackData: TrackData = {
         uri: url.url,
         artist: data.owner.name,
         artworkUri: convertToHTTPS(data.pic),
@@ -227,8 +252,11 @@ export async function addTrackFromDetail(id: string, episode: number) {
         },
         id: id + "_" + episode,
         title: data.pages.length === 1 ? data.title : currentEpisode.part,
-    });
-
+    };
+    await Player.addTrack(trackData);
+    if (getQueuePlayingMode() === "shuffle") {
+        addToQueueListBackup([trackData]);
+    }
     await Player.jump(existing.length); // existing.length - 1 + 1
     await Player.play();
     invalidateOnQueueStatus();
@@ -288,4 +316,9 @@ export async function replaceQueueWithPlaylist(id: number, index = 0) {
     }
     await Player.setQueue(tracks, index);
     await Player.play();
+
+    // 恢复到非随机状态
+    queueStorage.set(QUEUE_PLAYING_MODE, "normal");
+    queueStorage.set(QUEUE_IS_RANDOMIZED, false);
+    queueStorage.set(QUEUE_LIST_BACKUP, JSON.stringify(tracks));
 }

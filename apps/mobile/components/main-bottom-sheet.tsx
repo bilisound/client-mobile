@@ -58,6 +58,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { convertToHTTPS } from "~/utils/string";
 import { LayoutButton } from "~/components/layout";
 import { FlashList } from "@shopify/flash-list";
+import { QUEUE_PLAYING_MODE, QueuePlayingMode, queueStorage } from "~/storage/queue";
+import { useMMKVObject, useMMKVString } from "react-native-mmkv";
+import { setMode } from "~/business/playlist/shuffle";
 
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
@@ -260,6 +263,7 @@ function PlayerControlButtons() {
     const { colorValue } = useRawThemeValues();
     const isPlaying = useIsPlaying();
     const repeatMode = useRepeatMode();
+    const [queuePlayingMode] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
 
     const [layoutWidth, setLayoutWidth] = useState(384);
     const isNarrow = layoutWidth < 384;
@@ -287,6 +291,21 @@ function PlayerControlButtons() {
             type: "info",
             text1: `使用${REPEAT_MODE[await getRepeatMode()].name}`,
         });
+    }
+
+    async function handleChangeShuffle() {
+        const result = await setMode();
+        if (result === "normal") {
+            Toast.show({
+                type: "info",
+                text1: "随机模式关闭",
+            });
+        } else {
+            Toast.show({
+                type: "info",
+                text1: "随机模式开启",
+            });
+        }
     }
 
     return (
@@ -341,10 +360,15 @@ function PlayerControlButtons() {
             </View>
             {/* todo */}
             <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
-                <Button aria-label={"循环模式"} className={buttonToolSize} onPress={() => prev()} variant={"ghost"}>
+                <Button
+                    aria-label={"循环模式"}
+                    className={buttonToolSize}
+                    onPress={() => handleChangeShuffle()}
+                    variant={"ghost"}
+                >
                     <View className={"size-[44px] items-center justify-center"}>
                         <Monicon
-                            name={"tabler:arrows-right"}
+                            name={queuePlayingMode === "shuffle" ? "tabler:arrows-shuffle" : "tabler:arrows-right"}
                             size={iconToolSize}
                             color={colorValue("--color-primary-500")}
                         />
