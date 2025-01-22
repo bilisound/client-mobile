@@ -400,22 +400,14 @@ function PlayerControlButtons() {
             <Button onPress={() => setShowActionsheet(true)}>
                 <ButtonText>menu</ButtonText>
             </Button>
+
+            {/* 操作菜单 */}
             <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
                 <ActionsheetBackdrop />
-                <ActionsheetContent>
+                <ActionsheetContent className={"pb-safe"}>
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>
-                    <ActionsheetItem onPress={handleClose}>
-                        <View className={"size-6 items-center justify-center"}>
-                            <Monicon
-                                name="fa6-solid:cloud-arrow-down"
-                                size={18}
-                                color={colorValue("--color-typography-700")}
-                            />
-                        </View>
-                        <ActionsheetItemText>下载</ActionsheetItemText>
-                    </ActionsheetItem>
                     <ActionsheetItem onPress={handleClose}>
                         <View className={"size-6 items-center justify-center"}>
                             <Monicon
