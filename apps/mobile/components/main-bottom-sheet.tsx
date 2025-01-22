@@ -22,6 +22,7 @@ import {
     RepeatMode,
     seek,
     setRepeatMode,
+    setSpeed,
     toggle,
     useCurrentTrack,
     useIsPlaying,
@@ -58,8 +59,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { convertToHTTPS } from "~/utils/string";
 import { LayoutButton } from "~/components/layout";
 import { FlashList } from "@shopify/flash-list";
-import { QUEUE_PLAYING_MODE, QueuePlayingMode, queueStorage } from "~/storage/queue";
-import { useMMKVObject, useMMKVString } from "react-native-mmkv";
+import { QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
+import { useMMKVString } from "react-native-mmkv";
 import { setMode } from "~/business/playlist/shuffle";
 import {
     Actionsheet,
@@ -69,9 +70,10 @@ import {
     ActionsheetDragIndicatorWrapper,
     ActionsheetItem,
     ActionsheetItemText,
-    ActionsheetIcon,
 } from "~/components/ui/actionsheet";
-import { Entypo } from "@expo/vector-icons";
+import { SliderFilledTrack, SliderThumb, SliderTrack, Slider as GSSlider } from "~/components/ui/slider";
+import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
+import { CheckIcon } from "~/components/ui/icon";
 
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
@@ -264,8 +266,22 @@ function PlayerProgressTimer() {
 
     return (
         <View className={"flex-row justify-between px-8 " + DEBUG_COLOR[1]}>
-            <Text className={"text-sm text-typography-500"}>{from}</Text>
-            <Text className={"text-sm text-typography-500"}>{to}</Text>
+            <Text
+                className={"text-sm text-typography-500 tabular-nums"}
+                style={{
+                    fontFamily: "Roboto_400Regular",
+                }}
+            >
+                {from}
+            </Text>
+            <Text
+                className={"text-sm text-typography-500 tabular-nums"}
+                style={{
+                    fontFamily: "Roboto_400Regular",
+                }}
+            >
+                {to}
+            </Text>
         </View>
     );
 }
@@ -321,14 +337,41 @@ function PlayerControlButtons() {
         }
     }
 
-    const [showActionsheet, setShowActionsheet] = React.useState(false);
-    const handleClose = () => setShowActionsheet(false);
+    const [showActionSheet, setShowActionSheet] = useState(false);
+    const [showSpeedActionSheet, setShowSpeedActionSheet] = useState(false);
+    const handleClose = () => setShowActionSheet(false);
+    const handleSpeedClose = () => setShowSpeedActionSheet(false);
+
+    const menuItems = [
+        {
+            icon: "fa6-solid:floppy-disk",
+            iconSize: 18,
+            text: "保存",
+            action: () => {},
+        },
+        {
+            icon: "material-symbols:speed-rounded",
+            iconSize: 20,
+            text: "调节播放速度",
+            action: () => {
+                setShowActionSheet(false);
+                setShowSpeedActionSheet(true);
+            },
+        },
+        {
+            icon: "fa6-solid:xmark",
+            iconSize: 20,
+            text: "取消",
+            action: () => {},
+        },
+    ];
 
     return (
         <View
             className={`flex-row justify-between items-center pt-2 pb-8 px-4 md:pb-0 ` + DEBUG_COLOR[1]}
             onLayout={e => setLayoutWidth(e.nativeEvent.layout.width)}
         >
+            {/* 左侧按钮（循环模式） */}
             <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
                 <Button
                     aria-label={REPEAT_MODE[repeatMode].name}
@@ -346,6 +389,8 @@ function PlayerControlButtons() {
                     </View>
                 </Button>
             </ButtonOuter>
+
+            {/* 中间按钮（播放控制） */}
             <View className={`flex-row justify-center ${isNarrow ? "gap-3" : "gap-4"} ` + DEBUG_COLOR[1]}>
                 <ButtonOuter className={`rounded-full ${buttonSize}`}>
                     <Button aria-label={"上一首"} className={buttonSize} onPress={() => prev()} variant={"ghost"}>
@@ -380,6 +425,8 @@ function PlayerControlButtons() {
                     </Button>
                 </ButtonOuter>
             </View>
+
+            {/* 右侧按钮（随机模式） */}
             <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
                 <Button
                     aria-label={"循环模式"}
@@ -397,46 +444,128 @@ function PlayerControlButtons() {
                     </View>
                 </Button>
             </ButtonOuter>
-            <Button onPress={() => setShowActionsheet(true)}>
+            <Button onPress={() => setShowActionSheet(true)}>
                 <ButtonText>menu</ButtonText>
             </Button>
 
             {/* 操作菜单 */}
-            <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
+            <Actionsheet isOpen={showActionSheet} onClose={handleClose}>
                 <ActionsheetBackdrop />
                 <ActionsheetContent className={"pb-safe"}>
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>
-                    <ActionsheetItem onPress={handleClose}>
-                        <View className={"size-6 items-center justify-center"}>
-                            <Monicon
-                                name="fa6-solid:floppy-disk"
-                                size={18}
-                                color={colorValue("--color-typography-700")}
-                            />
-                        </View>
-                        <ActionsheetItemText>保存</ActionsheetItemText>
-                    </ActionsheetItem>
-                    <ActionsheetItem onPress={handleClose}>
-                        <View className={"size-6 items-center justify-center"}>
-                            <Monicon
-                                name="material-symbols:speed-rounded"
-                                size={20}
-                                color={colorValue("--color-typography-700")}
-                            />
-                        </View>
-                        <ActionsheetItemText>调节播放速度</ActionsheetItemText>
-                    </ActionsheetItem>
-                    <ActionsheetItem onPress={handleClose}>
-                        <View className={"size-6 items-center justify-center"}>
-                            <Monicon name="fa6-solid:xmark" size={20} color={colorValue("--color-typography-700")} />
-                        </View>
-                        <ActionsheetItemText>取消</ActionsheetItemText>
-                    </ActionsheetItem>
+                    {menuItems.map(item => (
+                        <ActionsheetItem key={item.text} onPress={item.action}>
+                            <View className={"size-6 items-center justify-center"}>
+                                <Monicon
+                                    name={item.icon}
+                                    size={item.iconSize}
+                                    color={colorValue("--color-typography-700")}
+                                />
+                            </View>
+                            <ActionsheetItemText>{item.text}</ActionsheetItemText>
+                        </ActionsheetItem>
+                    ))}
+                </ActionsheetContent>
+            </Actionsheet>
+
+            {/* 速度菜单 */}
+            <Actionsheet isOpen={showSpeedActionSheet} onClose={handleSpeedClose}>
+                <ActionsheetBackdrop />
+                <ActionsheetContent className={"pb-safe"}>
+                    <ActionsheetDragIndicatorWrapper>
+                        <ActionsheetDragIndicator />
+                    </ActionsheetDragIndicatorWrapper>
+                    <View className={"w-full p-2"}>
+                        <Text className={"font-semibold text-lg leading-tight"}>调节播放速度</Text>
+                        <SpeedControlPanel />
+                    </View>
                 </ActionsheetContent>
             </Actionsheet>
         </View>
+    );
+}
+
+function SpeedControlPanel() {
+    const [retainPitch, setRetainPitch] = useState(false);
+    const [speedValue, setSpeedValue] = useState(1);
+    const speedItems = [
+        { speed: 0.5, text: "0.5x" },
+        { speed: 0.75, text: "0.75x" },
+        { speed: 1, text: "1x" },
+        { speed: 1.25, text: "1.25x" },
+        { speed: 1.5, text: "1.5x" },
+        { speed: 1.75, text: "1.75x" },
+        { speed: 2, text: "2x" },
+    ];
+
+    return (
+        <>
+            <View className={"h-6 flex-row items-center gap-4 mt-4"}>
+                <GSSlider
+                    className={"flex-1"}
+                    value={speedValue}
+                    step={0.05}
+                    minValue={0.5}
+                    maxValue={2}
+                    size="md"
+                    orientation="horizontal"
+                    isDisabled={false}
+                    isReversed={false}
+                    onChange={e => {
+                        setSpeedValue(e);
+                        setSpeed(e, retainPitch);
+                    }}
+                >
+                    <SliderTrack>
+                        <SliderFilledTrack />
+                    </SliderTrack>
+                    <SliderThumb />
+                </GSSlider>
+                <Text
+                    className={"flex-0 basis-auto text-sm text-typography-500 tabular-nums"}
+                    style={{
+                        fontFamily: "Roboto_400Regular",
+                    }}
+                >
+                    {speedValue.toFixed(2) + "x"}
+                </Text>
+            </View>
+            <View className="flex-row flex-wrap gap-2 mt-4">
+                {speedItems.map(item => (
+                    <ButtonOuter key={item.text}>
+                        <Button
+                            variant={"outline"}
+                            size={"sm"}
+                            onPress={() => {
+                                setSpeedValue(item.speed);
+                                setSpeed(item.speed, retainPitch);
+                            }}
+                        >
+                            <ButtonText>{item.text}</ButtonText>
+                        </Button>
+                    </ButtonOuter>
+                ))}
+            </View>
+            <Checkbox
+                size="md"
+                isInvalid={false}
+                isDisabled={false}
+                value={""}
+                isChecked={retainPitch}
+                onChange={e => {
+                    setRetainPitch(e);
+                    setSpeed(speedValue, e);
+                }}
+                className={"mt-4"}
+            >
+                <CheckboxIndicator>
+                    <CheckboxIcon as={CheckIcon} />
+                </CheckboxIndicator>
+                <CheckboxLabel>变速不变调</CheckboxLabel>
+            </Checkbox>
+        </>
     );
 }
 
