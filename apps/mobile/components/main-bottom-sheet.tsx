@@ -75,6 +75,25 @@ import { SliderFilledTrack, SliderThumb, SliderTrack, Slider as GSSlider } from 
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import { CheckIcon } from "~/components/ui/icon";
 import { usePlaybackSpeedStore } from "~/store/playback-speed";
+import { createWithEqualityFn } from "zustand/traditional";
+
+interface ActionSheetState {
+    showActionSheet: boolean;
+    showSpeedActionSheet: boolean;
+    setShowActionSheet: (value: boolean) => void;
+    setShowSpeedActionSheet: (value: boolean) => void;
+    handleClose: () => void;
+    handleSpeedClose: () => void;
+}
+
+const useActionSheetStore = createWithEqualityFn<ActionSheetState>(set => ({
+    showActionSheet: false,
+    showSpeedActionSheet: false,
+    setShowActionSheet: value => set({ showActionSheet: value }),
+    setShowSpeedActionSheet: value => set({ showSpeedActionSheet: value }),
+    handleClose: () => set({ showActionSheet: false }),
+    handleSpeedClose: () => set({ showSpeedActionSheet: false }),
+}));
 
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
@@ -298,6 +317,20 @@ function PlayerProgressTimer() {
 }
 
 function PlayerControlButtons() {
+    const { showActionSheet, showSpeedActionSheet, handleClose, handleSpeedClose, setShowSpeedActionSheet } =
+        useActionSheetStore(state => ({
+            showActionSheet: state.showActionSheet,
+            showSpeedActionSheet: state.showSpeedActionSheet,
+            handleClose: state.handleClose,
+            handleSpeedClose: state.handleSpeedClose,
+            setShowSpeedActionSheet: state.setShowSpeedActionSheet,
+        }));
+    const { speedValue, retainPitch, applySpeed } = usePlaybackSpeedStore(state => ({
+        speedValue: state.speedValue,
+        retainPitch: state.retainPitch,
+        applySpeed: state.applySpeed,
+    }));
+
     const { colorValue } = useRawThemeValues();
     const isPlaying = useIsPlaying();
     const repeatMode = useRepeatMode();
@@ -348,16 +381,6 @@ function PlayerControlButtons() {
         }
     }
 
-    const [showActionSheet, setShowActionSheet] = useState(false);
-    const [showSpeedActionSheet, setShowSpeedActionSheet] = useState(false);
-    const handleClose = () => setShowActionSheet(false);
-    const handleSpeedClose = () => setShowSpeedActionSheet(false);
-    const { speedValue, retainPitch, applySpeed } = usePlaybackSpeedStore(state => ({
-        speedValue: state.speedValue,
-        retainPitch: state.retainPitch,
-        applySpeed: state.applySpeed,
-    }));
-
     const menuItems = [
         {
             icon: "fa6-solid:floppy-disk",
@@ -370,7 +393,6 @@ function PlayerControlButtons() {
             iconSize: 20,
             text: "调节播放速度",
             action: () => {
-                setShowActionSheet(false);
                 setShowSpeedActionSheet(true);
             },
         },
@@ -636,6 +658,9 @@ function PlayerQueueList() {
 export function PlayerControl() {
     const isInsidePage = useContext(InsidePageContext);
     const currentTrack = useCurrentTrack();
+    const { setShowActionSheet } = useActionSheetStore(state => ({
+        setShowActionSheet: state.setShowActionSheet,
+    }));
     const { close } = useBottomSheetStore(state => ({
         close: state.close,
     }));
@@ -685,6 +710,14 @@ export function PlayerControl() {
                                 } else {
                                     close();
                                 }
+                            }}
+                        />
+                    </View>
+                    <View className={"right-[10px] top-[10px] absolute"}>
+                        <LayoutButton
+                            iconName={"fa6-solid:ellipsis-vertical"}
+                            onPress={() => {
+                                setShowActionSheet(true);
                             }}
                         />
                     </View>
