@@ -22,7 +22,6 @@ import {
     RepeatMode,
     seek,
     setRepeatMode,
-    setSpeed,
     toggle,
     useCurrentTrack,
     useIsPlaying,
@@ -317,20 +316,6 @@ function PlayerProgressTimer() {
 }
 
 function PlayerControlButtons() {
-    const { showActionSheet, showSpeedActionSheet, handleClose, handleSpeedClose, setShowSpeedActionSheet } =
-        useActionSheetStore(state => ({
-            showActionSheet: state.showActionSheet,
-            showSpeedActionSheet: state.showSpeedActionSheet,
-            handleClose: state.handleClose,
-            handleSpeedClose: state.handleSpeedClose,
-            setShowSpeedActionSheet: state.setShowSpeedActionSheet,
-        }));
-    const { speedValue, retainPitch, applySpeed } = usePlaybackSpeedStore(state => ({
-        speedValue: state.speedValue,
-        retainPitch: state.retainPitch,
-        applySpeed: state.applySpeed,
-    }));
-
     const { colorValue } = useRawThemeValues();
     const isPlaying = useIsPlaying();
     const repeatMode = useRepeatMode();
@@ -380,29 +365,6 @@ function PlayerControlButtons() {
             });
         }
     }
-
-    const menuItems = [
-        {
-            icon: "fa6-solid:floppy-disk",
-            iconSize: 18,
-            text: "保存",
-            action: () => {},
-        },
-        {
-            icon: "material-symbols:speed-rounded",
-            iconSize: 20,
-            text: "调节播放速度",
-            action: () => {
-                setShowSpeedActionSheet(true);
-            },
-        },
-        {
-            icon: "fa6-solid:xmark",
-            iconSize: 20,
-            text: "取消",
-            action: () => {},
-        },
-    ];
 
     return (
         <View
@@ -482,7 +444,52 @@ function PlayerControlButtons() {
                     </View>
                 </Button>
             </ButtonOuter>
+        </View>
+    );
+}
 
+function PlayerControlMenu() {
+    const { colorValue } = useRawThemeValues();
+    const { showActionSheet, showSpeedActionSheet, handleClose, handleSpeedClose, setShowSpeedActionSheet } =
+        useActionSheetStore(state => ({
+            showActionSheet: state.showActionSheet,
+            showSpeedActionSheet: state.showSpeedActionSheet,
+            handleClose: state.handleClose,
+            handleSpeedClose: state.handleSpeedClose,
+            setShowSpeedActionSheet: state.setShowSpeedActionSheet,
+        }));
+    const { speedValue, retainPitch, applySpeed } = usePlaybackSpeedStore(state => ({
+        speedValue: state.speedValue,
+        retainPitch: state.retainPitch,
+        applySpeed: state.applySpeed,
+    }));
+
+    const menuItems = [
+        {
+            icon: "fa6-solid:floppy-disk",
+            iconSize: 18,
+            text: "保存",
+            action: () => {},
+        },
+        {
+            icon: "material-symbols:speed-rounded",
+            iconSize: 20,
+            text: "调节播放速度",
+            action: () => {
+                handleClose();
+                setShowSpeedActionSheet(true);
+            },
+        },
+        {
+            icon: "fa6-solid:xmark",
+            iconSize: 20,
+            text: "取消",
+            action: () => {},
+        },
+    ];
+
+    return (
+        <>
             {/* 操作菜单 */}
             <Actionsheet isOpen={showActionSheet} onClose={handleClose}>
                 <ActionsheetBackdrop />
@@ -549,7 +556,7 @@ function PlayerControlButtons() {
                     </View>
                 </ActionsheetContent>
             </Actionsheet>
-        </View>
+        </>
     );
 }
 
@@ -787,6 +794,9 @@ export function PlayerControl() {
                 {/* 曲目控制按钮 */}
                 <PlayerControlButtons />
             </View>
+
+            {/* 控制菜单 */}
+            <PlayerControlMenu />
         </View>
     );
 }
