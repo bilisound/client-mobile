@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import { setSpeed } from "@bilisound/player";
+import { createWithEqualityFn } from "zustand/traditional";
 
 interface PlaybackSpeedState {
     speedValue: number;
@@ -9,7 +9,7 @@ interface PlaybackSpeedState {
     applySpeed: (value: number, retainPitch: boolean) => void;
 }
 
-export const usePlaybackSpeedStore = create<PlaybackSpeedState>((set, get) => ({
+export const usePlaybackSpeedStore = createWithEqualityFn<PlaybackSpeedState>((set, get) => ({
     speedValue: 1,
     retainPitch: false,
     setSpeedValue: (value: number) => set({ speedValue: value }),

@@ -90,6 +90,16 @@ const TABS = [
     },
 ];
 
+const SPEED_PRESETS = [
+    { speed: 0.5, text: "0.5x" },
+    { speed: 0.75, text: "0.75x" },
+    { speed: 1, text: "1x" },
+    { speed: 1.25, text: "1.25x" },
+    { speed: 1.5, text: "1.5x" },
+    { speed: 1.75, text: "1.75x" },
+    { speed: 2, text: "2x" },
+];
+
 const REPEAT_MODE = {
     0: { name: "顺序播放", icon: "tabler:repeat-off" },
     1: { name: "单曲循环", icon: "tabler:repeat-once" },
@@ -342,6 +352,11 @@ function PlayerControlButtons() {
     const [showSpeedActionSheet, setShowSpeedActionSheet] = useState(false);
     const handleClose = () => setShowActionSheet(false);
     const handleSpeedClose = () => setShowSpeedActionSheet(false);
+    const { speedValue, retainPitch, applySpeed } = usePlaybackSpeedStore(state => ({
+        speedValue: state.speedValue,
+        retainPitch: state.retainPitch,
+        applySpeed: state.applySpeed,
+    }));
 
     const menuItems = [
         {
@@ -445,9 +460,6 @@ function PlayerControlButtons() {
                     </View>
                 </Button>
             </ButtonOuter>
-            <Button onPress={() => setShowActionSheet(true)}>
-                <ButtonText>menu</ButtonText>
-            </Button>
 
             {/* 操作菜单 */}
             <Actionsheet isOpen={showActionSheet} onClose={handleClose}>
@@ -481,6 +493,37 @@ function PlayerControlButtons() {
                     <View className={"w-full p-2"}>
                         <Text className={"font-semibold text-lg leading-tight"}>调节播放速度</Text>
                         <SpeedControlPanel />
+                        <View className="flex-row flex-wrap gap-2 mt-4">
+                            {SPEED_PRESETS.map(item => (
+                                <ButtonOuter key={item.text}>
+                                    <Button
+                                        variant={"outline"}
+                                        size={"sm"}
+                                        onPress={() => {
+                                            applySpeed(item.speed, retainPitch);
+                                        }}
+                                    >
+                                        <ButtonText>{item.text}</ButtonText>
+                                    </Button>
+                                </ButtonOuter>
+                            ))}
+                        </View>
+                        <Checkbox
+                            size="md"
+                            isInvalid={false}
+                            isDisabled={false}
+                            value={""}
+                            isChecked={retainPitch}
+                            onChange={e => {
+                                applySpeed(speedValue, e);
+                            }}
+                            className={"mt-4"}
+                        >
+                            <CheckboxIndicator>
+                                <CheckboxIcon as={CheckIcon} />
+                            </CheckboxIndicator>
+                            <CheckboxLabel>变速不变调</CheckboxLabel>
+                        </Checkbox>
                     </View>
                 </ActionsheetContent>
             </Actionsheet>
@@ -489,16 +532,11 @@ function PlayerControlButtons() {
 }
 
 function SpeedControlPanel() {
-    const { speedValue, retainPitch, setSpeedValue, setRetainPitch, applySpeed } = usePlaybackSpeedStore();
-    const speedItems = [
-        { speed: 0.5, text: "0.5x" },
-        { speed: 0.75, text: "0.75x" },
-        { speed: 1, text: "1x" },
-        { speed: 1.25, text: "1.25x" },
-        { speed: 1.5, text: "1.5x" },
-        { speed: 1.75, text: "1.75x" },
-        { speed: 2, text: "2x" },
-    ];
+    const { speedValue, retainPitch, applySpeed } = usePlaybackSpeedStore(state => ({
+        speedValue: state.speedValue,
+        retainPitch: state.retainPitch,
+        applySpeed: state.applySpeed,
+    }));
 
     return (
         <>
@@ -531,37 +569,6 @@ function SpeedControlPanel() {
                     {speedValue.toFixed(2) + "x"}
                 </Text>
             </View>
-            <View className="flex-row flex-wrap gap-2 mt-4">
-                {speedItems.map(item => (
-                    <ButtonOuter key={item.text}>
-                        <Button
-                            variant={"outline"}
-                            size={"sm"}
-                            onPress={() => {
-                                applySpeed(item.speed, retainPitch);
-                            }}
-                        >
-                            <ButtonText>{item.text}</ButtonText>
-                        </Button>
-                    </ButtonOuter>
-                ))}
-            </View>
-            <Checkbox
-                size="md"
-                isInvalid={false}
-                isDisabled={false}
-                value={""}
-                isChecked={retainPitch}
-                onChange={e => {
-                    applySpeed(speedValue, e);
-                }}
-                className={"mt-4"}
-            >
-                <CheckboxIndicator>
-                    <CheckboxIcon as={CheckIcon} />
-                </CheckboxIndicator>
-                <CheckboxLabel>变速不变调</CheckboxLabel>
-            </Checkbox>
         </>
     );
 }
