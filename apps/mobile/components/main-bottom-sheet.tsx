@@ -74,6 +74,7 @@ import {
 import { SliderFilledTrack, SliderThumb, SliderTrack, Slider as GSSlider } from "~/components/ui/slider";
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import { CheckIcon } from "~/components/ui/icon";
+import { usePlaybackSpeedStore } from "~/store/playback-speed";
 
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
@@ -488,8 +489,7 @@ function PlayerControlButtons() {
 }
 
 function SpeedControlPanel() {
-    const [retainPitch, setRetainPitch] = useState(false);
-    const [speedValue, setSpeedValue] = useState(1);
+    const { speedValue, retainPitch, setSpeedValue, setRetainPitch, applySpeed } = usePlaybackSpeedStore();
     const speedItems = [
         { speed: 0.5, text: "0.5x" },
         { speed: 0.75, text: "0.75x" },
@@ -514,8 +514,7 @@ function SpeedControlPanel() {
                     isDisabled={false}
                     isReversed={false}
                     onChange={e => {
-                        setSpeedValue(e);
-                        setSpeed(e, retainPitch);
+                        applySpeed(e, retainPitch);
                     }}
                 >
                     <SliderTrack>
@@ -539,8 +538,7 @@ function SpeedControlPanel() {
                             variant={"outline"}
                             size={"sm"}
                             onPress={() => {
-                                setSpeedValue(item.speed);
-                                setSpeed(item.speed, retainPitch);
+                                applySpeed(item.speed, retainPitch);
                             }}
                         >
                             <ButtonText>{item.text}</ButtonText>
@@ -555,8 +553,7 @@ function SpeedControlPanel() {
                 value={""}
                 isChecked={retainPitch}
                 onChange={e => {
-                    setRetainPitch(e);
-                    setSpeed(speedValue, e);
+                    applySpeed(speedValue, e);
                 }}
                 className={"mt-4"}
             >
