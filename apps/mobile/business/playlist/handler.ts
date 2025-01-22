@@ -316,7 +316,7 @@ export async function refreshCurrentTrack() {
 export async function replaceQueueWithPlaylist(id: number, index = 0) {
     const data = await getPlaylistDetail(id);
     const tracks = playlistToTracks(data);
-    if (!tracks[index].extendedData?.isLoaded) {
+    if (Platform.OS !== "web" && !tracks[index].extendedData?.isLoaded) {
         await refreshTrack(tracks[index]);
     }
     await Player.setQueue(tracks, index);
