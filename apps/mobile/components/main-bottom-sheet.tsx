@@ -690,6 +690,30 @@ export function PlayerControl() {
 
     return (
         <View className={"flex-1 flex-col md:flex-row"}>
+            <View className={"left-[10px] top-[10px] absolute z-10"}>
+                <LayoutButton
+                    iconName={"fa6-solid:angle-down"}
+                    onPress={() => {
+                        if (isInsidePage) {
+                            if (router.canGoBack()) {
+                                router.back();
+                            } else {
+                                router.replace("/");
+                            }
+                        } else {
+                            close();
+                        }
+                    }}
+                />
+            </View>
+            <View className={"right-[10px] top-[10px] absolute z-10"}>
+                <LayoutButton
+                    iconName={"fa6-solid:ellipsis-vertical"}
+                    onPress={() => {
+                        setShowActionSheet(true);
+                    }}
+                />
+            </View>
             {/* 左侧：曲目图片 */}
             <TabsPrimitive.Root
                 value={value}
@@ -697,30 +721,6 @@ export function PlayerControl() {
                 className={"flex-1 md:flex-row"}
             >
                 <View className={"items-center p-3 " + "md:justify-center"}>
-                    <View className={"left-[10px] top-[10px] absolute"}>
-                        <LayoutButton
-                            iconName={"fa6-solid:angle-down"}
-                            onPress={() => {
-                                if (isInsidePage) {
-                                    if (router.canGoBack()) {
-                                        router.back();
-                                    } else {
-                                        router.replace("/");
-                                    }
-                                } else {
-                                    close();
-                                }
-                            }}
-                        />
-                    </View>
-                    <View className={"right-[10px] top-[10px] absolute"}>
-                        <LayoutButton
-                            iconName={"fa6-solid:ellipsis-vertical"}
-                            onPress={() => {
-                                setShowActionSheet(true);
-                            }}
-                        />
-                    </View>
                     <TabsPrimitive.List
                         className={
                             "flex-0 w-48 h-10 flex-row items-center justify-center rounded-md bg-background-100 px-1 py-0 " +
