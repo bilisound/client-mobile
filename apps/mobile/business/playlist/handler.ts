@@ -1,4 +1,5 @@
 import * as Player from "@bilisound/player";
+import { RepeatMode } from "@bilisound/player";
 
 import {
     addToQueueListBackup,
@@ -23,7 +24,7 @@ import { cacheStatusStorage } from "~/storage/cache-status";
 import { PLACEHOLDER_AUDIO, URI_EXPIRE_DURATION } from "~/constants/playback";
 import { getPlaylistDetail } from "~/storage/sqlite/playlist";
 import { Platform } from "react-native";
-import { invalidateOnQueueStatus } from "~/storage/playlist";
+import { invalidateOnQueueStatus, PLAYLIST_RESTORE_LOOP_ONCE, playlistStorage } from "~/storage/playlist";
 import { convertToHTTPS } from "~/utils/string";
 import useSettingsStore from "~/store/settings";
 
@@ -309,7 +310,11 @@ export async function refreshCurrentTrack() {
     ) {
         log.debug("进行曲目替换操作");
         await Player.replaceTrack(trackIndex, await refreshTrack(trackData));
-        return;
+    }
+    // 缓解 Android 端特有的 bug：在单曲循环模式下切歌到会被触发替换操作的歌曲，会在歌曲被替换后自动跳转回第一首
+    if (playlistStorage.getBoolean(PLAYLIST_RESTORE_LOOP_ONCE)) {
+        await Player.setRepeatMode(RepeatMode.ONE);
+        playlistStorage.set(PLAYLIST_RESTORE_LOOP_ONCE, false);
     }
 }
 

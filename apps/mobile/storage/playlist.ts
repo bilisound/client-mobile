@@ -1,4 +1,4 @@
-import { MMKV, useMMKVObject } from "react-native-mmkv";
+import { MMKV, useMMKVBoolean, useMMKVObject } from "react-native-mmkv";
 
 import { PlaylistMeta } from "~/storage/sqlite/schema";
 
@@ -10,6 +10,8 @@ export const PLAYLIST_ON_QUEUE = "playlist_on_queue";
 
 // 播放列表数据库版本
 export const PLAYLIST_DB_VERSION = "playlist_db_version";
+
+export const PLAYLIST_RESTORE_LOOP_ONCE = "playlist_restore_loop_once";
 
 export interface LegacyPlaylistMeta {
     id: string;
@@ -36,4 +38,8 @@ export function usePlaylistOnQueue() {
 
 export function invalidateOnQueueStatus() {
     playlistStorage.set(PLAYLIST_ON_QUEUE, "{}");
+}
+
+export function usePlaylistRestoreLoopOnceFlag() {
+    return useMMKVBoolean(PLAYLIST_RESTORE_LOOP_ONCE, playlistStorage);
 }

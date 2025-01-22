@@ -75,6 +75,7 @@ import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/comp
 import { CheckIcon } from "~/components/ui/icon";
 import { usePlaybackSpeedStore } from "~/store/playback-speed";
 import { createWithEqualityFn } from "zustand/traditional";
+import { PLAYLIST_RESTORE_LOOP_ONCE, playlistStorage, usePlaylistRestoreLoopOnceFlag } from "~/storage/playlist";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -318,8 +319,10 @@ function PlayerProgressTimer() {
 function PlayerControlButtons() {
     const { colorValue } = useRawThemeValues();
     const isPlaying = useIsPlaying();
-    const repeatMode = useRepeatMode();
+    const repeatModeRaw = useRepeatMode();
     const [queuePlayingMode] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
+    const [restoreLoopOnceFlag] = usePlaylistRestoreLoopOnceFlag();
+    const repeatMode = restoreLoopOnceFlag ? RepeatMode.ONE : repeatModeRaw;
 
     const [layoutWidth, setLayoutWidth] = useState(384);
     const isNarrow = layoutWidth < 384;
@@ -331,7 +334,8 @@ function PlayerControlButtons() {
     const buttonSize = isNarrow ? "w-14 h-14" : "w-16 h-16";
     const buttonToolSize = "w-12 h-12";
 
-    const buttonDisabled = isLoading(useCurrentTrack(), useProgressSecond().duration);
+    const loading = isLoading(useCurrentTrack(), useProgressSecond().duration);
+    const buttonDisabled = restoreLoopOnceFlag || loading;
 
     async function handleChangeRepeatMode() {
         switch (repeatMode) {
@@ -632,6 +636,18 @@ function PlayerQueueList() {
 
     const FlashListComponent = isInsidePage ? FlashList : BottomSheetFlashList;
 
+    async function handleJump(index: number) {
+        // 缓解 Android 端特有的 bug：在单曲循环模式下切歌到会被触发替换操作的歌曲，会在歌曲被替换后自动跳转回第一首
+        if ((await getRepeatMode()) === RepeatMode.ONE) {
+            playlistStorage.set(PLAYLIST_RESTORE_LOOP_ONCE, true);
+            await setRepeatMode(RepeatMode.OFF);
+            await jump(index);
+        } else {
+            await jump(index);
+        }
+        return;
+    }
+
     return (
         <View className={"pb-2 md:py-0 flex-1"}>
             <FlashListComponent
@@ -652,7 +668,7 @@ function PlayerQueueList() {
                             episode: item.extendedData!.episode,
                         }}
                         index={index + 1}
-                        onRequestPlay={() => jump(index)}
+                        onRequestPlay={() => handleJump(index)}
                         onToggle={() => toggle()}
                     />
                 )}
