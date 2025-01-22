@@ -12,10 +12,15 @@ interface PlaybackSpeedState {
 export const usePlaybackSpeedStore = createWithEqualityFn<PlaybackSpeedState>((set, get) => ({
     speedValue: 1,
     retainPitch: false,
-    setSpeedValue: (value: number) => set({ speedValue: value }),
-    setRetainPitch: (value: boolean) => set({ retainPitch: value }),
+    setSpeedValue: (value: number) => set(() => ({ speedValue: value })),
+    setRetainPitch: (value: boolean) => set(() => ({ retainPitch: value })),
     applySpeed: (value: number, retainPitch: boolean) => {
-        set({ speedValue: value, retainPitch });
+        const got = get();
+        if (got.speedValue === value && got.retainPitch === retainPitch) {
+            // console.log("阻挡重复渲染");
+            return;
+        }
+        set(() => ({ speedValue: value, retainPitch }));
         setSpeed(value, retainPitch);
     },
 }));

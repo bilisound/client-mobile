@@ -88,10 +88,10 @@ interface ActionSheetState {
 const useActionSheetStore = createWithEqualityFn<ActionSheetState>(set => ({
     showActionSheet: false,
     showSpeedActionSheet: false,
-    setShowActionSheet: value => set({ showActionSheet: value }),
-    setShowSpeedActionSheet: value => set({ showSpeedActionSheet: value }),
-    handleClose: () => set({ showActionSheet: false }),
-    handleSpeedClose: () => set({ showSpeedActionSheet: false }),
+    setShowActionSheet: value => set(() => ({ showActionSheet: value })),
+    setShowSpeedActionSheet: value => set(() => ({ showSpeedActionSheet: value })),
+    handleClose: () => set(() => ({ showActionSheet: false })),
+    handleSpeedClose: () => set(() => ({ showSpeedActionSheet: false })),
 }));
 
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
