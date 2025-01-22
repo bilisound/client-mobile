@@ -1,7 +1,7 @@
 import { Text } from "~/components/ui/text";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
 import { router, useLocalSearchParams } from "expo-router";
-import { PLAYLIST_ON_QUEUE, PLAYLIST_RESTORE_LOOP_ONCE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
+import { PLAYLIST_ON_QUEUE, playlistStorage, usePlaylistOnQueue } from "~/storage/playlist";
 import {
     deletePlaylistDetail,
     getPlaylistDetail,
@@ -40,7 +40,6 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Heading } from "~/components/ui/heading";
 import * as Player from "@bilisound/player";
-import { RepeatMode } from "@bilisound/player";
 import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
 import useMultiSelect from "~/hooks/useMultiSelect";
 import useApplyPlaylistStore from "~/store/apply-playlist";
@@ -296,14 +295,7 @@ export default function Page() {
             from?.extendedData?.episode === to?.episode
         ) {
             log.debug("当前队列中的内容来自本歌单，就地跳转");
-            // 缓解 Android 端特有的 bug：在单曲循环模式下切歌到会被触发替换操作的歌曲，会在歌曲被替换后自动跳转回第一首
-            if ((await Player.getRepeatMode()) === RepeatMode.ONE) {
-                playlistStorage.set(PLAYLIST_RESTORE_LOOP_ONCE, true);
-                await Player.setRepeatMode(RepeatMode.OFF);
-                await Player.jump(index);
-            } else {
-                await Player.jump(index);
-            }
+            await Player.jump(index);
             return;
         }
         if (onQueue || (await Player.getTracks()).length <= 0) {

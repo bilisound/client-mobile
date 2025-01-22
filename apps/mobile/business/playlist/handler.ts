@@ -308,10 +308,14 @@ export async function refreshCurrentTrack() {
         !trackData.extendedData?.isLoaded &&
         (trackData.extendedData?.expireAt ?? 0) <= new Date().getTime()
     ) {
+        // 缓解 Android 端特有的 bug：在单曲循环模式下切歌到会被触发替换操作的歌曲，会在歌曲被替换后自动跳转回第一首
+        playlistStorage.set(PLAYLIST_RESTORE_LOOP_ONCE, true);
+        await Player.setRepeatMode(RepeatMode.OFF);
+
         log.debug("进行曲目替换操作");
         await Player.replaceTrack(trackIndex, await refreshTrack(trackData));
     }
-    // 缓解 Android 端特有的 bug：在单曲循环模式下切歌到会被触发替换操作的歌曲，会在歌曲被替换后自动跳转回第一首
+
     if (playlistStorage.getBoolean(PLAYLIST_RESTORE_LOOP_ONCE)) {
         await Player.setRepeatMode(RepeatMode.ONE);
         playlistStorage.set(PLAYLIST_RESTORE_LOOP_ONCE, false);

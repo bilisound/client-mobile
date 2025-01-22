@@ -75,7 +75,7 @@ import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/comp
 import { CheckIcon } from "~/components/ui/icon";
 import { usePlaybackSpeedStore } from "~/store/playback-speed";
 import { createWithEqualityFn } from "zustand/traditional";
-import { PLAYLIST_RESTORE_LOOP_ONCE, playlistStorage, usePlaylistRestoreLoopOnceFlag } from "~/storage/playlist";
+import { usePlaylistRestoreLoopOnceFlag } from "~/storage/playlist";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -637,15 +637,7 @@ function PlayerQueueList() {
     const FlashListComponent = isInsidePage ? FlashList : BottomSheetFlashList;
 
     async function handleJump(index: number) {
-        // 缓解 Android 端特有的 bug：在单曲循环模式下切歌到会被触发替换操作的歌曲，会在歌曲被替换后自动跳转回第一首
-        if ((await getRepeatMode()) === RepeatMode.ONE) {
-            playlistStorage.set(PLAYLIST_RESTORE_LOOP_ONCE, true);
-            await setRepeatMode(RepeatMode.OFF);
-            await jump(index);
-        } else {
-            await jump(index);
-        }
-        return;
+        await jump(index);
     }
 
     return (
