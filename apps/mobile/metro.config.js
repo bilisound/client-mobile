@@ -25,6 +25,7 @@ const configWithMonicon = withMonicon(configWithNativeWind, {
         "tabler:repeat-once",
         "tabler:arrows-right",
         "tabler:arrows-shuffle",
+        "material-symbols:speed-rounded",
     ],
     collections: ["fa6-solid", "fa6-regular"],
 });

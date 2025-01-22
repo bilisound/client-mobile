@@ -49,6 +49,7 @@
     "@iconify-json/fa6-solid": "^1.2.3",
     "@iconify-json/ri": "^1.2.5",
     "@iconify-json/tabler": "^1.2.14",
+    "@iconify-json/material-symbols": "^1.2.12",
     "@legendapp/motion": "^2.4.0",
     "@miblanchard/react-native-slider": "^2.6.0",
     "@monicon/metro": "^1.2.1",

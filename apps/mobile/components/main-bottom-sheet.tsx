@@ -44,7 +44,7 @@ import Animated, {
 import { LinearGradient } from "expo-linear-gradient";
 import { PLACEHOLDER_AUDIO } from "~/constants/playback";
 import { Monicon } from "@monicon/native";
-import { Button, ButtonOuter } from "~/components/ui/button";
+import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { useProgressSecond } from "~/hooks/useProgressSecond";
 import { formatSecond } from "~/utils/datetime";
 import { router } from "expo-router";
@@ -61,6 +61,17 @@ import { FlashList } from "@shopify/flash-list";
 import { QUEUE_PLAYING_MODE, QueuePlayingMode, queueStorage } from "~/storage/queue";
 import { useMMKVObject, useMMKVString } from "react-native-mmkv";
 import { setMode } from "~/business/playlist/shuffle";
+import {
+    Actionsheet,
+    ActionsheetBackdrop,
+    ActionsheetContent,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper,
+    ActionsheetItem,
+    ActionsheetItemText,
+    ActionsheetIcon,
+} from "~/components/ui/actionsheet";
+import { Entypo } from "@expo/vector-icons";
 
 // const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
 const DEBUG_COLOR = ["", "", ""];
@@ -310,6 +321,9 @@ function PlayerControlButtons() {
         }
     }
 
+    const [showActionsheet, setShowActionsheet] = React.useState(false);
+    const handleClose = () => setShowActionsheet(false);
+
     return (
         <View
             className={`flex-row justify-between items-center pt-2 pb-8 px-4 md:pb-0 ` + DEBUG_COLOR[1]}
@@ -366,7 +380,6 @@ function PlayerControlButtons() {
                     </Button>
                 </ButtonOuter>
             </View>
-            {/* todo */}
             <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
                 <Button
                     aria-label={"循环模式"}
@@ -384,6 +397,53 @@ function PlayerControlButtons() {
                     </View>
                 </Button>
             </ButtonOuter>
+            <Button onPress={() => setShowActionsheet(true)}>
+                <ButtonText>menu</ButtonText>
+            </Button>
+            <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
+                <ActionsheetBackdrop />
+                <ActionsheetContent>
+                    <ActionsheetDragIndicatorWrapper>
+                        <ActionsheetDragIndicator />
+                    </ActionsheetDragIndicatorWrapper>
+                    <ActionsheetItem onPress={handleClose}>
+                        <View className={"size-6 items-center justify-center"}>
+                            <Monicon
+                                name="fa6-solid:cloud-arrow-down"
+                                size={18}
+                                color={colorValue("--color-typography-700")}
+                            />
+                        </View>
+                        <ActionsheetItemText>下载</ActionsheetItemText>
+                    </ActionsheetItem>
+                    <ActionsheetItem onPress={handleClose}>
+                        <View className={"size-6 items-center justify-center"}>
+                            <Monicon
+                                name="fa6-solid:floppy-disk"
+                                size={18}
+                                color={colorValue("--color-typography-700")}
+                            />
+                        </View>
+                        <ActionsheetItemText>保存</ActionsheetItemText>
+                    </ActionsheetItem>
+                    <ActionsheetItem onPress={handleClose}>
+                        <View className={"size-6 items-center justify-center"}>
+                            <Monicon
+                                name="material-symbols:speed-rounded"
+                                size={20}
+                                color={colorValue("--color-typography-700")}
+                            />
+                        </View>
+                        <ActionsheetItemText>调节播放速度</ActionsheetItemText>
+                    </ActionsheetItem>
+                    <ActionsheetItem onPress={handleClose}>
+                        <View className={"size-6 items-center justify-center"}>
+                            <Monicon name="fa6-solid:xmark" size={20} color={colorValue("--color-typography-700")} />
+                        </View>
+                        <ActionsheetItemText>取消</ActionsheetItemText>
+                    </ActionsheetItem>
+                </ActionsheetContent>
+            </Actionsheet>
         </View>
     );
 }
