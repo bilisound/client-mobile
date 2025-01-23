@@ -512,7 +512,12 @@ export class BilisoundSDK {
     }
 
     private async getVideoUrlFestival(referer: string, avid: Numberish, bvid: string, cid: Numberish) {
-        return this.request<WebPlayInfo>({
+        const cacheKey = `bilisound_getVideoUrlFestival_${avid}_${bvid}_${cid}`;
+        const cacheGot = await this.cacheProvider.get(cacheKey);
+        if (cacheGot) {
+            return JSON.parse(cacheGot);
+        }
+        const response = await this.request<WebPlayInfo>({
             url: "/x/player/wbi/playurl",
             params: {
                 avid,
@@ -523,10 +528,17 @@ export class BilisoundSDK {
                 referer,
             },
         });
+        await this.cacheProvider.set(cacheKey, JSON.stringify(response));
+        return response;
     }
 
     private async getUserSeason(userId: Numberish, seasonId: Numberish, pageNum = 1) {
-        return this.request<UserSeasonInfo>({
+        const cacheKey = `bilisound_getUserSeason_${userId}_${seasonId}_${pageNum}`;
+        const cacheGot = await this.cacheProvider.get(cacheKey);
+        if (cacheGot) {
+            return JSON.parse(cacheGot);
+        }
+        const response = await this.request<UserSeasonInfo>({
             url: "/x/polymer/web-space/seasons_archives_list",
             params: {
                 mid: userId,
@@ -539,10 +551,17 @@ export class BilisoundSDK {
                 referer: `https://space.bilibili.com/${userId}/lists/${seasonId}?type=season`,
             },
         });
+        await this.cacheProvider.set(cacheKey, JSON.stringify(response));
+        return response;
     }
 
     private async getUserSeries(userId: Numberish, seriesId: Numberish, pageNum = 1) {
-        return this.request<UserSeriesInfo>({
+        const cacheKey = `bilisound_getUserSeries_${userId}_${seriesId}_${pageNum}`;
+        const cacheGot = await this.cacheProvider.get(cacheKey);
+        if (cacheGot) {
+            return JSON.parse(cacheGot);
+        }
+        const response = await this.request<UserSeriesInfo>({
             url: "/x/series/archives",
             params: {
                 mid: userId,
@@ -556,16 +575,25 @@ export class BilisoundSDK {
                 referer: `https://space.bilibili.com/${userId}/lists/${seriesId}?type=series`,
             },
         });
+        await this.cacheProvider.set(cacheKey, JSON.stringify(response));
+        return response;
     }
 
     private async getUserSeriesMeta(seriesId: Numberish) {
-        return this.request<UserSeriesMetadata>({
+        const cacheKey = `bilisound_getUserSeriesMeta_${seriesId}`;
+        const cacheGot = await this.cacheProvider.get(cacheKey);
+        if (cacheGot) {
+            return JSON.parse(cacheGot);
+        }
+        const response = await this.request<UserSeriesMetadata>({
             url: "/x/series/series",
             params: {
                 series_id: seriesId,
             },
             disableWbi: true,
         });
+        await this.cacheProvider.set(cacheKey, JSON.stringify(response));
+        return response;
     }
 }
 
