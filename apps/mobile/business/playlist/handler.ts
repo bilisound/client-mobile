@@ -117,7 +117,7 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
     return playlist.map(e => {
         const isLoaded = !!cacheStatusStorage.getBoolean(e.bvid + "_" + e.episode);
 
-        let uri = isLoaded ? getCacheAudioPath(e.bvid, e.episode, true) : PLACEHOLDER_AUDIO;
+        let uri = isLoaded ? getCacheAudioPath(e.bvid, e.episode) : PLACEHOLDER_AUDIO;
         if (Platform.OS === "web") {
             uri = getBilisoundResourceUrlOnline(e.bvid, e.episode).url;
         }
@@ -278,7 +278,7 @@ export async function refreshTrack(trackData: TrackData) {
     if (got && trackData.extendedData?.isLoaded) {
         log.info("有缓存，应用缓存");
         // url 设置为缓存数据
-        trackData.uri = getCacheAudioPath(id, episode, true);
+        trackData.uri = getCacheAudioPath(id, episode);
         trackData.extendedData!.isLoaded = true;
         return trackData;
     }

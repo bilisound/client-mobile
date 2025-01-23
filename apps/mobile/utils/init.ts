@@ -4,7 +4,7 @@ import { SplashScreen } from "expo-router";
 import log from "./logger";
 import useSettingsStore from "../store/settings";
 
-import { BILISOUND_LOG_URI, BILISOUND_OFFLINE_URI } from "~/constants/file";
+import { BILISOUND_LOG_URI, BILISOUND_OFFLINE_URI, BILISOUND_PROCESS_URI } from "~/constants/file";
 import { handleCacheStatus } from "~/utils/migration/cache-status";
 import { handlePlaylist } from "~/utils/migration/playlist";
 import { loadTrackData } from "~/business/playlist/handler";
@@ -23,6 +23,9 @@ export default async function init() {
         }
         if (!(await FileSystem.getInfoAsync(BILISOUND_OFFLINE_URI)).exists) {
             await FileSystem.makeDirectoryAsync(BILISOUND_OFFLINE_URI);
+        }
+        if (!(await FileSystem.getInfoAsync(BILISOUND_PROCESS_URI)).exists) {
+            await FileSystem.makeDirectoryAsync(BILISOUND_PROCESS_URI);
         }
         log.debug("目录初始化成功");
     } catch (e) {

@@ -1,5 +1,5 @@
 import { DownloadProgressData } from "expo-file-system";
-import { create } from "zustand";
+import { createWithEqualityFn } from "zustand/traditional";
 
 export interface DownloadItem {
     id: string;
@@ -18,7 +18,7 @@ export interface DownloadMethods {
     clearDownloadItem: () => void;
 }
 
-const useDownloadStore = create<DownloadProps & DownloadMethods>()((set, get) => ({
+const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()((set, get) => ({
     downloadList: new Map(),
     updateDownloadItem: (key, downloadItem) => {
         const downloadList = new Map(get().downloadList);

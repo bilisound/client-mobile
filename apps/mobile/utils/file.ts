@@ -2,7 +2,7 @@ import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import path from "path-browserify";
 
-import { BILISOUND_OFFLINE_URI } from "~/constants/file";
+import { BILISOUND_OFFLINE_URI, BILISOUND_PROCESS_URI } from "~/constants/file";
 import { cacheStatusStorage } from "~/storage/cache-status";
 import log from "~/utils/logger";
 
@@ -114,11 +114,11 @@ export async function cleanAudioCache() {
     }
 }
 
-export function getCacheAudioPath(id: string, episode: number, isAudio = true) {
-    if (isAudio) {
-        return `${BILISOUND_OFFLINE_URI}/${id}_${episode}.m4a`;
+export function getCacheAudioPath(id: string, episode: number, isTemp = false) {
+    if (isTemp) {
+        return `${BILISOUND_PROCESS_URI}/${id}_${episode}.tmp`;
     }
-    return `${BILISOUND_OFFLINE_URI}/${id}_${episode}.tmp`;
+    return `${BILISOUND_OFFLINE_URI}/${id}_${episode}.m4a`;
 }
 
 export function uriToPath(uri: string) {

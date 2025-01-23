@@ -77,6 +77,7 @@ import { usePlaybackSpeedStore } from "~/store/playback-speed";
 import { createWithEqualityFn } from "zustand/traditional";
 import { usePlaylistRestoreLoopOnceFlag } from "~/storage/playlist";
 import { getBilisoundResourceUrlOnline } from "~/api/bilisound";
+import { downloadResource } from "~/business/download";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -476,7 +477,7 @@ function PlayerControlMenu() {
             icon: "fa6-solid:download",
             iconSize: 18,
             text: "下载",
-            action: () => {
+            action: async () => {
                 if (!currentTrack?.extendedData) {
                     return;
                 }
@@ -488,7 +489,20 @@ function PlayerControlMenu() {
                             "bv",
                         ).url,
                     );
+                    return;
                 }
+                handleClose();
+                Toast.show({
+                    type: "info",
+                    text1: "开始下载",
+                    text2: currentTrack.title + "",
+                });
+                await downloadResource(currentTrack.extendedData.id, currentTrack.extendedData.episode);
+                Toast.show({
+                    type: "success",
+                    text1: "下载完成",
+                    text2: currentTrack.title + "",
+                });
             },
         },
         {
