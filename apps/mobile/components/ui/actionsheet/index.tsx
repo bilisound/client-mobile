@@ -84,10 +84,10 @@ cssInterop(PrimitiveIcon, {
     },
 });
 
-const actionsheetStyle = tva({ base: "w-full h-full web:pointer-events-none" });
+const actionsheetStyle = tva({ base: "h-full mx-safe web:pointer-events-none" });
 
 const actionsheetContentStyle = tva({
-    base: "items-center rounded-tl-3xl rounded-tr-3xl p-2 pt-2 bg-background-0 web:pointer-events-auto web:select-none shadow-hard-5 border border-b-0 border-outline-100",
+    base: "items-center rounded-tl-3xl rounded-tr-3xl p-2 pt-2 pb-safe bg-background-0 web:pointer-events-auto web:select-none shadow-hard-5 border border-b-0 border-outline-100",
 });
 
 const actionsheetItemStyle = tva({
@@ -134,7 +134,7 @@ const actionsheetDragIndicatorWrapperStyle = tva({
 });
 
 const actionsheetBackdropStyle = tva({
-    base: "absolute left-0 top-0 right-0 bottom-0 bg-background-dark web:cursor-default web:pointer-events-auto",
+    base: "absolute -left-64 -top-64 -right-64 -bottom-64 bg-background-dark web:cursor-default web:pointer-events-auto",
 });
 
 const actionsheetScrollViewStyle = tva({

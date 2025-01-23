@@ -522,7 +522,7 @@ function PlayerControlMenu() {
             {/* 操作菜单 */}
             <Actionsheet isOpen={showActionSheet} onClose={handleClose}>
                 <ActionsheetBackdrop />
-                <ActionsheetContent className={"pb-safe"}>
+                <ActionsheetContent>
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>
@@ -546,7 +546,7 @@ function PlayerControlMenu() {
             {/* 速度菜单 */}
             <Actionsheet isOpen={showSpeedActionSheet} onClose={handleSpeedClose}>
                 <ActionsheetBackdrop />
-                <ActionsheetContent className={"pb-safe"}>
+                <ActionsheetContent>
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>

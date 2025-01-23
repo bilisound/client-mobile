@@ -84,7 +84,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose}>
             <ActionsheetBackdrop />
-            <ActionsheetContent className="z-50" style={{ paddingBottom: edgeInsets.bottom }}>
+            <ActionsheetContent className="z-50">
                 <ActionsheetDragIndicatorWrapper>
                     <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
