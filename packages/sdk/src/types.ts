@@ -9,8 +9,15 @@ export interface Logger {
     debug(...msg: any[]): void;
 }
 
+export interface CacheProvider {
+    get(key: string): Promise<string | null | undefined>
+    set(key: string, value: string): Promise<void>
+    delete(key: string): Promise<void>
+}
+
 export interface SDKOptions {
     logger?: Logger;
+    cacheProvider?: CacheProvider;
     userAgent?: string;
     apiPrefix?: string;
     sitePrefix?: string;

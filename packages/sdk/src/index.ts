@@ -8,12 +8,13 @@ import {
     UserListMode,
     EpisodeItem,
     GetResourceOptions,
+    CacheProvider,
 } from "./types";
 import { filterCdnUrls } from "./cdn";
 import { InitialStateFestivalResponse, InitialStateResponse, WebPlayInfo } from "./types-vendor";
 import { extractJSON, findBestAudio } from "./utils";
 import axiosClient from "axios";
-import { signParam } from "./wbi";
+import { encWbi, getWbiKeys, signParam, WbiKey } from "./wbi";
 import { BiliRequestConfig, InternalBiliRequestConfig } from "./request";
 import { Numberish } from "./types";
 import { UserSeasonInfo, UserSeriesInfo, UserSeriesMetadata } from "./types-vendor";
@@ -25,6 +26,7 @@ export class BilisoundSDK {
     apiPrefix = "";
     key = "";
     request: <T>(cfg: BiliRequestConfig) => Promise<T>;
+    cacheProvider: CacheProvider;
 
     constructor(options: SDKOptions = {}) {
         this.logger = options.logger ?? {
@@ -37,6 +39,13 @@ export class BilisoundSDK {
         this.sitePrefix = options.sitePrefix;
         this.apiPrefix = options.apiPrefix;
         this.key = options.key;
+        this.cacheProvider = options.cacheProvider ?? {
+            async get() {
+                return null;
+            },
+            async set() {},
+            async delete() {},
+        };
         this.initRequest();
     }
 
@@ -441,6 +450,13 @@ export class BilisoundSDK {
     // JSON 请求部分
 
     private async getVideo(id: string, episode: number | string): Promise<GetVideoResponse | GetVideoFestivalResponse> {
+        const cacheKey = `bilisound_getVideo_${id}_${episode}`;
+        const cacheGot = await this.cacheProvider.get(cacheKey);
+        if (cacheGot) {
+            return JSON.parse(cacheGot);
+        }
+        let cacheData: GetVideoResponse | GetVideoFestivalResponse;
+
         const { finalUrl, response } = await this.fetchRaw(`${this.sitePrefix}/${id}/?p=${episode}`);
 
         this.logger.debug(`最终跳转结果：${finalUrl}`);
@@ -460,9 +476,7 @@ export class BilisoundSDK {
                 initialState.videoInfo.pages[0].cid,
             );
 
-            console.log(playInfo);
-
-            return { type: "festival", initialState, playInfo };
+            cacheData = { type: "festival", initialState, playInfo };
         } else {
             // 提取视频播放信息
             this.logger.debug(`按照常规视频处理该查询`);
@@ -490,8 +504,11 @@ export class BilisoundSDK {
                     throw e;
                 }
             }
-            return { type: "regular", initialState, playInfo };
+
+            cacheData = { type: "regular", initialState, playInfo };
         }
+        await this.cacheProvider.set(cacheKey, JSON.stringify(cacheData));
+        return cacheData;
     }
 
     private async getVideoUrlFestival(referer: string, avid: Numberish, bvid: string, cid: Numberish) {
