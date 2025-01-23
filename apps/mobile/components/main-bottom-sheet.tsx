@@ -582,7 +582,7 @@ function PlayerControlMenu() {
                             <CheckboxIndicator>
                                 <CheckboxIcon as={CheckIcon} />
                             </CheckboxIndicator>
-                            <CheckboxLabel>变速不变调</CheckboxLabel>
+                            <CheckboxLabel className={"text-sm"}>变速不变调</CheckboxLabel>
                         </Checkbox>
                     </View>
                 </ActionsheetContent>
@@ -644,7 +644,7 @@ function PlayerPicture() {
                 const { width, height } = event.nativeEvent.layout;
                 // padding 是 32dp `p-8`
                 const minSize = Math.min(width, height);
-                setImageSize(minSize - (minSize >= 384 ? 128 : 64));
+                setImageSize(minSize - (minSize >= 448 ? 128 : 64));
             }}
         >
             <View
