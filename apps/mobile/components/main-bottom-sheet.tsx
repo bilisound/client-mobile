@@ -243,10 +243,10 @@ function PlayerProgressBar() {
     return (
         <NativeViewGestureHandler disallowInterruption={true}>
             <View className="h-4 justify-center flex-1 relative">
-                <View className="left-[8px] right-[8px] top-[6.5px] h-[0.1875rem] rounded-full absolute overflow-hidden bg-neutral-200 dark:bg-primary-100">
+                <View className="left-[8px] right-[8px] top-[6.5px] h-[0.1875rem] rounded-full absolute overflow-hidden bg-background-50">
                     <View
                         style={{ width: `${(buffered / duration) * 100}%` }}
-                        className="h-full absolute bg-neutral-200 dark:bg-primary-100"
+                        className="h-full absolute bg-background-200"
                     />
                     <View
                         style={{ width: `${(value / duration) * 100}%` }}
