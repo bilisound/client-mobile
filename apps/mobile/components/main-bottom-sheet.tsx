@@ -28,7 +28,7 @@ import {
     useQueue,
 } from "@bilisound/player";
 import { Image } from "expo-image";
-import { ActivityIndicator, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, Platform, useWindowDimensions, View } from "react-native";
 import { breakpoints, shadow } from "~/constants/styles";
 import { Pressable } from "~/components/ui/pressable";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
@@ -76,6 +76,7 @@ import { CheckIcon } from "~/components/ui/icon";
 import { usePlaybackSpeedStore } from "~/store/playback-speed";
 import { createWithEqualityFn } from "zustand/traditional";
 import { usePlaylistRestoreLoopOnceFlag } from "~/storage/playlist";
+import { getBilisoundResourceUrlOnline } from "~/api/bilisound";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -453,6 +454,7 @@ function PlayerControlButtons() {
 }
 
 function PlayerControlMenu() {
+    const currentTrack = useCurrentTrack();
     const { colorValue } = useRawThemeValues();
     const { showActionSheet, showSpeedActionSheet, handleClose, handleSpeedClose, setShowSpeedActionSheet } =
         useActionSheetStore(state => ({
@@ -470,12 +472,34 @@ function PlayerControlMenu() {
 
     const menuItems = [
         {
+            show: true,
+            icon: "fa6-solid:download",
+            iconSize: 18,
+            text: "下载",
+            action: () => {
+                if (!currentTrack?.extendedData) {
+                    return;
+                }
+                if (Platform.OS === "web") {
+                    globalThis.window.open(
+                        getBilisoundResourceUrlOnline(
+                            currentTrack.extendedData.id,
+                            currentTrack.extendedData.episode,
+                            "bv",
+                        ).url,
+                    );
+                }
+            },
+        },
+        {
+            show: true,
             icon: "fa6-solid:floppy-disk",
             iconSize: 18,
             text: "保存",
             action: () => {},
         },
         {
+            show: true,
             icon: "material-symbols:speed-rounded",
             iconSize: 20,
             text: "调节播放速度",
@@ -485,6 +509,7 @@ function PlayerControlMenu() {
             },
         },
         {
+            show: true,
             icon: "fa6-solid:xmark",
             iconSize: 20,
             text: "取消",
@@ -501,18 +526,20 @@ function PlayerControlMenu() {
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>
-                    {menuItems.map(item => (
-                        <ActionsheetItem key={item.text} onPress={item.action}>
-                            <View className={"size-6 items-center justify-center"}>
-                                <Monicon
-                                    name={item.icon}
-                                    size={item.iconSize}
-                                    color={colorValue("--color-typography-700")}
-                                />
-                            </View>
-                            <ActionsheetItemText>{item.text}</ActionsheetItemText>
-                        </ActionsheetItem>
-                    ))}
+                    {menuItems
+                        .filter(e => e.show)
+                        .map(item => (
+                            <ActionsheetItem key={item.text} onPress={item.action}>
+                                <View className={"size-6 items-center justify-center"}>
+                                    <Monicon
+                                        name={item.icon}
+                                        size={item.iconSize}
+                                        color={colorValue("--color-typography-700")}
+                                    />
+                                </View>
+                                <ActionsheetItemText>{item.text}</ActionsheetItemText>
+                            </ActionsheetItem>
+                        ))}
                 </ActionsheetContent>
             </Actionsheet>
 

@@ -51,9 +51,10 @@ export async function getBilisoundMetadata(data: { id: string }): Promise<GetMet
     return sdk.getMetadata(data.id);
 }
 
-export function getBilisoundResourceUrlOnline(id: string, episode: number | string) {
+export function getBilisoundResourceUrlOnline(id: string, episode: number | string, download?: "av" | "bv") {
     return {
-        url: BILISOUND_API_PREFIX + `/internal/resource?id=${id}&episode=${episode}`,
+        url:
+            BILISOUND_API_PREFIX + `/internal/resource?id=${id}&episode=${episode}${download ? `&dl=${download}` : ""}`,
         isAudio: true,
     };
 }
