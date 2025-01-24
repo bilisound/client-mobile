@@ -268,14 +268,19 @@ export async function addTrackFromDetail(id: string, episode: number) {
 }
 
 export async function refreshTrack(trackData: TrackData) {
-    const id = trackData.extendedData!.id;
-    const episode = trackData.extendedData!.episode;
+    const { extendedData } = trackData;
+    if (!extendedData) {
+        log.error("无法替换曲目 " + trackData.uri + "，因为缺乏必要的元数据！！");
+        return trackData;
+    }
+    const id = extendedData.id;
+    const episode = extendedData.episode;
     log.info("正在进行刷新 Track 操作");
     log.debug(`id: ${id}, episode: ${episode}`);
 
     // 处理本地缓存
     const got = cacheStatusStorage.getBoolean(`${id}_${episode}`);
-    if (got && trackData.extendedData?.isLoaded) {
+    if (got && !extendedData.isLoaded) {
         log.info("有缓存，应用缓存");
         // url 设置为缓存数据
         trackData.uri = getCacheAudioPath(id, episode);
@@ -300,17 +305,25 @@ export async function refreshCurrentTrack() {
     log.debug("检查当前曲目是否可能需要替换");
     const trackData = await Player.getCurrentTrack();
     const trackIndex = await Player.getCurrentTrackIndex();
-    // console.log(JSON.stringify(trackData, null, 4));
-    // console.log(trackIndex);
-    // console.log(trackData, trackIndex);
-    if (
+
+    // 未缓存音频 URL 刷新条件：trackData 有效、未加载、已过期
+    const updateCondition =
         trackData &&
         !trackData.extendedData?.isLoaded &&
-        (trackData.extendedData?.expireAt ?? 0) <= new Date().getTime()
-    ) {
-        // 缓解 Android 端特有的 bug：在单曲循环模式下切歌到会被触发替换操作的歌曲，会在歌曲被替换后自动跳转回第一首
-        playlistStorage.set(PLAYLIST_RESTORE_LOOP_ONCE, true);
-        await Player.setRepeatMode(RepeatMode.OFF);
+        (trackData.extendedData?.expireAt ?? 0) <= new Date().getTime();
+
+    // 未缓存音频 URL 事后缓存刷新条件：trackData 有效、未加载、有缓存记录
+    const toPersistentCondition =
+        trackData?.extendedData &&
+        !trackData.extendedData.isLoaded &&
+        cacheStatusStorage.getBoolean(`${trackData.extendedData.id}_${trackData.extendedData.episode}`);
+
+    if (toPersistentCondition || updateCondition) {
+        if ((await Player.getRepeatMode()) === RepeatMode.ONE) {
+            // 缓解 Android 端特有的 bug：在单曲循环模式下切歌到会被触发替换操作的歌曲，会在歌曲被替换后自动跳转回第一首
+            playlistStorage.set(PLAYLIST_RESTORE_LOOP_ONCE, true);
+            await Player.setRepeatMode(RepeatMode.OFF);
+        }
 
         log.debug("进行曲目替换操作");
         await Player.replaceTrack(trackIndex, await refreshTrack(trackData));

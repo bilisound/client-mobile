@@ -68,6 +68,7 @@ export async function downloadResource(bvid: string, episode: number) {
             cache: true,
         },
         cb => {
+            console.log(JSON.stringify(downloadResumable, null, 4));
             // 更新状态管理器中的内容
             updateDownloadItem(id, {
                 id: playingRequest.id,
