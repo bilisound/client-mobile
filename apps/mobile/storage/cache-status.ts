@@ -5,6 +5,8 @@ export interface CacheMetadata {
     subName: string;
 }
 
+export const CACHE_INVALID_KEY_DO_NOT_USE = "cache_invalid_key_do_not_use";
+
 export const CACHE_STATUS_VERSION = "cache_status_version";
 
 // 键格式：[BV 号]_[分 P 编号]

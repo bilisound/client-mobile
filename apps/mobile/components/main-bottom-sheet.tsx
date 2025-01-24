@@ -78,6 +78,7 @@ import { createWithEqualityFn } from "zustand/traditional";
 import { usePlaylistRestoreLoopOnceFlag } from "~/storage/playlist";
 import { getBilisoundResourceUrlOnline } from "~/api/bilisound";
 import { downloadResource } from "~/business/download";
+import { CACHE_INVALID_KEY_DO_NOT_USE, cacheStatusStorage } from "~/storage/cache-status";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -456,6 +457,11 @@ function PlayerControlButtons() {
 
 function PlayerControlMenu() {
     const currentTrack = useCurrentTrack();
+    const currentCache = cacheStatusStorage.getBoolean(
+        currentTrack?.extendedData
+            ? currentTrack.extendedData.id + "_" + currentTrack.extendedData.episode
+            : CACHE_INVALID_KEY_DO_NOT_USE,
+    );
     const { colorValue } = useRawThemeValues();
     const { showActionSheet, showSpeedActionSheet, handleClose, handleSpeedClose, setShowSpeedActionSheet } =
         useActionSheetStore(state => ({
@@ -473,22 +479,12 @@ function PlayerControlMenu() {
 
     const menuItems = [
         {
-            show: true,
+            show: Platform.OS !== "web" && !currentCache,
             icon: "fa6-solid:download",
             iconSize: 18,
-            text: "下载",
+            text: "缓存到本地",
             action: async () => {
                 if (!currentTrack?.extendedData) {
-                    return;
-                }
-                if (Platform.OS === "web") {
-                    globalThis.window.open(
-                        getBilisoundResourceUrlOnline(
-                            currentTrack.extendedData.id,
-                            currentTrack.extendedData.episode,
-                            "bv",
-                        ).url,
-                    );
                     return;
                 }
                 handleClose();
@@ -506,11 +502,30 @@ function PlayerControlMenu() {
             },
         },
         {
-            show: true,
+            show: Platform.OS === "web",
+            icon: "fa6-solid:download",
+            iconSize: 18,
+            text: "下载",
+            action: async () => {
+                if (!currentTrack?.extendedData) {
+                    return;
+                }
+                globalThis.window.open(
+                    getBilisoundResourceUrlOnline(currentTrack.extendedData.id, currentTrack.extendedData.episode, "bv")
+                        .url,
+                );
+                handleClose();
+            },
+        },
+        {
+            show: Platform.OS !== "web" && currentCache,
             icon: "fa6-solid:floppy-disk",
             iconSize: 18,
             text: "保存",
-            action: () => {},
+            action: () => {
+                // todo 保存到本地的逻辑
+                handleClose();
+            },
         },
         {
             show: true,
