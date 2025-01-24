@@ -42,9 +42,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         "./plugins/withAndroidSignature",
         "react-native-edge-to-edge",
         [
+            // todo 需要解决二进制将会下线的问题
             "@config-plugins/ffmpeg-kit-react-native",
             {
-                package: "full-gpl",
+                package: "min",
             },
         ],
         [
