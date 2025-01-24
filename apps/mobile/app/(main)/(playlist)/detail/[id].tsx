@@ -263,14 +263,14 @@ export default function Page() {
 
     const [, setPlaylistOnQueue] = usePlaylistOnQueue();
 
-    const { data: metaRaw } = useQuery({
+    const { data: metaRaw, refetch: metaRefetch } = useQuery({
         queryKey: [`playlist_meta_${id}`],
         queryFn: () => getPlaylistMeta(Number(id)),
     });
 
     const meta = metaRaw?.[0];
 
-    const { data: playlistDetail } = useQuery({
+    const { data: playlistDetail, refetch: dataRefetch } = useQuery({
         queryKey: [`playlist_detail_${id}`],
         queryFn: () => getPlaylistDetail(Number(id)),
     });
@@ -373,6 +373,7 @@ export default function Page() {
                 queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] }),
                 queryClient.invalidateQueries({ queryKey: [`playlist_detail_${id}`] }),
             ]);
+            await Promise.all([metaRefetch(), dataRefetch()]);
             if (onQueue?.id === Number(id)) {
                 setPlaylistOnQueue(undefined);
             }

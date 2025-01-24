@@ -326,7 +326,12 @@ export async function refreshCurrentTrack() {
         }
 
         log.debug("进行曲目替换操作");
-        await Player.replaceTrack(trackIndex, await refreshTrack(trackData));
+        try {
+            await Player.replaceTrack(trackIndex, await refreshTrack(trackData));
+        } catch (e) {
+            log.error("错误捕获：" + e);
+            await Player.next();
+        }
     }
 
     if (playlistStorage.getBoolean(PLAYLIST_RESTORE_LOOP_ONCE)) {
