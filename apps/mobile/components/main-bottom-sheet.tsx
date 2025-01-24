@@ -523,11 +523,22 @@ function PlayerControlMenu() {
             },
         },
         {
+            show: process.env.NODE_ENV === "development",
+            icon: "fa6-solid:bug",
+            iconSize: 18,
+            text: "打印 currentTrack 到控制台",
+            action: () => {
+                console.log(JSON.stringify(currentTrack, null, 4));
+            },
+        },
+        {
             show: true,
             icon: "fa6-solid:xmark",
             iconSize: 20,
             text: "取消",
-            action: () => {},
+            action: () => {
+                handleClose();
+            },
         },
     ];
 
