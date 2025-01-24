@@ -24,6 +24,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { MainBottomSheet } from "~/components/main-bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ErrorToastHost } from "~/components/error-toast-host";
 
 // todo 把它们放到主题管理模块里
 const defaultTheme = structuredClone(DefaultTheme);
@@ -182,6 +183,7 @@ export default function RootLayout() {
                                 />
                             </Stack>
                             <MainBottomSheet />
+                            <ErrorToastHost />
                             <Toast config={toastConfig} topOffset={edgeInsets.top} />
                         </BottomSheetModalProvider>
                     </GestureHandlerRootView>

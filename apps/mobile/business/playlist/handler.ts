@@ -27,6 +27,7 @@ import { Platform } from "react-native";
 import { invalidateOnQueueStatus, PLAYLIST_RESTORE_LOOP_ONCE, playlistStorage } from "~/storage/playlist";
 import { convertToHTTPS } from "~/utils/string";
 import useSettingsStore from "~/store/settings";
+import useErrorMessageStore from "~/store/error-message";
 
 interface TrackDataOld {
     /** The track title */
@@ -330,6 +331,7 @@ export async function refreshCurrentTrack() {
             await Player.replaceTrack(trackIndex, await refreshTrack(trackData));
         } catch (e) {
             log.error("错误捕获：" + e);
+            useErrorMessageStore.getState().setMessage(String((e as Error)?.message || e));
             await Player.next();
         }
     }
