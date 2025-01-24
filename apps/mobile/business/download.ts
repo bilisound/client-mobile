@@ -68,7 +68,7 @@ export async function downloadResource(bvid: string, episode: number) {
             cache: true,
         },
         cb => {
-            console.log(JSON.stringify(downloadResumable, null, 4));
+            // console.log(JSON.stringify(downloadResumable, null, 4));
             // 更新状态管理器中的内容
             updateDownloadItem(id, {
                 id: playingRequest.id,
@@ -84,7 +84,6 @@ export async function downloadResource(bvid: string, episode: number) {
     const fileSize = info?.exists ? info.size : 0;
     const runTime = (endTime - beginTime) / 1000;
     log.debug(`下载任务结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(fileSize / runTime)}/s`);
-    removeDownloadItem(id);
 
     if (isAudio) {
         await FileSystem.moveAsync({
@@ -92,6 +91,7 @@ export async function downloadResource(bvid: string, episode: number) {
             to: checkUrl,
         });
         cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
+        removeDownloadItem(id);
         return;
     }
 
@@ -139,4 +139,5 @@ export async function downloadResource(bvid: string, episode: number) {
     log.debug("删除不再需要的视频文件");
     await FileSystem.deleteAsync(downloadTargetFileUrl);
     cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
+    removeDownloadItem(id);
 }

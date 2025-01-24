@@ -59,7 +59,7 @@ import { convertToHTTPS } from "~/utils/string";
 import { LayoutButton } from "~/components/layout";
 import { FlashList } from "@shopify/flash-list";
 import { QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
-import { useMMKVString } from "react-native-mmkv";
+import { useMMKVBoolean, useMMKVString } from "react-native-mmkv";
 import { setMode } from "~/business/playlist/shuffle";
 import {
     Actionsheet,
@@ -79,6 +79,7 @@ import { usePlaylistRestoreLoopOnceFlag } from "~/storage/playlist";
 import { getBilisoundResourceUrlOnline } from "~/api/bilisound";
 import { downloadResource } from "~/business/download";
 import { CACHE_INVALID_KEY_DO_NOT_USE, cacheStatusStorage } from "~/storage/cache-status";
+import useDownloadStore from "~/store/download";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -248,7 +249,9 @@ function PlayerProgressBar() {
             <View className="h-4 justify-center flex-1 relative">
                 <View className="left-[8px] right-[8px] top-[6.5px] h-[0.1875rem] rounded-full absolute overflow-hidden bg-background-50">
                     <View
-                        style={{ width: `${(buffered / duration) * 100}%` }}
+                        style={{
+                            width: activeTrack?.extendedData?.isLoaded ? "100%" : `${(buffered / duration) * 100}%`,
+                        }}
                         className="h-full absolute bg-background-200"
                     />
                     <View
@@ -457,10 +460,11 @@ function PlayerControlButtons() {
 
 function PlayerControlMenu() {
     const currentTrack = useCurrentTrack();
-    const currentCache = cacheStatusStorage.getBoolean(
+    const [currentCache] = useMMKVBoolean(
         currentTrack?.extendedData
             ? currentTrack.extendedData.id + "_" + currentTrack.extendedData.episode
             : CACHE_INVALID_KEY_DO_NOT_USE,
+        cacheStatusStorage,
     );
     const { colorValue } = useRawThemeValues();
     const { showActionSheet, showSpeedActionSheet, handleClose, handleSpeedClose, setShowSpeedActionSheet } =
@@ -476,33 +480,38 @@ function PlayerControlMenu() {
         retainPitch: state.retainPitch,
         applySpeed: state.applySpeed,
     }));
+    const { downloadList } = useDownloadStore(state => ({ downloadList: state.downloadList }));
+    const currentItemDownload = downloadList.get(
+        currentTrack?.extendedData?.id + "_" + currentTrack?.extendedData?.episode,
+    );
+    const currentProgress = currentItemDownload?.progress;
 
     const menuItems = [
         {
             show: Platform.OS !== "web" && !currentCache,
+            disabled: !!currentItemDownload,
             icon: "fa6-solid:download",
             iconSize: 18,
-            text: "缓存到本地",
+            text: currentProgress
+                ? `下载中 (${Math.round((currentProgress.totalBytesWritten / currentProgress.totalBytesExpectedToWrite) * 100 || 0)}%)`
+                : "缓存到本地",
             action: async () => {
                 if (!currentTrack?.extendedData) {
                     return;
                 }
-                handleClose();
-                Toast.show({
-                    type: "info",
-                    text1: "开始下载",
-                    text2: currentTrack.title + "",
-                });
                 await downloadResource(currentTrack.extendedData.id, currentTrack.extendedData.episode);
-                Toast.show({
-                    type: "success",
-                    text1: "下载完成",
-                    text2: currentTrack.title + "",
-                });
+                if (!useActionSheetStore.getState().showActionSheet) {
+                    Toast.show({
+                        type: "success",
+                        text1: "下载完成",
+                        text2: currentTrack.title + "",
+                    });
+                }
             },
         },
         {
             show: Platform.OS === "web",
+            disabled: false,
             icon: "fa6-solid:download",
             iconSize: 18,
             text: "下载",
@@ -519,6 +528,7 @@ function PlayerControlMenu() {
         },
         {
             show: Platform.OS !== "web" && currentCache,
+            disabled: false,
             icon: "fa6-solid:floppy-disk",
             iconSize: 18,
             text: "保存",
@@ -529,6 +539,7 @@ function PlayerControlMenu() {
         },
         {
             show: true,
+            disabled: false,
             icon: "material-symbols:speed-rounded",
             iconSize: 20,
             text: "调节播放速度",
@@ -539,6 +550,7 @@ function PlayerControlMenu() {
         },
         {
             show: process.env.NODE_ENV === "development",
+            disabled: false,
             icon: "fa6-solid:bug",
             iconSize: 18,
             text: "打印 currentTrack 到控制台",
@@ -548,6 +560,7 @@ function PlayerControlMenu() {
         },
         {
             show: true,
+            disabled: false,
             icon: "fa6-solid:xmark",
             iconSize: 20,
             text: "取消",
@@ -569,7 +582,7 @@ function PlayerControlMenu() {
                     {menuItems
                         .filter(e => e.show)
                         .map(item => (
-                            <ActionsheetItem key={item.text} onPress={item.action}>
+                            <ActionsheetItem key={item.text} onPress={item.action} isDisabled={item.disabled}>
                                 <View className={"size-6 items-center justify-center"}>
                                     <Monicon
                                         name={item.icon}
