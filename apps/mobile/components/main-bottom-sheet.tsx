@@ -988,7 +988,7 @@ export function MainBottomSheet() {
     );
 }
 
-export function MainBottomSheetCloseHost() {
+function MainBottomSheetCloseHostInner() {
     const { isOpen, close } = useBottomSheetStore();
 
     // 拦截系统返回事件
@@ -1014,4 +1014,11 @@ export function MainBottomSheetCloseHost() {
     }, [isOpen, close]);
 
     return null;
+}
+
+export function MainBottomSheetCloseHost() {
+    if (Platform.OS === "web") {
+        return null;
+    }
+    return <MainBottomSheetCloseHostInner />;
 }
