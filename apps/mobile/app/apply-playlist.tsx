@@ -13,7 +13,7 @@ import { usePlaylistOnQueue } from "~/storage/playlist";
 import { addToQueueListBackup, getQueuePlayingMode } from "~/storage/queue";
 import { addToPlaylist, getPlaylistMetas, quickCreatePlaylist, syncPlaylistAmount } from "~/storage/sqlite/playlist";
 import useApplyPlaylistStore from "~/store/apply-playlist";
-import { getImageProxyUrl } from "~/utils/constant-helper";
+import { getImageProxyUrl } from "~/business/constant-helper";
 import { Layout } from "~/components/layout";
 import { Pressable } from "~/components/ui/pressable";
 import { playlistToTracks } from "~/business/playlist/handler";

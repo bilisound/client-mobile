@@ -6,7 +6,7 @@ import { filesize } from "filesize";
 import { getBilisoundResourceUrl } from "~/api/bilisound";
 import log from "~/utils/logger";
 import useSettingsStore from "~/store/settings";
-import { getVideoUrl } from "~/utils/constant-helper";
+import { getVideoUrl } from "~/business/constant-helper";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { cacheStatusStorage } from "~/storage/cache-status";
 

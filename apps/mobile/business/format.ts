@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import sanitize from "sanitize-filename";
 
-import { bv2av } from "./vendors/av-bv";
+import { bv2av } from "../utils/vendors/av-bv";
 
 import { parseB23 } from "~/api/bilisound";
 import log from "~/utils/logger";

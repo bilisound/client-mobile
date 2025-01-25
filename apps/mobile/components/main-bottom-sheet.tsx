@@ -56,7 +56,7 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/notify-toast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { convertToHTTPS } from "~/utils/string";
-import { LayoutButton } from "~/components/layout";
+import { LayoutButton } from "~/components/layout-button";
 import { FlashList } from "@shopify/flash-list";
 import { QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
 import { useMMKVBoolean, useMMKVString } from "react-native-mmkv";
@@ -81,8 +81,6 @@ import { downloadResource } from "~/business/download";
 import { CACHE_INVALID_KEY_DO_NOT_USE, cacheStatusStorage } from "~/storage/cache-status";
 import useDownloadStore from "~/store/download";
 import useApplyPlaylistStore from "~/store/apply-playlist";
-import { usePreventRemove } from "@react-navigation/native";
-import { canGoBack } from "expo-router/build/global-state/routing";
 
 interface ActionSheetState {
     showActionSheet: boolean;

@@ -5,7 +5,7 @@ import { VideoItem } from "~/components/video-item";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getImageProxyUrl } from "~/utils/constant-helper";
+import { getImageProxyUrl } from "~/business/constant-helper";
 import {
     AlertDialog,
     AlertDialogBackdrop,

@@ -13,7 +13,7 @@ import {
     queueStorage,
 } from "~/storage/queue";
 import { TrackData } from "@bilisound/player/build/types";
-import { getImageProxyUrl, getVideoUrl } from "~/utils/constant-helper";
+import { getImageProxyUrl, getVideoUrl } from "~/business/constant-helper";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { handleLegacyQueue } from "~/utils/migration/legacy-queue";
 import { getCacheAudioPath } from "~/utils/file";

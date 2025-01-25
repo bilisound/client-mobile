@@ -1,14 +1,10 @@
-import React, { PropsWithChildren, ReactNode, forwardRef } from "react";
+import React, { PropsWithChildren, ReactNode } from "react";
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
-import { Monicon } from "@monicon/native";
-import { Button, ButtonOuter } from "~/components/ui/button";
-import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import { twMerge } from "tailwind-merge";
 import { router } from "expo-router";
-import { Pressable } from "~/components/ui/pressable";
 import { MainBottomSheetCloseHost } from "~/components/main-bottom-sheet";
+import { LayoutButton } from "~/components/layout-button";
 
 export interface LayoutProps {
     leftAccessories?: ReactNode | "BACK_BUTTON";
@@ -93,28 +89,4 @@ export function Layout({
     );
 }
 
-export interface LayoutButtonProps extends React.ComponentPropsWithoutRef<typeof Button> {
-    iconSize?: number;
-    iconName: string;
-    className?: string;
-}
-
-export const LayoutButton = forwardRef<React.ElementRef<typeof Button>, LayoutButtonProps>(
-    ({ iconSize = 20, iconName, className, ...props }, ref) => {
-        const { colorValue } = useRawThemeValues();
-
-        return (
-            <ButtonOuter>
-                <Pressable
-                    {...props}
-                    className={twMerge("w-[2.75rem] h-[2.75rem] px-0 items-center justify-center", className)}
-                    ref={ref}
-                >
-                    <Monicon size={iconSize} color={colorValue("--color-primary-500")} name={iconName} />
-                </Pressable>
-            </ButtonOuter>
-        );
-    },
-);
-
-LayoutButton.displayName = "LayoutButton";
+export * from "./layout-button";

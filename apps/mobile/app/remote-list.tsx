@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getBilisoundMetadata, getUserList, getUserListFull } from "~/api/bilisound";
 import { twMerge } from "tailwind-merge";
-import { getImageProxyUrl } from "~/utils/constant-helper";
+import { getImageProxyUrl } from "~/business/constant-helper";
 import { Skeleton } from "~/components/ui/skeleton";
 import { formatSecond } from "~/utils/datetime";
 import { decodeHTML } from "entities";

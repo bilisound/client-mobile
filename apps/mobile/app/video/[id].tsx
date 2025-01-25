@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { View, ViewStyle, Animated } from "react-native";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "~/components/ui/skeleton";
-import { getImageProxyUrl } from "~/utils/constant-helper";
+import { getImageProxyUrl } from "~/business/constant-helper";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { formatDate, formatSecond } from "~/utils/datetime";

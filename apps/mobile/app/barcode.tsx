@@ -18,7 +18,7 @@ import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
 import { useConfirm } from "~/hooks/useConfirm";
 import log from "~/utils/logger";
-import { handleQrCode } from "~/utils/qrcode";
+import { handleQrCode } from "~/business/qrcode";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Monicon } from "@monicon/native";
 

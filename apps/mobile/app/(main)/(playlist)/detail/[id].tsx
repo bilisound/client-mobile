@@ -18,7 +18,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
 import { convertToRelativeTime } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
-import { getImageProxyUrl } from "~/utils/constant-helper";
+import { getImageProxyUrl } from "~/business/constant-helper";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
 import { Platform, useWindowDimensions, Vibration, View } from "react-native";
 import { Image } from "expo-image";

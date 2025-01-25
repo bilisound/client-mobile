@@ -16,7 +16,7 @@ import { AlertCircleIcon } from "~/components/ui/icon";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import { router } from "expo-router";
-import { resolveVideo, resolveVideoAndJump } from "~/utils/format";
+import { resolveVideo, resolveVideoAndJump } from "~/business/format";
 
 export default function MainScreen() {
     const edgeInsets = useTabSafeAreaInsets();
