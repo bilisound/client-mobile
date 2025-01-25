@@ -73,6 +73,7 @@ interface TrackDataOld {
     // [key: string]: any;
 }
 
+// 对播放队列进行保存预处理
 function processTrackDataForSave(trackData: any[]) {
     trackData.forEach(e => {
         delete e.uri;
@@ -85,6 +86,7 @@ function processTrackDataForSave(trackData: any[]) {
     return trackData;
 }
 
+// 对还原的播放队列进行使用预处理
 function processTrackDataForLoad(trackData: TrackData[]) {
     trackData.forEach(e => {
         if (!e.extendedData) {
@@ -114,6 +116,7 @@ function processTrackDataForLoad(trackData: TrackData[]) {
     return trackData;
 }
 
+// 播放列表转播放队列
 export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
     return playlist.map(e => {
         const isLoaded = !!cacheStatusStorage.getBoolean(e.bvid + "_" + e.episode);
@@ -145,6 +148,7 @@ export function playlistToTracks(playlist: PlaylistDetail[]): TrackData[] {
     });
 }
 
+// 保存播放队列
 export async function saveTrackData() {
     log.debug("正在自动保存播放队列");
     await Promise.all([
@@ -161,6 +165,7 @@ export async function saveTrackData() {
     ]);
 }
 
+// 读取播放队列
 export async function loadTrackData() {
     const version = queueStorage.getNumber(QUEUE_LIST_VERSION);
 
@@ -215,6 +220,7 @@ export async function loadTrackData() {
     }
 }
 
+// 读取备份播放队列（随机模式用）
 export async function loadBackupTrackData() {
     const trackRawData = queueStorage.getString(QUEUE_LIST_BACKUP) || "[]";
     const trackData = JSON.parse(trackRawData) as TrackData[];
@@ -222,6 +228,7 @@ export async function loadBackupTrackData() {
     return trackData;
 }
 
+// 从视频详情页添加曲目到队列
 export async function addTrackFromDetail(id: string, episode: number) {
     log.debug(`用户请求增加曲目：${id} / ${episode}`);
     const existing = await Player.getTracks();
@@ -268,6 +275,7 @@ export async function addTrackFromDetail(id: string, episode: number) {
     invalidateOnQueueStatus();
 }
 
+// 刷新传入的曲目对象
 export async function refreshTrack(trackData: TrackData) {
     const { extendedData } = trackData;
     if (!extendedData) {
@@ -342,6 +350,7 @@ export async function refreshCurrentTrack() {
     }
 }
 
+// 替换播放队列
 export async function replaceQueueWithPlaylist(id: number, index = 0) {
     const data = await getPlaylistDetail(id);
     const tracks = playlistToTracks(data);
