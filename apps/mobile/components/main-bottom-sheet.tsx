@@ -28,7 +28,7 @@ import {
     useQueue,
 } from "@bilisound/player";
 import { Image } from "expo-image";
-import { ActivityIndicator, Platform, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, BackHandler, Platform, useWindowDimensions, View } from "react-native";
 import { breakpoints, shadow } from "~/constants/styles";
 import { Pressable } from "~/components/ui/pressable";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
@@ -81,6 +81,8 @@ import { downloadResource } from "~/business/download";
 import { CACHE_INVALID_KEY_DO_NOT_USE, cacheStatusStorage } from "~/storage/cache-status";
 import useDownloadStore from "~/store/download";
 import useApplyPlaylistStore from "~/store/apply-playlist";
+import { usePreventRemove } from "@react-navigation/native";
+import { canGoBack } from "expo-router/build/global-state/routing";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -984,4 +986,32 @@ export function MainBottomSheet() {
             <Toast config={toastConfig} topOffset={edgeInsets.top} />
         </BottomSheetModal>
     );
+}
+
+export function MainBottomSheetCloseHost() {
+    const { isOpen, close } = useBottomSheetStore();
+
+    // 拦截系统返回事件
+    useEffect(() => {
+        const onBackPress = () => {
+            // 开启 bottom sheet 时，关闭它
+            if (isOpen) {
+                close();
+                return true;
+            }
+            // 普通返回
+            if (router.canGoBack()) {
+                router.back();
+            } else {
+                BackHandler.exitApp();
+            }
+
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+        return () => backHandler.remove();
+    }, [isOpen, close]);
+
+    return null;
 }

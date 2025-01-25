@@ -8,6 +8,7 @@ import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { twMerge } from "tailwind-merge";
 import { router } from "expo-router";
 import { Pressable } from "~/components/ui/pressable";
+import { MainBottomSheetCloseHost } from "~/components/main-bottom-sheet";
 
 export interface LayoutProps {
     leftAccessories?: ReactNode | "BACK_BUTTON";
@@ -87,6 +88,7 @@ export function Layout({
             >
                 <View className={"flex-1"}>{children}</View>
             </View>
+            <MainBottomSheetCloseHost />
         </View>
     );
 }
