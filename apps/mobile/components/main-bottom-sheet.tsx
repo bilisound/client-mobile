@@ -638,7 +638,7 @@ function PlayerControlMenu() {
                             <CheckboxLabel className={"text-sm"}>变速不变调</CheckboxLabel>
                         </Checkbox>
                         <ButtonOuter className={"mt-4"}>
-                            <Button variant={"outline"}>
+                            <Button variant={"outline"} onPress={() => setShowSpeedActionSheet(false)}>
                                 <ButtonText>关闭</ButtonText>
                             </Button>
                         </ButtonOuter>
