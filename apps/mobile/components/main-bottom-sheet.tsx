@@ -637,6 +637,11 @@ function PlayerControlMenu() {
                             </CheckboxIndicator>
                             <CheckboxLabel className={"text-sm"}>变速不变调</CheckboxLabel>
                         </Checkbox>
+                        <ButtonOuter className={"mt-4"}>
+                            <Button variant={"outline"}>
+                                <ButtonText>关闭</ButtonText>
+                            </Button>
+                        </ButtonOuter>
                     </View>
                 </ActionsheetContent>
             </Actionsheet>
@@ -657,7 +662,7 @@ function SpeedControlPanel() {
                 <GSSlider
                     className={"flex-1"}
                     value={speedValue}
-                    step={0.05}
+                    step={0.01}
                     minValue={0.5}
                     maxValue={2}
                     size="md"
