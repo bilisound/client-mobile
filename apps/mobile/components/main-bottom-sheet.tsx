@@ -125,9 +125,9 @@ const SPEED_PRESETS = [
 ];
 
 const REPEAT_MODE = {
-    0: { name: "顺序播放", icon: "tabler:repeat-off" },
-    1: { name: "单曲循环", icon: "tabler:repeat-once" },
-    2: { name: "列表循环", icon: "tabler:repeat" },
+    0: { name: "关闭循环", icon: "tabler:repeat-off", toastText: "关闭循环" },
+    1: { name: "单曲循环", icon: "tabler:repeat-once", toastText: "使用单曲循环" },
+    2: { name: "列表循环", icon: "tabler:repeat", toastText: "使用列表循环" },
 };
 
 export const InsidePageContext = createContext(false);
@@ -358,7 +358,7 @@ function PlayerControlButtons() {
         }
         Toast.show({
             type: "info",
-            text1: `使用${REPEAT_MODE[await getRepeatMode()].name}`,
+            text1: REPEAT_MODE[await getRepeatMode()].toastText,
         });
     }
 
