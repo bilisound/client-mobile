@@ -4,11 +4,11 @@ import { router, useLocalSearchParams } from "expo-router";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useHistoryStore from "~/store/history";
 import { getBilisoundMetadata } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
-import { View, ViewStyle, Animated } from "react-native";
+import { View, ViewStyle } from "react-native";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "~/components/ui/skeleton";
 import { getImageProxyUrl } from "~/business/constant-helper";
@@ -20,8 +20,6 @@ import { SongItem } from "~/components/song-item";
 import { SkeletonText } from "~/components/skeleton-text";
 import { Pressable } from "~/components/ui/pressable";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { decodeHTML } from "entities";
 import { addTrackFromDetail } from "~/business/playlist/handler";
 import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
@@ -53,8 +51,6 @@ interface LongPressActionsProps {
  * 长按操作
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
-    const edgeInsets = useSafeAreaInsets();
-
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
             <ActionsheetBackdrop />
@@ -105,10 +101,10 @@ interface MetaDataProps {
     data?: GetMetadataResponse;
     className?: string;
     style?: ViewStyle;
-    onOpenModal?: () => void;
+    showFullMeta?: boolean;
 }
 
-function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
+function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
     const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
         setPlaylistDetail: state.setPlaylistDetail,
         setName: state.setName,
@@ -116,6 +112,7 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
         setSource: state.setSource,
         setCover: state.setCover,
     }));
+    const [alwaysShowFullMeta, setAlwaysShowFullMeta] = useState(false);
 
     function handleCreatePlaylist() {
         const meta = data;
@@ -193,14 +190,16 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
                 </View>
                 {data ? (
                     <>
-                        {onOpenModal ? (
-                            <Pressable onPress={onOpenModal}>
+                        {alwaysShowFullMeta || showFullMeta ? (
+                            <Text className={"text-sm leading-normal break-words"} selectable>
+                                {decodeHTML(data.desc)}
+                            </Text>
+                        ) : (
+                            <Pressable onPress={() => setAlwaysShowFullMeta(true)}>
                                 <Text className={"text-sm leading-normal break-words line-clamp-6"}>
                                     {decodeHTML(data.desc)}
                                 </Text>
                             </Pressable>
-                        ) : (
-                            <Text className={"text-sm leading-normal break-words"}>{decodeHTML(data.desc)}</Text>
                         )}
                     </>
                 ) : (
@@ -244,7 +243,6 @@ function MetaData({ data, className, style, onOpenModal }: MetaDataProps) {
 export default function Page() {
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
     const edgeInsets = useSafeAreaInsets();
-    const { colorValue } = useRawThemeValues();
 
     // 添加歌单
     const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
@@ -291,15 +289,6 @@ export default function Page() {
         }
     }, [appendHistoryList, data, noHistory]);
 
-    // 详情文本展示
-
-    // hooks
-    const sheetRef = useRef<BottomSheet>(null);
-
-    const snapPoints = useMemo(() => ["40%", "75%"], []);
-
-    const backdropOpacity = useRef(new Animated.Value(0)).current;
-
     return (
         <GestureHandlerRootView>
             <Layout title={"查看详情"} leftAccessories={"BACK_BUTTON"} disableContentPadding={true}>
@@ -310,20 +299,12 @@ export default function Page() {
                 ) : (
                     <DualScrollView
                         edgeInsets={edgeInsets}
-                        header={<MetaData data={data} />}
+                        header={<MetaData data={data} showFullMeta />}
                         list={({ contentContainerStyle }) => (
                             <FlashList
                                 estimatedItemSize={64}
                                 contentContainerStyle={contentContainerStyle}
-                                ListHeaderComponent={
-                                    <MetaData
-                                        data={data}
-                                        className={"flex md:hidden px-4 pb-4"}
-                                        onOpenModal={() => {
-                                            sheetRef.current?.snapToIndex(0);
-                                        }}
-                                    />
-                                }
+                                ListHeaderComponent={<MetaData data={data} className={"flex md:hidden px-4 pb-4"} />}
                                 renderItem={e => (
                                     <SongItem
                                         onRequestPlay={() => addTrackFromDetail(data!.bvid, e.item.page)}
@@ -350,74 +331,6 @@ export default function Page() {
                     />
                 )}
             </Layout>
-
-            {/* 详情内容 */}
-            <Animated.View
-                style={{
-                    opacity: backdropOpacity,
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    pointerEvents: "none",
-                }}
-                aria-hidden
-            />
-            <BottomSheet
-                ref={sheetRef}
-                index={-1}
-                snapPoints={snapPoints}
-                enableDynamicSizing={false}
-                enablePanDownToClose={true}
-                onAnimate={(fromIndex, toIndex) => {
-                    if (toIndex >= 0) {
-                        Animated.timing(backdropOpacity, {
-                            toValue: 1,
-                            duration: 300,
-                            useNativeDriver: true,
-                        }).start();
-                    } else {
-                        Animated.timing(backdropOpacity, {
-                            toValue: 0,
-                            duration: 300,
-                            useNativeDriver: true,
-                        }).start();
-                    }
-                }}
-                style={{
-                    borderTopStartRadius: 14,
-                    borderTopEndRadius: 14,
-                }}
-                handleStyle={{
-                    backgroundColor: "transparent",
-                }}
-                handleIndicatorStyle={{
-                    backgroundColor: colorValue("--color-typography-700"),
-                    width: 80,
-                }}
-                containerStyle={{
-                    backgroundColor: "transparent",
-                }}
-                backgroundStyle={{
-                    backgroundColor: colorValue("--color-background-50"),
-                }}
-            >
-                <BottomSheetScrollView
-                    className={"bg-background-50"}
-                    contentContainerStyle={{
-                        paddingLeft: edgeInsets.left + 16,
-                        paddingRight: edgeInsets.right + 16,
-                        paddingBottom: edgeInsets.bottom + 16,
-                    }}
-                >
-                    <Text className={"text-lg leading-normal font-semibold mb-2"}>视频简介</Text>
-                    <Text className={"text-sm leading-normal break-words"} selectable>
-                        {decodeHTML(data?.desc ?? "")}
-                    </Text>
-                </BottomSheetScrollView>
-            </BottomSheet>
 
             {/* 曲目操作 */}
             <LongPressActions
