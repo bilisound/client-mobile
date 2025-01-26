@@ -16,7 +16,7 @@ import { DualScrollView } from "~/components/dual-scroll-view";
 import { PlaylistDetail, PlaylistMeta } from "~/storage/sqlite/schema";
 import React, { useEffect, useRef, useState } from "react";
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
-import { convertToRelativeTime } from "~/utils/datetime";
+import { convertToRelativeTime, formatSecond } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
 import { getImageProxyUrl } from "~/business/constant-helper";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
@@ -44,6 +44,18 @@ import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage
 import useMultiSelect from "~/hooks/useMultiSelect";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { usePreventRemove } from "@react-navigation/native";
+import {
+    Actionsheet,
+    ActionsheetBackdrop,
+    ActionsheetContent,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper,
+    ActionsheetItem,
+    ActionsheetItemText,
+} from "~/components/ui/actionsheet";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { Monicon } from "@monicon/native";
 
 cssInterop(OrigCircle, {
     className: {
@@ -84,19 +96,16 @@ function ImagesGroup({ images: origImages }: { images: string[] }) {
         </View>
     );
 }
-function Header({
-    meta,
-    images,
-    onPlay,
-    showPlayButton,
-    className,
-}: {
+
+interface HeaderProps {
     meta: PlaylistMeta;
     images: string[];
     onPlay: () => void;
     showPlayButton: boolean;
     className?: string;
-}) {
+}
+
+function Header({ meta, images, onPlay, showPlayButton, className }: HeaderProps) {
     const queryClient = useQueryClient();
     const [syncing, setSyncing] = useState(false);
 
@@ -256,6 +265,38 @@ function Header({
     );
 }
 
+interface LongPressActionsProps {
+    showActionSheet: boolean;
+    onClose: () => void;
+    onAction: (action: "editMeta" | "close") => void;
+}
+
+function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActionsProps) {
+    const { colorValue } = useRawThemeValues();
+    return (
+        <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
+            <ActionsheetBackdrop />
+            <ActionsheetContent style={{ zIndex: 999 }}>
+                <ActionsheetDragIndicatorWrapper>
+                    <ActionsheetDragIndicator />
+                </ActionsheetDragIndicatorWrapper>
+                <ActionsheetItem onPress={() => onAction("editMeta")}>
+                    <View className={"size-6 items-center justify-center"}>
+                        <Monicon name={"fa6-solid:pen"} size={18} color={colorValue("--color-typography-700")} />
+                    </View>
+                    <ActionsheetItemText>修改信息</ActionsheetItemText>
+                </ActionsheetItem>
+                <ActionsheetItem onPress={() => onAction("close")}>
+                    <View className={"size-6 items-center justify-center"}>
+                        <Monicon name={"fa6-solid:xmark"} size={20} color={colorValue("--color-typography-700")} />
+                    </View>
+                    <ActionsheetItemText>取消</ActionsheetItemText>
+                </ActionsheetItem>
+            </ActionsheetContent>
+        </Actionsheet>
+    );
+}
+
 export default function Page() {
     const queryClient = useQueryClient();
     const tabSafeAreaEdgeInsets = useTabSafeAreaInsets();
@@ -407,6 +448,9 @@ export default function Page() {
 
     const isDeleteButtonIcon = useWindowDimensions().width < 768;
 
+    // 菜单管理
+    const [showActionSheet, setShowActionSheet] = useState(false);
+
     return (
         <Layout
             title={"查看详情"}
@@ -421,7 +465,14 @@ export default function Page() {
                             clear();
                         }}
                     />
-                ) : null
+                ) : (
+                    <LayoutButton
+                        iconName={"fa6-solid:ellipsis-vertical"}
+                        onPress={() => {
+                            setShowActionSheet(true);
+                        }}
+                    />
+                )
             }
             edgeInsets={{ ...tabSafeAreaEdgeInsets, bottom: 0 }}
         >
@@ -562,6 +613,22 @@ export default function Page() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            <LongPressActions
+                onAction={action => {
+                    setShowActionSheet(false);
+                    switch (action) {
+                        case "editMeta":
+                            router.push(`/(main)/(playlist)/meta/${id}`);
+                            break;
+                        case "close":
+                        default:
+                            break;
+                    }
+                }}
+                onClose={() => setShowActionSheet(false)}
+                showActionSheet={showActionSheet}
+            />
         </Layout>
     );
 }
