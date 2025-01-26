@@ -1,7 +1,6 @@
 import { Layout } from "~/components/layout";
 import { Text } from "~/components/ui/text";
 import { router, useLocalSearchParams } from "expo-router";
-import useApplyPlaylistStore from "~/store/apply-playlist";
 import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
 import React, { useEffect, useState } from "react";
@@ -37,6 +36,7 @@ import {
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import log from "~/utils/logger";
 import { GetMetadataResponse } from "@bilisound/sdk";
+import { openAddPlaylistPage } from "~/business/playlist/misc";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -105,13 +105,6 @@ interface MetaDataProps {
 }
 
 function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
-    const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
-        setPlaylistDetail: state.setPlaylistDetail,
-        setName: state.setName,
-        setDescription: state.setDescription,
-        setSource: state.setSource,
-        setCover: state.setCover,
-    }));
     const [alwaysShowFullMeta, setAlwaysShowFullMeta] = useState(false);
 
     function handleCreatePlaylist() {
@@ -120,8 +113,8 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
             log.error("使用 handleCreatePlaylist 函数时，meta 没有准备就绪！");
             return;
         }
-        setPlaylistDetail(
-            meta.pages.map(e => ({
+        openAddPlaylistPage({
+            playlistDetail: meta.pages.map(e => ({
                 author: meta.owner.name ?? "",
                 bvid: meta.bvid ?? "",
                 duration: e.duration,
@@ -132,12 +125,16 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                 playlistId: 0,
                 extendedData: null,
             })),
-        );
-        setName(meta.title);
-        setDescription(meta.desc);
-        setSource({ type: "video", bvid: meta.bvid, originalTitle: meta.title, lastSyncAt: new Date().getTime() });
-        setCover(meta.pic);
-        router.push(`/apply-playlist`);
+            name: meta.title,
+            description: meta.desc,
+            source: {
+                type: "video",
+                bvid: meta.bvid,
+                originalTitle: meta.title,
+                lastSyncAt: new Date().getTime(),
+            },
+            cover: meta.pic,
+        });
     }
 
     return (
@@ -244,15 +241,6 @@ export default function Page() {
     const { id, noHistory } = useLocalSearchParams<{ id: string; noHistory?: string }>();
     const edgeInsets = useSafeAreaInsets();
 
-    // 添加歌单
-    const { setPlaylistDetail, setName, setDescription, setSource, setCover } = useApplyPlaylistStore(state => ({
-        setPlaylistDetail: state.setPlaylistDetail,
-        setName: state.setName,
-        setDescription: state.setDescription,
-        setSource: state.setSource,
-        setCover: state.setCover,
-    }));
-
     // 添加歌单 UI 部分
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [displayTrack, setDisplayTrack] = useState<PageItem | undefined>();
@@ -344,24 +332,23 @@ export default function Page() {
                     }
                     switch (action) {
                         case "addPlaylist":
-                            setName(data?.title ?? "");
-                            setDescription(data?.desc ?? "");
-                            setPlaylistDetail([
-                                {
-                                    author: data?.owner.name ?? "",
-                                    bvid: data?.bvid ?? "",
-                                    duration: displayTrack.duration,
-                                    episode: displayTrack.page,
-                                    title: displayTrack.part,
-                                    imgUrl: data?.pic ?? "",
-                                    id: 0,
-                                    playlistId: 0,
-                                    extendedData: null,
-                                },
-                            ]);
-                            setSource();
-                            setCover();
-                            router.push(`/apply-playlist`);
+                            openAddPlaylistPage({
+                                playlistDetail: [
+                                    {
+                                        author: data?.owner.name ?? "",
+                                        bvid: data?.bvid ?? "",
+                                        duration: displayTrack.duration,
+                                        episode: displayTrack.page,
+                                        title: displayTrack.part,
+                                        imgUrl: data?.pic ?? "",
+                                        id: 0,
+                                        playlistId: 0,
+                                        extendedData: null,
+                                    },
+                                ],
+                                name: data?.title ?? "",
+                                description: data?.desc ?? "",
+                            });
                             break;
                         case "close":
                             break;
