@@ -80,7 +80,7 @@ import { getBilisoundResourceUrlOnline } from "~/api/bilisound";
 import { downloadResource } from "~/business/download";
 import { CACHE_INVALID_KEY_DO_NOT_USE, cacheStatusStorage } from "~/storage/cache-status";
 import useDownloadStore from "~/store/download";
-import useApplyPlaylistStore from "~/store/apply-playlist";
+import { openAddPlaylistPage } from "~/business/playlist/misc";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -490,6 +490,46 @@ function PlayerControlMenu() {
 
     const menuItems = [
         {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:plus",
+            iconSize: 18,
+            text: "添加到歌单",
+            action: () => {
+                if (!currentTrack?.extendedData) {
+                    return;
+                }
+                handleClose();
+                console.log(isInsidePage);
+                if (!isInsidePage) {
+                    useBottomSheetStore.getState().close();
+                }
+                setTimeout(
+                    () => {
+                        openAddPlaylistPage({
+                            name: currentTrack.title ?? "",
+                            description: "",
+                            playlistDetail: [
+                                {
+                                    author: currentTrack.artist ?? "",
+                                    bvid: currentTrack.extendedData?.id ?? "",
+                                    duration: currentTrack.duration ?? 0,
+                                    episode: currentTrack.extendedData?.episode ?? 1,
+                                    title: currentTrack.title ?? "",
+                                    imgUrl: currentTrack.artworkUri ?? "",
+                                    id: 0,
+                                    playlistId: 0,
+                                    extendedData: null,
+                                },
+                            ],
+                            cover: currentTrack.artworkUri ?? "",
+                        });
+                    },
+                    isInsidePage ? 0 : 250,
+                );
+            },
+        },
+        {
             show: Platform.OS !== "web" && !currentCache,
             disabled: !!currentItemDownload,
             icon: "fa6-solid:download",
@@ -537,47 +577,6 @@ function PlayerControlMenu() {
             action: () => {
                 // todo 保存到本地的逻辑
                 handleClose();
-            },
-        },
-        {
-            show: true,
-            disabled: false,
-            icon: "fa6-solid:plus",
-            iconSize: 18,
-            text: "添加到歌单",
-            action: () => {
-                if (!currentTrack?.extendedData) {
-                    return;
-                }
-                handleClose();
-                console.log(isInsidePage);
-                if (!isInsidePage) {
-                    useBottomSheetStore.getState().close();
-                }
-                setTimeout(
-                    () => {
-                        const state = useApplyPlaylistStore.getState();
-                        state.setName(currentTrack.title ?? "");
-                        state.setDescription("");
-                        state.setPlaylistDetail([
-                            {
-                                author: currentTrack.artist ?? "",
-                                bvid: currentTrack.extendedData?.id ?? "",
-                                duration: currentTrack.duration ?? 0,
-                                episode: currentTrack.extendedData?.episode ?? 1,
-                                title: currentTrack.title ?? "",
-                                imgUrl: currentTrack.artworkUri ?? "",
-                                id: 0,
-                                playlistId: 0,
-                                extendedData: null,
-                            },
-                        ]);
-                        state.setSource();
-                        state.setCover(currentTrack.artworkUri ?? "");
-                        router.push(`/apply-playlist`);
-                    },
-                    isInsidePage ? 0 : 250,
-                );
             },
         },
         {
