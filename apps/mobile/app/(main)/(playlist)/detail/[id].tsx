@@ -447,7 +447,7 @@ export default function Page() {
     }
 
     // 返回时先关闭编辑模式
-    usePreventRemove(editing, () => {
+    usePreventRemove(Platform.OS !== "ios" && editing, () => {
         setEditing(false);
         clear();
     });
