@@ -116,12 +116,12 @@ const TABS = [
 
 const SPEED_PRESETS = [
     { speed: 0.5, text: "0.5x" },
-    { speed: 0.75, text: "0.75x" },
+    { speed: 0.8, text: "0.8x" },
+    { speed: 0.9, text: "0.9x" },
     { speed: 1, text: "1x" },
-    { speed: 1.25, text: "1.25x" },
+    { speed: 1.1, text: "1.1x" },
+    { speed: 1.2, text: "1.2x" },
     { speed: 1.5, text: "1.5x" },
-    { speed: 1.75, text: "1.75x" },
-    { speed: 2, text: "2x" },
 ];
 
 const REPEAT_MODE = {
