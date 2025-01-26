@@ -1,0 +1,5 @@
+User-agent: *
+
+Disallow: /video/
+Disallow: /remote-list
+Disallow: /apply-playlist
