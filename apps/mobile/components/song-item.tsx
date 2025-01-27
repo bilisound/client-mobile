@@ -17,6 +17,8 @@ import { useCurrentTrack, useIsPlaying, usePlaybackState } from "@bilisound/play
 import { shadow } from "~/constants/styles";
 import { Monicon } from "@monicon/native";
 import { PLACEHOLDER_AUDIO } from "~/constants/playback";
+import { Skeleton } from "~/components/ui/skeleton";
+import { SkeletonText } from "~/components/skeleton-text";
 
 // 播放状态图标
 function PlayingIcon() {
@@ -68,7 +70,7 @@ export interface SongItemProps {
     onRequestPlay?: () => void;
     onLongPress?: () => void;
     onToggle?: () => void;
-    data: PlaylistDetail;
+    data?: PlaylistDetail;
     index?: number;
     isChecking?: boolean;
     isChecked?: boolean;
@@ -85,8 +87,9 @@ export function SongItem({
 }: SongItemProps) {
     const activeTrack = useCurrentTrack();
     const isActiveTrack =
-        data.bvid === activeTrack?.extendedData?.id && data.episode === activeTrack?.extendedData?.episode;
-    const [exists] = useMMKVBoolean(data.bvid + "_" + data.episode, cacheStatusStorage);
+        data && data.bvid === activeTrack?.extendedData?.id && data.episode === activeTrack?.extendedData?.episode;
+    const [existsRaw] = useMMKVBoolean(data?.bvid + "_" + data?.episode, cacheStatusStorage);
+    const exists = data && existsRaw;
 
     return (
         <Pressable
@@ -105,28 +108,41 @@ export function SongItem({
             className="px-4 h-16 flex-row gap-3 items-center"
         >
             <View className="flex-row flex-1 gap-3 justify-start">
-                <View
-                    className={trackNumberStyle({ isActiveTrack })}
-                    style={{ boxShadow: isActiveTrack ? shadow.lg : undefined }}
-                >
-                    <Text
-                        className="text-sm text-white tabular-nums"
-                        style={{ fontFamily: isActiveTrack ? "Roboto_700Bold" : "Roboto_400Regular" }}
+                {data ? (
+                    <View
+                        className={trackNumberStyle({ isActiveTrack })}
+                        style={{ boxShadow: isActiveTrack ? shadow.lg : undefined }}
                     >
-                        {typeof index === "number" ? index : data.episode}
-                    </Text>
-                </View>
+                        <Text
+                            className="text-sm text-white tabular-nums"
+                            style={{ fontFamily: isActiveTrack ? "Roboto_700Bold" : "Roboto_400Regular" }}
+                        >
+                            {typeof index === "number" ? index : data.episode}
+                        </Text>
+                    </View>
+                ) : (
+                    <Skeleton className={"rounded-md w-[20px] h-[22px]"} />
+                )}
+
                 <View className="flex-1">
-                    <Text className={trackTitleStyle({ isActiveTrack })} isTruncated>
-                        {data.title}
-                    </Text>
+                    {data ? (
+                        <Text className={trackTitleStyle({ isActiveTrack })} isTruncated>
+                            {data.title}
+                        </Text>
+                    ) : (
+                        <SkeletonText lineSize={1} lineHeight={22} fontSize={14} />
+                    )}
                     <View className="mt-1 flex-row items-center gap-1">
                         {exists ? (
                             <Ionicons name="checkmark-circle" size={16} className="color-typography-700 opacity-50" />
                         ) : null}
-                        <Text className="text-sm opacity-50" style={{ fontFamily: "Roboto_400Regular" }}>
-                            {formatSecond(data.duration)}
-                        </Text>
+                        {data ? (
+                            <Text className="text-sm opacity-50" style={{ fontFamily: "Roboto_400Regular" }}>
+                                {formatSecond(data.duration)}
+                            </Text>
+                        ) : (
+                            <SkeletonText lineSize={1} lineHeight={20} fontSize={14} className={"w-32"} />
+                        )}
                     </View>
                 </View>
             </View>
@@ -137,7 +153,6 @@ export function SongItem({
                             isChecked ? "bg-primary-500 dark:bg-primary-400" : "bg-transparent"
                         }`}
                     >
-                        {/*<Entypo name="check" size={18} color={isChecked ? "white" : "transparent"} />*/}
                         <Monicon name={"fa6-solid:check"} size={16} color={isChecked ? "white" : "transparent"} />
                     </View>
                 </View>
@@ -146,7 +161,6 @@ export function SongItem({
                     <View className="flex-0 flex-basis-auto items-center justify-center w-8">
                         <PlayingIcon />
                     </View>
-                    {/*<ProgressBar item={`${data.bvid}_${data.episode}`} />*/}
                 </>
             ) : null}
         </Pressable>

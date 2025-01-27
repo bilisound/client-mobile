@@ -27,7 +27,7 @@ export function SkeletonText({ lineHeight = 21, className, fontSize = 14, lineSi
             {Array.from({ length: lineSize - 1 }).map((_, i) => (
                 <Skeleton style={{ height: fontSize }} className="rounded-full w-full" key={i} />
             ))}
-            <Skeleton style={{ height: fontSize }} className="rounded-full w-1/2" />
+            <Skeleton style={{ height: fontSize }} className={`rounded-full ${lineSize === 1 ? "w-full" : "w-1/2"}`} />
         </VStack>
     );
 }
