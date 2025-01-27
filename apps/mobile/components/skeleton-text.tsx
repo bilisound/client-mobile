@@ -18,7 +18,9 @@ export function SkeletonText({ lineHeight = 21, className, fontSize = 14, lineSi
     return (
         <VStack
             style={{
-                paddingVertical: paddingY,
+                // 使用 paddingVertical 在 web 不生效
+                paddingTop: paddingY,
+                paddingBottom: paddingY,
                 gap,
             }}
             className={className}
