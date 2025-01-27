@@ -91,22 +91,8 @@ export function SongItem({
     const [existsRaw] = useMMKVBoolean(data?.bvid + "_" + data?.episode, cacheStatusStorage);
     const exists = data && existsRaw;
 
-    return (
-        <Pressable
-            onPress={async () => {
-                if (isChecking) {
-                    onToggle();
-                    return;
-                }
-                if (isActiveTrack) {
-                    await Player.toggle();
-                    return;
-                }
-                onRequestPlay();
-            }}
-            onLongPress={onLongPress}
-            className="px-4 h-16 flex-row gap-3 items-center"
-        >
+    const inner = (
+        <>
             <View className="flex-row flex-1 gap-3 justify-start">
                 {data ? (
                     <View
@@ -163,6 +149,28 @@ export function SongItem({
                     </View>
                 </>
             ) : null}
+        </>
+    );
+
+    return data ? (
+        <Pressable
+            onPress={async () => {
+                if (isChecking) {
+                    onToggle();
+                    return;
+                }
+                if (isActiveTrack) {
+                    await Player.toggle();
+                    return;
+                }
+                onRequestPlay();
+            }}
+            onLongPress={onLongPress}
+            className="px-4 h-16 flex-row gap-3 items-center"
+        >
+            {inner}
         </Pressable>
+    ) : (
+        <View className="px-4 h-16 flex-row gap-3 items-center"> {inner}</View>
     );
 }
