@@ -23,6 +23,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@animatereactnative/marquee": "^0.3.1",
     "@bilisound/player": "0.1.18",
     "@bilisound/sdk": "workspace:*",
     "@expo-google-fonts/poppins": "^0.2.3",

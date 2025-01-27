@@ -81,6 +81,7 @@ import { downloadResource } from "~/business/download";
 import { CACHE_INVALID_KEY_DO_NOT_USE, cacheStatusStorage } from "~/storage/cache-status";
 import useDownloadStore from "~/store/download";
 import { openAddPlaylistPage } from "~/business/playlist/misc";
+import { Marquee } from "@animatereactnative/marquee";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -808,6 +809,7 @@ export function PlayerControl() {
     }));
     const [closing, setClosing] = useState(false);
     const [value, setValue] = useState<"current" | "list">("current");
+    const [rotateTitle, setRotateTitle] = useState(false);
 
     function handleJump() {
         if (closing) {
@@ -906,14 +908,31 @@ export function PlayerControl() {
                 className={"@container flex-0 basis-auto md:flex-1 md:justify-center gap-3 @sm:gap-4 " + DEBUG_COLOR[0]}
             >
                 {/* 曲目信息，可点击 */}
-                <Pressable className={"gap-1.5 @sm:gap-2 py-2 @sm:py-4 px-8 " + DEBUG_COLOR[1]} onPress={handleJump}>
-                    <Text
-                        className={"leading-normal text-lg @sm:text-xl font-extrabold color-typography-700"}
-                        isTruncated
-                    >
-                        {currentTrack?.title}
-                    </Text>
-                    <Text className={"leading-normal text-sm color-typography-500"}>{currentTrack?.artist}</Text>
+                <Pressable
+                    className={"gap-1.5 @sm:gap-2 py-2 @sm:py-4 " + DEBUG_COLOR[1]}
+                    onPress={handleJump}
+                    onLongPress={() => setRotateTitle(p => !p)}
+                >
+                    {rotateTitle ? (
+                        <Marquee speed={0.5}>
+                            <Text
+                                className={
+                                    "leading-normal text-lg @sm:text-xl font-extrabold color-typography-700 pl-8"
+                                }
+                            >
+                                {currentTrack?.title}
+                            </Text>
+                        </Marquee>
+                    ) : (
+                        <Text
+                            className={"leading-normal text-lg @sm:text-xl font-extrabold color-typography-700 px-8"}
+                            isTruncated
+                        >
+                            {currentTrack?.title}
+                        </Text>
+                    )}
+
+                    <Text className={"leading-normal text-sm color-typography-500 px-8"}>{currentTrack?.artist}</Text>
                 </Pressable>
 
                 <View className={"gap-1.5"}>

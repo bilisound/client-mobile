@@ -38,6 +38,7 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Heading } from "~/components/ui/heading";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
+import { Marquee } from "@animatereactnative/marquee";
 
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
@@ -270,18 +271,32 @@ export default function Page() {
                     </>
                 }
             >
-                <FlashList
-                    data={data}
-                    renderItem={e => <PlaylistActionItem {...e.item} />}
-                    estimatedItemSize={80}
-                    numColumns={columns}
-                    onLayout={e => {
-                        setWidth(e.nativeEvent.layout.width);
-                    }}
-                    contentContainerStyle={{
-                        paddingBottom: edgeInsets.bottom,
-                    }}
-                />
+                {/* 不能用 ListEmptyComponent 做空内容提示的原因：https://github.com/Shopify/flash-list/issues/848 */}
+                {(data || []).length > 0 ? (
+                    <FlashList
+                        data={data}
+                        renderItem={e => <PlaylistActionItem {...e.item} />}
+                        estimatedItemSize={80}
+                        numColumns={columns}
+                        onLayout={e => {
+                            setWidth(e.nativeEvent.layout.width);
+                        }}
+                        contentContainerStyle={{
+                            paddingBottom: edgeInsets.bottom,
+                        }}
+                    />
+                ) : (
+                    <View className={"flex-1 items-center justify-center gap-4"}>
+                        <Text className={"leading-normal text-lg font-semibold color-typography-500"}>
+                            这里空空如也
+                        </Text>
+                        <ButtonOuter>
+                            <Button onPress={() => router.navigate("/")}>
+                                <ButtonText>去查询</ButtonText>
+                            </Button>
+                        </ButtonOuter>
+                    </View>
+                )}
 
                 {/* 操作菜单 */}
                 <LongPressActions
