@@ -289,7 +289,7 @@ export async function refreshTrack(trackData: TrackData) {
 
     // 处理本地缓存
     const got = cacheStatusStorage.getBoolean(`${id}_${episode}`);
-    if (got && !extendedData.isLoaded) {
+    if (got) {
         log.info("有缓存，应用缓存");
         // url 设置为缓存数据
         trackData.uri = getCacheAudioPath(id, episode);
