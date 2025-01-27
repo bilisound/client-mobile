@@ -1,5 +1,6 @@
 import { setSpeed } from "@bilisound/player";
 import { createWithEqualityFn } from "zustand/traditional";
+import throttle from "lodash/throttle";
 
 interface PlaybackSpeedState {
     speedValue: number;
@@ -8,6 +9,8 @@ interface PlaybackSpeedState {
     setRetainPitch: (value: boolean) => void;
     applySpeed: (value: number, retainPitch: boolean) => void;
 }
+
+const throttledSetSpeed = throttle(setSpeed, 100);
 
 export const usePlaybackSpeedStore = createWithEqualityFn<PlaybackSpeedState>((set, get) => ({
     speedValue: 1,
@@ -21,6 +24,6 @@ export const usePlaybackSpeedStore = createWithEqualityFn<PlaybackSpeedState>((s
             return;
         }
         set(() => ({ speedValue: value, retainPitch }));
-        setSpeed(value, retainPitch);
+        throttledSetSpeed(value, retainPitch);
     },
 }));
