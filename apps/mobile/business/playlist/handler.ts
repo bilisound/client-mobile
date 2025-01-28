@@ -367,6 +367,7 @@ export async function replaceQueueWithPlaylist(id: number, index = 0) {
     queueStorage.set(QUEUE_LIST_BACKUP, JSON.stringify(processTrackDataForSave(tracks)));
 }
 
+// 缓存当前曲目和下一曲目
 export async function saveCurrentAndNextTrack() {
     if (!useSettingsStore.getState().downloadNextTrack) {
         return;
@@ -377,7 +378,7 @@ export async function saveCurrentAndNextTrack() {
         return;
     }
     const trackIndexNext = trackIndex + 1;
-    const tasks: any[] = [];
+    const tasks: Promise<void>[] = [];
     log.info("预先下载当前曲目");
     tasks.push(downloadResource(tracks[trackIndex].extendedData!.id, tracks[trackIndex].extendedData!.episode));
     if (trackIndexNext <= tracks.length - 1) {
