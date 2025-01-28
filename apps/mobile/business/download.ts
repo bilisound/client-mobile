@@ -31,13 +31,8 @@ export async function downloadResource(bvid: string, episode: number) {
         log.debug("本地缓存有对应内容记录，不需要下载");
         return;
     }
-    if ((await FileSystem.getInfoAsync(checkUrl)).exists) {
-        log.debug("本地缓存有对应内容，不需要下载");
-        cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
-        return;
-    }
-    log.debug("本地缓存无对应内容，开始请求网络资源");
 
+    log.debug("本地缓存无对应内容，开始请求网络资源");
     // 在状态管理器创建下载任务
     updateDownloadItem(id, {
         id: playingRequest.id,
