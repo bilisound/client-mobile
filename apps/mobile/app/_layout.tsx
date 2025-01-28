@@ -19,7 +19,7 @@ import { registerBackgroundEventListener } from "@bilisound/player";
 import { toastConfig } from "~/components/notify-toast";
 import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { refreshCurrentTrack, saveTrackData } from "~/business/playlist/handler";
+import { refreshCurrentTrack, saveCurrentAndNextTrack, saveTrackData } from "~/business/playlist/handler";
 import * as NavigationBar from "expo-navigation-bar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { MainBottomSheet } from "~/components/main-bottom-sheet";
@@ -51,6 +51,7 @@ registerBackgroundEventListener(async ({ event, data }) => {
         }
         await refreshCurrentTrack();
         await saveTrackData();
+        await saveCurrentAndNextTrack();
     }
 });
 

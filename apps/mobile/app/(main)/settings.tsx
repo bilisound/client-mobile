@@ -95,7 +95,7 @@ export default function Page() {
                     <SettingMenuItem
                         key="settings_10020"
                         icon={"fa6-solid:cloud-arrow-down"}
-                        title="自动下载队列中即将播放的曲目"
+                        title="自动缓存队列中即将和正在播放的曲目"
                         subTitle="可以显著改善持续听歌的体验"
                         rightAccessories={
                             <Switch

@@ -1,5 +1,5 @@
 import * as Player from "@bilisound/player";
-import { RepeatMode } from "@bilisound/player";
+import { getCurrentTrackIndex, getTracks, RepeatMode } from "@bilisound/player";
 
 import {
     addToQueueListBackup,
@@ -28,6 +28,7 @@ import { invalidateOnQueueStatus, PLAYLIST_RESTORE_LOOP_ONCE, playlistStorage } 
 import { convertToHTTPS } from "~/utils/string";
 import useSettingsStore from "~/store/settings";
 import useErrorMessageStore from "~/store/error-message";
+import { downloadResource } from "~/business/download";
 
 interface TrackDataOld {
     /** The track title */
@@ -364,4 +365,26 @@ export async function replaceQueueWithPlaylist(id: number, index = 0) {
     queueStorage.set(QUEUE_PLAYING_MODE, "normal");
     queueStorage.set(QUEUE_IS_RANDOMIZED, false);
     queueStorage.set(QUEUE_LIST_BACKUP, JSON.stringify(processTrackDataForSave(tracks)));
+}
+
+export async function saveCurrentAndNextTrack() {
+    if (!useSettingsStore.getState().downloadNextTrack) {
+        return;
+    }
+    const tracks = await getTracks();
+    const trackIndex = await getCurrentTrackIndex();
+    if (tracks.length <= 0 || trackIndex > tracks.length - 1) {
+        return;
+    }
+    const trackIndexNext = trackIndex + 1;
+    const tasks: any[] = [];
+    log.info("预先下载当前曲目");
+    tasks.push(downloadResource(tracks[trackIndex].extendedData!.id, tracks[trackIndex].extendedData!.episode));
+    if (trackIndexNext <= tracks.length - 1) {
+        log.info("预先下载下一个曲目");
+        tasks.push(
+            downloadResource(tracks[trackIndexNext].extendedData!.id, tracks[trackIndexNext].extendedData!.episode),
+        );
+    }
+    await Promise.all(tasks);
 }

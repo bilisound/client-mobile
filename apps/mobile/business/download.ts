@@ -27,6 +27,10 @@ export async function downloadResource(bvid: string, episode: number) {
     // 待检查的本地音频路径（包括从视频提取的音频）
     const checkUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, false);
 
+    if (cacheStatusStorage.getBoolean(playingRequest.id + "_" + playingRequest.episode)) {
+        log.debug("本地缓存有对应内容记录，不需要下载");
+        return;
+    }
     if ((await FileSystem.getInfoAsync(checkUrl)).exists) {
         log.debug("本地缓存有对应内容，不需要下载");
         cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
