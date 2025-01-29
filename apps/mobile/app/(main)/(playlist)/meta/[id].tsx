@@ -33,6 +33,7 @@ import log from "~/utils/logger";
 import { Layout } from "~/components/layout";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
+import { useUpdateTriggerStore } from "~/store/update-trigger";
 
 const MAGIC_ID_NEW_ENTRY = "new";
 
@@ -90,6 +91,7 @@ export default function Page() {
             });
             await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
             await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
+            useUpdateTriggerStore.getState().incrementCount();
             Toast.show({
                 type: "success",
                 text1: "歌单副本创建成功",
@@ -135,6 +137,7 @@ export default function Page() {
         await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
         await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
         await queryClient.invalidateQueries({ queryKey: [`playlist_meta_${id}`] });
+        useUpdateTriggerStore.getState().incrementCount();
 
         if (isCreate) {
             Toast.show({

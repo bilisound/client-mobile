@@ -56,6 +56,7 @@ import {
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Monicon } from "@monicon/native";
+import { useUpdateTriggerStore } from "~/store/update-trigger";
 
 cssInterop(OrigCircle, {
     className: {
