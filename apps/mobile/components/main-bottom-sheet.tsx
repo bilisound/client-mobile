@@ -577,7 +577,7 @@ function PlayerControlMenu() {
             disabled: false,
             icon: "fa6-solid:floppy-disk",
             iconSize: 18,
-            text: "保存",
+            text: "保存到「文件」",
             action: async () => {
                 if (!currentTrack?.extendedData) {
                     return;
