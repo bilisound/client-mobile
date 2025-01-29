@@ -133,13 +133,19 @@ export default function RootLayout() {
                                     }}
                                 />
                                 <Stack.Screen
-                                    name={"settings/theme"}
+                                    name={"settings/about"}
                                     options={{
                                         headerShown: false,
                                     }}
                                 />
                                 <Stack.Screen
-                                    name={"settings/about"}
+                                    name={"settings/data"}
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name={"settings/theme"}
                                     options={{
                                         headerShown: false,
                                     }}

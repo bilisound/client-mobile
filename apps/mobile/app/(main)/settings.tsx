@@ -124,8 +124,7 @@ export default function Page() {
                         title="数据管理"
                         subTitle="管理离线缓存和数据备份"
                         onPress={async () => {
-                            // todo
-                            // router.navigate("/settings/data");
+                            router.navigate("/settings/data");
                         }}
                     />
                 )}

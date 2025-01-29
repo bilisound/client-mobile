@@ -82,6 +82,9 @@ import { CACHE_INVALID_KEY_DO_NOT_USE, cacheStatusStorage } from "~/storage/cach
 import useDownloadStore from "~/store/download";
 import { openAddPlaylistPage } from "~/business/playlist/misc";
 import { Marquee } from "@animatereactnative/marquee";
+import { saveFile } from "~/utils/file";
+import useSettingsStore from "~/store/settings";
+import { bv2av } from "~/utils/vendors/av-bv";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -575,9 +578,14 @@ function PlayerControlMenu() {
             icon: "fa6-solid:floppy-disk",
             iconSize: 18,
             text: "保存",
-            action: () => {
-                // todo 保存到本地的逻辑
+            action: async () => {
+                if (!currentTrack?.extendedData) {
+                    return;
+                }
                 handleClose();
+
+                const fileName = `[${useSettingsStore.getState().useLegacyID ? `av${bv2av(currentTrack.extendedData.id)}` : currentTrack.extendedData.id}] [P${currentTrack.extendedData.episode}] ${currentTrack.title}.m4a`;
+                await saveFile(currentTrack.uri, fileName);
             },
         },
         {

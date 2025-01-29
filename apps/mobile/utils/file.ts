@@ -5,6 +5,7 @@ import path from "path-browserify";
 import { BILISOUND_OFFLINE_URI, BILISOUND_PROCESS_URI } from "~/constants/file";
 import { cacheStatusStorage } from "~/storage/cache-status";
 import log from "~/utils/logger";
+import { getTracks } from "@bilisound/player";
 
 export async function saveTextFile(name: string, content: string, mimeType = "text/plain") {
     /*if (Platform.OS === "android") {
@@ -30,32 +31,17 @@ export async function saveTextFile(name: string, content: string, mimeType = "te
 }
 
 /**
- * 保存文件到「本地」。iOS 下，分享文件给文件 App；Android 下，通过 StorageAccessFramework 保存到用户路径
+ * 保存文件到「本地」
  * @param location
  * @param replaceFileName
  */
 export async function saveFile(location: string, replaceFileName?: string) {
+    // todo 改用各系统原生的文件保存功能，而非当前的文件分享功能
     log.debug(`尝试保存文件到本地。location: ${location}, replaceFileName: ${replaceFileName}`);
     if (!location.startsWith("file://")) {
         log.warn(`参数 location 必须是 file:// URI。传入的 location: ${location}`);
         location = `file://${encodeURI(location)}`;
     }
-    /*const parsed = path.parse(location);
-    const fileName = replaceFileName ?? `${parsed.name}${parsed.ext}`;
-
-    if (Platform.OS === "android") {
-        const response = await createDocument(await FileSystem.readAsStringAsync(location, { encoding: "base64" }), {
-            initialName: fileName,
-            encoding: "base64",
-        });
-        if (response) {
-            Toast.show({
-                type: "success",
-                text1: "音频文件已保存",
-            });
-        }
-        return !!response;
-    }*/
     let targetLocation = "";
 
     if (replaceFileName) {
@@ -97,15 +83,27 @@ async function checkDirectorySizeByUri(uri: string, options: CheckDirectorySizeO
     return totalSize;
 }
 
+export async function countSize() {
+    const tracks = await getTracks();
+    const cacheSize = await checkDirectorySizeByUri(BILISOUND_OFFLINE_URI);
+    const cacheFreeSize = await checkDirectorySizeByUri(BILISOUND_OFFLINE_URI, {
+        fileFilter(fileName) {
+            const name = path.parse(uriToPath(fileName)).name;
+            return !tracks.find(e => `${e.extendedData!.id}_${e.extendedData!.episode}` === name);
+        },
+    });
+    return { cacheSize, cacheFreeSize };
+}
+
 export async function cleanAudioCache() {
-    const tracks: any[] = []; // await TrackPlayer.getQueue();
+    const tracks = await getTracks();
     const items = (await FileSystem.readDirectoryAsync(BILISOUND_OFFLINE_URI))
         .map(e => {
             return BILISOUND_OFFLINE_URI + "/" + encodeURI(e);
         })
         .filter(fileName => {
             const name = path.parse(uriToPath(fileName)).name;
-            return !tracks.find(e => `${e.bilisoundId}_${e.bilisoundEpisode}` === name);
+            return !tracks.find(e => `${e.extendedData!.id}_${e.extendedData!.episode}` === name);
         });
     for (let i = 0; i < items.length; i++) {
         const name = path.parse(uriToPath(items[i])).name;
