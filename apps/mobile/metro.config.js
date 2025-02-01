@@ -6,6 +6,7 @@ const path = require("path");
 
 const config = mergeConfig(getDefaultConfig(__dirname), {
     projectRoot: path.resolve(__dirname, ".."),
+    resetCache: !!process.env.GITHUB_ACTIONS,
     resolver: {
         unstable_enableSymlinks: true,
         unstable_enablePackageExports: true,
