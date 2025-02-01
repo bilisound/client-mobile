@@ -20,6 +20,7 @@ jobs:
           BILISOUND_CREDENTIALS: ${{ secrets.BILISOUND_CREDENTIALS }}
           BILISOUND_KEYSTORE_RELEASE: ${{ secrets.BILISOUND_KEYSTORE_RELEASE }}
         run: |
+          cd apps/mobile
           echo "$BILISOUND_CREDENTIALS" | base64 --decode > credentials.json
           echo "$BILISOUND_KEYSTORE_RELEASE" | base64 --decode > credentials/bilisound-release.keystore
 
@@ -42,16 +43,19 @@ jobs:
           cache: pnpm
 
       - name: 📦 Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install
+          cd apps/mobile
 
       - name: 🚀 Build app
+        working-directory: apps/mobile
         run: pnpm run build:android
 
       - name: 📝 Extract Release Notes
         id: extract_release_notes
         uses: ffurrer2/extract-release-notes@v2
         with:
-          changelog_file: CHANGELOG.md
+          changelog_file: apps/mobile/CHANGELOG.md
 
       - name: 🚀 Create Release
         env:
@@ -60,4 +64,4 @@ jobs:
           gh release create ${{ github.ref_name }} \
             --title "Release ${{ github.ref_name }}" \
             --notes "${{ steps.extract_release_notes.outputs.release_notes }}" \
-            ./android/app/build/outputs/apk/release/app-release.apk#bilisound-${{ github.ref_name }}.apk
+            ./apps/mobile/android/app/build/outputs/apk/release/app-release.apk#bilisound-${{ github.ref_name }}.apk
