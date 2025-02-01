@@ -2,8 +2,8 @@ import { Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
 import "~/global.css";
 import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
-import React, { useEffect, useRef } from "react";
-import { Platform, useColorScheme, useWindowDimensions } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Linking, Platform, useColorScheme, useWindowDimensions } from "react-native";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { SystemBars } from "react-native-edge-to-edge";
 import { useFonts } from "expo-font";
@@ -14,7 +14,7 @@ import { Poppins_700Bold } from "@expo-google-fonts/poppins";
 import * as Player from "@bilisound/player";
 import "~/utils/polyfill";
 import "~/utils/nativewind";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { registerBackgroundEventListener } from "@bilisound/player";
 import { toastConfig } from "~/components/notify-toast";
 import Toast from "react-native-toast-message";
@@ -25,6 +25,9 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { MainBottomSheet } from "~/components/main-bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ErrorToastHost } from "~/components/error-toast-host";
+import CheckUpdateDialog from "~/components/check-update-dialog";
+import { checkLatestVersion } from "~/business/check-release";
+import { VERSION } from "~/constants/releasing";
 
 // todo 把它们放到主题管理模块里
 const defaultTheme = structuredClone(DefaultTheme);
@@ -54,6 +57,31 @@ registerBackgroundEventListener(async ({ event, data }) => {
         await saveCurrentAndNextTrack();
     }
 });
+
+function CheckUpdate() {
+    // 检查更新处理
+    const [modalVisible, setModalVisible] = useState(false);
+    const { data } = useQuery({
+        queryKey: ["check_update"],
+        queryFn: () => checkLatestVersion(VERSION),
+        staleTime: 86400_000,
+    });
+
+    function handleClose(positive: boolean) {
+        setModalVisible(false);
+        if (positive) {
+            Linking.openURL(data!.downloadUrl);
+        }
+    }
+
+    useEffect(() => {
+        if (data && !data.isLatest) {
+            setModalVisible(true);
+        }
+    }, [data, setModalVisible]);
+
+    return <CheckUpdateDialog open={modalVisible} onClose={handleClose} result={data} />;
+}
 
 export default function RootLayout() {
     const [loaded, error] = useFonts({
@@ -191,6 +219,7 @@ export default function RootLayout() {
                             </Stack>
                             <MainBottomSheet />
                             <ErrorToastHost />
+                            <CheckUpdate />
                             <Toast config={toastConfig} topOffset={edgeInsets.top} />
                         </BottomSheetModalProvider>
                     </GestureHandlerRootView>
