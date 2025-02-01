@@ -47,17 +47,11 @@ jobs:
         run: |
           pnpm install
           cd apps/mobile
-
-      - name: 🏗 Setup Android project
-        working-directory: apps/mobile/android
-        run: |
-          chmod +x ./gradlew
-          ./gradlew clean
+          pnpm run prebuild
 
       - name: 🚀 Build app
         working-directory: apps/mobile
-        run: |
-          cd android && ./gradlew assembleRelease
+        run: pnpm run build:android
 
       - name: 🏗 Generate build version
         id: build_version
