@@ -11,6 +11,7 @@ import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { cacheStatusStorage } from "~/storage/cache-status";
 
 export async function downloadResource(bvid: string, episode: number) {
+    const prefix = `[${bvid} / ${episode}] `;
     const { updateDownloadItem, removeDownloadItem, downloadList } = useDownloadStore.getState();
 
     const playingRequest = {
@@ -21,18 +22,18 @@ export async function downloadResource(bvid: string, episode: number) {
 
     // 避免重复操作
     if (downloadList.has(id)) {
-        log.debug("已经有相同任务在处理");
+        log.debug(prefix + "已经有相同任务在处理");
         return;
     }
     // 待检查的本地音频路径（包括从视频提取的音频）
     const checkUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, false);
 
     if (cacheStatusStorage.getBoolean(playingRequest.id + "_" + playingRequest.episode)) {
-        log.debug("本地缓存有对应内容记录，不需要下载");
+        log.debug(prefix + "本地缓存有对应内容记录，不需要下载");
         return;
     }
 
-    log.debug("本地缓存无对应内容，开始请求网络资源");
+    log.debug(prefix + "本地缓存无对应内容，开始请求网络资源");
     // 在状态管理器创建下载任务
     updateDownloadItem(id, {
         id: playingRequest.id,
@@ -82,7 +83,7 @@ export async function downloadResource(bvid: string, episode: number) {
     const info = await FileSystem.getInfoAsync(downloadTargetFileUrl);
     const fileSize = info?.exists ? info.size : 0;
     const runTime = (endTime - beginTime) / 1000;
-    log.debug(`下载任务结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(fileSize / runTime)}/s`);
+    log.debug(prefix + `下载任务结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(fileSize / runTime)}/s`);
 
     if (isAudio) {
         await FileSystem.moveAsync({
@@ -95,7 +96,7 @@ export async function downloadResource(bvid: string, episode: number) {
     }
 
     // 如果不是音频流，进行音视频分离操作
-    log.info("非音频流，进行音视频分离操作");
+    log.info(prefix + "非音频流，进行音视频分离操作");
 
     // 格式判断
     const probeSession = await FFprobeKit.execute(
@@ -104,7 +105,7 @@ export async function downloadResource(bvid: string, episode: number) {
     let returnCode = await probeSession.getReturnCode();
     let result = await probeSession.getOutput();
     if (!returnCode.isValueSuccess()) {
-        log.error("视频编码识别失败！");
+        log.error(prefix + "视频编码识别失败！");
         log.error(`returnCode: ${returnCode}`);
         log.error(`result：${result}`);
         throw new Error("视频处理失败");
@@ -113,12 +114,12 @@ export async function downloadResource(bvid: string, episode: number) {
     // 进行转码或直接提取操作
     let mpegSession;
     if (result.trim() === "aac") {
-        log.debug("进行提取音频流操作");
+        log.debug(prefix + "进行提取音频流操作");
         mpegSession = await FFmpegKit.execute(
             `-i ${JSON.stringify(downloadTargetFileUrl)} -vn -acodec copy ${JSON.stringify(checkUrl)}`,
         );
     } else {
-        log.debug(`进行转码音频流操作。原因：音频编码是 ${result}`);
+        log.debug(prefix + `进行转码音频流操作。原因：音频编码是 ${result}`);
         mpegSession = await FFmpegKit.execute(
             // 别的编码（比如 mp3）通常音质不会特别好，所以先设置 256kbps 的动态码率了
             // （叔叔会有上 opus 的一天吗？）
@@ -128,14 +129,14 @@ export async function downloadResource(bvid: string, episode: number) {
     returnCode = await mpegSession.getReturnCode();
     result = await mpegSession.getOutput();
     if (!returnCode.isValueSuccess()) {
-        log.error("视频转码失败！");
+        log.error(prefix + "视频转码失败！");
         log.error(`returnCode: ${returnCode}`);
         log.error(`result：${result}`);
         throw new Error("视频处理失败");
     }
 
     // 收尾
-    log.debug("删除不再需要的视频文件");
+    log.debug(prefix + "删除不再需要的视频文件");
     await FileSystem.deleteAsync(downloadTargetFileUrl);
     cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
     removeDownloadItem(id);

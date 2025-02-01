@@ -382,13 +382,17 @@ export async function saveCurrentAndNextTrack() {
     }
     const trackIndexNext = trackIndex + 1;
     const tasks: Promise<void>[] = [];
-    log.info("预先下载当前曲目");
-    tasks.push(downloadResource(tracks[trackIndex].extendedData!.id, tracks[trackIndex].extendedData!.episode));
+    const currId = tracks[trackIndex].extendedData!.id;
+    const currEpisode = tracks[trackIndex].extendedData!.episode;
+
+    log.info(`[${currId} / ${currEpisode}] 预先下载当前曲目`);
+    tasks.push(downloadResource(currId, currEpisode));
     if (trackIndexNext <= tracks.length - 1) {
-        log.info("预先下载下一个曲目");
-        tasks.push(
-            downloadResource(tracks[trackIndexNext].extendedData!.id, tracks[trackIndexNext].extendedData!.episode),
-        );
+        const nextId = tracks[trackIndexNext].extendedData!.id;
+        const nextEpisode = tracks[trackIndexNext].extendedData!.episode;
+
+        log.info(`[${nextId} / ${nextEpisode}] 预先下载下一个曲目`);
+        tasks.push(downloadResource(nextId, nextEpisode));
     }
     await Promise.all(tasks);
 }
