@@ -16,8 +16,10 @@
   "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "android": "./dist/index.js",
+      "ios": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "types": "./dist/index.d.ts",

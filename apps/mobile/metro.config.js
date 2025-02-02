@@ -13,8 +13,6 @@ const config = mergeConfig(getDefaultConfig(__dirname), {
     },
 });
 
-config.resolver.blockList = [/@monicon\/runtime/].concat(config.resolver.blockList);
-
 const configWithNativeWind = withNativeWind(config, { input: "./global.css", inlineRem: 16 });
 
 const configWithMonicon = withMonicon(configWithNativeWind, {
