@@ -75,6 +75,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo $PWD
+          ls -l
+          ls -l ./android/app/build/outputs/apk/release/app-release.apk#bilisound-${{ steps.build_version.outputs.version }}.apk
           gh release create ${{ steps.build_version.outputs.version }} \
             --title "Release ${{ steps.build_version.outputs.version }}" \
             --notes "${{ steps.extract_release_notes.outputs.release_notes }}" \
