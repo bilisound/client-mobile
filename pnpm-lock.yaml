@@ -108,11 +108,11 @@ importers:
         specifier: ^2.6.0
         version: 2.6.0(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)
       '@monicon/metro':
-        specifier: 1.2.2
-        version: 1.2.2
+        specifier: 1.2.1
+        version: 1.2.1
       '@monicon/native':
-        specifier: 1.2.2
-        version: 1.2.2(@types/react@18.3.18)(react-native-svg@15.8.0(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)
+        specifier: 1.2.1
+        version: 1.2.1(@types/react@18.3.18)(react-native-svg@15.8.0(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)
       '@react-navigation/bottom-tabs':
         specifier: ^7.2.0
         version: 7.2.0(@react-navigation/native@7.0.14(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native-safe-area-context@4.12.0(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native-screens@4.4.0(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)
@@ -2272,11 +2272,11 @@ packages:
   '@monicon/icon-loader@1.2.1':
     resolution: {integrity: sha512-YpQbr3l/E1UJ5h423mF1kPRjVxt1eGfx03oXWOemlEb+ljHl+1+gjkDde5fyPmGKsY/AFm2OzucsviQtGNaLhA==}
 
-  '@monicon/metro@1.2.2':
-    resolution: {integrity: sha512-MyB2xSsIQraJ6Ed9i5UsvtkvbMAzcwZJxw1iU8mBKyKAnz9C9+N+61Tvqu3m0q4ywNHvZFTU2jFlSI85+RBNgg==}
+  '@monicon/metro@1.2.1':
+    resolution: {integrity: sha512-IrhBV7zhQI7zqvzzBQ1W7hLWwtmvSATIssw0vdepme7DYXgsHpPDK/wjA0i1cX2mPfHyNnWxkfuKI8n+n/bXXw==}
 
-  '@monicon/native@1.2.2':
-    resolution: {integrity: sha512-j2dG3hkVKo1iRqKjqUwwS/eMWa98+naXqK9zu6LpjeySzCxOslIAUAoMfQJdnpkIo6WQN4tIjxETeHUCS285gg==}
+  '@monicon/native@1.2.1':
+    resolution: {integrity: sha512-74wWqw4mxnxOFFzgRU/APcKl4iffZzwtThOOoecvP1XiFpCTTu6II8VSLp99F7KXwzCEiqGMAS9BxvqHzdYs9A==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
       react-native: '>=0.63.0'
@@ -10831,13 +10831,13 @@ snapshots:
     dependencies:
       svgson: 5.3.1
 
-  '@monicon/metro@1.2.2':
+  '@monicon/metro@1.2.1':
     dependencies:
       '@monicon/core': 1.2.1
     transitivePeerDependencies:
       - supports-color
 
-  '@monicon/native@1.2.2(@types/react@18.3.18)(react-native-svg@15.8.0(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)':
+  '@monicon/native@1.2.1(@types/react@18.3.18)(react-native-svg@15.8.0(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.6(@babel/core@7.26.7)(@babel/preset-env@7.26.0(@babel/core@7.26.7))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@monicon/core': 1.2.1
       '@monicon/icon-loader': 1.2.1
