@@ -71,6 +71,7 @@ jobs:
           changelog_file: apps/mobile/CHANGELOG.md
 
       - name: 🚀 Create Release
+        working-directory: apps/mobile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -78,4 +79,4 @@ jobs:
             --title "Release ${{ steps.build_version.outputs.version }}" \
             --notes "${{ steps.extract_release_notes.outputs.release_notes }}" \
             --prerelease ${{ steps.build_version.outputs.is_prerelease }} \
-            ./apps/mobile/android/app/build/outputs/apk/release/app-release.apk#bilisound-${{ steps.build_version.outputs.version }}.apk
+            ./android/app/build/outputs/apk/release/app-release.apk#bilisound-${{ steps.build_version.outputs.version }}.apk
