@@ -290,7 +290,7 @@ export default function Page() {
                     />
                 ) : (
                     <View className={"flex-1 items-center justify-center gap-4"}>
-                        <Text className={"leading-normal text-lg font-semibold color-typography-500"}>
+                        <Text className={"leading-normal text-sm font-semibold color-typography-500"}>
                             这里空空如也
                         </Text>
                         <ButtonOuter>

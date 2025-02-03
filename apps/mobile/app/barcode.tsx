@@ -105,7 +105,11 @@ export default function Page() {
                     return (
                         <View style={styles.centeredContainer}>
                             <Text style={styles.permissionText}>扫码功能需要摄像头权限喵</Text>
-                            <Button onPress={() => getBarCodeScannerPermissions()}>给予权限</Button>
+                            <ButtonOuter>
+                                <Button onPress={() => getBarCodeScannerPermissions()}>
+                                    <ButtonText>给予权限</ButtonText>
+                                </Button>
+                            </ButtonOuter>
                         </View>
                     );
                 }
