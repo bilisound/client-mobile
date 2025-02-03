@@ -83,5 +83,6 @@ jobs:
           ls -l ./android/app/build/outputs/apk/release/app-release.apk
           gh release create ${{ steps.build_version.outputs.version }} \
             --title "Release ${{ steps.build_version.outputs.version }}" \
-            --notes "${{ steps.extract_release_notes.outputs.release_notes }}" ${{ steps.build_version.outputs.is_prerelease }} \
+            ${{ !steps.build_version.outputs.is_prerelease && '--notes "${{ steps.extract_release_notes.outputs.release_notes }}"' || '' }} \
+            ${{ steps.build_version.outputs.is_prerelease }} \
             ./android/app/build/outputs/apk/release/app-release.apk#bilisound-${{ steps.build_version.outputs.version }}.apk
