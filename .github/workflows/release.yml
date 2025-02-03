@@ -54,13 +54,18 @@ jobs:
           node-version: 22.11.0
           cache: pnpm
 
-      - name: 📦 Install dependencies
+      - name: 🏗 Set build version
+        working-directory: apps/mobile
         env:
           EXPO_VERSION: ${{ steps.build_version.outputs.version }}
         run: |
+          node ./scripts/change-version.js
+
+
+      - name: 📦 Install dependencies
+        run: |
           pnpm install
           cd apps/mobile
-          node ./scripts/change-version.js
           pnpm run prebuild
 
       - name: 🚀 Build app
