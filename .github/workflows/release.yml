@@ -16,6 +16,17 @@ jobs:
       - name: 🏗 Setup repo
         uses: actions/checkout@v4
 
+      - name: 🏗 Generate build version
+        id: build_version
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/next" ]]; then
+            echo "version=v0.0.0-next-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+            echo "is_prerelease=--prerelease" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "is_prerelease=''" >> $GITHUB_OUTPUT
+          fi
+
       - name: 🏗 Decode Keystore
         env:
           BILISOUND_CREDENTIALS: ${{ secrets.BILISOUND_CREDENTIALS }}
@@ -44,25 +55,17 @@ jobs:
           cache: pnpm
 
       - name: 📦 Install dependencies
+        env:
+          EXPO_VERSION: ${{ steps.build_version.outputs.version }}
         run: |
           pnpm install
           cd apps/mobile
+          node ./scripts/change-version.js
           pnpm run prebuild
 
       - name: 🚀 Build app
         working-directory: apps/mobile
         run: pnpm run build:android
-
-      - name: 🏗 Generate build version
-        id: build_version
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/next" ]]; then
-            echo "version=0.0.0-next.$(date +'%Y%m%d.%H%M%S')" >> $GITHUB_OUTPUT
-            echo "is_prerelease=--prerelease" >> $GITHUB_OUTPUT
-          else
-            echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
-            echo "is_prerelease=''" >> $GITHUB_OUTPUT
-          fi
 
       - name: 📝 Extract Release Notes
         id: extract_release_notes
@@ -80,6 +83,5 @@ jobs:
           ls -l ./android/app/build/outputs/apk/release/app-release.apk
           gh release create ${{ steps.build_version.outputs.version }} \
             --title "Release ${{ steps.build_version.outputs.version }}" \
-            --notes "${{ steps.extract_release_notes.outputs.release_notes }}" \
-            ${{ steps.build_version.outputs.is_prerelease }} \
+            --notes "${{ steps.extract_release_notes.outputs.release_notes }}" ${{ steps.build_version.outputs.is_prerelease }} \
             ./android/app/build/outputs/apk/release/app-release.apk#bilisound-${{ steps.build_version.outputs.version }}.apk
