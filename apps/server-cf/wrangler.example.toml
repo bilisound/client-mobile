@@ -7,5 +7,7 @@ kv_namespaces = [
 ]
 
 [vars]
-ENDPOINT_BILI = ["https://www.bilibili.com"]
+ENDPOINT_BILI = [
+	{ siteUrl = "https://www.bilibili.com", apiUrl = "https://api.bilibili.com", key = "" }
+]
 DEBUG_KEY = "12345678"
