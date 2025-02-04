@@ -577,7 +577,7 @@ function PlayerControlMenu() {
             disabled: false,
             icon: "fa6-solid:floppy-disk",
             iconSize: 18,
-            text: "保存到「文件」",
+            text: "保存到文件",
             action: async () => {
                 if (!currentTrack?.extendedData) {
                     return;
@@ -654,8 +654,8 @@ function PlayerControlMenu() {
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>
-                    <View className={"w-full p-2"}>
-                        <Text className={"font-semibold text-lg leading-tight"}>调节播放速度</Text>
+                    <View className={"w-full px-2 pt-4 pb-6"}>
+                        {/*<Text className={"font-semibold text-lg leading-tight"}>调节播放速度</Text>*/}
                         <SpeedControlPanel />
                         <View className="flex-row flex-wrap gap-2 mt-4">
                             {SPEED_PRESETS.map(item => (
@@ -688,11 +688,6 @@ function PlayerControlMenu() {
                             </CheckboxIndicator>
                             <CheckboxLabel className={"text-sm"}>变速不变调</CheckboxLabel>
                         </Checkbox>
-                        <ButtonOuter className={"mt-4"}>
-                            <Button variant={"outline"} onPress={() => setShowSpeedActionSheet(false)}>
-                                <ButtonText>关闭</ButtonText>
-                            </Button>
-                        </ButtonOuter>
                     </View>
                 </ActionsheetContent>
             </Actionsheet>
@@ -709,6 +704,7 @@ function SpeedControlPanel() {
 
     return (
         <>
+            <Text className={"font-semibold text-base text-center"}>{speedValue.toFixed(2) + "x"}</Text>
             <View className={"h-6 flex-row items-center gap-4 mt-4"}>
                 <GSSlider
                     className={"flex-1"}
@@ -729,14 +725,6 @@ function SpeedControlPanel() {
                     </SliderTrack>
                     <SliderThumb />
                 </GSSlider>
-                <Text
-                    className={"flex-0 basis-auto text-sm text-typography-500 tabular-nums"}
-                    style={{
-                        fontFamily: "Roboto_400Regular",
-                    }}
-                >
-                    {speedValue.toFixed(2) + "x"}
-                </Text>
             </View>
         </>
     );
