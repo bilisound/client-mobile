@@ -21,9 +21,11 @@ jobs:
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/next" ]]; then
             echo "version=v0.0.0-next-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+            echo "channel=android_github_beta" >> $GITHUB_OUTPUT
             echo "is_prerelease=--prerelease" >> $GITHUB_OUTPUT
           else
             echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "channel=android_github" >> $GITHUB_OUTPUT
             echo "is_prerelease=''" >> $GITHUB_OUTPUT
           fi
 
@@ -70,6 +72,8 @@ jobs:
 
       - name: 🚀 Build app
         working-directory: apps/mobile
+        env:
+          EXPO_PUBLIC_RELEASE_CHANNEL: ${{ steps.build_version.outputs.channel }}
         run: pnpm run build:android
 
       - name: 📝 Extract Release Notes

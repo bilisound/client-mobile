@@ -11,13 +11,20 @@ export interface CheckLatestVersionReturns {
     downloadUrl: string;
 }
 
-export async function checkLatestVersionGithub(currentVersion: string): Promise<CheckLatestVersionReturns> {
-    const response = await fetch("https://api.github.com/repos/bilisound/client-mobile/releases/latest", {
+export async function checkLatestVersionGithub(
+    currentVersion: string,
+    includePrerelease = false,
+): Promise<CheckLatestVersionReturns> {
+    const endpoint = includePrerelease
+        ? "https://api.github.com/repos/bilisound/client-mobile/releases"
+        : "https://api.github.com/repos/bilisound/client-mobile/releases/latest";
+    const response = await fetch(endpoint, {
         headers: {
             "User-Agent": USER_AGENT_BILISOUND,
         },
     }).then(e => e.json());
-    const latestVersion = response.tag_name.replace("v", "");
+    const latestRelease = includePrerelease ? response.find((r: any) => r.prerelease) || response[0] : response;
+    const latestVersion = latestRelease.tag_name.replace("v", "");
 
     if (!semver.valid(currentVersion) || !semver.valid(latestVersion)) {
         throw new Error("Invalid version format");
@@ -28,14 +35,17 @@ export async function checkLatestVersionGithub(currentVersion: string): Promise<
         currentVersion,
         latestVersion,
         extraInfo: "",
-        downloadUrl: "https://github.com/bilisound/client-mobile/releases/latest",
+        downloadUrl: latestRelease.html_url,
     };
 }
 
 export async function checkLatestVersion(currentVersion: string) {
     switch (RELEASE_CHANNEL) {
         case "android_github": {
-            return checkLatestVersionGithub(currentVersion);
+            return checkLatestVersionGithub(currentVersion, false);
+        }
+        case "android_github_beta": {
+            return checkLatestVersionGithub(currentVersion, true);
         }
         default: {
             return {

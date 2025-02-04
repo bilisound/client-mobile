@@ -1,5 +1,5 @@
 import React from "react";
-import { GestureResponderEvent, View } from "react-native";
+import { ActivityIndicator, GestureResponderEvent, View } from "react-native";
 
 import { IconComponent } from "~/components/icon";
 import { Text } from "~/components/ui/text";
@@ -36,7 +36,15 @@ export function SettingMenuItem({
                 <View className="flex-row items-center gap-3">
                     <View className="size-6 items-center justify-center">
                         {typeof icon === "string" ? (
-                            <Monicon name={icon} size={iconSize ?? 20} color={colorValue("--color-typography-700")} />
+                            icon === "loading" ? (
+                                <ActivityIndicator size={iconSize ?? 20} color={colorValue("--color-typography-700")} />
+                            ) : (
+                                <Monicon
+                                    name={icon}
+                                    size={iconSize ?? 20}
+                                    color={colorValue("--color-typography-700")}
+                                />
+                            )
                         ) : (
                             <Icon size={iconSize ?? 24} color={colorValue("--color-typography-700")} />
                         )}
