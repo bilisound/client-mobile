@@ -10,6 +10,7 @@ import Toast from "react-native-toast-message";
 import log from "~/utils/logger";
 import { checkLatestVersion, CheckLatestVersionReturns } from "~/business/check-release";
 import CheckUpdateDialog from "~/components/check-update-dialog";
+import { router } from "expo-router";
 
 export default function Page() {
     const [checking, setChecking] = useState(false);
@@ -22,7 +23,7 @@ export default function Page() {
             const result = await checkLatestVersion(VERSION);
             setCheckInfo(result);
             Toast.show({
-                type: "error",
+                type: "success",
                 text1: "您使用的是最新版本！",
                 text2: "当前最新版本是 " + result.latestVersion,
             });
@@ -61,6 +62,11 @@ export default function Page() {
                     icon={checking ? "loading" : "fa6-solid:circle-up"}
                     title="检查更新"
                     onPress={() => handleCheck()}
+                />
+                <SettingMenuItem
+                    icon={"fa6-solid:award"}
+                    title="开源软件许可证"
+                    onPress={() => router.navigate("/settings/license")}
                 />
             </ScrollView>
             {checkInfo ? <CheckUpdateDialog open={modalVisible} onClose={handleClose} result={checkInfo} /> : null}
