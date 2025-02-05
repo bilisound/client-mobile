@@ -1,6 +1,6 @@
 import { Linking, ScrollView, View } from "react-native";
 import { Layout } from "~/components/layout";
-import { VERSION } from "~/constants/releasing";
+import { RELEASE_CHANNEL, VERSION } from "~/constants/releasing";
 import React, { useState } from "react";
 
 import { Text } from "~/components/ui/text";
@@ -11,6 +11,12 @@ import log from "~/utils/logger";
 import { checkLatestVersion, CheckLatestVersionReturns } from "~/business/check-release";
 import CheckUpdateDialog from "~/components/check-update-dialog";
 import { router } from "expo-router";
+
+const releaseChannelDict: Record<string, string> = {
+    unknown: "未知",
+    android_github: "安卓 GitHub 正式版",
+    android_github_beta: "安卓 GitHub 测试版",
+};
 
 export default function Page() {
     const [checking, setChecking] = useState(false);
@@ -55,7 +61,7 @@ export default function Page() {
                         source={require("../../assets/images/icon.png")}
                     />
                     <Text className="text-2xl leading-normal font-semibold mt-2 mb-1">Bilisound</Text>
-                    <Text className="text-sm leading-normal opacity-50">{`版本 ${VERSION}`}</Text>
+                    <Text className="text-sm leading-normal opacity-50">{`版本 ${VERSION} ・ ${releaseChannelDict[RELEASE_CHANNEL ?? "unknown"]}`}</Text>
                 </View>
                 <SettingMenuItem
                     disabled={checking}
