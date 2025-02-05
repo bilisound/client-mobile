@@ -19,6 +19,7 @@ import { Text } from "~/components/ui/text";
 import { Heading } from "~/components/ui/heading";
 import React from "react";
 import Toast from "react-native-toast-message";
+import { View } from "react-native";
 
 export default function Page() {
     // 历史记录信息
@@ -86,31 +87,44 @@ export default function Page() {
         <Layout
             title={"历史记录"}
             leftAccessories={"BACK_BUTTON"}
-            rightAccessories={<LayoutButton iconName={"fa6-solid:trash-can"} onPress={handleOpen} />}
+            rightAccessories={
+                historyList.length > 0 ? <LayoutButton iconName={"fa6-solid:trash-can"} onPress={handleOpen} /> : null
+            }
             edgeInsets={{
                 ...edgeInsets,
                 bottom: 0,
             }}
         >
-            <FlashList
-                contentContainerStyle={{
-                    paddingBottom: edgeInsets.bottom,
-                }}
-                renderItem={({ item }) => {
-                    return (
-                        <VideoItem
-                            text1={item.name}
-                            text2={item.authorName}
-                            image={getImageProxyUrl(item.thumbnailUrl, "https://www.bilibili.com/video/" + item.id)}
-                            onPress={() => {
-                                router.navigate(`/video/${item.id}`);
-                            }}
-                        />
-                    );
-                }}
-                data={historyList}
-                estimatedItemSize={72}
-            />
+            {historyList.length > 0 ? (
+                <FlashList
+                    contentContainerStyle={{
+                        paddingBottom: edgeInsets.bottom,
+                    }}
+                    renderItem={({ item }) => {
+                        return (
+                            <VideoItem
+                                text1={item.name}
+                                text2={item.authorName}
+                                image={getImageProxyUrl(item.thumbnailUrl, "https://www.bilibili.com/video/" + item.id)}
+                                onPress={() => {
+                                    router.navigate(`/video/${item.id}`);
+                                }}
+                            />
+                        );
+                    }}
+                    data={historyList}
+                    estimatedItemSize={72}
+                />
+            ) : (
+                <View className={"flex-1 items-center justify-center gap-4"}>
+                    <Text className={"leading-normal text-sm font-semibold color-typography-500"}>这里空空如也</Text>
+                    <ButtonOuter>
+                        <Button onPress={() => router.back()}>
+                            <ButtonText>去查询</ButtonText>
+                        </Button>
+                    </ButtonOuter>
+                </View>
+            )}
             {dialogContent}
         </Layout>
     );
