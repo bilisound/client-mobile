@@ -13,6 +13,7 @@ import {
 } from "~/storage/sqlite/schema";
 import { saveTextFile } from "~/utils/file";
 import log from "~/utils/logger";
+import Toast from "react-native-toast-message";
 
 export async function exportPlaylistToFile(id?: number) {
     let output;
@@ -28,7 +29,13 @@ export async function exportPlaylistToFile(id?: number) {
     } else {
         name = output.meta[0].title;
     }
-    await saveTextFile("[Bilisound 歌单] " + name + ".toml", doc, "application/toml");
+    const fileName = `[Bilisound 歌单] ${name}.toml`;
+    await saveTextFile(fileName, doc, "application/toml");
+    Toast.show({
+        type: "success",
+        text1: "文件已保存",
+        text2: fileName,
+    });
 }
 
 interface MigratePlan {
