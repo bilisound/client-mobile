@@ -82,7 +82,7 @@ import { CACHE_INVALID_KEY_DO_NOT_USE, cacheStatusStorage } from "~/storage/cach
 import useDownloadStore from "~/store/download";
 import { openAddPlaylistPage } from "~/business/playlist/misc";
 import { Marquee } from "@animatereactnative/marquee";
-import { saveFile, uriToPath } from "~/utils/file";
+import { getCacheAudioPath, saveAudioFile, uriToPath } from "~/utils/file";
 import useSettingsStore from "~/store/settings";
 import { bv2av } from "~/utils/vendors/av-bv";
 import log from "~/utils/logger";
@@ -587,7 +587,12 @@ function PlayerControlMenu() {
 
                 const fileName = `[${useSettingsStore.getState().useLegacyID ? `av${bv2av(currentTrack.extendedData.id)}` : currentTrack.extendedData.id}] [P${currentTrack.extendedData.episode}] ${currentTrack.title}.m4a`;
                 try {
-                    await saveFile(uriToPath(currentTrack.uri), fileName);
+                    await saveAudioFile(
+                        uriToPath(
+                            getCacheAudioPath(currentTrack.extendedData.id, currentTrack.extendedData.episode, false),
+                        ),
+                        fileName,
+                    );
                     Toast.show({
                         type: "success",
                         text1: "文件已保存",

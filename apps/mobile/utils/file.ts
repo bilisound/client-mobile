@@ -34,12 +34,12 @@ export async function saveTextFile(name: string, content: string, mimeType = "te
  * @param location
  * @param replaceFileName
  */
-export async function saveFile(location: string, replaceFileName: string) {
+export async function saveAudioFile(location: string, replaceFileName: string) {
     log.debug(`尝试保存文件到本地。location: ${location}, replaceFileName: ${replaceFileName}`);
     let targetLocation = "";
 
     if (Platform.OS === "android") {
-        await Player.saveFile(location, "video/mp4", replaceFileName);
+        await Player.saveFile(location, "audio/mp4", replaceFileName);
         return;
     }
 
