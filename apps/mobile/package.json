@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@animatereactnative/marquee": "^0.3.1",
-    "@bilisound/player": "0.1.18",
+    "@bilisound/player": "0.1.19",
     "@bilisound/sdk": "workspace:*",
     "@expo-google-fonts/poppins": "^0.2.3",
     "@expo-google-fonts/roboto": "^0.2.3",

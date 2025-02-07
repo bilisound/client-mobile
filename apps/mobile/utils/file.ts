@@ -1,28 +1,27 @@
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
+import * as Player from "@bilisound/player";
 import path from "path-browserify";
 
 import { BILISOUND_OFFLINE_URI, BILISOUND_PROCESS_URI } from "~/constants/file";
 import { cacheStatusStorage } from "~/storage/cache-status";
 import log from "~/utils/logger";
 import { getTracks } from "@bilisound/player";
+import { Platform } from "react-native";
 
 export async function saveTextFile(name: string, content: string, mimeType = "text/plain") {
-    /*if (Platform.OS === "android") {
-        log.debug("使用 Android SAF 保存文本文件");
-        const response = await createDocument(content, {
-            initialName: name,
-            encoding: "utf8",
-        });
-        log.debug("保存文件流程结束");
-        return !!response;
-    }*/
     const filePath = FileSystem.cacheDirectory + `/shared_text_file_${new Date().getTime()}`;
     const fileFullPath = `${filePath}/${name}`;
     await FileSystem.makeDirectoryAsync(filePath, {
         intermediates: true,
     });
     await FileSystem.writeAsStringAsync(fileFullPath, content);
+
+    if (Platform.OS === "android") {
+        await Player.saveFile(uriToPath(fileFullPath), mimeType, name);
+        return;
+    }
+
     log.debug("分享文件：" + fileFullPath);
     await Sharing.shareAsync(fileFullPath, {
         mimeType,
@@ -35,25 +34,25 @@ export async function saveTextFile(name: string, content: string, mimeType = "te
  * @param location
  * @param replaceFileName
  */
-export async function saveFile(location: string, replaceFileName?: string) {
-    // todo 改用各系统原生的文件保存功能，而非当前的文件分享功能
+export async function saveFile(location: string, replaceFileName: string) {
     log.debug(`尝试保存文件到本地。location: ${location}, replaceFileName: ${replaceFileName}`);
-    if (!location.startsWith("file://")) {
-        log.warn(`参数 location 必须是 file:// URI。传入的 location: ${location}`);
-        location = `file://${encodeURI(location)}`;
-    }
     let targetLocation = "";
+
+    if (Platform.OS === "android") {
+        await Player.saveFile(location, "video/mp4", replaceFileName);
+        return;
+    }
 
     if (replaceFileName) {
         const targetDir = `${FileSystem.cacheDirectory}/sharing-${new Date().getTime()}`;
         targetLocation = `${targetDir}/${replaceFileName}`;
         await FileSystem.makeDirectoryAsync(targetDir, { intermediates: true });
         await FileSystem.copyAsync({
-            from: location,
+            from: pathToUri(location),
             to: targetLocation,
         });
     }
-    await Sharing.shareAsync(targetLocation || location, {
+    await Sharing.shareAsync(targetLocation, {
         mimeType: "application/octet-stream",
     });
     if (targetLocation) {
