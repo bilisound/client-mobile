@@ -568,8 +568,11 @@ function PlayerControlMenu() {
                     return;
                 }
                 globalThis.window.open(
-                    getBilisoundResourceUrlOnline(currentTrack.extendedData.id, currentTrack.extendedData.episode, "bv")
-                        .url,
+                    getBilisoundResourceUrlOnline(
+                        currentTrack.extendedData.id,
+                        currentTrack.extendedData.episode,
+                        useSettingsStore.getState().useLegacyID ? "av" : "bv",
+                    ).url,
                 );
                 handleClose();
             },
@@ -586,7 +589,7 @@ function PlayerControlMenu() {
                 }
                 handleClose();
 
-                const fileName = `[${useSettingsStore.getState().useLegacyID ? `av${bv2av(currentTrack.extendedData.id)}` : currentTrack.extendedData.id}] [P${currentTrack.extendedData.episode}] ${currentTrack.title}.m4a`;
+                const fileName = `[${useSettingsStore.getState().useLegacyID ? bv2av(currentTrack.extendedData.id) : currentTrack.extendedData.id}] [P${currentTrack.extendedData.episode}] ${currentTrack.title}.m4a`;
                 try {
                     await saveAudioFile(
                         uriToPath(
