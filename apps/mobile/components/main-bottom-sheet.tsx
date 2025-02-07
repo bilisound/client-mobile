@@ -86,6 +86,7 @@ import { getCacheAudioPath, saveAudioFile, uriToPath } from "~/utils/file";
 import useSettingsStore from "~/store/settings";
 import { bv2av } from "~/utils/vendors/av-bv";
 import log from "~/utils/logger";
+import MaskedView from "@react-native-masked-view/masked-view";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -822,6 +823,10 @@ export function PlayerControl() {
     const [value, setValue] = useState<"current" | "list">("current");
     const [rotateTitle, setRotateTitle] = useState(false);
 
+    // 滚动字幕
+    const { colorValue } = useRawThemeValues();
+    const [width, setWidth] = useState(320);
+
     function handleJump() {
         if (closing) {
             return;
@@ -917,6 +922,9 @@ export function PlayerControl() {
             {/* 右侧：播放控制 */}
             <View
                 className={"@container flex-0 basis-auto md:flex-1 md:justify-center gap-3 @sm:gap-4 " + DEBUG_COLOR[0]}
+                onLayout={event => {
+                    setWidth(event.nativeEvent.layout.width);
+                }}
             >
                 {/* 曲目信息，可点击 */}
                 <Pressable
@@ -925,15 +933,28 @@ export function PlayerControl() {
                     onLongPress={() => setRotateTitle(p => !p)}
                 >
                     {rotateTitle ? (
-                        <Marquee speed={0.5}>
-                            <Text
-                                className={
-                                    "leading-normal text-lg @sm:text-xl font-extrabold color-typography-700 pl-8"
-                                }
-                            >
-                                {currentTrack?.title}
-                            </Text>
-                        </Marquee>
+                        <MaskedView
+                            maskElement={
+                                <Marquee speed={0.5}>
+                                    <Text className={"text-lg @sm:text-xl font-extrabold color-typography-700 pl-8"}>
+                                        {currentTrack?.title}
+                                    </Text>
+                                </Marquee>
+                            }
+                        >
+                            <LinearGradient
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                colors={[
+                                    "transparent",
+                                    colorValue("--color-typography-700"),
+                                    colorValue("--color-typography-700"),
+                                    "transparent",
+                                ]}
+                                locations={[16 / width, 64 / width, (width - 64) / width, (width - 16) / width]}
+                                className={"h-[28px] @sm:h-[28px]"}
+                            />
+                        </MaskedView>
                     ) : (
                         <Text
                             className={"leading-normal text-lg @sm:text-xl font-extrabold color-typography-700 px-8"}

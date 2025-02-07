@@ -55,6 +55,7 @@
     "@miblanchard/react-native-slider": "^2.6.0",
     "@monicon/metro": "1.2.2",
     "@monicon/native": "1.2.2",
+    "@react-native-masked-view/masked-view": "0.3.2",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "@rn-primitives/tabs": "^1.1.0",
