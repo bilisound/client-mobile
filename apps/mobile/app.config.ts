@@ -40,7 +40,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     plugins: [
         "./plugins/withAbiFilters",
         "./plugins/withAndroidSignature",
-        "react-native-edge-to-edge",
+        [
+            "react-native-edge-to-edge",
+            {
+                enforceNavigationBarContrast: false,
+            },
+        ],
         [
             // todo 需要解决二进制将会下线的问题
             "@config-plugins/ffmpeg-kit-react-native",
