@@ -82,18 +82,18 @@ export async function importPlaylistFromFile() {
                 }
             }
         });
-        /*Toast.show({
+        Toast.show({
             type: "success",
             text1: "歌单导入成功",
             text2: `导入了 ${migratePlan.length} 个歌单`,
-        });*/
+        });
     } catch (e) {
         log.error(`歌单导入失败：${e}`);
-        /* Toast.show({
+        Toast.show({
             type: "error",
             text1: "歌单导入失败",
             text2: "无法读取选择的文件",
-        });*/
+        });
         if (process.env.NODE_ENV !== "production") {
             throw e;
         }
