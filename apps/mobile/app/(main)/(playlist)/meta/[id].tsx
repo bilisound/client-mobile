@@ -157,7 +157,7 @@ export default function Page() {
     return (
         <Layout title={id === MAGIC_ID_NEW_ENTRY ? "新建歌单" : "修改歌单信息"} leftAccessories="BACK_BUTTON">
             <ScrollView className="flex-1">
-                <View className="p-4 gap-4" style={{ paddingBottom: edgeInsets.bottom }}>
+                <View className="p-4 gap-4" style={{ paddingBottom: Math.max(edgeInsets.bottom, 16) }}>
                     {/*<View className={"h-[400px] w-16 bg-yellow-500"}></View>*/}
                     <FormControl isRequired isInvalid={"title" in errors}>
                         <FormControlLabel>
