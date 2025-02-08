@@ -12,6 +12,7 @@ import useSettingsStore from "~/store/settings";
 import { Layout } from "~/components/layout";
 import { Monicon } from "@monicon/native";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { shadow } from "~/constants/styles";
 
 interface ThemeButtonProps {
     selected?: boolean;
@@ -26,10 +27,9 @@ function ThemeButton({ selected = false, name, onPress, yuruChara }: ThemeButton
             onPress={onPress}
             className={twMerge(
                 "sm:flex-1 flex px-5 py-5 h-24 justify-between rounded-lg cursor-pointer overflow-hidden focus:ring-0.125rem focus:ring-primary-500 dark:focus:ring-primary-900",
-                selected
-                    ? "bg-primary-700 dark:bg-primary-200 android:shadow-md ios:shadow-md shadow-[0_4px_6px_-1px_rgb(0_0_0_/_0.1),_0_2px_4px_-2px_rgb(0_0_0_/_0.1)]"
-                    : "bg-background-50",
+                selected ? "bg-primary-700 dark:bg-primary-200" : "bg-background-50",
             )}
+            style={{ boxShadow: selected ? shadow.md : undefined }}
         >
             <Text className={`font-semibold text-lg ${selected ? "text-white" : ""}`}>{name}</Text>
             {selected && <Text className={`font-semibold text-sm ${selected ? "text-white" : ""}`}>已启用</Text>}
