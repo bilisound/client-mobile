@@ -83,6 +83,10 @@ async function checkDirectorySizeByUri(uri: string, options: CheckDirectorySizeO
 }
 
 export async function countSize() {
+    if (Platform.OS === "web") {
+        return { cacheSize: 0, cacheFreeSize: 0 };
+    }
+
     const tracks = await getTracks();
     const cacheSize = await checkDirectorySizeByUri(BILISOUND_OFFLINE_URI);
     const cacheFreeSize = await checkDirectorySizeByUri(BILISOUND_OFFLINE_URI, {

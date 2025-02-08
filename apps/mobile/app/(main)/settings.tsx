@@ -117,17 +117,15 @@ export default function Page() {
                         router.navigate("/settings/theme");
                     }}
                 />
-                {Platform.OS === "web" ? null : (
-                    <SettingMenuItem
-                        key="settings_10040"
-                        icon={"fa6-solid:database"}
-                        title="数据管理"
-                        subTitle="管理离线缓存和数据备份"
-                        onPress={async () => {
-                            router.navigate("/settings/data");
-                        }}
-                    />
-                )}
+                <SettingMenuItem
+                    key="settings_10040"
+                    icon={"fa6-solid:database"}
+                    title="数据管理"
+                    subTitle={Platform.OS === "web" ? "管理数据备份" : "管理离线缓存和数据备份"}
+                    onPress={async () => {
+                        router.navigate("/settings/data");
+                    }}
+                />
                 <SettingMenuItem
                     key="settings_10050"
                     icon={"fa6-solid:circle-info"}
