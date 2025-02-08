@@ -118,18 +118,24 @@ export default function RootLayout() {
         SystemUI.setBackgroundColorAsync(colorScheme === "dark" ? "#121212" : "#ffffff");
     }, [colorScheme]);
 
-    // 解决在 Xiaomi HyperOS 上底部 navigation bar 亮色模式下始终为半透明白色背景的问题。在「原生安卓」下其实不需要这一步
     useEffect(() => {
         (async () => {
-            // https://stackoverflow.com/questions/74999835/trying-to-make-the-android-navigation-bar-transparent-in-expo
-            if (Platform.OS === "android") {
-                await NavigationBar.setPositionAsync("absolute");
-                await NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#17171701" : "#ffffff01");
-            }
             await SystemUI.setBackgroundColorAsync(
                 colorScheme === "dark" || Platform.OS === "ios" ? "#171717" : "#ffffff",
             );
         })();
+
+        // 解决在 Xiaomi HyperOS 上底部 navigation bar 亮色模式下始终为半透明白色背景的问题。在「原生安卓」下其实不需要这一步
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        if (Platform.OS === "android" && Platform.Version <= 14) {
+            timer = setTimeout(async () => {
+                // https://stackoverflow.com/questions/74999835/trying-to-make-the-android-navigation-bar-transparent-in-expo
+                await NavigationBar.setPositionAsync("absolute");
+                await NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#17171701" : "#ffffff01");
+            }, 100);
+        }
+
+        return () => clearTimeout(timer);
     }, [colorScheme, width, height]);
 
     if (!loaded) {
