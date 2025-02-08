@@ -160,7 +160,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 export default function Page() {
     const edgeInsets = useTabSafeAreaInsets();
     const queryClient = useQueryClient();
-    const { data } = useQuery({
+    const { data, refetch } = useQuery({
         queryKey: ["playlist_meta"],
         queryFn: () => getPlaylistMetas(),
     });
@@ -170,7 +170,7 @@ export default function Page() {
         if (result) {
             await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
             await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
-            useUpdateTriggerStore.getState().incrementCount();
+            await refetch();
         }
     };
 
