@@ -61,7 +61,7 @@ export default function Page() {
                         source={require("../../assets/images/icon.png")}
                     />
                     <Text className="text-2xl leading-normal font-semibold mt-2 mb-1">Bilisound</Text>
-                    <Text className="text-sm leading-normal opacity-50">{`版本 ${VERSION} ・ ${releaseChannelDict[RELEASE_CHANNEL ?? "unknown"]}`}</Text>
+                    <Text className="text-sm leading-normal opacity-50 text-center">{`版本 ${VERSION} ・ ${releaseChannelDict[RELEASE_CHANNEL ?? "unknown"]}`}</Text>
                 </View>
                 <SettingMenuItem
                     disabled={checking}
