@@ -2,7 +2,7 @@ import * as Device from "expo-device";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { Platform } from "react-native";
-import { logger, fileAsyncTransport, consoleTransport } from "react-native-logs";
+import { consoleTransport, fileAsyncTransport, logger } from "react-native-logs";
 
 import { BILISOUND_LOG_URI } from "~/constants/file";
 import { VERSION } from "~/constants/releasing";
@@ -38,6 +38,10 @@ const osMap: Record<typeof Platform.OS, string> = {
     windows: "Windows",
     web: "Web",
 };
+
+export async function getLogList() {
+    return FileSystem.readDirectoryAsync(BILISOUND_LOG_URI);
+}
 
 export async function getLogContentForDisplay() {
     // 获取设备信息

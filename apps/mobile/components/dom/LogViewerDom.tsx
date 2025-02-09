@@ -9,7 +9,7 @@ export interface LogViewerProps {
     dom: DOMProps;
 }
 
-export default function LogViewer({ text, style }: LogViewerProps) {
+export default function LogViewerDom({ text, style }: LogViewerProps) {
     return (
         <pre style={style}>
             <code

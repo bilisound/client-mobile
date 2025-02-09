@@ -64,8 +64,7 @@ export default function Page() {
                         title="导出日志"
                         subTitle="对开发者真的太有用了"
                         onPress={async () => {
-                            // todo
-                            // router.navigate("/settings/log-show");
+                            router.navigate("/settings/logs");
                         }}
                     />
                 </>
