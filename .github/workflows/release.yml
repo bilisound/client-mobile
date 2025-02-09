@@ -67,9 +67,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
-          cache-dependency-path: |
-            apps/mobile/android/*.gradle*
-            apps/mobile/android/gradle-wrapper.properties
 
       - name: 🏗 Setup Gradle
         uses: gradle/gradle-build-action@v2
