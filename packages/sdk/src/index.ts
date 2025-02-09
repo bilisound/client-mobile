@@ -356,7 +356,9 @@ export class BilisoundSDK {
                     owner: data.owner,
                     desc: (data.desc_v2 ?? []).map(e => e.raw_text).join("\n"),
                     pubDate: data.pubdate * 1000,
-                    pages: pages.map(({ page, part, duration }) => ({ page, part, duration })),
+                    pages: pages.map(({ page, part, duration }, _, arr) => {
+                        return { page, part: arr.length === 1 ? data.title : part, duration, partDisplayName: part };
+                    }),
                     seasonId: data.season_id,
                 };
             }
@@ -384,7 +386,9 @@ export class BilisoundSDK {
                     owner: found.author,
                     desc: videoInfo.desc,
                     pubDate: videoInfo.pubdate * 1000,
-                    pages: pages.map(({ page, part, duration }) => ({ page, part, duration })),
+                    pages: pages.map(({ page, part, duration }, _, arr) => {
+                        return { page, part: arr.length === 1 ? videoInfo.title : part, duration, partDisplayName: part };
+                    }),
                 };
             }
             default:

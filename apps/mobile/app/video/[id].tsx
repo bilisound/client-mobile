@@ -295,7 +295,7 @@ export default function Page() {
                                             bvid: data!.bvid,
                                             duration: e.item.duration,
                                             episode: e.item.page,
-                                            title: e.item.part,
+                                            title: e.item.partDisplayName,
                                             imgUrl: data!.pic,
                                             id: 0,
                                             playlistId: 0,

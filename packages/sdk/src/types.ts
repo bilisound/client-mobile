@@ -39,6 +39,7 @@ export interface GetMetadataResponse {
     pages: {
         page: number;
         part: string;
+        partDisplayName: string;
         duration: number;
     }[];
     seasonId?: number;
