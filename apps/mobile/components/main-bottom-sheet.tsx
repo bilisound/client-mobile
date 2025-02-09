@@ -121,13 +121,11 @@ const TABS = [
 ];
 
 const SPEED_PRESETS = [
-    { speed: 0.5, text: "0.5x" },
     { speed: 0.8, text: "0.8x" },
     { speed: 0.9, text: "0.9x" },
     { speed: 1, text: "1x" },
     { speed: 1.1, text: "1.1x" },
     { speed: 1.2, text: "1.2x" },
-    { speed: 1.5, text: "1.5x" },
 ];
 
 const REPEAT_MODE = {
@@ -676,7 +674,7 @@ function PlayerControlMenu() {
                     <View className={"w-full px-2 pt-4 pb-6"}>
                         {/*<Text className={"font-semibold text-lg leading-tight"}>调节播放速度</Text>*/}
                         <SpeedControlPanel />
-                        <View className="flex-row flex-wrap gap-2 mt-4">
+                        <View className="flex-row flex-wrap justify-center gap-2 mt-4">
                             {SPEED_PRESETS.map(item => (
                                 <ButtonOuter key={item.text}>
                                     <Button
