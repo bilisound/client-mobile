@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import { ActivityIndicator, View } from "react-native";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -85,6 +84,7 @@ export function SongItem({
     isChecking,
     isChecked,
 }: SongItemProps) {
+    const { colorValue } = useRawThemeValues();
     const activeTrack = useCurrentTrack();
     const isActiveTrack =
         data && data.bvid === activeTrack?.extendedData?.id && data.episode === activeTrack?.extendedData?.episode;
@@ -118,9 +118,13 @@ export function SongItem({
                     ) : (
                         <SkeletonText lineSize={1} lineHeight={22} fontSize={14} />
                     )}
-                    <View className="mt-1 flex-row items-center gap-1">
+                    <View className="mt-1 flex-row items-center gap-1.5">
                         {exists ? (
-                            <Ionicons name="checkmark-circle" size={16} className="color-typography-700 opacity-50" />
+                            <Monicon
+                                name="ion:checkmark-circle"
+                                size={16}
+                                color={colorValue("--color-typography-700", 0.5)}
+                            />
                         ) : null}
                         {data ? (
                             <Text className="text-sm opacity-50" style={{ fontFamily: "Roboto_400Regular" }}>

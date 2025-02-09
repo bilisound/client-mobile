@@ -35,9 +35,6 @@ importers:
       '@expo/html-elements':
         specifier: 0.4.2
         version: 0.4.2
-      '@expo/vector-icons':
-        specifier: ^14.0.4
-        version: 14.0.4
       '@gluestack-ui/actionsheet':
         specifier: ^0.2.46
         version: 0.2.46(react-dom@18.3.1(react@18.3.1))(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)

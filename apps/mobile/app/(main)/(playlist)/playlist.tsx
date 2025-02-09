@@ -22,7 +22,6 @@ import {
 import { Text } from "~/components/ui/text";
 import { PlaylistMeta } from "~/storage/sqlite/schema";
 import { useWindowDimensions, View } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useConfirm } from "~/hooks/useConfirm";
 import log from "~/utils/logger";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
@@ -39,6 +38,7 @@ import {
 import { Heading } from "~/components/ui/heading";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { useUpdateTriggerStore } from "~/store/update-trigger";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
@@ -80,7 +80,7 @@ interface LongPressActionsProps {
  * 长按操作
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
-    const edgeInsets = useSafeAreaInsets();
+    const { colorValue } = useRawThemeValues();
 
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose}>
@@ -96,28 +96,14 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                     </View>
                 )}
                 <ActionsheetItem onPress={() => onAction("edit")}>
-                    <View
-                        style={{
-                            width: 24,
-                            height: 24,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <MaterialIcons name="edit" size={24} className="color-typography-700" />
+                    <View className={"size-6 items-center justify-center"}>
+                        <Monicon name={"fa6-solid:pen"} size={18} color={colorValue("--color-typography-700")} />
                     </View>
                     <ActionsheetItemText>修改信息</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("delete")}>
-                    <View
-                        style={{
-                            width: 24,
-                            height: 24,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <MaterialIcons name="delete" size={24} className="color-typography-700" />
+                    <View className={"size-6 items-center justify-center"}>
+                        <Monicon name={"fa6-solid:trash"} size={18} color={colorValue("--color-typography-700")} />
                     </View>
                     <ActionsheetItemText>删除</ActionsheetItemText>
                 </ActionsheetItem>
@@ -126,28 +112,18 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         onAction("export");
                     }}
                 >
-                    <View
-                        style={{
-                            width: 24,
-                            height: 24,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <Ionicons name="save" size={20} className="color-typography-700" />
+                    <View className={"size-6 items-center justify-center"}>
+                        <Monicon
+                            name={"fa6-solid:file-export"}
+                            size={18}
+                            color={colorValue("--color-typography-700")}
+                        />
                     </View>
                     <ActionsheetItemText>导出</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("close")}>
-                    <View
-                        style={{
-                            width: 24,
-                            height: 24,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <MaterialIcons name="cancel" size={22} className="color-typography-700" />
+                    <View className={"size-6 items-center justify-center"}>
+                        <Monicon name={"fa6-solid:xmark"} size={20} color={colorValue("--color-typography-700")} />
                     </View>
                     <ActionsheetItemText>取消</ActionsheetItemText>
                 </ActionsheetItem>

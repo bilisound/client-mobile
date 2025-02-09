@@ -33,10 +33,12 @@ import {
     ActionsheetItem,
     ActionsheetItemText,
 } from "~/components/ui/actionsheet";
-import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import log from "~/utils/logger";
 import { GetMetadataResponse } from "@bilisound/sdk";
 import { openAddPlaylistPage } from "~/business/playlist/misc";
+import { Monicon } from "@monicon/native";
+import { Box } from "~/components/ui/box";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -51,6 +53,8 @@ interface LongPressActionsProps {
  * 长按操作
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
+    const { colorValue } = useRawThemeValues();
+
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
             <ActionsheetBackdrop />
@@ -67,28 +71,14 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                     </View>
                 )}
                 <ActionsheetItem onPress={() => onAction("addPlaylist")}>
-                    <View
-                        style={{
-                            width: 24,
-                            height: 24,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <Entypo name="add-to-list" size={20} className="color-typography-700" />
-                    </View>
+                    <Box className={"size-6 items-center justify-center"}>
+                        <Monicon name={"fa6-solid:plus"} size={16} color={colorValue("--color-typography-700")} />
+                    </Box>
                     <ActionsheetItemText>添加到歌单</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("close")}>
-                    <View
-                        style={{
-                            width: 24,
-                            height: 24,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <MaterialIcons name="cancel" size={22} className="color-typography-700" />
+                    <View className={"size-6 items-center justify-center"}>
+                        <Monicon name={"fa6-solid:xmark"} size={20} color={colorValue("--color-typography-700")} />
                     </View>
                     <ActionsheetItemText>取消</ActionsheetItemText>
                 </ActionsheetItem>

@@ -13,14 +13,16 @@ import {
 import { Input, InputField, InputSlot } from "~/components/ui/input";
 import log from "~/utils/logger";
 import { AlertCircleIcon } from "~/components/ui/icon";
-import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import { router } from "expo-router";
 import { resolveVideo, resolveVideoAndJump } from "~/business/format";
+import { Monicon } from "@monicon/native";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 export default function MainScreen() {
     const edgeInsets = useTabSafeAreaInsets();
     const isNarrowWidth = useIsNarrowWidth();
+    const { colorValue } = useRawThemeValues();
 
     const {
         control,
@@ -123,7 +125,11 @@ export default function MainScreen() {
                                             setFormValue("videoUrl", "");
                                         }}
                                     >
-                                        <FontAwesome6 name="xmark" size={20} className="color-typography-700" />
+                                        <Monicon
+                                            name="fa6-solid:xmark"
+                                            size={20}
+                                            color={colorValue("--color-typography-700")}
+                                        />
                                     </InputSlot>
                                     <View className={"w-[1px] h-6 bg-background-100"}></View>
                                     <InputSlot
