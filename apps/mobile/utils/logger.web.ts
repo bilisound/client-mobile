@@ -20,8 +20,10 @@ const log = logger.createLogger(config);
 
 export default log;
 
-export async function getLogContentForDisplay() {
-    return "";
-}
+export async function getLogList() {}
 
-export async function shareLogContent(content: string) {}
+export async function getLog() {}
+
+export async function shareLog() {}
+
+export async function deleteLogContent() {}
