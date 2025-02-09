@@ -38,11 +38,9 @@ export function SettingMenuItem({
                             <Monicon name={icon} size={iconSize ?? 20} color={colorValue("--color-typography-700")} />
                         )}
                     </View>
-                    <Text className="font-semibold text-[0.9375rem]">{title}</Text>
+                    <Text className="font-semibold text-[15px]">{title}</Text>
                 </View>
-                {subTitle ? (
-                    <Text className="mt-1 ml-9 opacity-60 text-[0.9375rem] leading-normal">{subTitle}</Text>
-                ) : null}
+                {subTitle ? <Text className="mt-1 ml-9 opacity-60 text-[15px] leading-normal">{subTitle}</Text> : null}
             </View>
             {rightAccessories ? <View className="flex-0 basis-auto">{rightAccessories}</View> : null}
         </View>

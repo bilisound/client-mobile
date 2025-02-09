@@ -9,7 +9,6 @@ import { Monicon } from "@monicon/native";
 import { Box } from "~/components/ui/box";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
 import { exportPlaylistToFile, importPlaylistFromFile } from "~/utils/exchange/playlist";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
     Actionsheet,
     ActionsheetBackdrop,

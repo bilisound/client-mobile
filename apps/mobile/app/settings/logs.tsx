@@ -8,6 +8,9 @@ import { Text } from "~/components/ui/text";
 import { View } from "react-native";
 import { Monicon } from "@monicon/native";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { router } from "expo-router";
+
+const matchRegex = /^bilisound_log_(.+)_(\d{1,2})-(\d{1,2})-(\d+).log$/;
 
 export default function Page() {
     const edgeInsets = useSafeAreaInsets();
@@ -17,24 +20,39 @@ export default function Page() {
     });
     const { colorValue } = useRawThemeValues();
 
+    console.log(data);
+
     return (
         <Layout title={"查看日志"} leftAccessories={"BACK_BUTTON"} edgeInsets={{ ...edgeInsets, bottom: 0 }}>
             <FlashList
-                estimatedItemSize={48}
-                renderItem={e => (
-                    <Pressable className={"h-12 px-4 flex-row items-center gap-3"}>
-                        <View className={"items-center justify-center size-6 flex-0 basis-auto"}>
-                            <Monicon
-                                name={"fa6-solid:file-lines"}
-                                size={20}
-                                color={colorValue("--color-typography-700")}
-                            />
-                        </View>
-                        <Text className={"flex-1"} isTruncated>
-                            {e.item}
-                        </Text>
-                    </Pressable>
-                )}
+                key={11111121133}
+                contentContainerStyle={{ paddingBottom: edgeInsets.bottom }}
+                estimatedItemSize={72}
+                renderItem={e => {
+                    const info = matchRegex.exec(e.item);
+                    return (
+                        <Pressable
+                            className={"h-[72px] px-4 gap-1.5 justify-center"}
+                            onPress={() => router.navigate(`/settings/log/${e.item}`)}
+                        >
+                            <View className={"flex-row gap-3"}>
+                                <View className={"items-center justify-center size-6 flex-0 basis-auto"}>
+                                    <Monicon
+                                        name={"fa6-solid:file-lines"}
+                                        size={20}
+                                        color={colorValue("--color-typography-700")}
+                                    />
+                                </View>
+                                <Text className={"font-semibold"} isTruncated>
+                                    {info ? `${info[4]} 年 ${info[3]} 月 ${info[2]} 日` : "未知日志"}
+                                </Text>
+                            </View>
+                            <Text className={"text-typography-500 text-sm pl-9"} isTruncated>
+                                {e.item}
+                            </Text>
+                        </Pressable>
+                    );
+                }}
                 data={data}
             />
         </Layout>
