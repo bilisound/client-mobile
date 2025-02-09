@@ -24,11 +24,7 @@ const App: React.FC = () => {
             {data ? (
                 Platform.OS === "web" ? (
                     <pre className={"text-typography-700 p-4 m-0 w-full overflow-auto"}>
-                        <code
-                            className="break-all whitespace-pre-wrap text-[14px] leading-[1.25]"
-                        >
-                            {data}
-                        </code>
+                        <code className="break-all whitespace-pre-wrap text-[14px] leading-[1.25]">{data}</code>
                     </pre>
                 ) : (
                     <LogViewer
