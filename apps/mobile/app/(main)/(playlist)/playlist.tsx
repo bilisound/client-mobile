@@ -38,7 +38,6 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Heading } from "~/components/ui/heading";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
-import { Marquee } from "@animatereactnative/marquee";
 import { useUpdateTriggerStore } from "~/store/update-trigger";
 
 interface PlaylistContextProps {
