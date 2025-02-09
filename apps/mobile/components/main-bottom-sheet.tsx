@@ -760,7 +760,11 @@ function PlayerPicture() {
                 const { width, height } = event.nativeEvent.layout;
                 // padding 是 32dp `p-8`
                 const minSize = Math.min(width, height);
-                setImageSize(minSize - (minSize >= 448 ? 128 : 64));
+                const target = minSize - (minSize >= 448 ? 128 : 64);
+                // 抖动缓解措施
+                if (target > 0) {
+                    setImageSize(minSize - (minSize >= 448 ? 128 : 64));
+                }
             }}
         >
             <View
