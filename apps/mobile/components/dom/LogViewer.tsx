@@ -1,9 +1,12 @@
 "use dom";
 
+import { DOMProps } from "expo/dom";
+
 export interface LogViewerProps {
     text: string;
     className?: string;
     style?: any;
+    dom: DOMProps;
 }
 
 export default function LogViewer({ text, style }: LogViewerProps) {
