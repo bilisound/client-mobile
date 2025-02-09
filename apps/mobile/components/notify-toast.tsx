@@ -1,10 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
 
 import { Text } from "~/components/ui/text";
 import { shadow } from "~/constants/styles";
 import { ToastConfig } from "react-native-toast-message/lib/src/types";
 import React from "react";
+import { Monicon } from "@monicon/native";
+import colors from "tailwindcss/colors";
 
 export interface NotifyToastProps {
     type: "success" | "info" | "warning" | "error";
@@ -18,16 +19,12 @@ export function NotifyToast({ type, title, description }: NotifyToastProps) {
             style={{ boxShadow: shadow.xl }}
             className="bg-background-0 border-background-100 border min-h-[50px] rounded-[25px] pl-3 pr-[1.125rem] py-[0.8125rem] flex-row gap-3 mx-6 my-2 max-w-[400px]"
         >
-            {type === "success" && (
-                <Ionicons name="checkmark-circle" size={24} className="flex-0 basis-auto color-green-500" />
-            )}
-            {type === "info" && (
-                <Ionicons name="information-circle" size={24} className="flex-0 basis-auto color-neutral-500" />
-            )}
-            {type === "warning" && (
-                <Ionicons name="alert-circle" size={24} className="flex-0 basis-auto color-orange-500" />
-            )}
-            {type === "error" && <Ionicons name="close-circle" size={24} className="flex-0 basis-auto color-red-500" />}
+            <View className={"size-6 items-center justify-center flex-0 basis-auto"}>
+                {type === "success" && <Monicon name="ion:checkmark-circle" color={colors.green[500]} size={24} />}
+                {type === "info" && <Monicon name="ion:information-circle" color={colors.neutral[500]} size={24} />}
+                {type === "warning" && <Monicon name="ion:alert-circle" color={colors.orange[500]} size={24} />}
+                {type === "error" && <Monicon name="ion:close-circle" color={colors.red[500]} size={24} />}
+            </View>
             <View className="gap-1 flex-1">
                 <Text
                     className="text-base leading-normal font-semibold"

@@ -1,4 +1,3 @@
-import { Entypo } from "@expo/vector-icons";
 import React from "react";
 import { StyleProp, ViewStyle, View } from "react-native";
 import { twMerge } from "tailwind-merge";
@@ -8,6 +7,7 @@ import { PlaylistMeta } from "~/storage/sqlite/schema";
 import { Pressable } from "~/components/ui/pressable";
 import { Skeleton } from "~/components/ui/skeleton";
 import { SkeletonText } from "~/components/skeleton-text";
+import { Monicon } from "@monicon/native";
 
 export interface PlaylistItemProps {
     item?: PlaylistMeta;
@@ -32,7 +32,7 @@ export function PlaylistItem({ item, onPress, onLongPress, className, style }: P
                 {item ? (
                     <View className="w-6 h-6 items-center justify-center basis-auto flex-0">
                         {item.source ? (
-                            <Entypo name="cloud" size={20} color={item.color} />
+                            <Monicon name="fa6-solid:cloud" size={16} color={item.color} />
                         ) : (
                             <View
                                 className="w-[0.875rem] h-[0.875rem] rounded-full"
