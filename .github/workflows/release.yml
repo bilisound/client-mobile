@@ -38,16 +38,6 @@ jobs:
           echo "$BILISOUND_CREDENTIALS" | base64 --decode > credentials.json
           echo "$BILISOUND_KEYSTORE_RELEASE" | base64 --decode > credentials/bilisound-release.keystore
 
-      - name: 🏗 Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: gradle
-
-      - name: 🏗 Setup Gradle
-        uses: gradle/gradle-build-action@v2
-
       - name: 🏗 Setup pnpm
         uses: pnpm/action-setup@v4
 
@@ -70,6 +60,19 @@ jobs:
           pnpm install
           cd apps/mobile
           pnpm run prebuild
+
+      - name: 🏗 Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+          cache-dependency-path: |
+            apps/mobile/android/*.gradle*
+            apps/mobile/android/gradle-wrapper.properties
+
+      - name: 🏗 Setup Gradle
+        uses: gradle/gradle-build-action@v2
 
       - name: 🚀 Build app
         working-directory: apps/mobile
