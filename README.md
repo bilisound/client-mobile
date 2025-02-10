@@ -2,26 +2,19 @@
 
 基于 React Native (Expo) 的 Bilisound 移动客户端。
 
-本分支为 UI 重做版。
-
-## 已知问题
-
-- [x] 在 HMR 多次以后，按钮的 Android Ripple 效果会出现异常；在按住按钮的时候移开再松开，按钮的动画效果会直接结束
-- [x] 旋转屏幕时有机会卡住
-
 ---
 
 <table>
 <tbody>
 <tr>
-<td><img src=".github/assets/Screenshot_2024-10-03-14-58-03-293_moe.bilisound.app.jpg" alt="首页"></td>
-<td><img src=".github/assets/Screenshot_2024-10-03-14-58-10-400_moe.bilisound.app.jpg" alt="详情"></td>
-<td><img src=".github/assets/Screenshot_2024-10-03-14-58-14-386_moe.bilisound.app.jpg" alt="正在播放"></td>
+<td><img src=".github/assets/Screenshot_2025-02-10-21-49-28-446_moe.bilisound.app.jpg" alt="首页"></td>
+<td><img src=".github/assets/Screenshot_2025-02-10-21-49-38-905_moe.bilisound.app.jpg" alt="详情"></td>
+<td><img src=".github/assets/Screenshot_2025-02-10-21-49-43-691_moe.bilisound.app.jpg" alt="正在播放"></td>
 </tr>
 <tr>
-<td><img src=".github/assets/Screenshot_2024-10-03-14-58-18-556_moe.bilisound.app.jpg" alt="合集"></td>
-<td><img src=".github/assets/Screenshot_2024-10-03-14-58-29-386_moe.bilisound.app.jpg" alt="歌单"></td>
-<td><img src=".github/assets/Screenshot_2024-10-03-14-58-35-375_moe.bilisound.app.jpg" alt="设置"></td>
+<td><img src=".github/assets/Screenshot_2025-02-10-21-50-30-493_moe.bilisound.app.jpg" alt="合集"></td>
+<td><img src=".github/assets/Screenshot_2025-02-10-21-50-43-595_moe.bilisound.app.jpg" alt="歌单"></td>
+<td><img src=".github/assets/Screenshot_2025-02-10-21-50-49-505_moe.bilisound.app.jpg" alt="设置"></td>
 </tr>
 </tbody>
 </table>
@@ -44,46 +37,6 @@ Android 用户可以直接在本 GitHub 项目的 Releases 栏目下载 APK 文�
 
 关闭权限以后不会影响程序本体工作，但是将无法扫描二维码。
 
-## 技术栈
+## 许可证
 
-| 名称                                                                    | 简介                                 |
-|-----------------------------------------------------------------------|------------------------------------|
-| [Expo](https://expo.dev/)                                             | 基于 React Native 的跨端框架              |
-| [React Query](https://tanstack.com/query/latest)                      | 异步请求状态管理                           |
-| [React Native Track Player](https://rntp.dev/)                        | 音乐播放器解决方案                          |
-| [FFmpegKit for React Native](https://github.com/arthenica/ffmpeg-kit) | 音频提取和转码处理                          |
-| [Zustand](https://zustand-demo.pmnd.rs/)                              | React 全局状态管理                       |
-| [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv)    | 持久化键值对存储                           |
-| [react-native-saf-x](https://github.com/jd1378/react-native-saf-x)    | 在 Android 通过 SAF 实现文件导出功能          |
-
-## 开发模式
-
-由于本项目引用了若干带有原生代码的第三方库，因此不能使用 Expo Go。开发前，请根据 [这篇文档](https://docs.expo.dev/guides/local-app-development/) 的说明设置好开发环境，构建 Development build 进行开发。
-
-### iOS
-
-```bash
-pnpm run ios
-```
-
-### Android
-
-```bash
-pnpm run android
-```
-
-### Web (Beta，不同于当前线上 Web 版)
-
-```bash
-pnpm run web
-```
-
-## 构建生产版本
-
-构建生产版本以前，需要准备好 keystore 文件 (Android)……
-
-### Android
-
-```bash
-pnpm run build:android
-```
+GPLv3
