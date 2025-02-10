@@ -43,7 +43,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         [
             "react-native-edge-to-edge",
             {
-                enforceNavigationBarContrast: false,
+                android: {
+                    enforceNavigationBarContrast: false,
+                },
             },
         ],
         [
