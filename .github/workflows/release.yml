@@ -26,7 +26,7 @@ jobs:
           else
             echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
             echo "channel=android_github" >> $GITHUB_OUTPUT
-            echo "is_prerelease=''" >> $GITHUB_OUTPUT
+            echo "is_prerelease=" >> $GITHUB_OUTPUT
           fi
 
       - name: 🏗 Decode Keystore
