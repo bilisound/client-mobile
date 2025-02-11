@@ -1266,7 +1266,6 @@ export type UserInfo = {
                 intimacy: number;
                 next_intimacy: number;
                 day_limit: number;
-                today_feed: number;
                 medal_color_start: number;
                 medal_color_end: number;
                 medal_color_border: number;
@@ -1310,7 +1309,8 @@ export type UserInfo = {
             tv_vip_pay_type: number;
             tv_due_date: number;
             avatar_icon: {
-                icon_resource: object;
+                icon_type: number;
+                icon_resource: {};
             };
         };
         pendant: {
@@ -1333,13 +1333,12 @@ export type UserInfo = {
         user_honour_info: {
             mid: number;
             colour: any;
-            tags: any[];
+            tags: Array<any>;
             is_latest_100honour: number;
         };
         is_followed: boolean;
         top_photo: string;
-        theme: object;
-        sys_notice: object;
+        sys_notice: {};
         live_room: {
             roomStatus: number;
             liveStatus: number;
@@ -1392,5 +1391,118 @@ export type UserInfo = {
         };
         certificate_show: boolean;
         name_render: any;
+        top_photo_v2: {
+            sid: number;
+            l_img: string;
+            l_200h_img: string;
+        };
+        theme: any;
+        attestation: {
+            type: number;
+            common_info: {
+                title: string;
+                prefix: string;
+                prefix_title: string;
+            };
+            splice_info: {
+                title: string;
+            };
+            icon: string;
+            desc: string;
+        };
+    };
+};
+
+export type UserSubmission = {
+    code: number;
+    message: string;
+    ttl: number;
+    data: {
+        list: {
+            slist: Array<any>;
+            tlist: Record<
+                string,
+                {
+                    tid: number;
+                    count: number;
+                    name: string;
+                }
+            >;
+            vlist: Array<{
+                comment: number;
+                typeid: number;
+                play: number;
+                pic: string;
+                subtitle: string;
+                description: string;
+                copyright: string;
+                title: string;
+                review: number;
+                author: string;
+                mid: number;
+                created: number;
+                length: string;
+                video_review: number;
+                aid: number;
+                bvid: string;
+                hide_click: boolean;
+                is_pay: number;
+                is_union_video: number;
+                is_steins_gate: number;
+                is_live_playback: number;
+                is_lesson_video: number;
+                is_lesson_finished: number;
+                lesson_update_info: string;
+                jump_url: string;
+                meta?: {
+                    id: number;
+                    title: string;
+                    cover: string;
+                    mid: number;
+                    intro: string;
+                    sign_state: number;
+                    attribute: number;
+                    stat: {
+                        season_id: number;
+                        view: number;
+                        danmaku: number;
+                        reply: number;
+                        favorite: number;
+                        coin: number;
+                        share: number;
+                        like: number;
+                        mtime: number;
+                        vt: number;
+                        vv: number;
+                    };
+                    ep_count: number;
+                    first_aid: number;
+                    ptime: number;
+                    ep_num: number;
+                };
+                is_avoided: number;
+                season_id: number;
+                attribute: number;
+                is_charging_arc: boolean;
+                elec_arc_type: number;
+                vt: number;
+                enable_vt: number;
+                vt_display: string;
+                playback_position: number;
+                is_self_view: boolean;
+            }>;
+        };
+        page: {
+            pn: number;
+            ps: number;
+            count: number;
+        };
+        episodic_button: {
+            text: string;
+            uri: string;
+        };
+        is_risk: boolean;
+        gaia_res_type: number;
+        gaia_data: any;
     };
 };

@@ -78,7 +78,7 @@ export interface GetEpisodeUserResponse {
     };
 }
 
-export type UserListMode = "season" | "series" | "favourite";
+export type UserListMode = "season" | "series";
 
 export interface GetResourceOptions {
     method?: string

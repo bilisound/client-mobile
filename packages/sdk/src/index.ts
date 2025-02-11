@@ -11,7 +11,13 @@ import {
     CacheProvider,
 } from "./types";
 import { filterCdnUrls } from "./cdn";
-import { InitialStateFestivalResponse, InitialStateResponse, WebPlayInfo } from "./types-vendor";
+import {
+    InitialStateFestivalResponse,
+    InitialStateResponse,
+    UserInfo,
+    UserSubmission,
+    WebPlayInfo,
+} from "./types-vendor";
 import { extractJSON, findBestAudio } from "./utils";
 import axiosClient from "axios";
 import { encWbi, getWbiKeys, signParam, WbiKey } from "./wbi";
@@ -186,30 +192,32 @@ export class BilisoundSDK {
         let name = "";
         let description = "";
         let cover = "";
-        if (mode === "season") {
-            // 首先尝试从任意一个视频详情页面抓取完整的合集列表
-            const fullResult = await this.tryGetFullSection(userId, listId);
-            if (fullResult) {
-                return fullResult;
-            }
+        switch (mode) {
+            case "season": // 首先尝试从任意一个视频详情页面抓取完整的合集列表
+                const fullResult = await this.tryGetFullSection(userId, listId);
+                if (fullResult) {
+                    return fullResult;
+                }
 
-            response = await this.getUserSeason(userId, listId, page);
-            const data = response.data;
-            pageSize = data.page.page_size;
-            pageNum = data.page.page_num;
-            total = data.page.total;
-            name = data.meta.name;
-            description = data.meta.description;
-            cover = data.meta.cover;
-        } else {
-            response = await this.getUserSeries(userId, listId, page);
-            const meta = await this.getUserSeriesMeta(listId);
-            pageSize = response.data.page.size;
-            pageNum = response.data.page.num;
-            total = response.data.page.total;
-            name = meta.data.meta.name;
-            description = meta.data.meta.description;
-            cover = response.data.archives[0].pic;
+                response = await this.getUserSeason(userId, listId, page);
+                const data = response.data;
+                pageSize = data.page.page_size;
+                pageNum = data.page.page_num;
+                total = data.page.total;
+                name = data.meta.name;
+                description = data.meta.description;
+                cover = data.meta.cover;
+                break;
+            case "series":
+                response = await this.getUserSeries(userId, listId, page);
+                const meta = await this.getUserSeriesMeta(listId);
+                pageSize = response.data.page.size;
+                pageNum = response.data.page.num;
+                total = response.data.page.total;
+                name = meta.data.meta.name;
+                description = meta.data.meta.description;
+                cover = response.data.archives[0].pic;
+                break;
         }
         const rows = response.data.archives.map(e => ({
             bvid: e.bvid,
@@ -515,7 +523,7 @@ export class BilisoundSDK {
         return cacheData;
     }
 
-    private async getVideoUrlFestival(referer: string, avid: Numberish, bvid: string, cid: Numberish) {
+    private async getVideoUrlFestival(referer: string, avid: Numberish, bvid: string, cid: Numberish): Promise<WebPlayInfo> {
         const cacheKey = `bilisound_getVideoUrlFestival_${avid}_${bvid}_${cid}`;
         const cacheGot = await this.cacheProvider.get(cacheKey);
         if (cacheGot) {
@@ -536,7 +544,7 @@ export class BilisoundSDK {
         return response;
     }
 
-    private async getUserSeason(userId: Numberish, seasonId: Numberish, pageNum = 1) {
+    private async getUserSeason(userId: Numberish, seasonId: Numberish, pageNum = 1): Promise<UserSeasonInfo> {
         const cacheKey = `bilisound_getUserSeason_${userId}_${seasonId}_${pageNum}`;
         const cacheGot = await this.cacheProvider.get(cacheKey);
         if (cacheGot) {
@@ -559,7 +567,7 @@ export class BilisoundSDK {
         return response;
     }
 
-    private async getUserSeries(userId: Numberish, seriesId: Numberish, pageNum = 1) {
+    private async getUserSeries(userId: Numberish, seriesId: Numberish, pageNum = 1): Promise<UserSeriesInfo> {
         const cacheKey = `bilisound_getUserSeries_${userId}_${seriesId}_${pageNum}`;
         const cacheGot = await this.cacheProvider.get(cacheKey);
         if (cacheGot) {
@@ -583,7 +591,7 @@ export class BilisoundSDK {
         return response;
     }
 
-    private async getUserSeriesMeta(seriesId: Numberish) {
+    private async getUserSeriesMeta(seriesId: Numberish): Promise<UserSeriesMetadata> {
         const cacheKey = `bilisound_getUserSeriesMeta_${seriesId}`;
         const cacheGot = await this.cacheProvider.get(cacheKey);
         if (cacheGot) {
@@ -595,6 +603,48 @@ export class BilisoundSDK {
                 series_id: seriesId,
             },
             disableWbi: true,
+        });
+        await this.cacheProvider.set(cacheKey, JSON.stringify(response));
+        return response;
+    }
+
+    private async getUserInfo(mid: number): Promise<UserInfo> {
+        const cacheKey = `bilisound_getUserInfo_${mid}`;
+        const cacheGot = await this.cacheProvider.get(cacheKey);
+        if (cacheGot) {
+            return JSON.parse(cacheGot);
+        }
+        const response = await this.request<UserInfo>({
+            url: "/x/space/wbi/acc/info",
+            params: {
+                mid,
+            },
+            headers: {
+                referer: `https://space.bilibili.com/${mid}`,
+                cookie: `buvid3=760718ff-5ac0-4a29-856e-ae43c305509c`
+            },
+        });
+        await this.cacheProvider.set(cacheKey, JSON.stringify(response));
+        return response;
+    }
+
+    private async getUserSubmission(mid: number, tid: number, pageNum = 1): Promise<UserSubmission> {
+        const cacheKey = `bilisound_getUserSubmission_${mid}_${tid}_${pageNum}`;
+        const cacheGot = await this.cacheProvider.get(cacheKey);
+        if (cacheGot) {
+            return JSON.parse(cacheGot);
+        }
+        const response = await this.request<UserSubmission>({
+            url: "/x/space/wbi/arc/search",
+            params: {
+                mid,
+                tid: tid <= 0 ? undefined : tid,
+                pn: pageNum,
+                ps: 30,
+            },
+            headers: {
+                referer: `https://space.bilibili.com/${mid}/upload/video`,
+            },
         });
         await this.cacheProvider.set(cacheKey, JSON.stringify(response));
         return response;
