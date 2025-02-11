@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import React from "react";
-import { Platform, ScrollView } from "react-native";
+import { Platform, ScrollView, View } from "react-native";
 
 import { SettingMenuItem } from "~/components/setting-menu";
 import { Switch } from "~/components/ui/switch";
@@ -73,86 +73,88 @@ export default function Page() {
     );
 
     return (
-        <Layout title="设置" edgeInsets={edgeInsets}>
-            <ScrollView>
-                <SettingMenuItem
-                    key="settings_10010"
-                    icon={"fa6-solid:link"}
-                    title="使用 av 号而非 bv 号"
-                    subTitle="开启该选项后，在保存的音频文件中，文件名前缀将以 av 号开头"
-                    rightAccessories={
-                        <Switch
-                            value={useLegacyID}
-                            onChange={() => {
-                                toggle("useLegacyID");
-                            }}
-                        />
-                    }
-                    onPress={() => toggle("useLegacyID")}
-                />
-                {Platform.OS === "web" ? null : (
+        <Layout title="设置" edgeInsets={{ ...edgeInsets, bottom: 0 }}>
+            <ScrollView className={"flex-1"}>
+                <View style={{ bottom: edgeInsets.bottom }}>
                     <SettingMenuItem
-                        key="settings_10020"
-                        icon={"fa6-solid:cloud-arrow-down"}
-                        title="自动缓存队列中的曲目"
-                        subTitle="可以显著改善持续听歌的体验"
+                        key="settings_10010"
+                        icon={"fa6-solid:link"}
+                        title="使用 av 号而非 bv 号"
+                        subTitle="开启该选项后，在保存的音频文件中，文件名前缀将以 av 号开头"
                         rightAccessories={
                             <Switch
-                                value={downloadNextTrack}
+                                value={useLegacyID}
                                 onChange={() => {
-                                    toggle("downloadNextTrack");
+                                    toggle("useLegacyID");
                                 }}
                             />
                         }
-                        onPress={() => toggle("downloadNextTrack")}
+                        onPress={() => toggle("useLegacyID")}
                     />
-                )}
-                <SettingMenuItem
-                    key="settings_10030"
-                    icon={"fa6-solid:paintbrush"}
-                    title="外观设置"
-                    subTitle="切换应用主题和看板娘显示"
-                    onPress={async () => {
-                        router.navigate("/settings/theme");
-                    }}
-                />
-                <SettingMenuItem
-                    key="settings_10040"
-                    icon={"fa6-solid:database"}
-                    title="数据管理"
-                    subTitle={Platform.OS === "web" ? "管理数据备份" : "管理离线缓存和数据备份"}
-                    onPress={async () => {
-                        router.navigate("/settings/data");
-                    }}
-                />
-                <SettingMenuItem
-                    key="settings_10050"
-                    icon={"fa6-solid:circle-info"}
-                    title="关于 Bilisound"
-                    subTitle={`版本 ${VERSION}`}
-                    onPress={async () => {
-                        router.navigate("/settings/about");
-                    }}
-                />
-                <SettingMenuItem
-                    key="settings_10060"
-                    icon={"fa6-solid:code"}
-                    title="开发者模式"
-                    rightAccessories={
-                        <Switch
-                            value={debugMode}
-                            onChange={() => {
-                                const result = toggle("debugMode");
-                                log.setSeverity(result ? "debug" : "info");
-                            }}
+                    {Platform.OS === "web" ? null : (
+                        <SettingMenuItem
+                            key="settings_10020"
+                            icon={"fa6-solid:cloud-arrow-down"}
+                            title="自动缓存队列中的曲目"
+                            subTitle="可以显著改善持续听歌的体验"
+                            rightAccessories={
+                                <Switch
+                                    value={downloadNextTrack}
+                                    onChange={() => {
+                                        toggle("downloadNextTrack");
+                                    }}
+                                />
+                            }
+                            onPress={() => toggle("downloadNextTrack")}
                         />
-                    }
-                    onPress={() => {
-                        const result = toggle("debugMode");
-                        log.setSeverity(result ? "debug" : "info");
-                    }}
-                />
-                {debugMode ? developerOptions : null}
+                    )}
+                    <SettingMenuItem
+                        key="settings_10030"
+                        icon={"fa6-solid:paintbrush"}
+                        title="外观设置"
+                        subTitle="切换应用主题和看板娘显示"
+                        onPress={async () => {
+                            router.navigate("/settings/theme");
+                        }}
+                    />
+                    <SettingMenuItem
+                        key="settings_10040"
+                        icon={"fa6-solid:database"}
+                        title="数据管理"
+                        subTitle={Platform.OS === "web" ? "管理数据备份" : "管理离线缓存和数据备份"}
+                        onPress={async () => {
+                            router.navigate("/settings/data");
+                        }}
+                    />
+                    <SettingMenuItem
+                        key="settings_10050"
+                        icon={"fa6-solid:circle-info"}
+                        title="关于 Bilisound"
+                        subTitle={`版本 ${VERSION}`}
+                        onPress={async () => {
+                            router.navigate("/settings/about");
+                        }}
+                    />
+                    <SettingMenuItem
+                        key="settings_10060"
+                        icon={"fa6-solid:code"}
+                        title="开发者模式"
+                        rightAccessories={
+                            <Switch
+                                value={debugMode}
+                                onChange={() => {
+                                    const result = toggle("debugMode");
+                                    log.setSeverity(result ? "debug" : "info");
+                                }}
+                            />
+                        }
+                        onPress={() => {
+                            const result = toggle("debugMode");
+                            log.setSeverity(result ? "debug" : "info");
+                        }}
+                    />
+                    {debugMode ? developerOptions : null}
+                </View>
             </ScrollView>
         </Layout>
     );
