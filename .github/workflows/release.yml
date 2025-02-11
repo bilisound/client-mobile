@@ -6,8 +6,7 @@ on:
     tags:
       - '*'
     branches:
-      - ci-debug
-      - next
+      - main
 
 jobs:
   build:
@@ -19,7 +18,7 @@ jobs:
       - name: 🏗 Generate build version
         id: build_version
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/next" ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "version=v0.0.0-next-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
             echo "channel=android_github_beta" >> $GITHUB_OUTPUT
             echo "is_prerelease=--prerelease" >> $GITHUB_OUTPUT
@@ -82,6 +81,7 @@ jobs:
         uses: ffurrer2/extract-release-notes@v2
         with:
           changelog_file: apps/mobile/CHANGELOG.md
+          prerelease: ${{ github.ref == 'refs/heads/main' }}
 
       - name: 🚀 Create Release
         working-directory: apps/mobile
