@@ -39,6 +39,7 @@ import { openAddPlaylistPage } from "~/business/playlist/misc";
 import { Monicon } from "@monicon/native";
 import { Box } from "~/components/ui/box";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { useCacheExists } from "~/storage/cache-status";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -192,9 +193,16 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                 ) : (
                     <SkeletonText lineSize={6} fontSize={14} lineHeight={21} />
                 )}
-                <View className={"mt-4 flex-row gap-2"}>
+                <View className={"mt-4 flex-row flex-wrap gap-2"}>
                     {data ? (
                         <>
+                            {/* todo 区分单分 P（本页操作）和多分 P（新开页操作），实现不同的下载逻辑 */}
+                            <ButtonOuter className={"rounded-full"}>
+                                <Button className={"rounded-full"} onPress={() => {}}>
+                                    <ButtonMonIcon name={"fa6-solid:download"} size={16} />
+                                    <ButtonText>下载</ButtonText>
+                                </Button>
+                            </ButtonOuter>
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"} onPress={handleCreatePlaylist}>
                                     <ButtonMonIcon name={"fa6-solid:plus"} size={16} />

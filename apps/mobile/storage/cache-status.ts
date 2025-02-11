@@ -1,4 +1,4 @@
-import { MMKV } from "react-native-mmkv";
+import { MMKV, useMMKVBoolean } from "react-native-mmkv";
 
 export interface CacheMetadata {
     name: string;
@@ -11,3 +11,7 @@ export const CACHE_STATUS_VERSION = "cache_status_version";
 
 // 键格式：[BV 号]_[分 P 编号]
 export const cacheStatusStorage = new MMKV({ id: "cache-status" });
+
+export function useCacheExists(id?: string, episode?: string | number) {
+    return useMMKVBoolean(id + "_" + episode, cacheStatusStorage)[0];
+}

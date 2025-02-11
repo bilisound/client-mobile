@@ -4,7 +4,7 @@ import { useMMKVBoolean } from "react-native-mmkv";
 
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Text } from "~/components/ui/text";
-import { cacheStatusStorage } from "~/storage/cache-status";
+import { cacheStatusStorage, useCacheExists } from "~/storage/cache-status";
 import { PlaylistDetail } from "~/storage/sqlite/schema";
 import { formatSecond } from "~/utils/datetime";
 
@@ -88,7 +88,7 @@ export function SongItem({
     const activeTrack = useCurrentTrack();
     const isActiveTrack =
         data && data.bvid === activeTrack?.extendedData?.id && data.episode === activeTrack?.extendedData?.episode;
-    const [existsRaw] = useMMKVBoolean(data?.bvid + "_" + data?.episode, cacheStatusStorage);
+    const existsRaw = useCacheExists(data?.bvid, data?.episode);
     const exists = data && existsRaw;
 
     const inner = (
