@@ -35,10 +35,12 @@ export async function downloadResource(bvid: string, episode: number) {
 
     log.debug(prefix + "本地缓存无对应内容，开始请求网络资源");
     // 在状态管理器创建下载任务
+    const startTime = new Date().getTime();
     updateDownloadItem(id, {
         id: playingRequest.id,
         episode: playingRequest.episode,
         path: checkUrl,
+        startTime,
         progress: {
             totalBytesExpectedToWrite: 0,
             totalBytesWritten: 0,
@@ -74,6 +76,7 @@ export async function downloadResource(bvid: string, episode: number) {
                 id: playingRequest.id,
                 episode: playingRequest.episode,
                 path: downloadTargetFileUrl,
+                startTime,
                 progress: cb,
             });
         },

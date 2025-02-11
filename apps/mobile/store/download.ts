@@ -6,6 +6,7 @@ export interface DownloadItem {
     episode: number;
     path: string;
     progress: DownloadProgressData;
+    startTime: number;
 }
 
 export interface DownloadProps {
