@@ -3,7 +3,7 @@ import * as SystemUI from "expo-system-ui";
 import "~/global.css";
 import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
 import React, { useEffect, useRef, useState } from "react";
-import { Linking, Platform, useColorScheme, useWindowDimensions } from "react-native";
+import { Linking, Platform, useColorScheme } from "react-native";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { SystemBars } from "react-native-edge-to-edge";
 import { useFonts } from "expo-font";
@@ -92,7 +92,6 @@ export default function RootLayout() {
     const isInitializing = useRef(false);
     const colorScheme = useColorScheme();
     const edgeInsets = useSafeAreaInsets();
-    const { width, height } = useWindowDimensions();
 
     // Expo Router uses Error Boundaries to catch errors in the navigation tree.
     useEffect(() => {
@@ -114,16 +113,12 @@ export default function RootLayout() {
     }, [loaded]);
 
     useEffect(() => {
-        SystemUI.setBackgroundColorAsync(colorScheme === "dark" ? "#121212" : "#ffffff");
-    }, [colorScheme]);
-
-    useEffect(() => {
         (async () => {
             await SystemUI.setBackgroundColorAsync(
                 colorScheme === "dark" || Platform.OS === "ios" ? "#171717" : "#ffffff",
             );
         })();
-    }, [colorScheme, width, height]);
+    }, [colorScheme]);
 
     if (!loaded) {
         return null;
@@ -141,66 +136,6 @@ export default function RootLayout() {
                                     headerShown: false,
                                 }}
                             >
-                                <Stack.Screen
-                                    name={"(main)"}
-                                    options={{
-                                        headerShown: false,
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={"video/[id]"}
-                                    options={{
-                                        headerShown: false,
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={"settings/about"}
-                                    options={{
-                                        headerShown: false,
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={"settings/data"}
-                                    options={{
-                                        headerShown: false,
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={"settings/theme"}
-                                    options={{
-                                        headerShown: false,
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={"remote-list"}
-                                    options={{
-                                        headerShown: false,
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={"apply-playlist"}
-                                    options={{
-                                        headerShown: false,
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={"barcode"}
-                                    options={{
-                                        headerShown: false,
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={"history"}
-                                    options={{
-                                        headerShown: false,
-                                    }}
-                                />
-                                <Stack.Screen
-                                    name={"test"}
-                                    options={{
-                                        headerShown: false,
-                                    }}
-                                />
                                 <Stack.Screen
                                     name="description"
                                     options={{
