@@ -39,7 +39,6 @@ import { openAddPlaylistPage } from "~/business/playlist/misc";
 import { Monicon } from "@monicon/native";
 import { Box } from "~/components/ui/box";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import { useCacheExists } from "~/storage/cache-status";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -48,12 +47,13 @@ interface LongPressActionsProps {
     displayTrack?: PageItem;
     onClose: () => void;
     onAction: (action: "addPlaylist" | "addPlaylistRecent" | "close") => void;
+    data?: GetMetadataResponse;
 }
 
 /**
  * 长按操作
  */
-function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
+function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, data }: LongPressActionsProps) {
     const { colorValue } = useRawThemeValues();
 
     return (
@@ -64,11 +64,19 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                     <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
                 {!!displayTrack && (
-                    <View className="flex items-start w-full px-4 py-4 gap-1">
-                        <Text className="font-bold" isTruncated>
-                            {displayTrack.part}
-                        </Text>
-                        <Text className="text-sm opacity-60">{formatSecond(displayTrack.duration)}</Text>
+                    <View className={"flex-row items-center px-4 py-4 gap-4"}>
+                        {data ? (
+                            <Image
+                                source={getImageProxyUrl(data.pic, "https://www.bilibili.com/video/" + data.bvid)}
+                                className={"h-12 aspect-[3/2] rounded-lg flex-0 basis-auto"}
+                            />
+                        ) : null}
+                        <View className="flex-1 items-start w-full gap-1.5">
+                            <Text className="font-bold" isTruncated>
+                                {displayTrack.part}
+                            </Text>
+                            <Text className="text-sm opacity-60">{formatSecond(displayTrack.duration)}</Text>
+                        </View>
                     </View>
                 )}
                 <ActionsheetItem onPress={() => onAction("addPlaylist")}>
@@ -353,6 +361,7 @@ export default function Page() {
                     }
                 }}
                 displayTrack={displayTrack}
+                data={data}
             />
         </GestureHandlerRootView>
     );
