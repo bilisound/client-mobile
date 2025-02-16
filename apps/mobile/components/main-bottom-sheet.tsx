@@ -497,6 +497,28 @@ function PlayerControlMenu() {
         {
             show: true,
             disabled: false,
+            icon: "fa6-solid:eye",
+            iconSize: 16,
+            text: "查看详情",
+            action: () => {
+                if (!currentTrack?.extendedData) {
+                    return;
+                }
+                handleClose();
+                if (!isInsidePage) {
+                    useBottomSheetStore.getState().close();
+                }
+                setTimeout(
+                    () => {
+                        router.navigate(`/video/${currentTrack.extendedData?.id}`);
+                    },
+                    isInsidePage ? 0 : 250,
+                );
+            },
+        },
+        {
+            show: true,
+            disabled: false,
             icon: "fa6-solid:plus",
             iconSize: 18,
             text: "添加到歌单",
