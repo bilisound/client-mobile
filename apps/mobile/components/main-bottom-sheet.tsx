@@ -1,14 +1,4 @@
-import React, {
-    useCallback,
-    useMemo,
-    useRef,
-    useEffect,
-    useState,
-    Dispatch,
-    SetStateAction,
-    createContext,
-    useContext,
-} from "react";
+import React, { useCallback, useMemo, useRef, useEffect, useState, Dispatch, SetStateAction, useContext } from "react";
 import { BottomSheetBackdrop, BottomSheetFlashList, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
@@ -48,7 +38,6 @@ import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { useProgressSecond } from "~/hooks/useProgressSecond";
 import { formatSecond } from "~/utils/datetime";
 import { router } from "expo-router";
-import { TrackData } from "@bilisound/player/build/types";
 import * as TabsPrimitive from "@rn-primitives/tabs";
 import { SongItem } from "~/components/song-item";
 import { useRepeatMode } from "@bilisound/player/build/hooks/useRepeatMode";
@@ -74,7 +63,6 @@ import { SliderFilledTrack, SliderThumb, SliderTrack, Slider as GSSlider } from 
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import { CheckIcon } from "~/components/ui/icon";
 import { usePlaybackSpeedStore } from "~/store/playback-speed";
-import { createWithEqualityFn } from "zustand/traditional";
 import { usePlaylistRestoreLoopOnceFlag } from "~/storage/playlist";
 import { getBilisoundResourceUrlOnline } from "~/api/bilisound";
 import { downloadResource } from "~/business/download";
@@ -88,58 +76,9 @@ import { bv2av } from "~/utils/vendors/av-bv";
 import log from "~/utils/logger";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
-
-interface ActionSheetState {
-    showActionSheet: boolean;
-    showSpeedActionSheet: boolean;
-    setShowActionSheet: (value: boolean) => void;
-    setShowSpeedActionSheet: (value: boolean) => void;
-    handleClose: () => void;
-    handleSpeedClose: () => void;
-}
-
-const useActionSheetStore = createWithEqualityFn<ActionSheetState>(set => ({
-    showActionSheet: false,
-    showSpeedActionSheet: false,
-    setShowActionSheet: value => set(() => ({ showActionSheet: value })),
-    setShowSpeedActionSheet: value => set(() => ({ showSpeedActionSheet: value })),
-    handleClose: () => set(() => ({ showActionSheet: false })),
-    handleSpeedClose: () => set(() => ({ showSpeedActionSheet: false })),
-}));
-
-// const DEBUG_COLOR = ["bg-red-500", "bg-yellow-500", "bg-green-500"];
-const DEBUG_COLOR = ["", "", ""];
-
-const TABS = [
-    {
-        value: "current",
-        label: "正在播放",
-    },
-    {
-        value: "list",
-        label: "播放队列",
-    },
-];
-
-const SPEED_PRESETS = [
-    { speed: 0.8, text: "0.8x" },
-    { speed: 0.9, text: "0.9x" },
-    { speed: 1, text: "1x" },
-    { speed: 1.1, text: "1.1x" },
-    { speed: 1.2, text: "1.2x" },
-];
-
-const REPEAT_MODE = {
-    0: { name: "关闭循环", icon: "tabler:repeat-off", toastText: "关闭循环" },
-    1: { name: "单曲循环", icon: "tabler:repeat-once", toastText: "使用单曲循环" },
-    2: { name: "列表循环", icon: "tabler:repeat", toastText: "使用列表循环" },
-};
-
-export const InsidePageContext = createContext(false);
-
-function isLoading(activeTrack: TrackData | null | undefined, duration: number) {
-    return activeTrack?.uri === PLACEHOLDER_AUDIO || duration <= 0;
-}
+import { InsidePageContext, isLoading } from "./main-bottom-sheet/utils";
+import { DEBUG_COLOR, TABS, REPEAT_MODE, SPEED_PRESETS } from "./main-bottom-sheet/constants";
+import { useActionSheetStore } from "~/components/main-bottom-sheet/stores";
 
 function PlayButtonIcon({ size = 28 }: { size?: number }) {
     const duration = 200;
