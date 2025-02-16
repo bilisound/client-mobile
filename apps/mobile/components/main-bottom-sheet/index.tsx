@@ -7,7 +7,7 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/notify-toast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { DEBUG_COLOR } from "./constants";
-import { PlayerControl } from "~/components/main-bottom-sheet/components/player-control";
+import { PlayerControl } from "./components/player-control";
 
 export function MainBottomSheet() {
     const edgeInsets = useSafeAreaInsets();

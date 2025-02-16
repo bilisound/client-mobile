@@ -34,7 +34,7 @@ import { SPEED_PRESETS } from "~/components/main-bottom-sheet/constants";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import { CheckIcon } from "~/components/ui/icon";
-import { SpeedControlPanel } from "~/components/main-bottom-sheet/components/speed-control-panel";
+import { SpeedControlPanel } from "./speed-control-panel";
 
 export function PlayerControlMenu() {
     const isInsidePage = useContext(InsidePageContext);

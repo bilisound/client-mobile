@@ -11,16 +11,16 @@ import { LayoutButton } from "~/components/layout-button";
 import * as TabsPrimitive from "@rn-primitives/tabs";
 import { DEBUG_COLOR, TABS } from "~/components/main-bottom-sheet/constants";
 import { Text } from "~/components/ui/text";
-import { PlayerPicture } from "~/components/main-bottom-sheet/components/player-picture";
-import { PlayerQueueList } from "~/components/main-bottom-sheet/components/player-queue-list";
+import { PlayerPicture } from "./player-picture";
+import { PlayerQueueList } from "./player-queue-list";
 import { Pressable } from "~/components/ui/pressable";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Marquee } from "@animatereactnative/marquee";
 import { LinearGradient } from "expo-linear-gradient";
-import { PlayerProgressBar } from "~/components/main-bottom-sheet/components/player-progress-bar";
-import { PlayerProgressTimer } from "~/components/main-bottom-sheet/components/player-progress-timer";
-import { PlayerControlButtons } from "~/components/main-bottom-sheet/components/player-control-buttons";
-import { PlayerControlMenu } from "~/components/main-bottom-sheet/components/player-control-menu";
+import { PlayerProgressBar } from "./player-progress-bar";
+import { PlayerProgressTimer } from "./player-progress-timer";
+import { PlayerControlButtons } from "./player-control-buttons";
+import { PlayerControlMenu } from "./player-control-menu";
 
 export function PlayerControl() {
     const isInsidePage = useContext(InsidePageContext);

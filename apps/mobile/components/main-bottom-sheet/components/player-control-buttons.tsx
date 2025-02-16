@@ -22,7 +22,7 @@ import { setMode } from "~/business/playlist/shuffle";
 import { View } from "react-native";
 import { Button, ButtonOuter } from "~/components/ui/button";
 import { Monicon } from "@monicon/native";
-import { PlayButtonIcon } from "~/components/main-bottom-sheet/components/play-button-icon";
+import { PlayButtonIcon } from "./play-button-icon";
 
 export function PlayerControlButtons() {
     const { colorValue } = useRawThemeValues();
