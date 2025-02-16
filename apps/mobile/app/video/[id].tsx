@@ -197,12 +197,14 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                     {data ? (
                         <>
                             {/* todo 区分单分 P（本页操作）和多分 P（新开页操作），实现不同的下载逻辑 */}
-                            <ButtonOuter className={"rounded-full"}>
-                                <Button className={"rounded-full"} onPress={() => {}}>
-                                    <ButtonMonIcon name={"fa6-solid:download"} size={16} />
-                                    <ButtonText>下载</ButtonText>
-                                </Button>
-                            </ButtonOuter>
+                            {process.env.NODE_ENV === "development" ? (
+                                <ButtonOuter className={"rounded-full"}>
+                                    <Button className={"rounded-full"} onPress={() => {}}>
+                                        <ButtonMonIcon name={"fa6-solid:download"} size={16} />
+                                        <ButtonText>下载</ButtonText>
+                                    </Button>
+                                </ButtonOuter>
+                            ) : null}
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"} onPress={handleCreatePlaylist}>
                                     <ButtonMonIcon name={"fa6-solid:plus"} size={16} />
