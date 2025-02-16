@@ -4,52 +4,25 @@ import type { BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { Text } from "~/components/ui/text";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import {
-    getRepeatMode,
-    jump,
-    next,
-    prev,
-    RepeatMode,
-    seek,
-    setRepeatMode,
-    toggle,
-    useCurrentTrack,
-    useIsPlaying,
-    useQueue,
-} from "@bilisound/player";
+import { jump, toggle, useCurrentTrack, useQueue } from "@bilisound/player";
 import { Image } from "expo-image";
-import { ActivityIndicator, BackHandler, Platform, useWindowDimensions, View } from "react-native";
+import { BackHandler, Platform, useWindowDimensions, View } from "react-native";
 import { breakpoints, shadow } from "~/constants/styles";
 import { Pressable } from "~/components/ui/pressable";
-import { NativeViewGestureHandler } from "react-native-gesture-handler";
-import { Slider } from "@miblanchard/react-native-slider";
-import Animated, {
-    Easing,
-    ReduceMotion,
-    useAnimatedStyle,
-    useSharedValue,
-    withRepeat,
-    withTiming,
-} from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
-import { PLACEHOLDER_AUDIO } from "~/constants/playback";
 import { Monicon } from "@monicon/native";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
-import { useProgressSecond } from "~/hooks/useProgressSecond";
 import { formatSecond } from "~/utils/datetime";
 import { router } from "expo-router";
 import * as TabsPrimitive from "@rn-primitives/tabs";
 import { SongItem } from "~/components/song-item";
-import { useRepeatMode } from "@bilisound/player/build/hooks/useRepeatMode";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "~/components/notify-toast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { convertToHTTPS } from "~/utils/string";
 import { LayoutButton } from "~/components/layout-button";
 import { FlashList } from "@shopify/flash-list";
-import { QUEUE_PLAYING_MODE, queueStorage } from "~/storage/queue";
-import { useMMKVBoolean, useMMKVString } from "react-native-mmkv";
-import { setMode } from "~/business/playlist/shuffle";
+import { useMMKVBoolean } from "react-native-mmkv";
 import {
     Actionsheet,
     ActionsheetBackdrop,
@@ -63,7 +36,6 @@ import { SliderFilledTrack, SliderThumb, SliderTrack, Slider as GSSlider } from 
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import { CheckIcon } from "~/components/ui/icon";
 import { usePlaybackSpeedStore } from "~/store/playback-speed";
-import { usePlaylistRestoreLoopOnceFlag } from "~/storage/playlist";
 import { getBilisoundResourceUrlOnline } from "~/api/bilisound";
 import { downloadResource } from "~/business/download";
 import { CACHE_INVALID_KEY_DO_NOT_USE, cacheStatusStorage } from "~/storage/cache-status";
@@ -75,333 +47,13 @@ import useSettingsStore from "~/store/settings";
 import { bv2av } from "~/utils/vendors/av-bv";
 import log from "~/utils/logger";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { ActionSheetCurrent } from "~/components/action-sheet-current";
-import { InsidePageContext, isLoading } from "./main-bottom-sheet/utils";
-import { DEBUG_COLOR, TABS, REPEAT_MODE, SPEED_PRESETS } from "./main-bottom-sheet/constants";
-import { useActionSheetStore } from "~/components/main-bottom-sheet/stores";
-
-function PlayButtonIcon({ size = 28 }: { size?: number }) {
-    const duration = 200;
-    const isPlaying = useIsPlaying();
-    const { colorValue } = useRawThemeValues();
-
-    const pauseScale = useSharedValue(isPlaying ? 1 : 0);
-    const pauseOpacity = useSharedValue(isPlaying ? 1 : 0);
-    const playScale = useSharedValue(isPlaying ? 0 : 1);
-    const playOpacity = useSharedValue(isPlaying ? 0 : 1);
-
-    useEffect(() => {
-        pauseScale.value = withTiming(isPlaying ? 1 : 0, { duration, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
-        pauseOpacity.value = withTiming(isPlaying ? 1 : 0, {
-            duration,
-            easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-        });
-        playScale.value = withTiming(isPlaying ? 0 : 1, { duration, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
-        playOpacity.value = withTiming(isPlaying ? 0 : 1, { duration, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
-    }, [isPlaying, pauseOpacity, pauseScale, playOpacity, playScale]);
-
-    const pauseAnimatedStyle = useAnimatedStyle(() => {
-        return {
-            transform: [{ scale: pauseScale.value }],
-            opacity: pauseOpacity.value,
-        };
-    });
-
-    const playAnimatedStyle = useAnimatedStyle(() => {
-        return {
-            transform: [{ scale: playScale.value }],
-            opacity: playOpacity.value,
-        };
-    });
-
-    if (isLoading(useCurrentTrack(), useProgressSecond().duration)) {
-        return <ActivityIndicator size={size} className={"size-8"} color={colorValue("--color-background-0")} />;
-    }
-
-    return (
-        <View className="relative size-8">
-            <Animated.View style={pauseAnimatedStyle} className="absolute size-full items-center justify-center">
-                <Monicon name="fa6-solid:pause" size={size / 0.875} color={colorValue("--color-background-0")} />
-            </Animated.View>
-            <Animated.View style={playAnimatedStyle} className="absolute size-full items-center justify-center">
-                <Monicon name="fa6-solid:play" size={size} color={colorValue("--color-background-0")} />
-            </Animated.View>
-        </View>
-    );
-}
-
-function PlayerProgressBar() {
-    const { colorValue } = useRawThemeValues();
-
-    const [value, setValue] = useState(0);
-    const [holding, setHolding] = useState(false);
-
-    // 进度提示
-    const [glowTotalWidth, setGlowTotalWidth] = useState(0);
-    const glowWidth = glowTotalWidth * 1.5;
-    const glowPosition = useSharedValue<number>(0);
-
-    useEffect(() => {
-        glowPosition.value = withRepeat(
-            withTiming(glowTotalWidth + glowWidth, { duration: 1000 }),
-            -1,
-            false,
-            () => {},
-            ReduceMotion.System,
-        );
-    }, [glowPosition, glowTotalWidth, glowWidth]);
-
-    // 播放状态
-    const activeTrack = useCurrentTrack();
-    const { position, buffered, duration } = useProgressSecond();
-
-    useEffect(() => {
-        if (!holding) {
-            setValue(position);
-        }
-    }, [holding, position]);
-
-    const animatedStyle = useAnimatedStyle(() => ({
-        transform: [{ translateX: glowPosition.value - glowWidth }],
-    }));
-
-    if (isLoading(activeTrack, duration)) {
-        return (
-            <View
-                onLayout={e => setGlowTotalWidth(e.nativeEvent.layout.width - 20)}
-                className="h-4 justify-center flex-1 relative px-2"
-            >
-                <View className="h-[0.1875rem] rounded-full overflow-hidden bg-primary-100 dark:bg-primary-100">
-                    <Animated.View style={[{ width: glowWidth, height: 3 }, animatedStyle]}>
-                        <LinearGradient
-                            colors={[
-                                colorValue("--color-primary-100"),
-                                colorValue("--color-primary-400"),
-                                colorValue("--color-primary-100"),
-                            ]}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            className="w-full h-full"
-                        />
-                    </Animated.View>
-                </View>
-            </View>
-        );
-    }
-
-    return (
-        <NativeViewGestureHandler disallowInterruption={true}>
-            <View className="h-4 justify-center flex-1 relative">
-                <View className="left-[8px] right-[8px] top-[6.5px] h-[0.1875rem] rounded-full absolute overflow-hidden bg-background-50">
-                    <View
-                        style={{
-                            width: activeTrack?.extendedData?.isLoaded ? "100%" : `${(buffered / duration) * 100}%`,
-                        }}
-                        className="h-full absolute bg-background-200"
-                    />
-                    <View
-                        style={{ width: `${(value / duration) * 100}%` }}
-                        className="h-full absolute bg-primary-500"
-                    />
-                </View>
-                <View className="absolute px-2 w-full">
-                    <Slider
-                        value={value}
-                        onValueChange={([v]) => setValue(v)}
-                        onSlidingStart={() => {
-                            setValue(position);
-                            setHolding(true);
-                        }}
-                        onSlidingComplete={async val => {
-                            await seek(val[0]);
-                            setHolding(false);
-                        }}
-                        minimumValue={0}
-                        maximumValue={duration}
-                        containerStyle={{ width: "100%" }}
-                        trackStyle={{
-                            backgroundColor: "transparent",
-                        }}
-                        minimumTrackStyle={{
-                            backgroundColor: "transparent",
-                        }}
-                        renderThumbComponent={() => <View className="w-4 h-4 bg-primary-500 rounded-full" />}
-                    />
-                </View>
-            </View>
-        </NativeViewGestureHandler>
-    );
-}
-
-function PlayerProgressTimer() {
-    // 播放状态
-    const activeTrack = useCurrentTrack();
-    const { position } = useProgressSecond();
-
-    let from = formatSecond(position);
-    let to = activeTrack ? formatSecond(activeTrack.duration || 0) : "--:--";
-
-    if (activeTrack?.uri === PLACEHOLDER_AUDIO) {
-        from = "00:00";
-    }
-
-    return (
-        <View className={"flex-row justify-between px-8 " + DEBUG_COLOR[1]}>
-            <Text
-                className={"text-sm text-typography-500 tabular-nums"}
-                style={{
-                    fontFamily: "Roboto_400Regular",
-                }}
-            >
-                {from}
-            </Text>
-            <Text
-                className={"text-sm text-typography-500 tabular-nums"}
-                style={{
-                    fontFamily: "Roboto_400Regular",
-                }}
-            >
-                {to}
-            </Text>
-        </View>
-    );
-}
-
-function PlayerControlButtons() {
-    const { colorValue } = useRawThemeValues();
-    const isPlaying = useIsPlaying();
-    const repeatModeRaw = useRepeatMode();
-    const [queuePlayingMode] = useMMKVString(QUEUE_PLAYING_MODE, queueStorage);
-    const [restoreLoopOnceFlag] = usePlaylistRestoreLoopOnceFlag();
-    const repeatMode = restoreLoopOnceFlag ? RepeatMode.ONE : repeatModeRaw;
-
-    const [layoutWidth, setLayoutWidth] = useState(384);
-    const isNarrow = layoutWidth < 384;
-
-    const iconSize = isNarrow ? 24 : 28;
-    const iconJumpSize = isNarrow ? 38 : 44;
-    const iconToolSize = 24;
-
-    const buttonSize = isNarrow ? "w-14 h-14" : "w-16 h-16";
-    const buttonToolSize = "w-12 h-12";
-
-    const loading = isLoading(useCurrentTrack(), useProgressSecond().duration);
-    const buttonDisabled = restoreLoopOnceFlag || loading;
-
-    async function handleChangeRepeatMode() {
-        switch (repeatMode) {
-            case RepeatMode.OFF:
-                await setRepeatMode(RepeatMode.ONE);
-                break;
-            case RepeatMode.ONE:
-                await setRepeatMode(RepeatMode.ALL);
-                break;
-            case RepeatMode.ALL:
-                await setRepeatMode(RepeatMode.OFF);
-                break;
-        }
-        Toast.show({
-            type: "info",
-            text1: REPEAT_MODE[await getRepeatMode()].toastText,
-        });
-    }
-
-    async function handleChangeShuffle() {
-        const result = await setMode();
-        if (result === "normal") {
-            Toast.show({
-                type: "info",
-                text1: "随机模式关闭",
-            });
-        } else {
-            Toast.show({
-                type: "info",
-                text1: "随机模式开启",
-            });
-        }
-    }
-
-    return (
-        <View
-            className={`flex-row justify-between items-center pt-2 pb-8 px-4 md:pb-0 ` + DEBUG_COLOR[1]}
-            onLayout={e => setLayoutWidth(e.nativeEvent.layout.width)}
-        >
-            {/* 左侧按钮（循环模式） */}
-            <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
-                <Button
-                    aria-label={REPEAT_MODE[repeatMode].name}
-                    className={buttonToolSize}
-                    onPress={() => handleChangeRepeatMode()}
-                    variant={"ghost"}
-                    disabled={buttonDisabled}
-                >
-                    <View className={"size-[44px] items-center justify-center"}>
-                        <Monicon
-                            name={REPEAT_MODE[repeatMode].icon}
-                            size={iconToolSize}
-                            color={colorValue("--color-primary-500")}
-                        />
-                    </View>
-                </Button>
-            </ButtonOuter>
-
-            {/* 中间按钮（播放控制） */}
-            <View className={`flex-row justify-center ${isNarrow ? "gap-3" : "gap-4"} ` + DEBUG_COLOR[1]}>
-                <ButtonOuter className={`rounded-full ${buttonSize}`}>
-                    <Button aria-label={"上一首"} className={buttonSize} onPress={() => prev()} variant={"ghost"}>
-                        <View className={"size-[44px] items-center justify-center"}>
-                            <Monicon
-                                name={"ri:skip-back-mini-fill"}
-                                size={iconJumpSize}
-                                color={colorValue("--color-primary-500")}
-                            />
-                        </View>
-                    </Button>
-                </ButtonOuter>
-                <ButtonOuter className={`rounded-full ${buttonSize}`}>
-                    <Button
-                        disabled={buttonDisabled}
-                        aria-label={isPlaying ? "暂停" : "播放"}
-                        className={buttonSize}
-                        onPress={() => toggle()}
-                    >
-                        <PlayButtonIcon size={iconSize} />
-                    </Button>
-                </ButtonOuter>
-                <ButtonOuter className={`rounded-full ${buttonSize}`}>
-                    <Button aria-label={"下一首"} className={buttonSize} onPress={() => next()} variant={"ghost"}>
-                        <View className={"size-[44px] items-center justify-center rotate-180"}>
-                            <Monicon
-                                name={"ri:skip-back-mini-fill"}
-                                size={iconJumpSize}
-                                color={colorValue("--color-primary-500")}
-                            />
-                        </View>
-                    </Button>
-                </ButtonOuter>
-            </View>
-
-            {/* 右侧按钮（随机模式） */}
-            <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
-                <Button
-                    aria-label={"循环模式"}
-                    className={buttonToolSize}
-                    onPress={() => handleChangeShuffle()}
-                    variant={"ghost"}
-                    disabled={buttonDisabled}
-                >
-                    <View className={"size-[44px] items-center justify-center"}>
-                        <Monicon
-                            name={queuePlayingMode === "shuffle" ? "tabler:arrows-shuffle" : "tabler:arrows-right"}
-                            size={iconToolSize}
-                            color={colorValue("--color-primary-500")}
-                        />
-                    </View>
-                </Button>
-            </ButtonOuter>
-        </View>
-    );
-}
+import { ActionSheetCurrent } from "../action-sheet-current";
+import { InsidePageContext } from "./utils";
+import { DEBUG_COLOR, TABS, SPEED_PRESETS } from "./constants";
+import { useActionSheetStore } from "./stores";
+import { PlayerProgressBar } from "./components/player-progress-bar";
+import { PlayerProgressTimer } from "./components/player-progress-timer";
+import { PlayerControlButtons } from "./components/player-control-buttons";
 
 function PlayerControlMenu() {
     const isInsidePage = useContext(InsidePageContext);

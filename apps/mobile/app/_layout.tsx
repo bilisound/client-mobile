@@ -21,12 +21,12 @@ import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { refreshCurrentTrack, saveCurrentAndNextTrack, saveTrackData } from "~/business/playlist/handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { MainBottomSheet } from "~/components/main-bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ErrorToastHost } from "~/components/error-toast-host";
 import CheckUpdateDialog from "~/components/check-update-dialog";
 import { checkLatestVersion, downloadApk } from "~/business/check-release";
 import { VERSION } from "~/constants/releasing";
+import { MainBottomSheet } from "~/components/main-bottom-sheet";
 
 // todo 把它们放到主题管理模块里
 const defaultTheme = structuredClone(DefaultTheme);
