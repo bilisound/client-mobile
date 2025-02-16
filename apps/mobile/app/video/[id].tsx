@@ -39,6 +39,7 @@ import { openAddPlaylistPage } from "~/business/playlist/misc";
 import { Monicon } from "@monicon/native";
 import { Box } from "~/components/ui/box";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { ActionSheetCurrent } from "~/components/action-sheet-current";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -63,21 +64,12 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, da
                 <ActionsheetDragIndicatorWrapper>
                     <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
-                {!!displayTrack && (
-                    <View className={"flex-row items-center px-4 py-4 gap-4"}>
-                        {data ? (
-                            <Image
-                                source={getImageProxyUrl(data.pic, "https://www.bilibili.com/video/" + data.bvid)}
-                                className={"h-12 aspect-[3/2] rounded-lg flex-0 basis-auto"}
-                            />
-                        ) : null}
-                        <View className="flex-1 items-start w-full gap-1.5">
-                            <Text className="font-bold" isTruncated>
-                                {displayTrack.part}
-                            </Text>
-                            <Text className="text-sm opacity-60">{formatSecond(displayTrack.duration)}</Text>
-                        </View>
-                    </View>
+                {displayTrack && data && (
+                    <ActionSheetCurrent
+                        line1={displayTrack.part}
+                        line2={formatSecond(displayTrack.duration)}
+                        image={getImageProxyUrl(data.pic, "https://www.bilibili.com/video/" + data.bvid)}
+                    />
                 )}
                 <ActionsheetItem onPress={() => onAction("addPlaylist")}>
                     <Box className={"size-6 items-center justify-center"}>

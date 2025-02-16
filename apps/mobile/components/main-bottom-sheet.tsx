@@ -87,6 +87,7 @@ import useSettingsStore from "~/store/settings";
 import { bv2av } from "~/utils/vendors/av-bv";
 import log from "~/utils/logger";
 import MaskedView from "@react-native-masked-view/masked-view";
+import { ActionSheetCurrent } from "~/components/action-sheet-current";
 
 interface ActionSheetState {
     showActionSheet: boolean;
@@ -647,6 +648,13 @@ function PlayerControlMenu() {
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>
+                    {!!currentTrack && (
+                        <ActionSheetCurrent
+                            line1={currentTrack.title ?? ""}
+                            line2={formatSecond(currentTrack.duration ?? 0)}
+                            image={currentTrack.artworkUri}
+                        />
+                    )}
                     {menuItems
                         .filter(e => e.show)
                         .map(item => (

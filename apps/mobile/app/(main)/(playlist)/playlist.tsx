@@ -38,6 +38,7 @@ import { Heading } from "~/components/ui/heading";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { useUpdateTriggerStore } from "~/store/update-trigger";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { ActionSheetCurrent } from "~/components/action-sheet-current";
 
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
@@ -89,10 +90,11 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                     <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
                 {!!displayTrack && (
-                    <View className="items-start w-full px-4 py-4 gap-1">
-                        <Text className="font-bold">{displayTrack.title}</Text>
-                        <Text className="text-sm opacity-60">{`${displayTrack.amount} 首歌曲`}</Text>
-                    </View>
+                    <ActionSheetCurrent
+                        line1={displayTrack.title}
+                        line2={`${displayTrack.amount} 首歌曲`}
+                        image={displayTrack.imgUrl}
+                    />
                 )}
                 <ActionsheetItem onPress={() => onAction("edit")}>
                     <View className={"size-6 items-center justify-center"}>

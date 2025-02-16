@@ -55,6 +55,7 @@ import {
 } from "~/components/ui/actionsheet";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Monicon } from "@monicon/native";
+import { ActionSheetCurrent } from "~/components/action-sheet-current";
 
 cssInterop(OrigCircle, {
     className: {
@@ -268,9 +269,10 @@ interface LongPressActionsProps {
     showActionSheet: boolean;
     onClose: () => void;
     onAction: (action: "editMeta" | "editMass" | "close") => void;
+    current?: PlaylistMeta;
 }
 
-function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActionsProps) {
+function LongPressActions({ showActionSheet, onAction, onClose, current }: LongPressActionsProps) {
     const { colorValue } = useRawThemeValues();
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
@@ -279,6 +281,13 @@ function LongPressActions({ showActionSheet, onAction, onClose }: LongPressActio
                 <ActionsheetDragIndicatorWrapper>
                     <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
+                {!!current && (
+                    <ActionSheetCurrent
+                        line1={current.title}
+                        line2={`${current.amount} 首歌曲`}
+                        image={current.imgUrl}
+                    />
+                )}
                 <ActionsheetItem onPress={() => onAction("editMeta")}>
                     <View className={"size-6 items-center justify-center"}>
                         <Monicon name={"fa6-solid:pen"} size={18} color={colorValue("--color-typography-700")} />
@@ -314,7 +323,7 @@ export default function Page() {
         queryFn: () => getPlaylistMeta(Number(id)),
     });
 
-    const meta = metaRaw?.[0];
+    const meta: PlaylistMeta | undefined = metaRaw?.[0];
 
     const { data: playlistDetail, refetch: dataRefetch } = useQuery({
         queryKey: [`playlist_detail_${id}`],
@@ -636,6 +645,7 @@ export default function Page() {
                 }}
                 onClose={() => setShowActionSheet(false)}
                 showActionSheet={showActionSheet}
+                current={meta}
             />
         </Layout>
     );
