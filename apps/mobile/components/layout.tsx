@@ -3,8 +3,8 @@ import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { MainBottomSheetCloseHost } from "~/components/main-bottom-sheet";
 import { LayoutButton } from "~/components/layout-button";
+import { MainBottomSheetCloseHost } from "~/components/main-bottom-sheet/utils";
 
 export interface LayoutProps {
     leftAccessories?: ReactNode | "BACK_BUTTON";

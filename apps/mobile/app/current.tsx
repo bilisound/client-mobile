@@ -1,5 +1,6 @@
 import { View } from "react-native";
-import { InsidePageContext, PlayerControl } from "~/components/main-bottom-sheet";
+import { InsidePageContext } from "~/components/main-bottom-sheet/utils";
+import { PlayerControl } from "~/components/main-bottom-sheet/components/player-control";
 
 export default function Page() {
     return (
