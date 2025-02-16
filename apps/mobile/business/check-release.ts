@@ -2,12 +2,14 @@ import * as semver from "semver";
 
 import { USER_AGENT_BILISOUND } from "~/constants/network";
 import { RELEASE_CHANNEL } from "~/constants/releasing";
+import ReactNativeBlobUtil from "react-native-blob-util";
 
 export interface CheckLatestVersionReturns {
     isLatest: boolean;
     currentVersion: string;
     latestVersion: string;
     extraInfo: string;
+    downloadPage: string;
     downloadUrl: string;
 }
 
@@ -35,7 +37,8 @@ export async function checkLatestVersionGithub(
         currentVersion,
         latestVersion,
         extraInfo: "",
-        downloadUrl: latestRelease.html_url,
+        downloadPage: latestRelease.html_url,
+        downloadUrl: latestRelease.assets[0].browser_download_url,
     };
 }
 
@@ -53,8 +56,25 @@ export async function checkLatestVersion(currentVersion: string) {
                 currentVersion,
                 latestVersion: currentVersion,
                 extraInfo: "",
+                downloadPage: "",
                 downloadUrl: "",
             };
         }
     }
+}
+
+export function downloadApk(url: string, version: string) {
+    const android = ReactNativeBlobUtil.android;
+    return ReactNativeBlobUtil.config({
+        addAndroidDownloads: {
+            useDownloadManager: true,
+            title: " Bilisound 更新",
+            description: `版本 ${version}`,
+            mime: "application/vnd.android.package-archive",
+            mediaScannable: true,
+            notification: true,
+        },
+    })
+        .fetch("GET", url)
+        .then(res => android.actionViewIntent(res.path(), "application/vnd.android.package-archive"));
 }

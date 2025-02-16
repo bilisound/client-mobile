@@ -8,7 +8,7 @@ import { Image } from "expo-image";
 import { SettingMenuItem } from "~/components/setting-menu";
 import Toast from "react-native-toast-message";
 import log from "~/utils/logger";
-import { checkLatestVersion, CheckLatestVersionReturns } from "~/business/check-release";
+import { checkLatestVersion, CheckLatestVersionReturns, downloadApk } from "~/business/check-release";
 import CheckUpdateDialog from "~/components/check-update-dialog";
 import { router } from "expo-router";
 
@@ -47,8 +47,12 @@ export default function Page() {
 
     function handleClose(positive: boolean) {
         setModalVisible(false);
-        if (positive) {
-            Linking.openURL(checkInfo!.downloadUrl);
+        if (positive && checkInfo?.downloadUrl) {
+            downloadApk(checkInfo.downloadUrl, checkInfo.latestVersion);
+            return;
+        }
+        if (positive && checkInfo?.downloadPage) {
+            Linking.openURL(checkInfo.downloadPage);
         }
     }
 

@@ -25,7 +25,7 @@ import { MainBottomSheet } from "~/components/main-bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ErrorToastHost } from "~/components/error-toast-host";
 import CheckUpdateDialog from "~/components/check-update-dialog";
-import { checkLatestVersion } from "~/business/check-release";
+import { checkLatestVersion, downloadApk } from "~/business/check-release";
 import { VERSION } from "~/constants/releasing";
 
 // todo 把它们放到主题管理模块里
@@ -68,8 +68,12 @@ function CheckUpdate() {
 
     function handleClose(positive: boolean) {
         setModalVisible(false);
-        if (positive) {
-            Linking.openURL(data!.downloadUrl);
+        if (positive && data?.downloadUrl) {
+            downloadApk(data.downloadUrl, data.latestVersion);
+            return;
+        }
+        if (positive && data?.downloadPage) {
+            Linking.openURL(data.downloadPage);
         }
     }
 

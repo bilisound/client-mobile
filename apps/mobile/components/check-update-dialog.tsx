@@ -33,7 +33,7 @@ export default function CheckUpdateDialog({ open, onClose, result }: CheckUpdate
                     <Text size="sm" className="leading-normal">
                         {`Bilisound ${result?.latestVersion} 现已发布，而您当前正在使用 ${result?.currentVersion}。${
                             result?.extraInfo ? `\n\n${result?.extraInfo}\n` : ""
-                        }\n想要前往最新版本下载页面吗？`}
+                        }\n${result?.downloadUrl ? "想要立即下载吗？" : "想要前往最新版本下载页面吗？"}`}
                     </Text>
                 </AlertDialogBody>
                 <AlertDialogFooter className="gap-2">
