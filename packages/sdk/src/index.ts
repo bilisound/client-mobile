@@ -14,13 +14,11 @@ import { filterCdnUrls } from "./cdn";
 import {
     InitialStateFestivalResponse,
     InitialStateResponse,
-    UserInfo,
-    UserSubmission,
     WebPlayInfo,
 } from "./types-vendor";
 import { extractJSON, findBestAudio } from "./utils";
 import axiosClient from "axios";
-import { encWbi, getWbiKeys, signParam, WbiKey } from "./wbi";
+import { signParam } from "./wbi";
 import { BiliRequestConfig, InternalBiliRequestConfig } from "./request";
 import { Numberish } from "./types";
 import { UserSeasonInfo, UserSeriesInfo, UserSeriesMetadata } from "./types-vendor";
@@ -603,48 +601,6 @@ export class BilisoundSDK {
                 series_id: seriesId,
             },
             disableWbi: true,
-        });
-        await this.cacheProvider.set(cacheKey, JSON.stringify(response));
-        return response;
-    }
-
-    private async getUserInfo(mid: number): Promise<UserInfo> {
-        const cacheKey = `bilisound_getUserInfo_${mid}`;
-        const cacheGot = await this.cacheProvider.get(cacheKey);
-        if (cacheGot) {
-            return JSON.parse(cacheGot);
-        }
-        const response = await this.request<UserInfo>({
-            url: "/x/space/wbi/acc/info",
-            params: {
-                mid,
-            },
-            headers: {
-                referer: `https://space.bilibili.com/${mid}`,
-                cookie: `buvid3=760718ff-5ac0-4a29-856e-ae43c305509c`
-            },
-        });
-        await this.cacheProvider.set(cacheKey, JSON.stringify(response));
-        return response;
-    }
-
-    private async getUserSubmission(mid: number, tid: number, pageNum = 1): Promise<UserSubmission> {
-        const cacheKey = `bilisound_getUserSubmission_${mid}_${tid}_${pageNum}`;
-        const cacheGot = await this.cacheProvider.get(cacheKey);
-        if (cacheGot) {
-            return JSON.parse(cacheGot);
-        }
-        const response = await this.request<UserSubmission>({
-            url: "/x/space/wbi/arc/search",
-            params: {
-                mid,
-                tid: tid <= 0 ? undefined : tid,
-                pn: pageNum,
-                ps: 30,
-            },
-            headers: {
-                referer: `https://space.bilibili.com/${mid}/upload/video`,
-            },
         });
         await this.cacheProvider.set(cacheKey, JSON.stringify(response));
         return response;
