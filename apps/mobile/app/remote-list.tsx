@@ -124,7 +124,7 @@ function MetaData({ data, className, style, mode }: MetaDataProps) {
                                             />
                                         </View>
                                     ) : (
-                                        <ButtonMonIcon name={"fa6-solid:plus"} />
+                                        <ButtonMonIcon name={"fa6-solid:plus"} size={18} />
                                     )}
                                     <ButtonText>创建歌单</ButtonText>
                                 </Button>

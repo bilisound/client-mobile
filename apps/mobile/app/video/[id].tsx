@@ -207,7 +207,7 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                             ) : null}
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"} onPress={handleCreatePlaylist}>
-                                    <ButtonMonIcon name={"fa6-solid:plus"} size={16} />
+                                    <ButtonMonIcon name={"fa6-solid:plus"} size={18} />
                                     <ButtonText>创建歌单</ButtonText>
                                 </Button>
                             </ButtonOuter>
