@@ -247,7 +247,7 @@ export function PlayerControlMenu() {
                         <ActionSheetCurrent
                             line1={currentTrack.title ?? ""}
                             line2={formatSecond(currentTrack.duration ?? 0)}
-                            image={getImageProxyUrl(currentTrack.artworkUri)}
+                            image={currentTrack.artworkUri}
                         />
                     )}
                     {menuItems
