@@ -3,7 +3,7 @@ import React from "react";
 import { createButton } from "@gluestack-ui/button";
 import { withStyleContext, useStyleContext } from "@gluestack-ui/nativewind-utils/withStyleContext";
 import { cssInterop } from "nativewind";
-import { ActivityIndicator, Pressable, Text, View, ViewProps } from "react-native";
+import { ActivityIndicator, Platform, Pressable, Text, View, ViewProps } from "react-native";
 import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 import { PrimitiveIcon, UIIcon } from "@gluestack-ui/icon";
 import { twMerge } from "tailwind-merge";
@@ -150,7 +150,13 @@ type IButtonOuterProps = ViewProps & VariantProps<typeof boxStyle> & { className
 
 const ButtonOuter = React.forwardRef<React.ElementRef<typeof View>, IButtonOuterProps>(
     ({ className, ...props }, ref) => {
-        return <View ref={ref} {...props} className={twMerge("rounded-lg overflow-hidden", className)} />;
+        return (
+            <View
+                ref={ref}
+                {...props}
+                className={twMerge(Platform.OS === "android" ? "rounded-lg overflow-hidden" : "", className)}
+            />
+        );
     },
 );
 

@@ -116,7 +116,7 @@ function CurrentPlayingTablet() {
                             "size-10 items-center justify-center " +
                             (Platform.OS === "android"
                                 ? "{}-[android_ripple.color]/color:color-background-200"
-                                : "hover:bg-background-100 active:bg-background-200")
+                                : "rounded-lg hover:bg-background-100 active:bg-background-200")
                         }
                         onPress={() => toggle()}
                     >
@@ -163,7 +163,7 @@ function CurrentPlayingTablet() {
                             (Platform.OS === "android"
                                 ? "{}-[android_ripple.color]/color:color-background-200"
                                 : "hover:bg-background-100 active:bg-background-200") +
-                            " size-10 items-center justify-center"
+                            " rounded-lg size-10 items-center justify-center"
                         }
                         onPress={() => toggle()}
                     >
@@ -224,7 +224,7 @@ function CurrentPlaying() {
                         (Platform.OS === "android"
                             ? "{}-[android_ripple.color]/color:color-background-200"
                             : "hover:bg-background-100 active:bg-background-200") +
-                        " size-10 items-center justify-center"
+                        " rounded-lg size-10 items-center justify-center"
                     }
                     onPress={() => toggle()}
                 >

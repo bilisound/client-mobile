@@ -19,7 +19,10 @@ export const LayoutButton = forwardRef<React.ElementRef<typeof Button>, LayoutBu
             <ButtonOuter>
                 <Pressable
                     {...props}
-                    className={twMerge("w-[2.75rem] h-[2.75rem] px-0 items-center justify-center", className)}
+                    className={twMerge(
+                        "w-[2.75rem] h-[2.75rem] rounded-lg px-0 items-center justify-center",
+                        className,
+                    )}
                     ref={ref}
                 >
                     <Monicon size={iconSize} color={colorValue("--color-primary-500")} name={iconName} />
