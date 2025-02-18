@@ -35,6 +35,7 @@ import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import { CheckIcon } from "~/components/ui/icon";
 import { SpeedControlPanel } from "./speed-control-panel";
+import { getImageProxyUrl } from "~/business/constant-helper";
 
 export function PlayerControlMenu() {
     const isInsidePage = useContext(InsidePageContext);
@@ -246,7 +247,7 @@ export function PlayerControlMenu() {
                         <ActionSheetCurrent
                             line1={currentTrack.title ?? ""}
                             line2={formatSecond(currentTrack.duration ?? 0)}
-                            image={currentTrack.artworkUri}
+                            image={getImageProxyUrl(currentTrack.artworkUri)}
                         />
                     )}
                     {menuItems

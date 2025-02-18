@@ -285,7 +285,7 @@ function LongPressActions({ showActionSheet, onAction, onClose, current }: LongP
                     <ActionSheetCurrent
                         line1={current.title}
                         line2={`${current.amount} 首歌曲`}
-                        image={current.imgUrl}
+                        image={getImageProxyUrl(current.imgUrl!)}
                     />
                 )}
                 <ActionsheetItem onPress={() => onAction("editMeta")}>

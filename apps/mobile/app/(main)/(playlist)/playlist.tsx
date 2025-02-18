@@ -39,6 +39,7 @@ import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { useUpdateTriggerStore } from "~/store/update-trigger";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
+import { getImageProxyUrl } from "~/business/constant-helper";
 
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
@@ -93,7 +94,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                     <ActionSheetCurrent
                         line1={displayTrack.title}
                         line2={`${displayTrack.amount} 首歌曲`}
-                        image={displayTrack.imgUrl}
+                        image={getImageProxyUrl(displayTrack.imgUrl!)}
                     />
                 )}
                 <ActionsheetItem onPress={() => onAction("edit")}>
