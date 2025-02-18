@@ -87,7 +87,7 @@ export function PlayerControlButtons() {
             <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
                 <Button
                     aria-label={REPEAT_MODE[repeatMode].name}
-                    className={buttonToolSize}
+                    className={`rounded-full ${buttonToolSize}`}
                     onPress={() => handleChangeRepeatMode()}
                     variant={"ghost"}
                     disabled={buttonDisabled}
@@ -105,7 +105,12 @@ export function PlayerControlButtons() {
             {/* 中间按钮（播放控制） */}
             <View className={`flex-row justify-center ${isNarrow ? "gap-3" : "gap-4"} ` + DEBUG_COLOR[1]}>
                 <ButtonOuter className={`rounded-full ${buttonSize}`}>
-                    <Button aria-label={"上一首"} className={buttonSize} onPress={() => prev()} variant={"ghost"}>
+                    <Button
+                        aria-label={"上一首"}
+                        className={`rounded-full ${buttonSize}`}
+                        onPress={() => prev()}
+                        variant={"ghost"}
+                    >
                         <View className={"size-[44px] items-center justify-center"}>
                             <Monicon
                                 name={"ri:skip-back-mini-fill"}
@@ -119,14 +124,19 @@ export function PlayerControlButtons() {
                     <Button
                         disabled={buttonDisabled}
                         aria-label={isPlaying ? "暂停" : "播放"}
-                        className={buttonSize}
+                        className={"rounded-full " + buttonSize}
                         onPress={() => toggle()}
                     >
                         <PlayButtonIcon size={iconSize} />
                     </Button>
                 </ButtonOuter>
                 <ButtonOuter className={`rounded-full ${buttonSize}`}>
-                    <Button aria-label={"下一首"} className={buttonSize} onPress={() => next()} variant={"ghost"}>
+                    <Button
+                        aria-label={"下一首"}
+                        className={`rounded-full ${buttonSize}`}
+                        onPress={() => next()}
+                        variant={"ghost"}
+                    >
                         <View className={"size-[44px] items-center justify-center rotate-180"}>
                             <Monicon
                                 name={"ri:skip-back-mini-fill"}
@@ -142,7 +152,7 @@ export function PlayerControlButtons() {
             <ButtonOuter className={`rounded-full ${buttonToolSize}`}>
                 <Button
                     aria-label={"循环模式"}
-                    className={buttonToolSize}
+                    className={`rounded-full ${buttonToolSize}`}
                     onPress={() => handleChangeShuffle()}
                     variant={"ghost"}
                     disabled={buttonDisabled}
