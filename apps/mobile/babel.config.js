@@ -13,11 +13,11 @@ module.exports = function (api) {
         ],
 
         plugins: [
+            ["react-native-worklets-core/plugin"],
             [
                 "module-resolver",
                 {
                     root: ["./"],
-
                     alias: {
                         "~": "./",
                         "tailwind.config": "./tailwind.config.js",
