@@ -49,13 +49,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             },
         ],
         [
-            // todo 需要解决二进制将会下线的问题
-            "@config-plugins/ffmpeg-kit-react-native",
-            {
-                package: "min",
-            },
-        ],
-        [
             "expo-splash-screen",
             {
                 backgroundColor: "#ffffff",

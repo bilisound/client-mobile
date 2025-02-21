@@ -1,7 +1,6 @@
 import useDownloadStore from "~/store/download";
 import { getCacheAudioPath } from "~/utils/file";
 import * as FileSystem from "expo-file-system";
-import { FFmpegKit, FFprobeKit } from "ffmpeg-kit-react-native";
 import { filesize } from "filesize";
 import { getBilisoundResourceUrl } from "~/api/bilisound";
 import log from "~/utils/logger";
@@ -9,6 +8,8 @@ import useSettingsStore from "~/store/settings";
 import { getVideoUrl } from "~/business/constant-helper";
 import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { cacheStatusStorage } from "~/storage/cache-status";
+import { extractAudioFile } from "~/business/mp4";
+import { File } from "expo-file-system/next";
 
 export async function downloadResource(bvid: string, episode: number) {
     const prefix = `[${bvid} / ${episode}] `;
@@ -101,40 +102,12 @@ export async function downloadResource(bvid: string, episode: number) {
     // 如果不是音频流，进行音视频分离操作
     log.info(prefix + "非音频流，进行音视频分离操作");
 
-    // 格式判断
-    const probeSession = await FFprobeKit.execute(
-        `-v error -select_streams a:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 ${JSON.stringify(downloadTargetFileUrl)}`,
-    );
-    let returnCode = await probeSession.getReturnCode();
-    let result = await probeSession.getOutput();
-    if (!returnCode.isValueSuccess()) {
-        log.error(prefix + "视频编码识别失败！");
-        log.error(`returnCode: ${returnCode}`);
-        log.error(`result：${result}`);
-        throw new Error("视频处理失败");
-    }
-
-    // 进行转码或直接提取操作
-    let mpegSession;
-    if (result.trim() === "aac") {
-        log.debug(prefix + "进行提取音频流操作");
-        mpegSession = await FFmpegKit.execute(
-            `-i ${JSON.stringify(downloadTargetFileUrl)} -vn -acodec copy ${JSON.stringify(checkUrl)}`,
-        );
-    } else {
-        log.debug(prefix + `进行转码音频流操作。原因：音频编码是 ${result}`);
-        mpegSession = await FFmpegKit.execute(
-            // 别的编码（比如 mp3）通常音质不会特别好，所以先设置 256kbps 的动态码率了
-            // （叔叔会有上 opus 的一天吗？）
-            `-i ${JSON.stringify(downloadTargetFileUrl)} -vn -acodec aac -b:a 256k ${JSON.stringify(checkUrl)}`,
-        );
-    }
-    returnCode = await mpegSession.getReturnCode();
-    result = await mpegSession.getOutput();
-    if (!returnCode.isValueSuccess()) {
+    // 提取 m4a
+    try {
+        extractAudioFile(new File(downloadTargetFileUrl), new File(checkUrl));
+    } catch (e) {
         log.error(prefix + "视频转码失败！");
-        log.error(`returnCode: ${returnCode}`);
-        log.error(`result：${result}`);
+        log.error(`result：${e}`);
         throw new Error("视频处理失败");
     }
 

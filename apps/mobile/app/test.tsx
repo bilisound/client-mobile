@@ -6,31 +6,6 @@ import { SystemBars, SystemBarStyle } from "react-native-edge-to-edge";
 import { Button, ScrollView, useColorScheme as useColorSchemeRN } from "react-native";
 import { shadow } from "~/constants/styles";
 import { Layout } from "~/components/layout";
-import { extractAudioFile } from "~/business/mp4";
-import { File, Paths } from "expo-file-system/next";
-// import { useWorklet } from "react-native-worklets-core";
-// import { extractAudioFile, fibonacci } from "~/business/mp4";
-
-function ReadTest() {
-    /*const worklet = useWorklet("default", async () => {
-        "worklet";
-        console.log("hello from worklet!");
-        extractAudioFile(new File(Paths.document, "test.mp4"), new File(Paths.document, "test2.m4a"));
-        // console.log(fibonacci(100));
-        console.log("hello from worklet! end");
-    });*/
-
-    return (
-        <Box>
-            <Button
-                title={"extract"}
-                onPress={() => {
-                    extractAudioFile(new File(Paths.document, "test.mp4"), new File(Paths.document, "test2.m4a"));
-                }}
-            />
-        </Box>
-    );
-}
 
 export default function Test() {
     const colorScheme = useColorScheme();
@@ -58,7 +33,6 @@ export default function Test() {
                     </Box>
                     {nativeWindShadow === 0 && (
                         <Box className={"gap-12 mt-8 pb-8"} key={"test-0"}>
-                            <ReadTest />
                             <Box className={"bg-blue-500 w-48 h-16 rounded-lg"} style={{ boxShadow: shadow.sm }} />
                             <Box className={"bg-blue-500 w-48 h-16 rounded-lg"} style={{ boxShadow: shadow.DEFAULT }} />
                             <Box className={"bg-blue-500 w-48 h-16 rounded-lg"} style={{ boxShadow: shadow.md }} />
