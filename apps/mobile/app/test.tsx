@@ -6,36 +6,28 @@ import { SystemBars, SystemBarStyle } from "react-native-edge-to-edge";
 import { Button, ScrollView, useColorScheme as useColorSchemeRN } from "react-native";
 import { shadow } from "~/constants/styles";
 import { Layout } from "~/components/layout";
+import { extractAudioFile } from "~/business/mp4";
 import { File, Paths } from "expo-file-system/next";
-import { Mp4 } from "mp4.js/dist";
-
-async function readMp4File() {
-    try {
-        const from = new Date().getTime();
-
-        const file = new File(Paths.document, "test.mp4");
-        const stream = file.bytes();
-        const m4aBytes = Mp4.extractAudio(stream);
-
-        const outFile = new File(Paths.document, "test_out.m4a");
-        outFile.write(m4aBytes);
-
-        console.log(`操作用时 ${(new Date().getTime() - from) / 1000}s`);
-    } catch (e) {
-        console.error(e);
-    }
-}
+// import { useWorklet } from "react-native-worklets-core";
+// import { extractAudioFile, fibonacci } from "~/business/mp4";
 
 function ReadTest() {
-    async function handleRead() {
-        console.log("运行开始");
-        await readMp4File();
-        console.log("运行结束");
-    }
+    /*const worklet = useWorklet("default", async () => {
+        "worklet";
+        console.log("hello from worklet!");
+        extractAudioFile(new File(Paths.document, "test.mp4"), new File(Paths.document, "test2.m4a"));
+        // console.log(fibonacci(100));
+        console.log("hello from worklet! end");
+    });*/
 
     return (
         <Box>
-            <Button title={"mp4box test"} onPress={() => handleRead()} />
+            <Button
+                title={"extract"}
+                onPress={() => {
+                    extractAudioFile(new File(Paths.document, "test.mp4"), new File(Paths.document, "test2.m4a"));
+                }}
+            />
         </Box>
     );
 }
