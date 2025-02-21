@@ -1,7 +1,4 @@
 import { router } from "expo-router";
-import sanitize from "sanitize-filename";
-
-import { bv2av } from "../utils/vendors/av-bv";
 
 import { parseB23 } from "~/api/bilisound";
 import log from "~/utils/logger";
@@ -110,21 +107,6 @@ export async function resolveVideo(input: string): Promise<string | UserListPars
     }
 
     throw new Error("不支持的视频地址");
-}
-
-export interface GetFileNameOptions {
-    id: string;
-    episode: string;
-    title: string;
-    av: boolean;
-    ext?: string;
-}
-
-export function getFileName(options: GetFileNameOptions) {
-    const { id, episode, title, av } = options;
-    const ext = options.ext ?? "m4a";
-    const fileName = `[${av ? bv2av(id) : id}] [P${episode}] ${title.replaceAll("/", "∕")}.${ext}`;
-    return sanitize(fileName);
 }
 
 export async function resolveVideoAndJump(value: string, replace = false) {

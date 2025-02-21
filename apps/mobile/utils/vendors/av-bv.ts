@@ -1,36 +1,39 @@
 /* eslint-disable no-bitwise */
 
 // https://mrhso.github.io/IshisashiWebsite/BVwhodoneit/
-// 改写自 https://www.zhihu.com/question/381784377/answer/1099438784，并加上一些适当的处理
-// 我这人虽然是写 JS 的，但是看 Python 不是问题
 
-const table = [..."fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF"];
-const s = [11, 10, 3, 8, 4, 6];
-const xor = 177451812;
-const add = 8728348608;
+const table = [..."FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf"];
+// JS 中 Number 的位运算只适用于 32 位整数，故用 BigInt
+const base = BigInt(table.length);
+const xor = 23442827791579n;
+const rangeLeft = 1n;
+const rangeRight = 2n ** 51n;
 
-export const av2bv = (av: string | number) => {
-    let num = NaN;
-    if (typeof av === "number") {
-        num = av;
-    } else {
-        num = parseInt(av.replace(/[^0-9]/gu, ""), 10);
+export const av2bv = (av: number | bigint | string) => {
+    let num = av;
+    if (typeof num === "string") {
+        num = parseInt(num.replace(/^[Aa][Vv]/u, ""));
     }
-    if (Number.isNaN(num) || num <= 0) {
-        // 网页版直接输出这个结果了
+    if (typeof num !== "bigint" && !Number.isInteger(num)) {
+        return null;
+    }
+    num = BigInt(num);
+    if (num < rangeLeft || num >= rangeRight) {
         return null;
     }
 
-    num = (num ^ xor) + add;
-    const result = [..."BV1  4 1 7  "];
-    let i = 0;
-    while (i < 6) {
-        // 这里改写差点犯了运算符优先级的坑
-        // 果然 Python 也不是特别熟练
-        // 说起来 ** 按照传统语法应该写成 Math.pow()，但是我个人更喜欢 ** 一些
-        result[s[i]] = table[Math.floor(num / 58 ** i) % 58];
-        i += 1;
+    num = (num + rangeRight) ^ xor;
+    let result = [..."BV1000000000"];
+    let i = 11;
+    while (i > 2) {
+        result[i] = table[Number(num % base)];
+        num /= base;
+        i -= 1;
     }
+
+    [result[3], result[9]] = [result[9], result[3]];
+    [result[4], result[7]] = [result[7], result[4]];
+
     return result.join("");
 };
 
@@ -47,15 +50,31 @@ export const bv2av = (bv: string) => {
     } else {
         return null;
     }
-    if (!str.match(/[Bb][Vv][fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{10}/gu)) {
+    if (!str.match(/^[Bb][Vv]1[FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf]{9}$/u)) {
+        return null;
+    }
+    const str2 = [...str];
+
+    [str2[3], str2[9]] = [str2[9], str2[3]];
+    [str2[4], str2[7]] = [str2[7], str2[4]];
+
+    let result = 0n;
+    let i = 3;
+    while (i < 12) {
+        result *= base;
+        result += BigInt(table.indexOf(str2[i]));
+        i += 1;
+    }
+
+    if (result < rangeRight || result >= rangeRight * 2n) {
         return null;
     }
 
-    let result = 0;
-    let i = 0;
-    while (i < 6) {
-        result += table.indexOf(str[s[i]]) * 58 ** i;
-        i += 1;
+    result = (result - rangeRight) ^ xor;
+
+    if (result < rangeLeft) {
+        return null;
     }
-    return `av${(result - add) ^ xor}`;
+
+    return `av${result}`;
 };
