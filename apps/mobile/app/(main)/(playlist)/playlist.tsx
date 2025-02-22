@@ -162,7 +162,11 @@ export default function Page() {
     if (windowDimensions.width >= 1280) {
         windowWidth = windowDimensions.width - 256;
     }
+    if (windowDimensions.width >= 1536) {
+        windowWidth = 1280;
+    }
     const columns = showGrid ? Math.floor(windowWidth / 200) : windowWidth > 1024 ? 2 : 1;
+    const columnHeight = windowWidth / columns + 72;
     const [width, setWidth] = useState(0);
 
     // 模态框管理
@@ -275,7 +279,7 @@ export default function Page() {
                     <FlashList
                         data={data}
                         renderItem={e => <PlaylistActionItem grid={showGrid} {...e.item} />}
-                        estimatedItemSize={80}
+                        estimatedItemSize={showGrid ? columnHeight : 80}
                         numColumns={columns}
                         onLayout={e => {
                             setWidth(e.nativeEvent.layout.width);

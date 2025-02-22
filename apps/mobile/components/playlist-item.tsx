@@ -72,8 +72,11 @@ export function PlaylistItem({ item, onPress, onLongPress, className, style, gri
                                 className={"w-full aspect-square"}
                             ></Image>
                         </View>
-                        <Text className="pt-2 text-sm leading-normal flex-1" isTruncated>
+                        <Text className="text-sm flex-1 pt-2" isTruncated>
                             {item.title}
+                        </Text>
+                        <Text className="text-xs color-typography-400 pt-1 flex-1" isTruncated>
+                            {item.amount + " 首歌曲"}
                         </Text>
                     </>
                 ) : (
