@@ -16,7 +16,7 @@ import { DualScrollView } from "~/components/dual-scroll-view";
 import { PlaylistDetail, PlaylistMeta } from "~/storage/sqlite/schema";
 import React, { useEffect, useRef, useState } from "react";
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
-import { convertToRelativeTime, formatSecond } from "~/utils/datetime";
+import { convertToRelativeTime } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
 import { getImageProxyUrl } from "~/business/constant-helper";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
@@ -285,7 +285,7 @@ function LongPressActions({ showActionSheet, onAction, onClose, current }: LongP
                     <ActionSheetCurrent
                         line1={current.title}
                         line2={`${current.amount} 首歌曲`}
-                        image={getImageProxyUrl(current.imgUrl!)}
+                        image={current?.imgUrl ? getImageProxyUrl(current.imgUrl) : undefined}
                     />
                 )}
                 <ActionsheetItem onPress={() => onAction("editMeta")}>
