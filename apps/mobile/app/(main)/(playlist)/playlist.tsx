@@ -53,7 +53,7 @@ const PlaylistContext = createContext<PlaylistContextProps>({
     width: 0,
 });
 
-function PlaylistActionItem(item: PlaylistMeta) {
+function PlaylistActionItem(item: PlaylistMeta & { grid: boolean }) {
     const { onLongPress, columns, width } = useContext(PlaylistContext);
 
     return (
@@ -66,6 +66,7 @@ function PlaylistActionItem(item: PlaylistMeta) {
                 onLongPress(item.id);
             }}
             style={{ width: columns === 2 ? width / 2 : undefined }}
+            grid={item.grid}
         />
     );
 }
@@ -152,8 +153,16 @@ export default function Page() {
     };
 
     // 布局管理
+    const [showGrid, setShowGrid] = useState(false);
     const windowDimensions = useWindowDimensions();
-    const columns = windowDimensions.width > 1024 ? 2 : 1;
+    let windowWidth = windowDimensions.width;
+    if (windowDimensions.width >= 768) {
+        windowWidth = windowDimensions.width - 64;
+    }
+    if (windowDimensions.width >= 1280) {
+        windowWidth = windowDimensions.width - 256;
+    }
+    const columns = showGrid ? Math.floor(windowWidth / 200) : windowWidth > 1024 ? 2 : 1;
     const [width, setWidth] = useState(0);
 
     // 模态框管理
@@ -201,6 +210,16 @@ export default function Page() {
             <Layout
                 edgeInsets={{ ...edgeInsets, bottom: 0 }}
                 title={"歌单"}
+                leftAccessories={
+                    <LayoutButton
+                        iconName={showGrid ? "mingcute:grid-fill" : "fa6-solid:list"}
+                        aria-label={"扫描二维码"}
+                        iconSize={showGrid ? 24 : 20}
+                        onPress={() => {
+                            setShowGrid(e => !e);
+                        }}
+                    />
+                }
                 rightAccessories={
                     <>
                         <LayoutButton
@@ -255,7 +274,7 @@ export default function Page() {
                 {(data || []).length > 0 ? (
                     <FlashList
                         data={data}
-                        renderItem={e => <PlaylistActionItem {...e.item} />}
+                        renderItem={e => <PlaylistActionItem grid={showGrid} {...e.item} />}
                         estimatedItemSize={80}
                         numColumns={columns}
                         onLayout={e => {
@@ -263,7 +282,9 @@ export default function Page() {
                         }}
                         contentContainerStyle={{
                             paddingBottom: edgeInsets.bottom,
+                            paddingHorizontal: showGrid ? 12 : 0,
                         }}
+                        extraData={showGrid}
                     />
                 ) : (
                     <View className={"flex-1 items-center justify-center gap-4"}>

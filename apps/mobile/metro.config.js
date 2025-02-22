@@ -18,6 +18,7 @@ config.resolver.assetExts.push("txt");
 const configWithNativeWind = withNativeWind(config, { input: "./global.css", inlineRem: 16 });
 
 const configWithMonicon = withMonicon(configWithNativeWind, {
+    collections: ["fa6-solid"],
     icons: [
         "uil:qrcode-scan",
         "ri:skip-back-mini-fill",
@@ -32,8 +33,8 @@ const configWithMonicon = withMonicon(configWithNativeWind, {
         "ion:alert-circle",
         "ion:close-circle",
         "material-symbols:speed-rounded",
+        "mingcute:grid-fill",
     ],
-    collections: ["fa6-solid", "fa6-regular"],
 });
 
 module.exports = configWithMonicon;
