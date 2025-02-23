@@ -52,7 +52,7 @@ export default function Page() {
         setDialogInfo(e => ({
             ...e,
             title: "清除历史日志确认",
-            description: `确定要清楚之前的历史日志吗？今日的日志不会被清除。`,
+            description: `确定要清除之前的历史日志吗？今日的日志不会被清除。`,
         }));
         setModalVisible(true);
     };
