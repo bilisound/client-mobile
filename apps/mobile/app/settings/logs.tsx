@@ -3,13 +3,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
 import { Pressable } from "~/components/ui/pressable";
 import { useQuery } from "@tanstack/react-query";
-import log, { deleteLogContent, getLogList } from "~/utils/logger";
+import { deleteLogContent, getLogList } from "~/utils/logger";
 import { Text } from "~/components/ui/text";
 import { View } from "react-native";
 import { Monicon } from "@monicon/native";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import {
     AlertDialog,
     AlertDialogBackdrop,
@@ -20,10 +20,7 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Heading } from "~/components/ui/heading";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
-import { PlaylistMeta } from "~/storage/sqlite/schema";
 import { useConfirm } from "~/hooks/useConfirm";
-import { deletePlaylistMeta } from "~/storage/sqlite/playlist";
-import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
 import Toast from "react-native-toast-message";
 
 const matchRegex = /^bilisound_log_(.+)_(\d{1,2})-(\d{1,2})-(\d+).log$/;
