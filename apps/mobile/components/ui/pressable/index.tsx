@@ -17,13 +17,14 @@ cssInterop(UIPressable, { className: "style" });
 
 type IPressableProps = Omit<React.ComponentProps<typeof UIPressable>, "context"> & VariantProps<typeof pressableStyle>;
 const Pressable = React.forwardRef<React.ElementRef<typeof UIPressable>, IPressableProps>(
-    ({ className, ...props }, ref) => {
+    ({ className, androidRipple = true, ...props }, ref) => {
         return (
             <UIPressable
                 {...props}
                 ref={ref}
                 className={pressableStyle({
                     class: className,
+                    androidRipple,
                 })}
             />
         );

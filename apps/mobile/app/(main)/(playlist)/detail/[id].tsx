@@ -268,7 +268,7 @@ function Header({ meta, images, onPlay, showPlayButton, className }: HeaderProps
 interface LongPressActionsProps {
     showActionSheet: boolean;
     onClose: () => void;
-    onAction: (action: "editMeta" | "editMass" | "close") => void;
+    onAction: (action: "editMeta" | "editCover" | "editMass" | "close") => void;
     current?: PlaylistMeta;
 }
 
@@ -293,6 +293,12 @@ function LongPressActions({ showActionSheet, onAction, onClose, current }: LongP
                         <Monicon name={"fa6-solid:pen"} size={18} color={colorValue("--color-typography-700")} />
                     </View>
                     <ActionsheetItemText>修改信息</ActionsheetItemText>
+                </ActionsheetItem>
+                <ActionsheetItem onPress={() => onAction("editCover")}>
+                    <View className={"size-6 items-center justify-center"}>
+                        <Monicon name={"fa6-solid:images"} size={18} color={colorValue("--color-typography-700")} />
+                    </View>
+                    <ActionsheetItemText>修改封面</ActionsheetItemText>
                 </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("editMass")}>
                     <View className={"size-6 items-center justify-center"}>
@@ -634,6 +640,9 @@ export default function Page() {
                     switch (action) {
                         case "editMeta":
                             router.push(`/(main)/(playlist)/meta/${id}`);
+                            break;
+                        case "editCover":
+                            router.push(`/utils/cover-picker?listId=${id}`);
                             break;
                         case "editMass":
                             setEditing(true);
