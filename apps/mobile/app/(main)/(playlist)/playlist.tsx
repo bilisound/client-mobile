@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { deletePlaylistMeta, getPlaylistMetas } from "~/storage/sqlite/playlist";
 import { Layout, LayoutButton } from "~/components/layout";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import { PlaylistItem } from "~/components/playlist-item";
 import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
@@ -36,7 +36,6 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Heading } from "~/components/ui/heading";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
-import { useUpdateTriggerStore } from "~/store/update-trigger";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { getImageProxyUrl } from "~/business/constant-helper";
@@ -147,7 +146,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 export default function Page() {
     const edgeInsets = useTabSafeAreaInsets();
     const queryClient = useQueryClient();
-    const { data, refetch } = useQuery({
+    const { data, refetch, isLoading } = useQuery({
         queryKey: ["playlist_meta"],
         queryFn: () => getPlaylistMetas(),
     });

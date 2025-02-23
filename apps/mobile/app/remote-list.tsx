@@ -117,7 +117,7 @@ function MetaData({ data, className, style, mode }: MetaDataProps) {
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"} onPress={handleCreatePlaylist}>
                                     {loading ? (
-                                        <View className={"size-4 items-center justify-center"}>
+                                        <View className={"size-[18px] items-center justify-center"}>
                                             <ActivityIndicator
                                                 className={"size-4"}
                                                 color={colorValue("--color-typography-0")}
