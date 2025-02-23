@@ -1,32 +1,70 @@
-import { Layout } from "~/components/layout";
+import { Layout, LayoutButton } from "~/components/layout";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
 import { Pressable } from "~/components/ui/pressable";
 import { useQuery } from "@tanstack/react-query";
-import { getLogList } from "~/utils/logger";
+import log, { deleteLogContent, getLogList } from "~/utils/logger";
 import { Text } from "~/components/ui/text";
 import { View } from "react-native";
 import { Monicon } from "@monicon/native";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { router } from "expo-router";
+import React, { useState } from "react";
+import {
+    AlertDialog,
+    AlertDialogBackdrop,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+} from "~/components/ui/alert-dialog";
+import { Heading } from "~/components/ui/heading";
+import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
+import { PlaylistMeta } from "~/storage/sqlite/schema";
+import { useConfirm } from "~/hooks/useConfirm";
+import { deletePlaylistMeta } from "~/storage/sqlite/playlist";
+import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
+import Toast from "react-native-toast-message";
 
 const matchRegex = /^bilisound_log_(.+)_(\d{1,2})-(\d{1,2})-(\d+).log$/;
 const matchOldRegex = /^bilisound_log_(\d{1,2})-(\d{1,2})-(\d+).log$/;
 
 export default function Page() {
     const edgeInsets = useSafeAreaInsets();
-    const { data } = useQuery({
+    const { data, refetch } = useQuery({
         queryKey: ["log_list"],
         queryFn: getLogList,
     });
     const { colorValue } = useRawThemeValues();
 
-    console.log(data);
+    // 模态框管理
+    const { dialogInfo, setDialogInfo, modalVisible, setModalVisible, handleClose, dialogCallback } = useConfirm();
+
+    const handleDelete = async () => {
+        dialogCallback.current = async () => {
+            await deleteLogContent();
+            await refetch();
+            Toast.show({
+                type: "success",
+                text1: "历史日志清除成功",
+            });
+        };
+        setDialogInfo(e => ({
+            ...e,
+            title: "清除历史日志确认",
+            description: `确定要清楚之前的历史日志吗？今日的日志不会被清除。`,
+        }));
+        setModalVisible(true);
+    };
 
     return (
-        <Layout title={"查看日志"} leftAccessories={"BACK_BUTTON"} edgeInsets={{ ...edgeInsets, bottom: 0 }}>
+        <Layout
+            title={"查看日志"}
+            leftAccessories={"BACK_BUTTON"}
+            rightAccessories={<LayoutButton iconName={"fa6-solid:trash-can"} onPress={() => handleDelete()} />}
+            edgeInsets={{ ...edgeInsets, bottom: 0 }}
+        >
             <FlashList
-                key={11111121133}
                 contentContainerStyle={{ paddingBottom: edgeInsets.bottom }}
                 estimatedItemSize={72}
                 renderItem={e => {
@@ -66,6 +104,35 @@ export default function Page() {
                 }}
                 data={data}
             />
+
+            {/* 对话框 */}
+            <AlertDialog isOpen={modalVisible} onClose={() => handleClose(false)} size="md">
+                <AlertDialogBackdrop />
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <Heading className="text-typography-950 font-semibold" size="md">
+                            {dialogInfo.title}
+                        </Heading>
+                    </AlertDialogHeader>
+                    <AlertDialogBody className="mt-4 mb-6">
+                        <Text size="sm" className="leading-normal">
+                            {dialogInfo.description}
+                        </Text>
+                    </AlertDialogBody>
+                    <AlertDialogFooter>
+                        <ButtonOuter>
+                            <Button variant="ghost" onPress={() => handleClose(false)}>
+                                <ButtonText>{dialogInfo.cancel}</ButtonText>
+                            </Button>
+                        </ButtonOuter>
+                        <ButtonOuter>
+                            <Button onPress={() => handleClose(true)}>
+                                <ButtonText>{dialogInfo.ok}</ButtonText>
+                            </Button>
+                        </ButtonOuter>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Layout>
     );
 }

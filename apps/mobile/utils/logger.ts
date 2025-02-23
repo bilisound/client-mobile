@@ -45,8 +45,14 @@ export async function shareLog(name: string) {
 
 export async function deleteLogContent() {
     const fileList = await FileSystem.readDirectoryAsync(BILISOUND_LOG_URI);
+    const now = new Date();
+    const matchRegex = new RegExp(
+        `^bilisound_log_(.+)_${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}.log$`,
+    );
     for (let i = 0; i < fileList.length; i++) {
         const e = fileList[i];
-        await FileSystem.deleteAsync(`${BILISOUND_LOG_URI}/${e}`, { idempotent: true });
+        if (!matchRegex.test(e)) {
+            await FileSystem.deleteAsync(`${BILISOUND_LOG_URI}/${e}`, { idempotent: true });
+        }
     }
 }
