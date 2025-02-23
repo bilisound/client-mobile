@@ -11,6 +11,7 @@ import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { router } from "expo-router";
 
 const matchRegex = /^bilisound_log_(.+)_(\d{1,2})-(\d{1,2})-(\d+).log$/;
+const matchOldRegex = /^bilisound_log_(\d{1,2})-(\d{1,2})-(\d+).log$/;
 
 export default function Page() {
     const edgeInsets = useSafeAreaInsets();
@@ -30,6 +31,16 @@ export default function Page() {
                 estimatedItemSize={72}
                 renderItem={e => {
                     const info = matchRegex.exec(e.item);
+                    const infoOld = matchOldRegex.exec(e.item);
+
+                    let text = "未知日志";
+                    if (info) {
+                        text = `${info[4]}-${info[3].padStart(2, "0")}-${info[2].padStart(2, "0")}（版本 ${info[1]}）`;
+                    }
+                    if (infoOld) {
+                        text = `${infoOld[3]}-${infoOld[2].padStart(2, "0")}-${infoOld[1].padStart(2, "0")}`;
+                    }
+
                     return (
                         <Pressable
                             className={"h-[72px] px-4 gap-1.5 justify-center"}
@@ -44,7 +55,7 @@ export default function Page() {
                                     />
                                 </View>
                                 <Text className={"font-semibold"} isTruncated>
-                                    {info ? `${info[4]} 年 ${info[3]} 月 ${info[2]} 日` : "未知日志"}
+                                    {text}
                                 </Text>
                             </View>
                             <Text className={"text-typography-500 text-sm pl-9"} isTruncated>
