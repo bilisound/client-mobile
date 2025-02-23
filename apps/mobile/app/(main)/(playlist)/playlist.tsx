@@ -75,7 +75,7 @@ interface LongPressActionsProps {
     showActionSheet: boolean;
     displayTrack?: PlaylistMeta;
     onClose: () => void;
-    onAction: (action: "delete" | "close" | "edit" | "export") => void;
+    onAction: (action: "delete" | "close" | "edit" | "editCover" | "export") => void;
 }
 
 /**
@@ -83,6 +83,7 @@ interface LongPressActionsProps {
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
     const { colorValue } = useRawThemeValues();
+    const showEditCover = !displayTrack?.source;
 
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose}>
@@ -104,6 +105,14 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                     </View>
                     <ActionsheetItemText>修改信息</ActionsheetItemText>
                 </ActionsheetItem>
+                {showEditCover ? (
+                    <ActionsheetItem onPress={() => onAction("editCover")}>
+                        <View className={"size-6 items-center justify-center"}>
+                            <Monicon name={"fa6-solid:images"} size={18} color={colorValue("--color-typography-700")} />
+                        </View>
+                        <ActionsheetItemText>修改封面</ActionsheetItemText>
+                    </ActionsheetItem>
+                ) : null}
                 <ActionsheetItem onPress={() => onAction("delete")}>
                     <View className={"size-6 items-center justify-center"}>
                         <Monicon name={"fa6-solid:trash"} size={18} color={colorValue("--color-typography-700")} />
@@ -318,6 +327,9 @@ export default function Page() {
                                 break;
                             case "edit":
                                 router.push(`./meta/${displayTrack?.id}`);
+                                break;
+                            case "editCover":
+                                router.push(`/utils/cover-picker?listId=${displayTrack?.id}`);
                                 break;
                             case "export":
                                 if (displayTrack?.id) {

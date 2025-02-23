@@ -274,6 +274,8 @@ interface LongPressActionsProps {
 
 function LongPressActions({ showActionSheet, onAction, onClose, current }: LongPressActionsProps) {
     const { colorValue } = useRawThemeValues();
+    const showEditCover = !current?.source;
+
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
             <ActionsheetBackdrop />
@@ -294,12 +296,14 @@ function LongPressActions({ showActionSheet, onAction, onClose, current }: LongP
                     </View>
                     <ActionsheetItemText>修改信息</ActionsheetItemText>
                 </ActionsheetItem>
-                <ActionsheetItem onPress={() => onAction("editCover")}>
-                    <View className={"size-6 items-center justify-center"}>
-                        <Monicon name={"fa6-solid:images"} size={18} color={colorValue("--color-typography-700")} />
-                    </View>
-                    <ActionsheetItemText>修改封面</ActionsheetItemText>
-                </ActionsheetItem>
+                {showEditCover ? (
+                    <ActionsheetItem onPress={() => onAction("editCover")}>
+                        <View className={"size-6 items-center justify-center"}>
+                            <Monicon name={"fa6-solid:images"} size={18} color={colorValue("--color-typography-700")} />
+                        </View>
+                        <ActionsheetItemText>修改封面</ActionsheetItemText>
+                    </ActionsheetItem>
+                ) : null}
                 <ActionsheetItem onPress={() => onAction("editMass")}>
                     <View className={"size-6 items-center justify-center"}>
                         <Monicon name={"fa6-solid:list-check"} size={18} color={colorValue("--color-typography-700")} />
