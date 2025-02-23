@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { deletePlaylistMeta, getPlaylistMetas } from "~/storage/sqlite/playlist";
 import { Layout, LayoutButton } from "~/components/layout";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import { PlaylistItem } from "~/components/playlist-item";
 import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
@@ -174,8 +174,9 @@ export default function Page() {
     if (windowDimensions.width >= 1536) {
         windowWidth = 1280;
     }
-    const columns = showGrid ? Math.floor(windowWidth / 200) : windowWidth > 1024 ? 2 : 1;
+    const columns = showGrid ? Math.max(Math.floor(windowWidth / 200), 2) : windowWidth > 1024 ? 2 : 1;
     const columnHeight = windowWidth / columns + 72;
+    const gridSidePadding = windowWidth >= 448 ? 12 : 8;
     const [width, setWidth] = useState(0);
 
     // 模态框管理
@@ -285,20 +286,22 @@ export default function Page() {
             >
                 {/* 不能用 ListEmptyComponent 做空内容提示的原因：https://github.com/Shopify/flash-list/issues/848 */}
                 {(data || []).length > 0 ? (
-                    <FlashList
-                        data={data}
-                        renderItem={e => <PlaylistActionItem grid={showGrid} {...e.item} />}
-                        estimatedItemSize={showGrid ? columnHeight : 80}
-                        numColumns={columns}
-                        onLayout={e => {
-                            setWidth(e.nativeEvent.layout.width);
-                        }}
-                        contentContainerStyle={{
-                            paddingBottom: edgeInsets.bottom,
-                            paddingHorizontal: showGrid ? 12 : 0,
-                        }}
-                        extraData={showGrid}
-                    />
+                    <View className={"flex-1 @container"}>
+                        <FlashList
+                            data={data}
+                            renderItem={e => <PlaylistActionItem grid={showGrid} {...e.item} />}
+                            estimatedItemSize={showGrid ? columnHeight : 80}
+                            numColumns={columns}
+                            onLayout={e => {
+                                setWidth(e.nativeEvent.layout.width);
+                            }}
+                            contentContainerStyle={{
+                                paddingBottom: edgeInsets.bottom,
+                                paddingHorizontal: showGrid ? gridSidePadding : 0,
+                            }}
+                            extraData={showGrid}
+                        />
+                    </View>
                 ) : (
                     <View className={"flex-1 items-center justify-center gap-4"}>
                         <Text className={"leading-normal text-sm font-semibold color-typography-500"}>

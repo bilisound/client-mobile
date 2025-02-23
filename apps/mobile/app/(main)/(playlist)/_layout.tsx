@@ -1,11 +1,8 @@
 import { Stack } from "expo-router";
-import { useUpdateTriggerStore } from "~/store/update-trigger";
 
 export default function StackLayout() {
-    const { count } = useUpdateTriggerStore();
-
     return (
-        <Stack key={count}>
+        <Stack>
             <Stack.Screen
                 name="playlist"
                 options={{

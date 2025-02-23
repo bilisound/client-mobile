@@ -87,7 +87,7 @@ export default function CoverPicker() {
     // 布局管理
     const windowDimensions = useWindowDimensions();
     let windowWidth = windowDimensions.width;
-    const columns = Math.floor(windowWidth / 200);
+    const columns = Math.max(Math.floor(windowWidth / 200), 2);
     const columnHeight = windowWidth / columns;
 
     return (
