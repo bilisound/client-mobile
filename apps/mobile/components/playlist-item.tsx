@@ -10,6 +10,7 @@ import { SkeletonText } from "~/components/skeleton-text";
 import { Monicon } from "@monicon/native";
 import { Image } from "expo-image";
 import { getImageProxyUrl } from "~/business/constant-helper";
+import { Svg, Polygon } from "react-native-svg";
 
 export interface PlaylistItemProps {
     item?: PlaylistMeta;
@@ -66,11 +67,21 @@ export function PlaylistItem({ item, onPress, onLongPress, className, style, gri
             <>
                 {item ? (
                     <>
-                        <View className={"w-full rounded-2xl bg-background-200 overflow-hidden"}>
+                        <View className={"w-full rounded-2xl bg-background-200 overflow-hidden relative"}>
                             <Image
                                 source={getImageProxyUrl(item?.imgUrl ?? "")}
                                 className={"w-full aspect-square"}
                             ></Image>
+                            {item.source ? (
+                                <>
+                                    <Svg width="58" height="58" style={{ position: "absolute", right: 0, bottom: 0 }}>
+                                        <Polygon points="58,0 58,58 0,58" fill={item.color} />
+                                    </Svg>
+                                    <View className={"absolute right-3 bottom-3 size-3 items-center justify-center"}>
+                                        <Monicon name="fa6-solid:cloud" size={12} color="white" />
+                                    </View>
+                                </>
+                            ) : null}
                         </View>
                         <Text className="text-sm flex-1 pt-2" isTruncated>
                             {item.title}
