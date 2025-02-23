@@ -187,7 +187,7 @@ export default function Page() {
             await deletePlaylistMeta(displayTrack!.id);
             await queryClient.invalidateQueries({ queryKey: ["playlist_meta"] });
             await queryClient.invalidateQueries({ queryKey: ["playlist_meta_apply"] });
-            useUpdateTriggerStore.getState().incrementCount();
+            await refetch();
 
             // 清空当前播放队列隶属歌单的状态机
             const got: { value?: PlaylistMeta } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");
