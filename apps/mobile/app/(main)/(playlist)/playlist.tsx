@@ -283,10 +283,12 @@ export default function Page() {
                     </>
                 }
             >
-                {/* 不能用 ListEmptyComponent 做空内容提示的原因：https://github.com/Shopify/flash-list/issues/848 */}
-                {(data || []).length > 0 ? (
-                    <View className={"flex-1 @container"}>
+                <View className={"flex-1 @container"}>
+                    {/* 不能用 ListEmptyComponent 做空内容提示的原因：https://github.com/Shopify/flash-list/issues/848 */}
+                    {(data || []).length > 0 ? (
                         <FlashList
+                            refreshing={isLoading}
+                            onRefresh={() => refetch()}
                             data={data}
                             renderItem={e => <PlaylistActionItem grid={showGrid} {...e.item} />}
                             estimatedItemSize={showGrid ? columnHeight : 80}
@@ -300,19 +302,19 @@ export default function Page() {
                             }}
                             extraData={showGrid}
                         />
-                    </View>
-                ) : (
-                    <View className={"flex-1 items-center justify-center gap-4"}>
-                        <Text className={"leading-normal text-sm font-semibold color-typography-500"}>
-                            这里空空如也
-                        </Text>
-                        <ButtonOuter>
-                            <Button onPress={() => router.navigate("/")}>
-                                <ButtonText>去查询</ButtonText>
-                            </Button>
-                        </ButtonOuter>
-                    </View>
-                )}
+                    ) : (
+                        <View className={"flex-1 items-center justify-center gap-4"}>
+                            <Text className={"leading-normal text-sm font-semibold color-typography-500"}>
+                                这里空空如也
+                            </Text>
+                            <ButtonOuter>
+                                <Button onPress={() => router.navigate("/")}>
+                                    <ButtonText>去查询</ButtonText>
+                                </Button>
+                            </ButtonOuter>
+                        </View>
+                    )}
+                </View>
 
                 {/* 操作菜单 */}
                 <LongPressActions
