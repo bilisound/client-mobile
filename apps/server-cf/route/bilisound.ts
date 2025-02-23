@@ -37,10 +37,10 @@ function getHandleResource(method: string) {
                     "Content-Type": dl ? "application/octet-stream" : "audio/mp4",
                     "Accept-Ranges": "bytes",
                     "Cache-Control": "max-age=604800",
+                    "Content-Length": contentLength,
                     ...(range
                         ? {
                               "Content-Range": contentRange,
-                              "Content-Length": contentLength,
                           }
                         : {}),
                 },
