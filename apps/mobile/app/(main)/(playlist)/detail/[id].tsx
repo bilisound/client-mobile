@@ -76,7 +76,7 @@ function extractAndProcessImgUrls(playlistDetails: PlaylistDetail[]) {
 }
 
 function ImagesGroup({ images: origImages }: { images: string[] }) {
-    const images = origImages.map(image => getImageProxyUrl(image));
+    const images = origImages;
     if (images.length === 0) {
         return <View className="aspect-video rounded-lg bg-background-100" />;
     }
