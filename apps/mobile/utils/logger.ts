@@ -30,7 +30,7 @@ const log = logger.createLogger({
 export default log;
 
 export async function getLogList() {
-    return FileSystem.readDirectoryAsync(BILISOUND_LOG_URI);
+    return (await FileSystem.readDirectoryAsync(BILISOUND_LOG_URI)).sort((a, b) => b.localeCompare(a));
 }
 
 export async function getLog(name: string) {
