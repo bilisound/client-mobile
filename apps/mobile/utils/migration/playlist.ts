@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { eq, isNull, sql } from "drizzle-orm";
 import * as FileSystem from "expo-file-system";
 
 import log from "../logger";
@@ -21,7 +21,7 @@ export async function handlePlaylist() {
 
     log.info(`当前数据库版本：${version}`);
 
-    while (version < 3) {
+    while (version < 4) {
         // 版本为 0：首次使用 Bilisound 或从 1.5.0 以下版本升级上来，需要创建数据库，并且导入存在 MMKV 中的旧版歌单数据
         if (version <= 0) {
             log.info("正在执行 v0 -> v3 升级程序……");
@@ -150,8 +150,33 @@ export async function handlePlaylist() {
             log.info(`升级数据库版本至 3`);
             version = 3;
         }
+
+        // 版本为 3：需要填充缺失的数据
+        if (version === 3) {
+            log.info("正在执行 v3 -> v4 升级程序……");
+
+            await db.transaction(async tx => {
+                const result = await tx.select().from(playlistMeta).where(isNull(playlistMeta.imgUrl));
+                console.log(JSON.stringify(result, null, 4));
+                for (let i = 0; i < result.length; i++) {
+                    const e = result[i];
+                    log.info(`更新本地歌单「${e.title}」的图片`);
+
+                    const firstItem = await tx.select().from(playlistDetail).where(eq(playlistDetail.playlistId, e.id));
+                    if (firstItem[0]) {
+                        await tx.update(playlistMeta).set({
+                            id: e.id,
+                            imgUrl: firstItem[0].imgUrl,
+                        });
+                    }
+                }
+            });
+
+            log.info(`升级数据库版本至 4`);
+            version = 4;
+        }
     }
 
-    log.info(`将数据库版本设置为 3`);
-    playlistStorage.set(PLAYLIST_DB_VERSION, 3);
+    log.info(`将数据库版本设置为 4`);
+    playlistStorage.set(PLAYLIST_DB_VERSION, 4);
 }
