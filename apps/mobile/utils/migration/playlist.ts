@@ -115,6 +115,7 @@ export async function handlePlaylist() {
 
             log.info(`升级数据库版本至 3`);
             version = 3;
+            playlistStorage.set(PLAYLIST_DB_VERSION, 3);
         }
 
         // 版本为 1：需要增加数据库列
@@ -137,6 +138,7 @@ export async function handlePlaylist() {
 
             log.info(`升级数据库版本至 3`);
             version = 3;
+            playlistStorage.set(PLAYLIST_DB_VERSION, 3);
         }
 
         // 版本为 2：需要增加数据库列
@@ -150,6 +152,7 @@ export async function handlePlaylist() {
 
             log.info(`升级数据库版本至 3`);
             version = 3;
+            playlistStorage.set(PLAYLIST_DB_VERSION, 3);
         }
 
         // 版本为 3：需要填充缺失的数据
@@ -178,9 +181,7 @@ export async function handlePlaylist() {
 
             log.info(`升级数据库版本至 4`);
             version = 4;
+            playlistStorage.set(PLAYLIST_DB_VERSION, 4);
         }
     }
-
-    log.info(`将数据库版本设置为 4`);
-    playlistStorage.set(PLAYLIST_DB_VERSION, 4);
 }
