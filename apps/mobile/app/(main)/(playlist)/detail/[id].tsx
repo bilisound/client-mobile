@@ -296,7 +296,7 @@ function LongPressActions({ showActionSheet, onAction, onClose, current }: LongP
                     </View>
                     <ActionsheetItemText>修改信息</ActionsheetItemText>
                 </ActionsheetItem>
-                {showEditCover ? (
+                {showEditCover && (current?.amount ?? 0) > 0 ? (
                     <ActionsheetItem onPress={() => onAction("editCover")}>
                         <View className={"size-6 items-center justify-center"}>
                             <Monicon name={"fa6-solid:images"} size={18} color={colorValue("--color-typography-700")} />

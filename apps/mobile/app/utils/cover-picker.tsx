@@ -6,7 +6,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPlaylistDetail, setPlaylistMeta } from "~/storage/sqlite/playlist";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
-import { convertToHTTPS } from "~/utils/string";
 import { Pressable } from "~/components/ui/pressable";
 import React, { useState } from "react";
 import {
@@ -19,6 +18,7 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Heading } from "~/components/ui/heading";
 import Toast from "react-native-toast-message";
+import { getImageProxyUrl } from "~/business/constant-helper";
 
 function determinePadding(index: number, amount: number, columns: number) {
     const row = Math.floor(index / columns);
@@ -95,7 +95,7 @@ export default function CoverPicker() {
             <View className={"flex-1"}>
                 <FlashList
                     renderItem={e => (
-                        <View style={determinePadding(e.index, data?.length ?? 0, columns)}>
+                        <View style={determinePadding(e.index, data?.length ?? 0, columns)} className={"flex-1"}>
                             <Pressable
                                 onPress={() => {
                                     setUserPickResult(e.item.imgUrl);
@@ -104,7 +104,7 @@ export default function CoverPicker() {
                                 className={"w-full"}
                                 androidRipple={false}
                             >
-                                <Image source={convertToHTTPS(e.item.imgUrl)} className={"w-full aspect-square"} />
+                                <Image source={getImageProxyUrl(e.item.imgUrl)} className={"w-full aspect-square"} />
                             </Pressable>
                         </View>
                     )}
@@ -143,7 +143,7 @@ export default function CoverPicker() {
                         </Heading>
                     </AlertDialogHeader>
                     <AlertDialogBody className="mt-4 mb-6">
-                        <Image source={convertToHTTPS(userPickResult)} className={"rounded-xl w-full aspect-video"} />
+                        <Image source={getImageProxyUrl(userPickResult)} className={"rounded-xl w-full aspect-video"} />
                     </AlertDialogBody>
                     <AlertDialogFooter>
                         <ButtonOuter>
