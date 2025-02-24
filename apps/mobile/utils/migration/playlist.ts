@@ -18,6 +18,7 @@ const PLAYLIST_V0_BACKUP_URI = FileSystem.documentDirectory + "migration_backup/
 
 export async function handlePlaylist() {
     let version = playlistStorage.getNumber(PLAYLIST_DB_VERSION) || 0;
+    // let version = 3;
 
     log.info(`当前数据库版本：${version}`);
 
@@ -164,10 +165,13 @@ export async function handlePlaylist() {
 
                     const firstItem = await tx.select().from(playlistDetail).where(eq(playlistDetail.playlistId, e.id));
                     if (firstItem[0]) {
-                        await tx.update(playlistMeta).set({
-                            id: e.id,
-                            imgUrl: firstItem[0].imgUrl,
-                        });
+                        await tx
+                            .update(playlistMeta)
+                            .set({
+                                ...e,
+                                imgUrl: firstItem[0].imgUrl,
+                            })
+                            .where(eq(playlistMeta.id, e.id));
                     }
                 }
             });
