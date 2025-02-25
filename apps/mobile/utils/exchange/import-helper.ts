@@ -1,13 +1,5 @@
 import { parse } from "smol-toml";
-import {
-    playlistDetail,
-    PlaylistDetailInsert,
-    playlistImportSchema,
-    playlistMeta,
-    PlaylistMetaInsert,
-} from "~/storage/sqlite/schema";
-import { db } from "~/storage/sqlite/main";
-import Toast from "react-native-toast-message";
+import { PlaylistDetailInsert, playlistImportSchema, PlaylistMetaInsert } from "~/storage/sqlite/schema";
 
 interface MigratePlan {
     meta: PlaylistMetaInsert;
@@ -31,24 +23,5 @@ export function importHelper(content: string) {
             detail,
         });
     }
-    db.transaction(tx => {
-        for (let i = 0; i < migratePlan.length; i++) {
-            const e = migratePlan[i];
-            const { lastInsertRowId } = tx
-                .insert(playlistMeta)
-                .values({ ...e.meta, amount: e.detail.length, id: undefined })
-                .run();
-            for (let j = 0; j < e.detail.length; j++) {
-                const f = e.detail[j];
-                tx.insert(playlistDetail)
-                    .values({ ...f, id: undefined, playlistId: lastInsertRowId })
-                    .run();
-            }
-        }
-    });
-    Toast.show({
-        type: "success",
-        text1: "歌单导入成功",
-        text2: `导入了 ${migratePlan.length} 个歌单`,
-    });
+    return migratePlan;
 }

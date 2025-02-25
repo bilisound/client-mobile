@@ -1,6 +1,7 @@
 import Toast from "react-native-toast-message";
 import log from "~/utils/logger";
 import { importHelper } from "~/utils/exchange/import-helper";
+import { addToPlaylist, insertPlaylistMeta } from "~/storage/sqlite/playlist";
 
 export async function exportPlaylistToFile(id?: number) {}
 
@@ -36,7 +37,20 @@ function readPlaylistFromFile() {
 
 export async function importPlaylistFromFile() {
     try {
-        importHelper(await readPlaylistFromFile());
+        const migratePlan = importHelper(await readPlaylistFromFile());
+        for (let i = 0; i < migratePlan.length; i++) {
+            const e = migratePlan[i];
+            const { lastInsertRowId } = await insertPlaylistMeta({ ...e.meta, amount: e.detail.length });
+            await addToPlaylist(
+                lastInsertRowId,
+                e.detail.map(f => ({ ...f, playlistId: lastInsertRowId })),
+            );
+        }
+        Toast.show({
+            type: "success",
+            text1: "歌单导入成功",
+            text2: `导入了 ${migratePlan.length} 个歌单`,
+        });
     } catch (e) {
         log.error(`歌单导入失败：${e}`);
         Toast.show({

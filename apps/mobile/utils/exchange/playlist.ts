@@ -8,6 +8,8 @@ import { saveTextFile } from "~/utils/file";
 import log from "~/utils/logger";
 import Toast from "react-native-toast-message";
 import { importHelper } from "~/utils/exchange/import-helper";
+import { db } from "~/storage/sqlite/main";
+import { playlistDetail, playlistMeta } from "~/storage/sqlite/schema";
 
 export async function exportPlaylistToFile(id?: number) {
     let output;
@@ -43,7 +45,27 @@ export async function importPlaylistFromFile() {
     }
     try {
         log.info(`用户导入歌单：${pickResult.assets?.[0].uri}`);
-        importHelper(await FileSystem.readAsStringAsync(uri, { encoding: "utf8" }));
+        const migratePlan = importHelper(await FileSystem.readAsStringAsync(uri, { encoding: "utf8" }));
+        db.transaction(tx => {
+            for (let i = 0; i < migratePlan.length; i++) {
+                const e = migratePlan[i];
+                const { lastInsertRowId } = tx
+                    .insert(playlistMeta)
+                    .values({ ...e.meta, amount: e.detail.length, id: undefined })
+                    .run();
+                for (let j = 0; j < e.detail.length; j++) {
+                    const f = e.detail[j];
+                    tx.insert(playlistDetail)
+                        .values({ ...f, id: undefined, playlistId: lastInsertRowId })
+                        .run();
+                }
+            }
+        });
+        Toast.show({
+            type: "success",
+            text1: "歌单导入成功",
+            text2: `导入了 ${migratePlan.length} 个歌单`,
+        });
     } catch (e) {
         log.error(`歌单导入失败：${e}`);
         Toast.show({
