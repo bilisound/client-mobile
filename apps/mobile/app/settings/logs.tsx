@@ -22,9 +22,7 @@ import { Heading } from "~/components/ui/heading";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { useConfirm } from "~/hooks/useConfirm";
 import Toast from "react-native-toast-message";
-
-const matchRegex = /^bilisound_log_(.+)_(\d{1,2})-(\d{1,2})-(\d+).log$/;
-const matchOldRegex = /^bilisound_log_(\d{1,2})-(\d{1,2})-(\d+).log$/;
+import { matchOldRegex, matchRegex } from "~/utils/logger-common";
 
 export default function Page() {
     const edgeInsets = useSafeAreaInsets();
@@ -64,6 +62,14 @@ export default function Page() {
             <FlashList
                 contentContainerStyle={{ paddingBottom: edgeInsets.bottom }}
                 estimatedItemSize={72}
+                ListFooterComponent={
+                    <Text
+                        className="text-sm px-5 opacity-60 pt-4 text-center"
+                        style={{ paddingBottom: edgeInsets.bottom + 16 }}
+                    >
+                        超过 14 天的日志会被自动删除
+                    </Text>
+                }
                 renderItem={e => {
                     const info = matchRegex.exec(e.item);
                     const infoOld = matchOldRegex.exec(e.item);

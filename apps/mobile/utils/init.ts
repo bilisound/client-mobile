@@ -1,7 +1,7 @@
 import * as FileSystem from "expo-file-system";
 import { SplashScreen } from "expo-router";
 
-import log from "./logger";
+import log, { deleteOldLogContent } from "./logger";
 import useSettingsStore from "../store/settings";
 
 import { BILISOUND_LOG_URI, BILISOUND_OFFLINE_URI, BILISOUND_PROCESS_URI } from "~/constants/file";
@@ -15,6 +15,7 @@ export default async function init() {
     await useSettingsStore.persist.rehydrate();
     const settings = useSettingsStore.getState();
     log.setSeverity(settings.debugMode ? "debug" : "info");
+    await deleteOldLogContent();
 
     // 目录初始化
     try {
