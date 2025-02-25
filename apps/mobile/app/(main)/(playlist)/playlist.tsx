@@ -39,6 +39,7 @@ import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { getImageProxyUrl } from "~/business/constant-helper";
+import useSettingsStore from "~/store/settings";
 
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
@@ -161,7 +162,6 @@ export default function Page() {
     };
 
     // 布局管理
-    const [showGrid, setShowGrid] = useState(false);
     const windowDimensions = useWindowDimensions();
     let windowWidth = windowDimensions.width;
     if (windowDimensions.width >= 768) {
@@ -173,7 +173,11 @@ export default function Page() {
     if (windowDimensions.width >= 1536) {
         windowWidth = 1280;
     }
-    const columns = showGrid ? Math.max(Math.floor(windowWidth / 200), 2) : windowWidth > 1024 ? 2 : 1;
+    const { showPlaylistInGrid, toggle } = useSettingsStore(state => ({
+        showPlaylistInGrid: state.showPlaylistInGrid,
+        toggle: state.toggle,
+    }));
+    const columns = showPlaylistInGrid ? Math.max(Math.floor(windowWidth / 200), 2) : windowWidth > 1024 ? 2 : 1;
     const columnHeight = windowWidth / columns + 72;
     const gridSidePadding = windowWidth >= 448 ? 12 : 8;
     const [width, setWidth] = useState(0);
@@ -225,11 +229,11 @@ export default function Page() {
                 title={"歌单"}
                 leftAccessories={
                     <LayoutButton
-                        iconName={showGrid ? "mingcute:grid-fill" : "fa6-solid:list"}
+                        iconName={showPlaylistInGrid ? "mingcute:grid-fill" : "fa6-solid:list"}
                         aria-label={"扫描二维码"}
-                        iconSize={showGrid ? 24 : 20}
+                        iconSize={showPlaylistInGrid ? 24 : 20}
                         onPress={() => {
-                            setShowGrid(e => !e);
+                            toggle("showPlaylistInGrid");
                         }}
                     />
                 }
@@ -290,17 +294,17 @@ export default function Page() {
                             refreshing={isLoading}
                             onRefresh={() => refetch()}
                             data={data}
-                            renderItem={e => <PlaylistActionItem grid={showGrid} {...e.item} />}
-                            estimatedItemSize={showGrid ? columnHeight : 80}
+                            renderItem={e => <PlaylistActionItem grid={showPlaylistInGrid} {...e.item} />}
+                            estimatedItemSize={showPlaylistInGrid ? columnHeight : 80}
                             numColumns={columns}
                             onLayout={e => {
                                 setWidth(e.nativeEvent.layout.width);
                             }}
                             contentContainerStyle={{
                                 paddingBottom: edgeInsets.bottom,
-                                paddingHorizontal: showGrid ? gridSidePadding : 0,
+                                paddingHorizontal: showPlaylistInGrid ? gridSidePadding : 0,
                             }}
-                            extraData={showGrid}
+                            extraData={showPlaylistInGrid}
                         />
                     ) : (
                         <View className={"flex-1 items-center justify-center gap-4"}>

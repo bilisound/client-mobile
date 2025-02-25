@@ -8,6 +8,7 @@ export interface SettingsProps {
     downloadNextTrack: boolean;
     filterResourceURL: boolean;
     debugMode: boolean;
+    showPlaylistInGrid: boolean;
     theme: string;
     showYuruChara: boolean;
 }
@@ -18,11 +19,19 @@ export interface SettingsMethods {
 }
 
 const initialState: SettingsProps = {
+    // 使用 av 号
     useLegacyID: false,
+    // 自动下载
     downloadNextTrack: true,
+    // 过滤非 CDN 资源地址
     filterResourceURL: true,
+    // 开发者模式
     debugMode: false,
+    // 使用主题
     theme: "classic",
+    // 显示网格歌单布局
+    showPlaylistInGrid: false,
+    // 显示看板娘
     showYuruChara: true,
 };
 
