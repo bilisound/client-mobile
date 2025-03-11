@@ -1,7 +1,7 @@
 {
   "name": "@bilisound/mobile",
   "main": "expo-router/entry",
-  "version": "2.0.1",
+  "version": "2.2.0",
   "scripts": {
     "start": "expo start -c --dev-client",
     "android": "expo run:android",
