@@ -11,9 +11,12 @@ import useSettingsStore from "~/store/settings";
 import { bv2av } from "~/utils/vendors/av-bv";
 import { getCacheAudioPath, saveAudioFile, uriToPath } from "~/utils/file";
 import log from "~/utils/logger";
-import { MenuItem } from "~/typings/menu";
+import { ActionMenuItem } from "~/components/action-menu";
 
-export function useDownloadMenuItem(currentTrack: TrackData | null | undefined, closeCallback: () => void): MenuItem[] {
+export function useDownloadMenuItem(
+    currentTrack: TrackData | null | undefined,
+    closeCallback: () => void,
+): ActionMenuItem[] {
     const { downloadList } = useDownloadStore(state => ({ downloadList: state.downloadList }));
     const currentItemDownload = downloadList.get(
         currentTrack?.extendedData?.id + "_" + currentTrack?.extendedData?.episode,

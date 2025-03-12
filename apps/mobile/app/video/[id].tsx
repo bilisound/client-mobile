@@ -40,15 +40,18 @@ import { Monicon } from "@monicon/native";
 import { Box } from "~/components/ui/box";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
+import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
+import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
+import { undefined } from "zod";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
 interface LongPressActionsProps {
     showActionSheet: boolean;
-    displayTrack?: PageItem;
+    displayTrack: PageItem;
     onClose: () => void;
     onAction: (action: "addPlaylist" | "addPlaylistRecent" | "close") => void;
-    data?: GetMetadataResponse;
+    data: GetMetadataResponse;
 }
 
 /**
@@ -56,6 +59,31 @@ interface LongPressActionsProps {
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, data }: LongPressActionsProps) {
     const { colorValue } = useRawThemeValues();
+
+    const menuItems: ActionMenuItem[] = [
+        ...useDownloadMenuItem(
+            {
+                title: displayTrack.part,
+                artist: data.owner.name ?? "",
+                artworkUri: data.pic ?? "",
+                duration: displayTrack.duration ?? 0,
+                extendedData: {
+                    id: data.bvid,
+                    episode: displayTrack.page,
+
+                    // 以下为虚拟值
+                    isLoaded: false,
+                    expireAt: 0,
+                    artworkUrl: data.pic,
+                },
+                headers: {},
+                id: "",
+                mimeType: "",
+                uri: "",
+            },
+            () => onClose(),
+        ),
+    ];
 
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
@@ -71,6 +99,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, da
                         image={getImageProxyUrl(data.pic, "https://www.bilibili.com/video/" + data.bvid)}
                     />
                 )}
+                <ActionMenu menuItems={menuItems} />
                 <ActionsheetItem onPress={() => onAction("addPlaylist")}>
                     <Box className={"size-6 items-center justify-center"}>
                         <Monicon name={"fa6-solid:plus"} size={16} color={colorValue("--color-typography-700")} />
@@ -321,42 +350,44 @@ export default function Page() {
             </Layout>
 
             {/* 曲目操作 */}
-            <LongPressActions
-                showActionSheet={showActionSheet}
-                onClose={handleClose}
-                onAction={action => {
-                    handleClose();
-                    if (!displayTrack) {
-                        log.error("/query/[id]", `用户在没有指定操作目标的情况下，执行了菜单操作 ${action}`);
-                        return;
-                    }
-                    switch (action) {
-                        case "addPlaylist":
-                            openAddPlaylistPage({
-                                playlistDetail: [
-                                    {
-                                        author: data?.owner.name ?? "",
-                                        bvid: data?.bvid ?? "",
-                                        duration: displayTrack.duration,
-                                        episode: displayTrack.page,
-                                        title: displayTrack.part,
-                                        imgUrl: data?.pic ?? "",
-                                        id: 0,
-                                        playlistId: 0,
-                                        extendedData: null,
-                                    },
-                                ],
-                                name: data?.title ?? "",
-                                description: data?.desc ?? "",
-                            });
-                            break;
-                        case "close":
-                            break;
-                    }
-                }}
-                displayTrack={displayTrack}
-                data={data}
-            />
+            {displayTrack && data ? (
+                <LongPressActions
+                    showActionSheet={showActionSheet}
+                    onClose={handleClose}
+                    onAction={action => {
+                        handleClose();
+                        if (!displayTrack) {
+                            log.error("/query/[id]", `用户在没有指定操作目标的情况下，执行了菜单操作 ${action}`);
+                            return;
+                        }
+                        switch (action) {
+                            case "addPlaylist":
+                                openAddPlaylistPage({
+                                    playlistDetail: [
+                                        {
+                                            author: data?.owner.name ?? "",
+                                            bvid: data?.bvid ?? "",
+                                            duration: displayTrack.duration,
+                                            episode: displayTrack.page,
+                                            title: displayTrack.part,
+                                            imgUrl: data?.pic ?? "",
+                                            id: 0,
+                                            playlistId: 0,
+                                            extendedData: null,
+                                        },
+                                    ],
+                                    name: data?.title ?? "",
+                                    description: data?.desc ?? "",
+                                });
+                                break;
+                            case "close":
+                                break;
+                        }
+                    }}
+                    displayTrack={displayTrack}
+                    data={data}
+                />
+            ) : null}
         </GestureHandlerRootView>
     );
 }

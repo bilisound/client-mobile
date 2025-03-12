@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { InsidePageContext } from "~/components/main-bottom-sheet/utils";
 import { useCurrentTrack } from "@bilisound/player";
-import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { useActionSheetStore } from "~/components/main-bottom-sheet/stores";
 import { usePlaybackSpeedStore } from "~/store/playback-speed";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
@@ -14,24 +13,20 @@ import {
     ActionsheetContent,
     ActionsheetDragIndicator,
     ActionsheetDragIndicatorWrapper,
-    ActionsheetItem,
-    ActionsheetItemText,
 } from "~/components/ui/actionsheet";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { formatSecond } from "~/utils/datetime";
-import { Monicon } from "@monicon/native";
 import { SPEED_PRESETS } from "~/components/main-bottom-sheet/constants";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import { CheckIcon } from "~/components/ui/icon";
 import { SpeedControlPanel } from "./speed-control-panel";
 import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
-import { MenuItem } from "~/typings/menu";
+import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
 
 export function PlayerControlMenu() {
     const isInsidePage = useContext(InsidePageContext);
     const currentTrack = useCurrentTrack();
-    const { colorValue } = useRawThemeValues();
     const { showActionSheet, showSpeedActionSheet, handleClose, handleSpeedClose, setShowSpeedActionSheet } =
         useActionSheetStore(state => ({
             showActionSheet: state.showActionSheet,
@@ -46,7 +41,7 @@ export function PlayerControlMenu() {
         applySpeed: state.applySpeed,
     }));
 
-    const menuItems: MenuItem[] = [
+    const menuItems: ActionMenuItem[] = [
         {
             show: true,
             disabled: false,
@@ -159,20 +154,7 @@ export function PlayerControlMenu() {
                             image={currentTrack.artworkUri}
                         />
                     )}
-                    {menuItems
-                        .filter(e => e.show)
-                        .map(item => (
-                            <ActionsheetItem key={item.text} onPress={item.action} isDisabled={item.disabled}>
-                                <View className={"size-6 items-center justify-center"}>
-                                    <Monicon
-                                        name={item.icon}
-                                        size={item.iconSize}
-                                        color={colorValue("--color-typography-700")}
-                                    />
-                                </View>
-                                <ActionsheetItemText>{item.text}</ActionsheetItemText>
-                            </ActionsheetItem>
-                        ))}
+                    <ActionMenu menuItems={menuItems} />
                 </ActionsheetContent>
             </Actionsheet>
 
