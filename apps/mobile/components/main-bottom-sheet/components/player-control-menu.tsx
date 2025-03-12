@@ -1,23 +1,13 @@
 import React, { useContext } from "react";
 import { InsidePageContext } from "~/components/main-bottom-sheet/utils";
 import { useCurrentTrack } from "@bilisound/player";
-import { useMMKVBoolean } from "react-native-mmkv";
-import { CACHE_INVALID_KEY_DO_NOT_USE, cacheStatusStorage } from "~/storage/cache-status";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { useActionSheetStore } from "~/components/main-bottom-sheet/stores";
 import { usePlaybackSpeedStore } from "~/store/playback-speed";
-import useDownloadStore from "~/store/download";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { router } from "expo-router";
 import { openAddPlaylistPage } from "~/business/playlist/misc";
-import { Platform, View } from "react-native";
-import { downloadResource } from "~/business/download";
-import Toast from "react-native-toast-message";
-import { getBilisoundResourceUrlOnline } from "~/api/bilisound";
-import useSettingsStore from "~/store/settings";
-import { bv2av } from "~/utils/vendors/av-bv";
-import { getCacheAudioPath, saveAudioFile, uriToPath } from "~/utils/file";
-import log from "~/utils/logger";
+import { View } from "react-native";
 import {
     Actionsheet,
     ActionsheetBackdrop,
@@ -35,17 +25,12 @@ import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import { CheckIcon } from "~/components/ui/icon";
 import { SpeedControlPanel } from "./speed-control-panel";
-import { getImageProxyUrl } from "~/business/constant-helper";
+import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
+import { MenuItem } from "~/typings/menu";
 
 export function PlayerControlMenu() {
     const isInsidePage = useContext(InsidePageContext);
     const currentTrack = useCurrentTrack();
-    const [currentCache] = useMMKVBoolean(
-        currentTrack?.extendedData
-            ? currentTrack.extendedData.id + "_" + currentTrack.extendedData.episode
-            : CACHE_INVALID_KEY_DO_NOT_USE,
-        cacheStatusStorage,
-    );
     const { colorValue } = useRawThemeValues();
     const { showActionSheet, showSpeedActionSheet, handleClose, handleSpeedClose, setShowSpeedActionSheet } =
         useActionSheetStore(state => ({
@@ -60,13 +45,8 @@ export function PlayerControlMenu() {
         retainPitch: state.retainPitch,
         applySpeed: state.applySpeed,
     }));
-    const { downloadList } = useDownloadStore(state => ({ downloadList: state.downloadList }));
-    const currentItemDownload = downloadList.get(
-        currentTrack?.extendedData?.id + "_" + currentTrack?.extendedData?.episode,
-    );
-    const currentProgress = currentItemDownload?.progress;
 
-    const menuItems = [
+    const menuItems: MenuItem[] = [
         {
             show: true,
             disabled: false,
@@ -129,78 +109,7 @@ export function PlayerControlMenu() {
                 );
             },
         },
-        {
-            show: Platform.OS !== "web" && !currentCache,
-            disabled: !!currentItemDownload,
-            icon: "fa6-solid:download",
-            iconSize: 18,
-            text: currentProgress
-                ? `下载中 (${Math.round((currentProgress.totalBytesWritten / currentProgress.totalBytesExpectedToWrite) * 100 || 0)}%)`
-                : "缓存到本地",
-            action: async () => {
-                if (!currentTrack?.extendedData) {
-                    return;
-                }
-                await downloadResource(currentTrack.extendedData.id, currentTrack.extendedData.episode);
-                if (!useActionSheetStore.getState().showActionSheet) {
-                    Toast.show({
-                        type: "success",
-                        text1: "下载完成",
-                        text2: currentTrack.title + "",
-                    });
-                }
-            },
-        },
-        {
-            show: Platform.OS === "web",
-            disabled: false,
-            icon: "fa6-solid:download",
-            iconSize: 18,
-            text: "下载",
-            action: async () => {
-                if (!currentTrack?.extendedData) {
-                    return;
-                }
-                globalThis.window.open(
-                    getBilisoundResourceUrlOnline(
-                        currentTrack.extendedData.id,
-                        currentTrack.extendedData.episode,
-                        useSettingsStore.getState().useLegacyID ? "av" : "bv",
-                    ).url,
-                );
-                handleClose();
-            },
-        },
-        {
-            show: Platform.OS !== "web" && currentCache,
-            disabled: false,
-            icon: "fa6-solid:floppy-disk",
-            iconSize: 18,
-            text: "保存到文件",
-            action: async () => {
-                if (!currentTrack?.extendedData) {
-                    return;
-                }
-                handleClose();
-
-                const fileName = `[${useSettingsStore.getState().useLegacyID ? bv2av(currentTrack.extendedData.id) : currentTrack.extendedData.id}] [P${currentTrack.extendedData.episode}] ${currentTrack.title}.m4a`;
-                try {
-                    await saveAudioFile(
-                        uriToPath(
-                            getCacheAudioPath(currentTrack.extendedData.id, currentTrack.extendedData.episode, false),
-                        ),
-                        fileName,
-                    );
-                    Toast.show({
-                        type: "success",
-                        text1: "文件已保存",
-                        text2: fileName,
-                    });
-                } catch (error) {
-                    log.error("文件未保存：" + error);
-                }
-            },
-        },
+        ...useDownloadMenuItem(currentTrack, () => handleClose()),
         {
             show: true,
             disabled: false,
