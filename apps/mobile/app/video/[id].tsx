@@ -281,9 +281,6 @@ export default function Page() {
     const { data, error } = useQuery({
         queryKey: [id],
         queryFn: () => {
-            if (!id) {
-                return undefined;
-            }
             return getBilisoundMetadata({ id });
         },
     });
