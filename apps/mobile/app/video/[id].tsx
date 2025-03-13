@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import useHistoryStore from "~/store/history";
 import { getBilisoundMetadata } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
-import { View, ViewStyle } from "react-native";
+import { Platform, View, ViewStyle } from "react-native";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "~/components/ui/skeleton";
 import { getImageProxyUrl } from "~/business/constant-helper";
@@ -42,7 +42,10 @@ import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
 import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
-import { undefined } from "zod";
+import { downloadResource } from "~/business/download";
+import { isCacheExists } from "~/storage/cache-status";
+import Toast from "react-native-toast-message";
+import { RELEASE_CHANNEL } from "~/constants/releasing";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -225,10 +228,23 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                 <View className={"mt-4 flex-row flex-wrap gap-2"}>
                     {data ? (
                         <>
-                            {/* todo 区分单分 P（本页操作）和多分 P（新开页操作），实现不同的下载逻辑 */}
-                            {process.env.NODE_ENV === "development" ? (
+                            {Platform.OS !== "web" && RELEASE_CHANNEL === "android_github_beta" ? (
                                 <ButtonOuter className={"rounded-full"}>
-                                    <Button className={"rounded-full"} onPress={() => {}}>
+                                    <Button
+                                        className={"rounded-full"}
+                                        onPress={() => {
+                                            for (let i = 0; i < data.pages.length; i++) {
+                                                const e = data.pages[i];
+                                                if (!isCacheExists(data.bvid, e.page)) {
+                                                    downloadResource(data.bvid, e.page);
+                                                }
+                                                Toast.show({
+                                                    type: "success",
+                                                    text1: "下载任务已添加",
+                                                });
+                                            }
+                                        }}
+                                    >
                                         <ButtonMonIcon name={"fa6-solid:download"} size={16} />
                                         <ButtonText>下载</ButtonText>
                                     </Button>

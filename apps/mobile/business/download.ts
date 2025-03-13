@@ -10,6 +10,7 @@ import { USER_AGENT_BILIBILI } from "~/constants/network";
 import { cacheStatusStorage } from "~/storage/cache-status";
 import { extractAudioFile } from "~/business/mp4";
 import { File } from "expo-file-system/next";
+import downloadQueue from "./download-queue";
 
 export async function downloadResource(bvid: string, episode: number) {
     const prefix = `[${bvid} / ${episode}] `;
@@ -42,78 +43,97 @@ export async function downloadResource(bvid: string, episode: number) {
         episode: playingRequest.episode,
         path: checkUrl,
         startTime,
+        started: false,
         progress: {
             totalBytesExpectedToWrite: 0,
             totalBytesWritten: 0,
         },
     });
 
-    // 获取源地址
-    const { url, isAudio } = await getBilisoundResourceUrl(
-        playingRequest.id,
-        playingRequest.episode,
-        useSettingsStore.getState().filterResourceURL,
-    );
-
-    // 待下载资源地址（可能是音频或视频）
-    const downloadTargetFileUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, true);
-
-    // 下载处理
-    const beginTime = global.performance.now();
-    const downloadResumable = FileSystem.createDownloadResumable(
-        url,
-        downloadTargetFileUrl,
-        {
-            headers: {
-                referer: getVideoUrl(playingRequest.id, playingRequest.episode),
-                "user-agent": USER_AGENT_BILIBILI,
+    return downloadQueue.add(async () => {
+        // 更新为正在下载的状态
+        updateDownloadItem(id, {
+            id: playingRequest.id,
+            episode: playingRequest.episode,
+            path: checkUrl,
+            startTime,
+            started: true,
+            progress: {
+                totalBytesExpectedToWrite: 0,
+                totalBytesWritten: 0,
             },
-            cache: true,
-        },
-        cb => {
-            // console.log(JSON.stringify(downloadResumable, null, 4));
-            // 更新状态管理器中的内容
-            updateDownloadItem(id, {
-                id: playingRequest.id,
-                episode: playingRequest.episode,
-                path: downloadTargetFileUrl,
-                startTime,
-                progress: cb,
-            });
-        },
-    );
-    await downloadResumable.downloadAsync();
-    const endTime = global.performance.now();
-    const info = await FileSystem.getInfoAsync(downloadTargetFileUrl);
-    const fileSize = info?.exists ? info.size : 0;
-    const runTime = (endTime - beginTime) / 1000;
-    log.debug(prefix + `下载任务结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(fileSize / runTime)}/s`);
-
-    if (isAudio) {
-        await FileSystem.moveAsync({
-            from: getCacheAudioPath(playingRequest.id, playingRequest.episode, true),
-            to: checkUrl,
         });
+
+        // 获取源地址
+        const { url, isAudio } = await getBilisoundResourceUrl(
+            playingRequest.id,
+            playingRequest.episode,
+            useSettingsStore.getState().filterResourceURL,
+        );
+
+        // 待下载资源地址（可能是音频或视频）
+        const downloadTargetFileUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, true);
+
+        // 下载处理
+        const beginTime = global.performance.now();
+        const downloadResumable = FileSystem.createDownloadResumable(
+            url,
+            downloadTargetFileUrl,
+            {
+                headers: {
+                    referer: getVideoUrl(playingRequest.id, playingRequest.episode),
+                    "user-agent": USER_AGENT_BILIBILI,
+                },
+                cache: true,
+            },
+            cb => {
+                // console.log(JSON.stringify(downloadResumable, null, 4));
+                // 更新状态管理器中的内容
+                updateDownloadItem(id, {
+                    id: playingRequest.id,
+                    episode: playingRequest.episode,
+                    path: downloadTargetFileUrl,
+                    startTime,
+                    started: true,
+                    progress: cb,
+                });
+            },
+        );
+        await downloadResumable.downloadAsync();
+        const endTime = global.performance.now();
+        const info = await FileSystem.getInfoAsync(downloadTargetFileUrl);
+        const fileSize = info?.exists ? info.size : 0;
+        const runTime = (endTime - beginTime) / 1000;
+        log.debug(
+            prefix + `下载任务结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(fileSize / runTime)}/s`,
+        );
+
+        if (isAudio) {
+            await FileSystem.moveAsync({
+                from: getCacheAudioPath(playingRequest.id, playingRequest.episode, true),
+                to: checkUrl,
+            });
+            cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
+            removeDownloadItem(id);
+            return;
+        }
+
+        // 如果不是音频流，进行音视频分离操作
+        log.info(prefix + "非音频流，进行音视频分离操作");
+
+        // 提取 m4a
+        try {
+            extractAudioFile(new File(downloadTargetFileUrl), new File(checkUrl));
+        } catch (e) {
+            log.error(prefix + "视频转码失败！");
+            log.error(`result：${e}`);
+            throw new Error("视频处理失败");
+        }
+
+        // 收尾
+        log.debug(prefix + "删除不再需要的视频文件");
+        await FileSystem.deleteAsync(downloadTargetFileUrl);
         cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
         removeDownloadItem(id);
-        return;
-    }
-
-    // 如果不是音频流，进行音视频分离操作
-    log.info(prefix + "非音频流，进行音视频分离操作");
-
-    // 提取 m4a
-    try {
-        extractAudioFile(new File(downloadTargetFileUrl), new File(checkUrl));
-    } catch (e) {
-        log.error(prefix + "视频转码失败！");
-        log.error(`result：${e}`);
-        throw new Error("视频处理失败");
-    }
-
-    // 收尾
-    log.debug(prefix + "删除不再需要的视频文件");
-    await FileSystem.deleteAsync(downloadTargetFileUrl);
-    cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
-    removeDownloadItem(id);
+    });
 }

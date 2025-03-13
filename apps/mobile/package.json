@@ -92,6 +92,7 @@
     "md5": "^2.3.0",
     "mp4.js": "github:ukyo/mp4.js#b4c99bf27bd8989eda5a0d04c1644c6bcade21f6",
     "nativewind": "4.1.23",
+    "p-queue": "^8.1.0",
     "path-browserify": "^1.0.1",
     "promise-memoize": "^1.2.1",
     "react": "18.3.1",

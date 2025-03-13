@@ -35,9 +35,15 @@ export function useDownloadMenuItem(
             disabled: !!currentItemDownload,
             icon: "fa6-solid:download",
             iconSize: 18,
-            text: currentProgress
-                ? `下载中 (${Math.round((currentProgress.totalBytesWritten / currentProgress.totalBytesExpectedToWrite) * 100 || 0)}%)`
-                : "缓存到本地",
+            text: (() => {
+                if (currentProgress && !currentItemDownload.started) {
+                    return "排队中……";
+                }
+                if (currentProgress) {
+                    return `下载中 (${Math.round((currentProgress.totalBytesWritten / currentProgress.totalBytesExpectedToWrite) * 100 || 0)}%)`;
+                }
+                return "缓存到本地";
+            })(),
             action: async () => {
                 if (!currentTrack?.extendedData) {
                     return;

@@ -15,3 +15,7 @@ export const cacheStatusStorage = new MMKV({ id: "cache-status" });
 export function useCacheExists(id?: string, episode?: string | number) {
     return useMMKVBoolean(id + "_" + episode, cacheStatusStorage)[0];
 }
+
+export function isCacheExists(id: string, episode: string | number = 1) {
+    return cacheStatusStorage.getBoolean(id + "_" + episode);
+}

@@ -7,6 +7,7 @@ export interface DownloadItem {
     path: string;
     progress: DownloadProgressData;
     startTime: number;
+    started: boolean;
 }
 
 export interface DownloadProps {
