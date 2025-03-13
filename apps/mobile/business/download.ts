@@ -49,10 +49,18 @@ export async function downloadResource(bvid: string, episode: number, title: str
             totalBytesExpectedToWrite: 0,
             totalBytesWritten: 0,
         },
+        progressOld: {
+            totalBytesExpectedToWrite: 0,
+            totalBytesWritten: 0,
+        },
+        updateTime: startTime,
+        updateTimeOld: startTime,
     });
 
     return downloadQueue.add(async () => {
         // 更新为正在下载的状态
+        let updateTime = startTime;
+        let updateTimeOld = startTime;
         updateDownloadItem(id, {
             title,
             id: playingRequest.id,
@@ -64,6 +72,12 @@ export async function downloadResource(bvid: string, episode: number, title: str
                 totalBytesExpectedToWrite: 0,
                 totalBytesWritten: 0,
             },
+            progressOld: {
+                totalBytesExpectedToWrite: 0,
+                totalBytesWritten: 0,
+            },
+            updateTime,
+            updateTimeOld,
         });
 
         // 获取源地址
@@ -91,6 +105,7 @@ export async function downloadResource(bvid: string, episode: number, title: str
             cb => {
                 // console.log(JSON.stringify(downloadResumable, null, 4));
                 // 更新状态管理器中的内容
+                const old = useDownloadStore.getState().downloadList.get(id)!;
                 updateDownloadItem(id, {
                     title,
                     id: playingRequest.id,
@@ -99,6 +114,9 @@ export async function downloadResource(bvid: string, episode: number, title: str
                     startTime,
                     started: true,
                     progress: cb,
+                    progressOld: old.progress,
+                    updateTime: new Date().getTime(),
+                    updateTimeOld: old.updateTime,
                 });
             },
         );

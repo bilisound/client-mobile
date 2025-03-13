@@ -56,6 +56,8 @@ import {
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Monicon } from "@monicon/native";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
+import { RELEASE_CHANNEL } from "~/constants/releasing";
+import { DownloadButton } from "~/components/download-button";
 
 cssInterop(OrigCircle, {
     className: {
@@ -99,13 +101,14 @@ function ImagesGroup({ images: origImages }: { images: string[] }) {
 
 interface HeaderProps {
     meta: PlaylistMeta;
+    detail: PlaylistDetail[];
     images: string[];
     onPlay: () => void;
     showPlayButton: boolean;
     className?: string;
 }
 
-function Header({ meta, images, onPlay, showPlayButton, className }: HeaderProps) {
+function Header({ meta, detail, images, onPlay, showPlayButton, className }: HeaderProps) {
     const queryClient = useQueryClient();
     const [syncing, setSyncing] = useState(false);
 
@@ -200,6 +203,15 @@ function Header({ meta, images, onPlay, showPlayButton, className }: HeaderProps
                                     <ButtonText>播放</ButtonText>
                                 </Button>
                             </ButtonOuter>
+                            {RELEASE_CHANNEL === "android_github_beta" || process.env.NODE_ENV !== "production" ? (
+                                <DownloadButton
+                                    items={detail.map(e => ({
+                                        id: e.bvid,
+                                        episode: e.episode,
+                                        title: e.title,
+                                    }))}
+                                />
+                            ) : null}
                             {meta.source ? (
                                 <ButtonOuter className={"rounded-full"}>
                                     <Button
@@ -507,6 +519,7 @@ export default function Page() {
                     header={
                         <Header
                             meta={meta}
+                            detail={playlistDetail}
                             images={extractAndProcessImgUrls(playlistDetail)}
                             showPlayButton={playlistDetail.length > 0}
                             onPlay={() => handlePlay()}
@@ -539,6 +552,7 @@ export default function Page() {
                                 <Header
                                     className={"flex md:hidden px-4 pb-4"}
                                     meta={meta}
+                                    detail={playlistDetail}
                                     images={extractAndProcessImgUrls(playlistDetail)}
                                     showPlayButton={playlistDetail.length > 0}
                                     onPlay={() => handlePlay()}

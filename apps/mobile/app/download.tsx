@@ -3,7 +3,7 @@ import { Text } from "~/components/ui/text";
 import useDownloadStore, { DownloadItem } from "~/store/download";
 import { View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { mockDownloadData } from "~/store/mockDownloadData";
+// import { mockDownloadData } from "~/store/mockDownloadData";
 import { Pressable } from "~/components/ui/pressable";
 import { filesize } from "filesize";
 
@@ -41,7 +41,10 @@ function DownloadEntry({ item }: DownloadEntryProps) {
                         <View
                             className={"h-full bg-secondary-300"}
                             style={{
-                                width: `${(item.progress.totalBytesWritten / item.progress.totalBytesExpectedToWrite) * 100}%`,
+                                width:
+                                    item.progress.totalBytesExpectedToWrite === 0
+                                        ? 0
+                                        : `${(item.progress.totalBytesWritten / item.progress.totalBytesExpectedToWrite) * 100}%`,
                             }}
                         ></View>
                     )}
@@ -54,11 +57,11 @@ function DownloadEntry({ item }: DownloadEntryProps) {
 export default function Page() {
     const { downloadList } = useDownloadStore(state => ({ downloadList: state.downloadList }));
 
-    const builtList: DownloadItem[] = Array.from(downloadList.values()).sort((a, b) => b.startTime - a.startTime);
+    const builtList: DownloadItem[] = Array.from(downloadList.values()).sort((a, b) => a.startTime - b.startTime);
 
     return (
         <Layout leftAccessories={"BACK_BUTTON"} title={"下载管理"}>
-            <FlashList data={mockDownloadData} renderItem={e => <DownloadEntry item={e.item} />} />
+            <FlashList estimatedItemSize={64} data={builtList} renderItem={e => <DownloadEntry item={e.item} />} />
         </Layout>
     );
 }

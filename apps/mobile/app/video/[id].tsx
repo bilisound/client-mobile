@@ -3,7 +3,7 @@ import { Text } from "~/components/ui/text";
 import { router, useLocalSearchParams } from "expo-router";
 import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import useHistoryStore from "~/store/history";
 import { getBilisoundMetadata } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
@@ -46,6 +46,7 @@ import { downloadResource } from "~/business/download";
 import { isCacheExists } from "~/storage/cache-status";
 import Toast from "react-native-toast-message";
 import { RELEASE_CHANNEL } from "~/constants/releasing";
+import { DownloadButton } from "~/components/download-button";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -160,6 +161,17 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
         });
     }
 
+    const downloadItems = useMemo(() => {
+        if (!data) {
+            return [];
+        }
+        return data.pages.map(e => ({
+            id: data.bvid,
+            episode: e.page,
+            title: e.partDisplayName,
+        }));
+    }, [data]);
+
     return (
         <View className={twMerge("gap-4", className)} style={style}>
             {data ? (
@@ -230,26 +242,7 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                         <>
                             {Platform.OS !== "web" &&
                             (RELEASE_CHANNEL === "android_github_beta" || process.env.NODE_ENV !== "production") ? (
-                                <ButtonOuter className={"rounded-full"}>
-                                    <Button
-                                        className={"rounded-full"}
-                                        onPress={() => {
-                                            for (let i = 0; i < data.pages.length; i++) {
-                                                const e = data.pages[i];
-                                                if (!isCacheExists(data.bvid, e.page)) {
-                                                    downloadResource(data.bvid, e.page, e.partDisplayName);
-                                                }
-                                                Toast.show({
-                                                    type: "success",
-                                                    text1: "下载任务已添加",
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        <ButtonMonIcon name={"fa6-solid:download"} size={16} />
-                                        <ButtonText>下载</ButtonText>
-                                    </Button>
-                                </ButtonOuter>
+                                <DownloadButton items={downloadItems} />
                             ) : null}
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"} onPress={handleCreatePlaylist}>

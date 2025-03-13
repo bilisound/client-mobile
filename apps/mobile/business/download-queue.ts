@@ -1,4 +1,4 @@
-import PQueue from 'p-queue';
+import PQueue from "p-queue";
 
 // Create a queue with concurrency of 3
 const downloadQueue = new PQueue({ concurrency: 3 });
