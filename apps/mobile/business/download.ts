@@ -12,7 +12,7 @@ import { extractAudioFile } from "~/business/mp4";
 import { File } from "expo-file-system/next";
 import downloadQueue from "./download-queue";
 
-export async function downloadResource(bvid: string, episode: number) {
+export async function downloadResource(bvid: string, episode: number, title: string) {
     const prefix = `[${bvid} / ${episode}] `;
     const { updateDownloadItem, removeDownloadItem, downloadList } = useDownloadStore.getState();
 
@@ -39,6 +39,7 @@ export async function downloadResource(bvid: string, episode: number) {
     // 在状态管理器创建下载任务
     const startTime = new Date().getTime();
     updateDownloadItem(id, {
+        title,
         id: playingRequest.id,
         episode: playingRequest.episode,
         path: checkUrl,
@@ -53,6 +54,7 @@ export async function downloadResource(bvid: string, episode: number) {
     return downloadQueue.add(async () => {
         // 更新为正在下载的状态
         updateDownloadItem(id, {
+            title,
             id: playingRequest.id,
             episode: playingRequest.episode,
             path: checkUrl,
@@ -90,6 +92,7 @@ export async function downloadResource(bvid: string, episode: number) {
                 // console.log(JSON.stringify(downloadResumable, null, 4));
                 // 更新状态管理器中的内容
                 updateDownloadItem(id, {
+                    title,
                     id: playingRequest.id,
                     episode: playingRequest.episode,
                     path: downloadTargetFileUrl,

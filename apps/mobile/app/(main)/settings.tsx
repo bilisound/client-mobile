@@ -127,6 +127,14 @@ export default function Page() {
                         }}
                     />
                     <SettingMenuItem
+                        key="settings_10041"
+                        icon={"fa6-solid:download"}
+                        title="下载管理"
+                        onPress={async () => {
+                            router.navigate("/download");
+                        }}
+                    />
+                    <SettingMenuItem
                         key="settings_10050"
                         icon={"fa6-solid:circle-info"}
                         title="关于 Bilisound"

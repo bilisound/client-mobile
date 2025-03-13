@@ -228,7 +228,8 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                 <View className={"mt-4 flex-row flex-wrap gap-2"}>
                     {data ? (
                         <>
-                            {Platform.OS !== "web" && RELEASE_CHANNEL === "android_github_beta" ? (
+                            {Platform.OS !== "web" &&
+                            (RELEASE_CHANNEL === "android_github_beta" || process.env.NODE_ENV !== "production") ? (
                                 <ButtonOuter className={"rounded-full"}>
                                     <Button
                                         className={"rounded-full"}
@@ -236,7 +237,7 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                                             for (let i = 0; i < data.pages.length; i++) {
                                                 const e = data.pages[i];
                                                 if (!isCacheExists(data.bvid, e.page)) {
-                                                    downloadResource(data.bvid, e.page);
+                                                    downloadResource(data.bvid, e.page, e.partDisplayName);
                                                 }
                                                 Toast.show({
                                                     type: "success",

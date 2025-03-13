@@ -2,10 +2,14 @@ import { DownloadProgressData } from "expo-file-system";
 import { createWithEqualityFn } from "zustand/traditional";
 
 export interface DownloadItem {
+    title: string;
     id: string;
     episode: number;
     path: string;
     progress: DownloadProgressData;
+    progressOld: DownloadProgressData;
+    updateTime: number;
+    updateTimeOld: number;
     startTime: number;
     started: boolean;
 }

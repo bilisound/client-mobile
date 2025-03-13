@@ -48,7 +48,11 @@ export function useDownloadMenuItem(
                 if (!currentTrack?.extendedData) {
                     return;
                 }
-                await downloadResource(currentTrack.extendedData.id, currentTrack.extendedData.episode);
+                await downloadResource(
+                    currentTrack.extendedData.id,
+                    currentTrack.extendedData.episode,
+                    currentTrack.title ?? "未知曲目",
+                );
                 if (!useActionSheetStore.getState().showActionSheet) {
                     Toast.show({
                         type: "success",

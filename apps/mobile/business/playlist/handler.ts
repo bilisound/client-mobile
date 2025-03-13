@@ -384,15 +384,17 @@ export async function saveCurrentAndNextTrack() {
     const tasks: Promise<void>[] = [];
     const currId = tracks[trackIndex].extendedData!.id;
     const currEpisode = tracks[trackIndex].extendedData!.episode;
+    const currTitle = tracks[trackIndex].title;
 
     log.info(`[${currId} / ${currEpisode}] 预先下载当前曲目`);
-    tasks.push(downloadResource(currId, currEpisode));
+    tasks.push(downloadResource(currId, currEpisode, currTitle ?? "未知曲目"));
     if (trackIndexNext <= tracks.length - 1) {
         const nextId = tracks[trackIndexNext].extendedData!.id;
         const nextEpisode = tracks[trackIndexNext].extendedData!.episode;
+        const nextTitle = tracks[trackIndex].title;
 
         log.info(`[${nextId} / ${nextEpisode}] 预先下载下一个曲目`);
-        tasks.push(downloadResource(nextId, nextEpisode));
+        tasks.push(downloadResource(nextId, nextEpisode, nextTitle ?? "未知曲目"));
     }
     await Promise.all(tasks);
 }
