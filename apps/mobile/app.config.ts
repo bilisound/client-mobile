@@ -38,7 +38,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         favicon: "./assets/images/favicon.png",
     },
     plugins: [
-        "./plugins/withAbiFilters",
         "./plugins/withAndroidSignature",
         [
             "react-native-edge-to-edge",
