@@ -1,5 +1,6 @@
 import { DownloadProgressData } from "expo-file-system";
 import { createWithEqualityFn } from "zustand/traditional";
+import * as FileSystem from "expo-file-system";
 
 export interface DownloadItem {
     title: string;
@@ -12,6 +13,8 @@ export interface DownloadItem {
     updateTimeOld: number;
     startTime: number;
     started: boolean;
+    instance?: FileSystem.DownloadResumable;
+    cancelFlag?: boolean;
 }
 
 export interface DownloadProps {

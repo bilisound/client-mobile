@@ -58,6 +58,16 @@ export async function downloadResource(bvid: string, episode: number, title: str
     });
 
     return downloadQueue.add(async () => {
+        let got = useDownloadStore.getState().downloadList.get(id);
+        if (got?.cancelFlag) {
+            log.info("下载任务在开始处理前被取消");
+            if (got.instance) {
+                await got.instance.cancelAsync();
+            }
+            useDownloadStore.getState().removeDownloadItem(id);
+            return;
+        }
+
         // 更新为正在下载的状态
         let updateTime = startTime;
         let updateTimeOld = startTime;
@@ -86,6 +96,16 @@ export async function downloadResource(bvid: string, episode: number, title: str
             playingRequest.episode,
             useSettingsStore.getState().filterResourceURL,
         );
+
+        got = useDownloadStore.getState().downloadList.get(id);
+        if (got?.cancelFlag) {
+            log.info("下载任务在获取资源链接后、开始前被取消");
+            if (got.instance) {
+                await got.instance.cancelAsync();
+            }
+            useDownloadStore.getState().removeDownloadItem(id);
+            return;
+        }
 
         // 待下载资源地址（可能是音频或视频）
         const downloadTargetFileUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, true);
@@ -117,6 +137,7 @@ export async function downloadResource(bvid: string, episode: number, title: str
                     progressOld: old.progress,
                     updateTime: new Date().getTime(),
                     updateTimeOld: old.updateTime,
+                    instance: downloadResumable,
                 });
             },
         );
