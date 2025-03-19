@@ -13,8 +13,8 @@ export function SpeedControlPanel() {
 
     return (
         <>
-            <Text className={"font-semibold text-base text-center"}>{speedValue.toFixed(2) + "x"}</Text>
-            <View className={"h-6 flex-row items-center gap-4 mt-4"}>
+            <Text className={"font-semibold text-xl text-center py-1"}>{speedValue.toFixed(2) + "x"}</Text>
+            <View className={"h-6 flex-row items-center gap-4 mt-4 px-2"}>
                 <GSSlider
                     className={"flex-1"}
                     value={speedValue}
