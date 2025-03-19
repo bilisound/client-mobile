@@ -14,7 +14,8 @@ import downloadQueue from "./download-queue";
 
 export async function downloadResource(bvid: string, episode: number, title: string) {
     const prefix = `[${bvid} / ${episode}] `;
-    const { updateDownloadItem, removeDownloadItem, downloadList } = useDownloadStore.getState();
+    const { updateDownloadItem, updateDownloadItemPartial, removeDownloadItem, downloadList } =
+        useDownloadStore.getState();
 
     const playingRequest = {
         id: bvid,
@@ -44,7 +45,6 @@ export async function downloadResource(bvid: string, episode: number, title: str
         episode: playingRequest.episode,
         path: checkUrl,
         startTime,
-        started: false,
         progress: {
             totalBytesExpectedToWrite: 0,
             totalBytesWritten: 0,
@@ -55,6 +55,7 @@ export async function downloadResource(bvid: string, episode: number, title: str
         },
         updateTime: startTime,
         updateTimeOld: startTime,
+        status: 0,
     });
 
     return downloadQueue.add(async () => {
@@ -77,7 +78,6 @@ export async function downloadResource(bvid: string, episode: number, title: str
             episode: playingRequest.episode,
             path: checkUrl,
             startTime,
-            started: true,
             progress: {
                 totalBytesExpectedToWrite: 0,
                 totalBytesWritten: 0,
@@ -88,6 +88,7 @@ export async function downloadResource(bvid: string, episode: number, title: str
             },
             updateTime,
             updateTimeOld,
+            status: 1,
         });
 
         // 获取源地址
@@ -126,18 +127,11 @@ export async function downloadResource(bvid: string, episode: number, title: str
                 // console.log(JSON.stringify(downloadResumable, null, 4));
                 // 更新状态管理器中的内容
                 const old = useDownloadStore.getState().downloadList.get(id)!;
-                updateDownloadItem(id, {
-                    title,
-                    id: playingRequest.id,
-                    episode: playingRequest.episode,
-                    path: downloadTargetFileUrl,
-                    startTime,
-                    started: true,
+                updateDownloadItemPartial(id, {
                     progress: cb,
                     progressOld: old.progress,
                     updateTime: new Date().getTime(),
                     updateTimeOld: old.updateTime,
-                    instance: downloadResumable,
                 });
             },
         );
@@ -149,6 +143,9 @@ export async function downloadResource(bvid: string, episode: number, title: str
         log.debug(
             prefix + `下载任务结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(fileSize / runTime)}/s`,
         );
+        updateDownloadItemPartial(id, {
+            status: 2,
+        });
 
         if (isAudio) {
             await FileSystem.moveAsync({

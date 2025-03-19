@@ -1,11 +1,15 @@
 import { Layout } from "~/components/layout";
 import { Text } from "~/components/ui/text";
 import useDownloadStore, { DownloadItem } from "~/store/download";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-// import { mockDownloadData } from "~/store/mockDownloadData";
 import { Pressable } from "~/components/ui/pressable";
 import { filesize } from "filesize";
+import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
+import Toast from "react-native-toast-message";
+import React, { useState } from "react";
+import log from "~/utils/logger";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 interface DownloadEntryProps {
     item: DownloadItem;
@@ -23,8 +27,11 @@ function DownloadEntry({ item }: DownloadEntryProps) {
                     </Text>
                     <Text className={"flex-0 basis-auto text-sm text-typography-500"}>
                         {(() => {
-                            if (!item.started) {
+                            if (item.status === 0) {
                                 return "排队中";
+                            }
+                            if (item.status === 2) {
+                                return "本地处理中";
                             }
                             const bytesDiff = item.progress.totalBytesWritten - item.progressOld.totalBytesWritten;
                             const timeDiff = (item.updateTime - item.updateTimeOld) / 1000;
@@ -37,7 +44,7 @@ function DownloadEntry({ item }: DownloadEntryProps) {
                     </Text>
                 </View>
                 <View className={"w-full h-1 bg-secondary-100"}>
-                    {item.started && (
+                    {item.status !== 0 && (
                         <View
                             className={"h-full bg-secondary-300"}
                             style={{
@@ -55,12 +62,54 @@ function DownloadEntry({ item }: DownloadEntryProps) {
 }
 
 export default function Page() {
-    const { downloadList } = useDownloadStore(state => ({ downloadList: state.downloadList }));
+    const { downloadList, cancelAll } = useDownloadStore(state => ({
+        downloadList: state.downloadList,
+        cancelAll: state.cancelAll,
+    }));
+    const { colorValue } = useRawThemeValues();
 
-    const builtList: DownloadItem[] = Array.from(downloadList.values()).sort((a, b) => a.startTime - b.startTime);
+    const builtList: DownloadItem[] = Array.from(downloadList.values())
+        .filter(e => !e.cancelFlag)
+        .sort((a, b) => a.startTime - b.startTime);
+
+    const [loading, setLoading] = useState(false);
+    async function handleCancel() {
+        setLoading(true);
+        try {
+            await cancelAll();
+            Toast.show({
+                type: "success",
+                text1: "已取消当前进行的所有下载任务",
+            });
+        } catch (e) {
+            log.error("下载任务取消失败：" + e);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <Layout leftAccessories={"BACK_BUTTON"} title={"下载管理"}>
+            <View className={"flex flex-0 basis-auto flex-row items-center gap-2 p-4 pt-0"}>
+                <View className={"flex-1"}>
+                    <Text
+                        className={"text-typography-500 text-sm"}
+                        isTruncated
+                    >{`当前有 ${builtList.length} 个任务进行中`}</Text>
+                </View>
+                <ButtonOuter className={"flex-0 basis-auto rounded-full"}>
+                    <Button onPress={handleCancel} action={"negative"} disabled={loading || builtList.length <= 0}>
+                        {loading ? (
+                            <View className={"size-[18px] items-center justify-center"}>
+                                <ActivityIndicator className={"size-4"} color={colorValue("--color-typography-0")} />
+                            </View>
+                        ) : (
+                            <ButtonMonIcon name={"fa6-solid:circle-stop"} size={18} />
+                        )}
+                        <ButtonText>取消全部</ButtonText>
+                    </Button>
+                </ButtonOuter>
+            </View>
             <FlashList estimatedItemSize={64} data={builtList} renderItem={e => <DownloadEntry item={e.item} />} />
         </Layout>
     );
