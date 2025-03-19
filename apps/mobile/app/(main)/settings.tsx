@@ -9,6 +9,7 @@ import useSettingsStore from "~/store/settings";
 import log from "~/utils/logger";
 import { Layout } from "~/components/layout";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
+import { FEATURE_DOWNLOAD_MANAGER } from "~/constants/feature";
 
 export default function Page() {
     const edgeInsets = useTabSafeAreaInsets();
@@ -126,14 +127,16 @@ export default function Page() {
                             router.navigate("/settings/data");
                         }}
                     />
-                    <SettingMenuItem
-                        key="settings_10041"
-                        icon={"fa6-solid:download"}
-                        title="下载管理"
-                        onPress={async () => {
-                            router.navigate("/download");
-                        }}
-                    />
+                    {FEATURE_DOWNLOAD_MANAGER ? (
+                        <SettingMenuItem
+                            key="settings_10041"
+                            icon={"fa6-solid:download"}
+                            title="下载管理"
+                            onPress={async () => {
+                                router.navigate("/download");
+                            }}
+                        />
+                    ) : null}
                     <SettingMenuItem
                         key="settings_10050"
                         icon={"fa6-solid:circle-info"}

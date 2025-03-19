@@ -58,6 +58,7 @@ import { Monicon } from "@monicon/native";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { RELEASE_CHANNEL } from "~/constants/releasing";
 import { DownloadButton } from "~/components/download-button";
+import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
 
 cssInterop(OrigCircle, {
     className: {
@@ -203,7 +204,7 @@ function Header({ meta, detail, images, onPlay, showPlayButton, className }: Hea
                                     <ButtonText>播放</ButtonText>
                                 </Button>
                             </ButtonOuter>
-                            {RELEASE_CHANNEL === "android_github_beta" || process.env.NODE_ENV !== "production" ? (
+                            {FEATURE_MASS_DOWNLOAD ? (
                                 <DownloadButton
                                     items={detail.map(e => ({
                                         id: e.bvid,

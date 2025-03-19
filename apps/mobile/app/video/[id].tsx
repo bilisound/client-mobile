@@ -7,7 +7,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import useHistoryStore from "~/store/history";
 import { getBilisoundMetadata } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
-import { Platform, View, ViewStyle } from "react-native";
+import { View, ViewStyle } from "react-native";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "~/components/ui/skeleton";
 import { getImageProxyUrl } from "~/business/constant-helper";
@@ -47,6 +47,7 @@ import { isCacheExists } from "~/storage/cache-status";
 import Toast from "react-native-toast-message";
 import { RELEASE_CHANNEL } from "~/constants/releasing";
 import { DownloadButton } from "~/components/download-button";
+import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -240,10 +241,7 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                 <View className={"mt-4 flex-row flex-wrap gap-2"}>
                     {data ? (
                         <>
-                            {Platform.OS !== "web" &&
-                            (RELEASE_CHANNEL === "android_github_beta" || process.env.NODE_ENV !== "production") ? (
-                                <DownloadButton items={downloadItems} />
-                            ) : null}
+                            {FEATURE_MASS_DOWNLOAD ? <DownloadButton items={downloadItems} /> : null}
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"} onPress={handleCreatePlaylist}>
                                     <ButtonMonIcon name={"fa6-solid:plus"} size={18} />
