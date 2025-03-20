@@ -62,8 +62,8 @@ const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()
         for (let [key, value] of downloadList) {
             if (value.instance) {
                 await value.instance.cancelAsync();
-                downloadList.delete(key);
             }
+            downloadList.delete(key);
         }
         get().abortController.abort();
         set(() => ({ downloadList }));

@@ -14,7 +14,6 @@ import downloadQueue from "./download-queue";
 
 export async function downloadResource(bvid: string, episode: number, title: string) {
     const prefix = `[${bvid} / ${episode}] `;
-    useDownloadStore.getState().resetAbortController();
     const { updateDownloadItem, updateDownloadItemPartial, removeDownloadItem, downloadList, abortController } =
         useDownloadStore.getState();
 
@@ -177,6 +176,6 @@ export async function downloadResource(bvid: string, episode: number, title: str
             cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
             removeDownloadItem(id);
         },
-        { signal: abortController.signal },
+        // { signal: abortController.signal }, // 坏的，因为 React Native 没有 throwIfAborted
     );
 }

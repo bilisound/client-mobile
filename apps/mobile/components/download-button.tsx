@@ -3,6 +3,7 @@ import { isCacheExists } from "~/storage/cache-status";
 import { downloadResource } from "~/business/download";
 import Toast from "react-native-toast-message";
 import React, { memo } from "react";
+import useDownloadStore from "~/store/download";
 
 export interface DownloadButtonProps {
     items: { id: string; episode: number; title: string }[];
@@ -14,10 +15,15 @@ function DownloadButtonRaw({ items }: DownloadButtonProps) {
             <Button
                 className={"rounded-full"}
                 onPress={() => {
+                    useDownloadStore.getState().resetAbortController();
                     for (let i = 0; i < items.length; i++) {
                         const e = items[i];
                         if (!isCacheExists(e.id, e.episode)) {
-                            downloadResource(e.id, e.episode, e.title);
+                            downloadResource(e.id, e.episode, e.title)
+                                .then(res => {})
+                                .catch(err => {
+                                    console.error("downloadResource 错误：" + err);
+                                });
                         }
                         Toast.show({
                             type: "success",
