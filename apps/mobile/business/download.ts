@@ -14,7 +14,8 @@ import downloadQueue from "./download-queue";
 
 export async function downloadResource(bvid: string, episode: number, title: string) {
     const prefix = `[${bvid} / ${episode}] `;
-    const { updateDownloadItem, updateDownloadItemPartial, removeDownloadItem, downloadList } =
+    useDownloadStore.getState().resetAbortController();
+    const { updateDownloadItem, updateDownloadItemPartial, removeDownloadItem, downloadList, abortController } =
         useDownloadStore.getState();
 
     const playingRequest = {
@@ -58,121 +59,124 @@ export async function downloadResource(bvid: string, episode: number, title: str
         status: 0,
     });
 
-    return downloadQueue.add(async () => {
-        let got = useDownloadStore.getState().downloadList.get(id);
-        if (got?.cancelFlag) {
-            log.info("下载任务在开始处理前被取消");
-            if (got.instance) {
-                await got.instance.cancelAsync();
+    return downloadQueue.add(
+        async ({ signal }) => {
+            let got = useDownloadStore.getState().downloadList.get(id);
+            if (signal?.aborted) {
+                log.info("下载任务在开始处理前被取消");
+                if (got?.instance) {
+                    await got.instance.cancelAsync();
+                }
+                useDownloadStore.getState().removeDownloadItem(id);
+                return;
             }
-            useDownloadStore.getState().removeDownloadItem(id);
-            return;
-        }
 
-        // 更新为正在下载的状态
-        let updateTime = startTime;
-        let updateTimeOld = startTime;
-        updateDownloadItem(id, {
-            title,
-            id: playingRequest.id,
-            episode: playingRequest.episode,
-            path: checkUrl,
-            startTime,
-            progress: {
-                totalBytesExpectedToWrite: 0,
-                totalBytesWritten: 0,
-            },
-            progressOld: {
-                totalBytesExpectedToWrite: 0,
-                totalBytesWritten: 0,
-            },
-            updateTime,
-            updateTimeOld,
-            status: 1,
-        });
-
-        // 获取源地址
-        const { url, isAudio } = await getBilisoundResourceUrl(
-            playingRequest.id,
-            playingRequest.episode,
-            useSettingsStore.getState().filterResourceURL,
-        );
-
-        got = useDownloadStore.getState().downloadList.get(id);
-        if (got?.cancelFlag) {
-            log.info("下载任务在获取资源链接后、开始前被取消");
-            if (got.instance) {
-                await got.instance.cancelAsync();
-            }
-            useDownloadStore.getState().removeDownloadItem(id);
-            return;
-        }
-
-        // 待下载资源地址（可能是音频或视频）
-        const downloadTargetFileUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, true);
-
-        // 下载处理
-        const beginTime = global.performance.now();
-        const downloadResumable = FileSystem.createDownloadResumable(
-            url,
-            downloadTargetFileUrl,
-            {
-                headers: {
-                    referer: getVideoUrl(playingRequest.id, playingRequest.episode),
-                    "user-agent": USER_AGENT_BILIBILI,
+            // 更新为正在下载的状态
+            let updateTime = startTime;
+            let updateTimeOld = startTime;
+            updateDownloadItem(id, {
+                title,
+                id: playingRequest.id,
+                episode: playingRequest.episode,
+                path: checkUrl,
+                startTime,
+                progress: {
+                    totalBytesExpectedToWrite: 0,
+                    totalBytesWritten: 0,
                 },
-                cache: true,
-            },
-            cb => {
-                // console.log(JSON.stringify(downloadResumable, null, 4));
-                // 更新状态管理器中的内容
-                const old = useDownloadStore.getState().downloadList.get(id)!;
-                updateDownloadItemPartial(id, {
-                    progress: cb,
-                    progressOld: old.progress,
-                    updateTime: new Date().getTime(),
-                    updateTimeOld: old.updateTime,
-                });
-            },
-        );
-        await downloadResumable.downloadAsync();
-        const endTime = global.performance.now();
-        const info = await FileSystem.getInfoAsync(downloadTargetFileUrl);
-        const fileSize = info?.exists ? info.size : 0;
-        const runTime = (endTime - beginTime) / 1000;
-        log.debug(
-            prefix + `下载任务结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(fileSize / runTime)}/s`,
-        );
-        updateDownloadItemPartial(id, {
-            status: 2,
-        });
-
-        if (isAudio) {
-            await FileSystem.moveAsync({
-                from: getCacheAudioPath(playingRequest.id, playingRequest.episode, true),
-                to: checkUrl,
+                progressOld: {
+                    totalBytesExpectedToWrite: 0,
+                    totalBytesWritten: 0,
+                },
+                updateTime,
+                updateTimeOld,
+                status: 1,
             });
+
+            // 获取源地址
+            const { url, isAudio } = await getBilisoundResourceUrl(
+                playingRequest.id,
+                playingRequest.episode,
+                useSettingsStore.getState().filterResourceURL,
+            );
+
+            got = useDownloadStore.getState().downloadList.get(id);
+            if (signal?.aborted) {
+                log.info("下载任务在获取资源链接后、开始前被取消");
+                if (got?.instance) {
+                    await got.instance.cancelAsync();
+                }
+                useDownloadStore.getState().removeDownloadItem(id);
+                return;
+            }
+
+            // 待下载资源地址（可能是音频或视频）
+            const downloadTargetFileUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, true);
+
+            // 下载处理
+            const beginTime = global.performance.now();
+            const downloadResumable = FileSystem.createDownloadResumable(
+                url,
+                downloadTargetFileUrl,
+                {
+                    headers: {
+                        referer: getVideoUrl(playingRequest.id, playingRequest.episode),
+                        "user-agent": USER_AGENT_BILIBILI,
+                    },
+                    cache: true,
+                },
+                cb => {
+                    // console.log(JSON.stringify(downloadResumable, null, 4));
+                    // 更新状态管理器中的内容
+                    const old = useDownloadStore.getState().downloadList.get(id)!;
+                    updateDownloadItemPartial(id, {
+                        progress: cb,
+                        progressOld: old.progress,
+                        updateTime: new Date().getTime(),
+                        updateTimeOld: old.updateTime,
+                    });
+                },
+            );
+            await downloadResumable.downloadAsync();
+            const endTime = global.performance.now();
+            const info = await FileSystem.getInfoAsync(downloadTargetFileUrl);
+            const fileSize = info?.exists ? info.size : 0;
+            const runTime = (endTime - beginTime) / 1000;
+            log.debug(
+                prefix + `下载任务结束，用时: ${runTime.toFixed(3)}s, 平均下载速度: ${filesize(fileSize / runTime)}/s`,
+            );
+            updateDownloadItemPartial(id, {
+                status: 2,
+            });
+
+            if (isAudio) {
+                await FileSystem.moveAsync({
+                    from: getCacheAudioPath(playingRequest.id, playingRequest.episode, true),
+                    to: checkUrl,
+                });
+                cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
+                removeDownloadItem(id);
+                return;
+            }
+
+            // 如果不是音频流，进行音视频分离操作
+            log.info(prefix + "非音频流，进行音视频分离操作");
+
+            // 提取 m4a
+            try {
+                extractAudioFile(new File(downloadTargetFileUrl), new File(checkUrl));
+            } catch (e) {
+                log.error(prefix + "视频转码失败！");
+                log.error(`result：${e}`);
+                throw new Error("视频处理失败");
+            }
+
+            // 收尾
+            log.debug(prefix + "删除不再需要的视频文件");
+            await FileSystem.deleteAsync(downloadTargetFileUrl);
             cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
             removeDownloadItem(id);
-            return;
-        }
-
-        // 如果不是音频流，进行音视频分离操作
-        log.info(prefix + "非音频流，进行音视频分离操作");
-
-        // 提取 m4a
-        try {
-            extractAudioFile(new File(downloadTargetFileUrl), new File(checkUrl));
-        } catch (e) {
-            log.error(prefix + "视频转码失败！");
-            log.error(`result：${e}`);
-            throw new Error("视频处理失败");
-        }
-
-        // 收尾
-        log.debug(prefix + "删除不再需要的视频文件");
-        await FileSystem.deleteAsync(downloadTargetFileUrl);
-        cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
-        removeDownloadItem(id);
-    });
+        },
+        { signal: abortController.signal },
+    );
 }

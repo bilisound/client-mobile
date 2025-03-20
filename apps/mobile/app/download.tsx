@@ -68,9 +68,8 @@ export default function Page() {
     }));
     const { colorValue } = useRawThemeValues();
 
-    const builtList: DownloadItem[] = Array.from(downloadList.values())
-        .filter(e => !e.cancelFlag)
-        .sort((a, b) => a.startTime - b.startTime);
+    const builtList: DownloadItem[] = Array.from(downloadList.values()).sort((a, b) => a.startTime - b.startTime);
+    const displayList = builtList.filter(e => e.status === 1);
 
     const [loading, setLoading] = useState(false);
     async function handleCancel() {
@@ -92,10 +91,11 @@ export default function Page() {
         <Layout leftAccessories={"BACK_BUTTON"} title={"下载管理"}>
             <View className={"flex flex-0 basis-auto flex-row items-center gap-2 p-4 pt-0"}>
                 <View className={"flex-1"}>
-                    <Text
-                        className={"text-typography-500 text-sm"}
-                        isTruncated
-                    >{`当前有 ${builtList.length} 个任务进行中`}</Text>
+                    <Text className={"text-typography-500 text-sm"} isTruncated>
+                        {builtList.length <= 0
+                            ? "无下载任务"
+                            : `当前有 ${displayList.length} / ${builtList.length} 个任务进行中`}
+                    </Text>
                 </View>
                 <ButtonOuter className={"flex-0 basis-auto rounded-full"}>
                     <Button onPress={handleCancel} action={"negative"} disabled={loading || builtList.length <= 0}>
@@ -110,7 +110,20 @@ export default function Page() {
                     </Button>
                 </ButtonOuter>
             </View>
-            <FlashList estimatedItemSize={64} data={builtList} renderItem={e => <DownloadEntry item={e.item} />} />
+            <FlashList
+                estimatedItemSize={64}
+                data={displayList}
+                renderItem={e => <DownloadEntry item={e.item} />}
+                ListFooterComponent={
+                    displayList.length > 0 ? (
+                        <View className={"flex-1 items-center py-4"}>
+                            <Text
+                                className={"text-typography-500 text-sm"}
+                            >{`${builtList.length - displayList.length} 个任务排队中`}</Text>
+                        </View>
+                    ) : null
+                }
+            />
         </Layout>
     );
 }
