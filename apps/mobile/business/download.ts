@@ -24,14 +24,14 @@ export function addDownloadTask(bvid: string, episode: number, title: string) {
     // 避免重复操作
     if (downloadList.has(id)) {
         log.debug(prefix + "已经有相同任务在处理");
-        return;
+        return false;
     }
     // 待检查的本地音频路径（包括从视频提取的音频）
     const checkUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, false);
 
     if (cacheStatusStorage.getBoolean(playingRequest.id + "_" + playingRequest.episode)) {
         log.debug(prefix + "本地缓存有对应内容记录，不需要下载");
-        return;
+        return false;
     }
 
     log.debug(prefix + "本地缓存无对应内容，开始请求网络资源");
@@ -55,11 +55,12 @@ export function addDownloadTask(bvid: string, episode: number, title: string) {
         updateTimeOld: startTime,
         status: 0,
     });
+    return true;
 }
 
-export async function downloadResource(bvid: string, episode: number, title: string) {
+export async function downloadResource(bvid: string, episode: number) {
     const prefix = `[${bvid} / ${episode}] `;
-    const { updateDownloadItemPartial, removeDownloadItem, pickTask } = useDownloadStore.getState();
+    const { updateDownloadItemPartial, removeDownloadItem } = useDownloadStore.getState();
 
     const playingRequest = {
         id: bvid,
@@ -148,4 +149,12 @@ export async function downloadResource(bvid: string, episode: number, title: str
     await FileSystem.deleteAsync(downloadTargetFileUrl);
     cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
     removeDownloadItem(id);
+}
+
+export async function downloadResourceNow(bvid: string, episode: number, title: string) {
+    const ok = addDownloadTask(bvid, episode, title);
+    if (!ok) {
+        return;
+    }
+    return downloadResource(bvid, episode);
 }

@@ -1,7 +1,7 @@
 import useDownloadStore from "~/store/download";
 import { TrackData } from "@bilisound/player/build/types";
 import { Platform } from "react-native";
-import { downloadResource } from "~/business/download";
+import { downloadResource, downloadResourceNow } from "~/business/download";
 import { useActionSheetStore } from "~/components/main-bottom-sheet/stores";
 import Toast from "react-native-toast-message";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -48,7 +48,7 @@ export function useDownloadMenuItem(
                 if (!currentTrack?.extendedData) {
                     return;
                 }
-                await downloadResource(
+                await downloadResourceNow(
                     currentTrack.extendedData.id,
                     currentTrack.extendedData.episode,
                     currentTrack.title ?? "未知曲目",

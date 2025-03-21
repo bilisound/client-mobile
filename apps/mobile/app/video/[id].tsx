@@ -42,10 +42,6 @@ import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
 import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
-import { downloadResource } from "~/business/download";
-import { isCacheExists } from "~/storage/cache-status";
-import Toast from "react-native-toast-message";
-import { RELEASE_CHANNEL } from "~/constants/releasing";
 import { DownloadButton } from "~/components/download-button";
 import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
 

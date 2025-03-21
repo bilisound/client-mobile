@@ -107,7 +107,7 @@ const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()
 
             log.info("处理任务 " + id);
 
-            downloadResource(got.id, got.episode, got.title)
+            downloadResource(got.id, got.episode)
                 .then(() => {
                     log.info(`[${got.id} / ${got.episode}] 下载完毕`);
                 })
