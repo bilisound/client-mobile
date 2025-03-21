@@ -69,6 +69,7 @@ export async function downloadResource(bvid: string, episode: number, title: str
 
     updateDownloadItemPartial(id, {
         status: 1,
+        claimed: true,
     });
 
     // 待检查的本地音频路径（包括从视频提取的音频）
@@ -97,7 +98,6 @@ export async function downloadResource(bvid: string, episode: number, title: str
             cache: true,
         },
         cb => {
-            // console.log(JSON.stringify(downloadResumable, null, 4));
             // 更新状态管理器中的内容
             const old = useDownloadStore.getState().downloadList.get(id);
             if (!old) {
@@ -148,5 +148,4 @@ export async function downloadResource(bvid: string, episode: number, title: str
     await FileSystem.deleteAsync(downloadTargetFileUrl);
     cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
     removeDownloadItem(id);
-    pickTask();
 }

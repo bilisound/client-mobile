@@ -20,10 +20,14 @@ export interface DownloadItem {
      */
     status: 0 | 1 | 2;
     count: number;
+    claimed?: boolean;
 }
 
 export interface DownloadProps {
     downloadList: Map<string, DownloadItem>;
+    max: number;
+    count: number;
+    processTasks: string[];
 }
 
 export interface DownloadMethods {
@@ -33,19 +37,21 @@ export interface DownloadMethods {
     clearDownloadItem: () => void;
     cancelAll: () => Promise<void>;
     pickTask: () => void;
+    addProcessTask: (id: string) => void;
+    removeProcessTask: (id: string) => void;
 }
-
-const max = 3;
-let count = 0;
-let processTasks: string[] = [];
 
 const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()((set, get) => ({
     downloadList: new Map(),
+    max: 3,
+    count: 0,
+    processTasks: [],
     abortController: new AbortController(),
     updateDownloadItem: (key, downloadItem) => {
         const downloadList = new Map(get().downloadList);
-        downloadList.set(key, { ...downloadItem, count: count++ });
-        set(() => ({ downloadList }));
+        const count = get().count + 1;
+        downloadList.set(key, { ...downloadItem, count });
+        set(() => ({ downloadList, count }));
     },
     updateDownloadItemPartial: (key, downloadItem) => {
         const downloadList = new Map(get().downloadList);
@@ -64,17 +70,41 @@ const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()
         set(() => ({ downloadList: new Map() }));
     },
     cancelAll: async () => {},
+    addProcessTask: id => {
+        const processTasks = get().processTasks;
+        processTasks.push(id);
+        set(() => ({ processTasks }));
+    },
+    removeProcessTask: id => {
+        const processTasks = get().processTasks;
+        const index = processTasks.findIndex(e => e === id);
+        if (index >= 0) {
+            processTasks.splice(index, 1);
+            set(() => ({ processTasks }));
+        }
+    },
     pickTask: () => {
-        const list = Array.from(get().downloadList.values()).sort((a, b) => b.count - a.count);
+        // 抓取当前队列
+        const list = Array.from(get().downloadList.values())
+            .sort((a, b) => b.count - a.count)
+            .filter(e => !e.claimed);
+
         // 如果 processTasks 不够多，逐渐递加
-        while (processTasks.length < max) {
-            log.info("待处理任务数量：" + processTasks.length);
-            const got = list.pop();
+        while (get().processTasks.length < get().max) {
+            log.info("待处理任务数量：" + get().processTasks.length);
+
+            // 获取最后一个还没有处理的任务
+            const got = list[list.length - 1];
+
             if (!got) {
-                break;
+                log.info("没有要处理的任务");
+                return;
             }
+
+            // 将任务标记放到列表里
             const id = got.id + "_" + got.episode;
-            processTasks.push(id);
+            get().addProcessTask(id);
+
             log.info("处理任务 " + id);
 
             downloadResource(got.id, got.episode, got.title)
@@ -85,10 +115,11 @@ const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()
                     log.error(`[${got.id} / ${got.episode}] 下载失败：${e?.message || e}`);
                 })
                 .finally(() => {
-                    processTasks.splice(
-                        processTasks.findIndex(e => e === id),
-                        1,
-                    );
+                    // 将任务标记予以删除
+                    get().removeProcessTask(id);
+
+                    // 尝试领取剩余任务
+                    get().pickTask();
                 });
         }
     },
