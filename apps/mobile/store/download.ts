@@ -21,7 +21,6 @@ export interface DownloadItem {
 
 export interface DownloadProps {
     downloadList: Map<string, DownloadItem>;
-    abortController: AbortController;
 }
 
 export interface DownloadMethods {
@@ -30,7 +29,6 @@ export interface DownloadMethods {
     removeDownloadItem: (key: string) => void;
     clearDownloadItem: () => void;
     cancelAll: () => Promise<void>;
-    resetAbortController: () => void;
 }
 
 const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()((set, get) => ({
@@ -57,20 +55,7 @@ const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()
     clearDownloadItem: () => {
         set(() => ({ downloadList: new Map() }));
     },
-    cancelAll: async () => {
-        const downloadList = new Map(get().downloadList);
-        for (let [key, value] of downloadList) {
-            if (value.instance) {
-                await value.instance.cancelAsync();
-            }
-            downloadList.delete(key);
-        }
-        get().abortController.abort();
-        set(() => ({ downloadList }));
-    },
-    resetAbortController: () => {
-        set(() => ({ abortController: new AbortController() }));
-    },
+    cancelAll: async () => {},
 }));
 
 export default useDownloadStore;

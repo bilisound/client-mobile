@@ -15,7 +15,6 @@ function DownloadButtonRaw({ items }: DownloadButtonProps) {
             <Button
                 className={"rounded-full"}
                 onPress={() => {
-                    useDownloadStore.getState().resetAbortController();
                     for (let i = 0; i < items.length; i++) {
                         const e = items[i];
                         if (!isCacheExists(e.id, e.episode)) {

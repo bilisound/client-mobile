@@ -36,7 +36,7 @@ export function useDownloadMenuItem(
             icon: "fa6-solid:download",
             iconSize: 18,
             text: (() => {
-                if (currentProgress && !currentItemDownload.started) {
+                if (currentProgress && currentItemDownload.status === 0) {
                     return "排队中……";
                 }
                 if (currentProgress) {
