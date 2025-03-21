@@ -83,6 +83,11 @@ export async function downloadResource(bvid: string, episode: number) {
         useSettingsStore.getState().filterResourceURL,
     );
 
+    if (!useDownloadStore.getState().downloadList.has(id)) {
+        log.info(prefix + "操作取消");
+        return;
+    }
+
     // 待下载资源地址（可能是音频或视频）
     const downloadTargetFileUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, true);
 
@@ -102,6 +107,8 @@ export async function downloadResource(bvid: string, episode: number) {
             // 更新状态管理器中的内容
             const old = useDownloadStore.getState().downloadList.get(id);
             if (!old) {
+                log.info(prefix + "在下载过程中操作取消");
+                downloadResumable.cancelAsync();
                 return;
             }
             updateDownloadItemPartial(id, {
@@ -113,6 +120,11 @@ export async function downloadResource(bvid: string, episode: number) {
         },
     );
     await downloadResumable.downloadAsync();
+    if (!useDownloadStore.getState().downloadList.has(id)) {
+        log.info(prefix + "操作取消");
+        return;
+    }
+
     const endTime = global.performance.now();
     const info = await FileSystem.getInfoAsync(downloadTargetFileUrl);
     const fileSize = info?.exists ? info.size : 0;

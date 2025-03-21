@@ -16,9 +16,9 @@ export interface DownloadItem {
     startTime: number;
     instance?: FileSystem.DownloadResumable;
     /**
-     * 0 - 等待中，1 - 下载中，2 - 本地处理中
+     * 0 - 等待中，1 - 下载中，2 - 本地处理中，3 - 下载失败
      */
-    status: 0 | 1 | 2;
+    status: 0 | 1 | 2 | 3;
     count: number;
     claimed?: boolean;
 }
@@ -69,7 +69,9 @@ const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()
     clearDownloadItem: () => {
         set(() => ({ downloadList: new Map() }));
     },
-    cancelAll: async () => {},
+    cancelAll: async () => {
+        set(() => ({ downloadList: new Map() }));
+    },
     addProcessTask: id => {
         const processTasks = get().processTasks;
         processTasks.push(id);
@@ -113,6 +115,9 @@ const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()
                 })
                 .catch(e => {
                     log.error(`[${got.id} / ${got.episode}] 下载失败：${e?.message || e}`);
+                    get().updateDownloadItemPartial(id, {
+                        status: 3,
+                    });
                 })
                 .finally(() => {
                     // 将任务标记予以删除

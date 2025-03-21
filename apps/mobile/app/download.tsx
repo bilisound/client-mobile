@@ -16,8 +16,6 @@ interface DownloadEntryProps {
 }
 
 function DownloadEntry({ item }: DownloadEntryProps) {
-    // const { colorValue } = useRawThemeValues();
-
     return (
         <Pressable className={"flex-row px-4 items-center"}>
             <View className={"h-[4rem] flex-1 gap-3 justify-center"}>
@@ -25,13 +23,18 @@ function DownloadEntry({ item }: DownloadEntryProps) {
                     <Text className={"text-sm flex-1"} isTruncated>
                         {item.title}
                     </Text>
-                    <Text className={"flex-0 basis-auto text-sm text-typography-500"}>
+                    <Text
+                        className={`flex-0 basis-auto text-sm ${item.status === 3 ? "text-red-500" : "text-typography-500"}`}
+                    >
                         {(() => {
                             if (item.status === 0) {
                                 return "排队中";
                             }
                             if (item.status === 2) {
                                 return "本地处理中";
+                            }
+                            if (item.status === 3) {
+                                return "下载失败";
                             }
                             const bytesDiff = item.progress.totalBytesWritten - item.progressOld.totalBytesWritten;
                             const timeDiff = (item.updateTime - item.updateTimeOld) / 1000;
@@ -69,7 +72,8 @@ export default function Page() {
     const { colorValue } = useRawThemeValues();
 
     const builtList: DownloadItem[] = Array.from(downloadList.values()).sort((a, b) => a.startTime - b.startTime);
-    const displayList = builtList.filter(e => e.status === 1);
+    const displayList = builtList.filter(e => e.status === 1 || e.status === 3);
+    const runningList = displayList.filter(e => e.status === 1);
 
     const [loading, setLoading] = useState(false);
     async function handleCancel() {
@@ -94,7 +98,7 @@ export default function Page() {
                     <Text className={"text-typography-500 text-sm"} isTruncated>
                         {builtList.length <= 0
                             ? "无下载任务"
-                            : `当前有 ${displayList.length} / ${builtList.length} 个任务进行中`}
+                            : `当前有 ${runningList.length} / ${builtList.length} 个任务进行中`}
                     </Text>
                 </View>
                 <ButtonOuter className={"flex-0 basis-auto rounded-full"}>
