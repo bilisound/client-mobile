@@ -24,6 +24,7 @@ function DownloadButtonRaw({ items }: DownloadButtonProps) {
                         Toast.show({
                             type: "success",
                             text1: "下载任务已添加",
+                            text2: "让 Bilisound 一直播放音乐，可以加快下载速度",
                         });
                     }
                 }}
