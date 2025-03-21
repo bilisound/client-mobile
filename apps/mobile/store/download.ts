@@ -31,7 +31,7 @@ export interface DownloadProps {
 }
 
 export interface DownloadMethods {
-    updateDownloadItem: (key: string, downloadItem: Omit<DownloadItem, "count">) => void;
+    addDownloadItem: (key: string, downloadItem: Omit<DownloadItem, "count">) => void;
     updateDownloadItemPartial: (key: string, downloadItem: Partial<DownloadItem>) => void;
     removeDownloadItem: (key: string) => void;
     clearDownloadItem: () => void;
@@ -47,7 +47,7 @@ const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()
     count: 0,
     processTasks: [],
     abortController: new AbortController(),
-    updateDownloadItem: (key, downloadItem) => {
+    addDownloadItem: (key, downloadItem) => {
         const downloadList = new Map(get().downloadList);
         const count = get().count + 1;
         downloadList.set(key, { ...downloadItem, count });

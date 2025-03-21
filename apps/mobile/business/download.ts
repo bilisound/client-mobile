@@ -13,7 +13,7 @@ import { File } from "expo-file-system/next";
 
 export function addDownloadTask(bvid: string, episode: number, title: string) {
     const prefix = `[${bvid} / ${episode}] `;
-    const { updateDownloadItem, downloadList } = useDownloadStore.getState();
+    const { addDownloadItem, downloadList } = useDownloadStore.getState();
 
     const playingRequest = {
         id: bvid,
@@ -37,7 +37,7 @@ export function addDownloadTask(bvid: string, episode: number, title: string) {
     log.debug(prefix + "本地缓存无对应内容，开始请求网络资源");
     // 在状态管理器创建下载任务
     const startTime = new Date().getTime();
-    updateDownloadItem(id, {
+    addDownloadItem(id, {
         title,
         id: playingRequest.id,
         episode: playingRequest.episode,
