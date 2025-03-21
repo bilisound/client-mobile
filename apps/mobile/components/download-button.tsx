@@ -1,6 +1,6 @@
 import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { isCacheExists } from "~/storage/cache-status";
-import { downloadResource } from "~/business/download";
+import { addDownloadTask } from "~/business/download";
 import Toast from "react-native-toast-message";
 import React, { memo } from "react";
 import useDownloadStore from "~/store/download";
@@ -18,12 +18,9 @@ function DownloadButtonRaw({ items }: DownloadButtonProps) {
                     for (let i = 0; i < items.length; i++) {
                         const e = items[i];
                         if (!isCacheExists(e.id, e.episode)) {
-                            downloadResource(e.id, e.episode, e.title)
-                                .then(res => {})
-                                .catch(err => {
-                                    console.error("downloadResource 错误：" + err);
-                                });
+                            addDownloadTask(e.id, e.episode, e.title);
                         }
+                        useDownloadStore.getState().pickTask();
                         Toast.show({
                             type: "success",
                             text1: "下载任务已添加",

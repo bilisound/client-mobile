@@ -369,7 +369,7 @@ export async function replaceQueueWithPlaylist(id: number, index = 0) {
 
 // 缓存当前曲目和下一曲目
 export async function saveCurrentAndNextTrack() {
-    if (Platform.OS === "web") {
+    /*if (Platform.OS === "web") {
         return;
     }
     if (!useSettingsStore.getState().downloadNextTrack) {
@@ -396,5 +396,5 @@ export async function saveCurrentAndNextTrack() {
         log.info(`[${nextId} / ${nextEpisode}] 预先下载下一个曲目`);
         tasks.push(downloadResource(nextId, nextEpisode, nextTitle ?? "未知曲目"));
     }
-    await Promise.all(tasks);
+    await Promise.all(tasks);*/
 }

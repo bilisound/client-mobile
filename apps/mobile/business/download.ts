@@ -11,10 +11,9 @@ import { cacheStatusStorage } from "~/storage/cache-status";
 import { extractAudioFile } from "~/business/mp4";
 import { File } from "expo-file-system/next";
 
-export async function downloadResource(bvid: string, episode: number, title: string) {
+export function addDownloadTask(bvid: string, episode: number, title: string) {
     const prefix = `[${bvid} / ${episode}] `;
-    const { updateDownloadItem, updateDownloadItemPartial, removeDownloadItem, downloadList } =
-        useDownloadStore.getState();
+    const { updateDownloadItem, downloadList } = useDownloadStore.getState();
 
     const playingRequest = {
         id: bvid,
@@ -56,28 +55,24 @@ export async function downloadResource(bvid: string, episode: number, title: str
         updateTimeOld: startTime,
         status: 0,
     });
+}
 
-    // 更新为正在下载的状态
-    let updateTime = startTime;
-    let updateTimeOld = startTime;
-    updateDownloadItem(id, {
-        title,
-        id: playingRequest.id,
-        episode: playingRequest.episode,
-        path: checkUrl,
-        startTime,
-        progress: {
-            totalBytesExpectedToWrite: 0,
-            totalBytesWritten: 0,
-        },
-        progressOld: {
-            totalBytesExpectedToWrite: 0,
-            totalBytesWritten: 0,
-        },
-        updateTime,
-        updateTimeOld,
+export async function downloadResource(bvid: string, episode: number, title: string) {
+    const prefix = `[${bvid} / ${episode}] `;
+    const { updateDownloadItemPartial, removeDownloadItem, pickTask } = useDownloadStore.getState();
+
+    const playingRequest = {
+        id: bvid,
+        episode,
+    };
+    const id = `${playingRequest.id}_${playingRequest.episode}`;
+
+    updateDownloadItemPartial(id, {
         status: 1,
     });
+
+    // 待检查的本地音频路径（包括从视频提取的音频）
+    const checkUrl = getCacheAudioPath(playingRequest.id, playingRequest.episode, false);
 
     // 获取源地址
     const { url, isAudio } = await getBilisoundResourceUrl(
@@ -104,7 +99,10 @@ export async function downloadResource(bvid: string, episode: number, title: str
         cb => {
             // console.log(JSON.stringify(downloadResumable, null, 4));
             // 更新状态管理器中的内容
-            const old = useDownloadStore.getState().downloadList.get(id)!;
+            const old = useDownloadStore.getState().downloadList.get(id);
+            if (!old) {
+                return;
+            }
             updateDownloadItemPartial(id, {
                 progress: cb,
                 progressOld: old.progress,
@@ -150,4 +148,5 @@ export async function downloadResource(bvid: string, episode: number, title: str
     await FileSystem.deleteAsync(downloadTargetFileUrl);
     cacheStatusStorage.set(playingRequest.id + "_" + playingRequest.episode, true);
     removeDownloadItem(id);
+    pickTask();
 }
