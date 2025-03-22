@@ -93,13 +93,13 @@ const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()
 
         // 如果 processTasks 不够多，逐渐递加
         while (get().processTasks.length < get().max) {
-            log.info("待处理任务数量：" + get().processTasks.length);
+            log.debug("待处理任务数量：" + get().processTasks.length);
 
             // 获取最后一个还没有处理的任务
             const got = list[list.length - 1];
 
             if (!got) {
-                log.info("没有要处理的任务");
+                log.debug("没有要处理的任务");
                 return;
             }
 
@@ -107,7 +107,7 @@ const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()
             const id = got.id + "_" + got.episode;
             get().addProcessTask(id);
 
-            log.info("处理任务 " + id);
+            log.debug("处理任务 " + id);
 
             downloadResource(got.id, got.episode)
                 .then(() => {
