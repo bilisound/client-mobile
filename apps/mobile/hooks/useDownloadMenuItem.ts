@@ -17,7 +17,7 @@ export function useDownloadMenuItem(
     currentTrack: TrackData | null | undefined,
     closeCallback: () => void,
 ): ActionMenuItem[] {
-    const { downloadList } = useDownloadStore(state => ({ downloadList: state.downloadList }));
+    const { downloadList } = useDownloadStore();
     const currentItemDownload = downloadList.get(
         currentTrack?.extendedData?.id + "_" + currentTrack?.extendedData?.episode,
     );

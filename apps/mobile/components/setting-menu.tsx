@@ -8,7 +8,7 @@ import { Monicon } from "@monicon/native";
 
 export interface SettingMenuItemProps {
     title: string;
-    subTitle?: string;
+    subTitle?: string | React.ReactNode;
     icon: string;
     iconSize?: number;
     rightAccessories?: React.ReactNode;
@@ -40,7 +40,12 @@ export function SettingMenuItem({
                     </View>
                     <Text className="font-semibold text-[15px]">{title}</Text>
                 </View>
-                {subTitle ? <Text className="mt-1 ml-9 opacity-60 text-[15px] leading-normal">{subTitle}</Text> : null}
+                {(() => {
+                    if (typeof subTitle === "string") {
+                        return <Text className="mt-1 ml-9 opacity-60 text-[15px] leading-normal">{subTitle}</Text>;
+                    }
+                    return subTitle;
+                })()}
             </View>
             {rightAccessories ? <View className="flex-0 basis-auto">{rightAccessories}</View> : null}
         </View>

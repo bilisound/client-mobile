@@ -65,10 +65,7 @@ function DownloadEntry({ item }: DownloadEntryProps) {
 }
 
 export default function Page() {
-    const { downloadList, cancelAll } = useDownloadStore(state => ({
-        downloadList: state.downloadList,
-        cancelAll: state.cancelAll,
-    }));
+    const { downloadList, cancelAll } = useDownloadStore();
     const { colorValue } = useRawThemeValues();
 
     const builtList: DownloadItem[] = Array.from(downloadList.values()).sort((a, b) => a.startTime - b.startTime);

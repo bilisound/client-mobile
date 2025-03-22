@@ -1,5 +1,5 @@
 import { DownloadProgressData } from "expo-file-system";
-import { createWithEqualityFn } from "zustand/traditional";
+import { create } from "zustand";
 import * as FileSystem from "expo-file-system";
 import { downloadResource } from "~/business/download";
 import log from "~/utils/logger";
@@ -41,7 +41,7 @@ export interface DownloadMethods {
     removeProcessTask: (id: string) => void;
 }
 
-const useDownloadStore = createWithEqualityFn<DownloadProps & DownloadMethods>()((set, get) => ({
+const useDownloadStore = create<DownloadProps & DownloadMethods>()((set, get) => ({
     downloadList: new Map(),
     max: 3,
     count: 0,

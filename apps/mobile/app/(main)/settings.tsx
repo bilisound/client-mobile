@@ -10,6 +10,20 @@ import log from "~/utils/logger";
 import { Layout } from "~/components/layout";
 import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
 import { FEATURE_DOWNLOAD_MANAGER } from "~/constants/feature";
+import useDownloadStore, { DownloadItem } from "~/store/download";
+import { Text } from "~/components/ui/text";
+
+function DownloadDescription() {
+    const { downloadList } = useDownloadStore();
+    const builtList: DownloadItem[] = Array.from(downloadList.values()).sort((a, b) => a.startTime - b.startTime);
+    const displayList = builtList.filter(e => e.status === 1 || e.status === 0);
+
+    return (
+        <Text className="mt-1 ml-9 opacity-60 text-[15px] leading-normal">
+            {displayList.length > 0 ? `${displayList.length} 个任务进行中` : "尚无任务正在进行"}
+        </Text>
+    );
+}
 
 export default function Page() {
     const edgeInsets = useTabSafeAreaInsets();
@@ -132,6 +146,7 @@ export default function Page() {
                             key="settings_10041"
                             icon={"fa6-solid:download"}
                             title="下载管理"
+                            subTitle={<DownloadDescription />}
                             onPress={async () => {
                                 router.navigate("/download");
                             }}
