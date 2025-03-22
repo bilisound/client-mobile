@@ -120,10 +120,11 @@ export default function Page() {
                 renderItem={e => <DownloadEntry item={e.item} />}
                 ListFooterComponent={
                     displayList.length > 0 ? (
-                        <View className={"flex-1 items-center py-4"}>
+                        <View className={"flex-1 items-center py-4 gap-1"}>
                             <Text
                                 className={"text-typography-500 text-sm"}
-                            >{`${builtList.length - displayList.length} 个任务排队中`}</Text>
+                            >{`还有 ${builtList.length - displayList.length} 个任务排队中`}</Text>
+                            <Text className={"text-typography-500 text-sm"}>可点击上方「取消全部」停止下载</Text>
                         </View>
                     ) : null
                 }
