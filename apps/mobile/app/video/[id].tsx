@@ -45,6 +45,7 @@ import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
 import { DownloadButton } from "~/components/download-button";
 import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
 import * as Clipboard from "expo-clipboard";
+import Toast from "react-native-toast-message";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -164,6 +165,10 @@ function PageMenu({ data, onAction }: PageMenuProps) {
             show: true,
             async action() {
                 await Clipboard.setStringAsync("https://www.bilibili.com/video/" + data.bvid + "/");
+                Toast.show({
+                    type: "success",
+                    text1: "视频链接已复制到剪贴板",
+                });
                 onClose();
             },
         },
