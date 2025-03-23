@@ -85,6 +85,15 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, da
             },
             () => onClose(),
         ),
+        {
+            text: "添加到歌单",
+            icon: "fa6-solid:plus",
+            iconSize: 16,
+            show: true,
+            action() {
+                onAction("addPlaylist");
+            },
+        },
     ];
 
     return (
@@ -102,12 +111,6 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, da
                     />
                 )}
                 <ActionMenu menuItems={menuItems} />
-                <ActionsheetItem onPress={() => onAction("addPlaylist")}>
-                    <Box className={"size-6 items-center justify-center"}>
-                        <Monicon name={"fa6-solid:plus"} size={16} color={colorValue("--color-typography-700")} />
-                    </Box>
-                    <ActionsheetItemText>添加到歌单</ActionsheetItemText>
-                </ActionsheetItem>
                 <ActionsheetItem onPress={() => onAction("close")}>
                     <View className={"size-6 items-center justify-center"}>
                         <Monicon name={"fa6-solid:xmark"} size={20} color={colorValue("--color-typography-700")} />
@@ -121,13 +124,13 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, da
 
 interface PageMenuProps {
     data: GetMetadataResponse;
+    onAction: (action: "addPlaylist") => void;
 }
 
 /**
  * 右侧菜单操作
  */
-function PageMenu({ data }: PageMenuProps) {
-    const { colorValue } = useRawThemeValues();
+function PageMenu({ data, onAction }: PageMenuProps) {
     const [showActionSheet, setShowActionSheet] = useState(false);
 
     function onClose() {
@@ -135,6 +138,16 @@ function PageMenu({ data }: PageMenuProps) {
     }
 
     const menuItems: ActionMenuItem[] = [
+        {
+            text: "添加到歌单",
+            icon: "fa6-solid:plus",
+            iconSize: 16,
+            show: true,
+            action() {
+                onAction("addPlaylist");
+                onClose();
+            },
+        },
         {
             text: "在浏览器打开",
             icon: "fa6-solid:link",
@@ -151,6 +164,15 @@ function PageMenu({ data }: PageMenuProps) {
             show: true,
             async action() {
                 await Clipboard.setStringAsync("https://www.bilibili.com/video/" + data.bvid + "/");
+                onClose();
+            },
+        },
+        {
+            text: "取消",
+            icon: "fa6-solid:xmark",
+            iconSize: 20,
+            show: true,
+            action() {
                 onClose();
             },
         },
@@ -171,12 +193,6 @@ function PageMenu({ data }: PageMenuProps) {
                         image={getImageProxyUrl(data.pic, "https://www.bilibili.com/video/" + data.bvid)}
                     />
                     <ActionMenu menuItems={menuItems} />
-                    <ActionsheetItem onPress={onClose}>
-                        <View className={"size-6 items-center justify-center"}>
-                            <Monicon name={"fa6-solid:xmark"} size={20} color={colorValue("--color-typography-700")} />
-                        </View>
-                        <ActionsheetItemText>取消</ActionsheetItemText>
-                    </ActionsheetItem>
                 </ActionsheetContent>
             </Actionsheet>
         </>
@@ -372,12 +388,58 @@ export default function Page() {
         }
     }, [appendHistoryList, data, noHistory]);
 
+    // 操作
+
+    function handleAddPlaylist() {
+        const meta = data;
+        if (!meta) {
+            return;
+        }
+        openAddPlaylistPage({
+            playlistDetail: meta.pages.map(e => ({
+                author: meta.owner.name ?? "",
+                bvid: meta.bvid ?? "",
+                duration: e.duration,
+                episode: e.page,
+                title: e.part,
+                imgUrl: meta.pic ?? "",
+                id: 0,
+                playlistId: 0,
+                extendedData: null,
+            })),
+            name: meta.title,
+            description: meta.desc,
+            source: {
+                type: "video",
+                bvid: meta.bvid,
+                originalTitle: meta.title,
+                lastSyncAt: new Date().getTime(),
+            },
+            cover: meta.pic,
+        });
+    }
+
     return (
         <GestureHandlerRootView>
             <Layout
                 title={"查看详情"}
                 leftAccessories={"BACK_BUTTON"}
-                rightAccessories={data ? <PageMenu data={data} /> : null}
+                rightAccessories={
+                    data ? (
+                        <PageMenu
+                            data={data}
+                            onAction={action => {
+                                switch (action) {
+                                    case "addPlaylist":
+                                        handleAddPlaylist();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }}
+                        />
+                    ) : null
+                }
                 disableContentPadding={true}
             >
                 {error ? (
@@ -433,23 +495,7 @@ export default function Page() {
                         }
                         switch (action) {
                             case "addPlaylist":
-                                openAddPlaylistPage({
-                                    playlistDetail: [
-                                        {
-                                            author: data?.owner.name ?? "",
-                                            bvid: data?.bvid ?? "",
-                                            duration: displayTrack.duration,
-                                            episode: displayTrack.page,
-                                            title: displayTrack.part,
-                                            imgUrl: data?.pic ?? "",
-                                            id: 0,
-                                            playlistId: 0,
-                                            extendedData: null,
-                                        },
-                                    ],
-                                    name: data?.title ?? "",
-                                    description: data?.desc ?? "",
-                                });
+                                handleAddPlaylist();
                                 break;
                             case "close":
                                 break;
