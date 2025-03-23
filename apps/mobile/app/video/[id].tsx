@@ -37,7 +37,6 @@ import log from "~/utils/logger";
 import { GetMetadataResponse } from "@bilisound/sdk";
 import { openAddPlaylistPage } from "~/business/playlist/misc";
 import { Monicon } from "@monicon/native";
-import { Box } from "~/components/ui/box";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
@@ -48,6 +47,31 @@ import * as Clipboard from "expo-clipboard";
 import Toast from "react-native-toast-message";
 
 type PageItem = GetMetadataResponse["pages"][number];
+
+function handleAddPlaylist(meta: GetMetadataResponse) {
+    openAddPlaylistPage({
+        playlistDetail: meta.pages.map(e => ({
+            author: meta.owner.name ?? "",
+            bvid: meta.bvid ?? "",
+            duration: e.duration,
+            episode: e.page,
+            title: e.part,
+            imgUrl: meta.pic ?? "",
+            id: 0,
+            playlistId: 0,
+            extendedData: null,
+        })),
+        name: meta.title,
+        description: meta.desc,
+        source: {
+            type: "video",
+            bvid: meta.bvid,
+            originalTitle: meta.title,
+            lastSyncAt: new Date().getTime(),
+        },
+        cover: meta.pic,
+    });
+}
 
 interface LongPressActionsProps {
     showActionSheet: boolean;
@@ -215,33 +239,11 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
     const [alwaysShowFullMeta, setAlwaysShowFullMeta] = useState(false);
 
     function handleCreatePlaylist() {
-        const meta = data;
-        if (!meta) {
+        if (!data) {
             log.error("使用 handleCreatePlaylist 函数时，meta 没有准备就绪！");
             return;
         }
-        openAddPlaylistPage({
-            playlistDetail: meta.pages.map(e => ({
-                author: meta.owner.name ?? "",
-                bvid: meta.bvid ?? "",
-                duration: e.duration,
-                episode: e.page,
-                title: e.part,
-                imgUrl: meta.pic ?? "",
-                id: 0,
-                playlistId: 0,
-                extendedData: null,
-            })),
-            name: meta.title,
-            description: meta.desc,
-            source: {
-                type: "video",
-                bvid: meta.bvid,
-                originalTitle: meta.title,
-                lastSyncAt: new Date().getTime(),
-            },
-            cover: meta.pic,
-        });
+        handleAddPlaylist(data);
     }
 
     const downloadItems = useMemo(() => {
@@ -393,37 +395,6 @@ export default function Page() {
         }
     }, [appendHistoryList, data, noHistory]);
 
-    // 操作
-
-    function handleAddPlaylist() {
-        const meta = data;
-        if (!meta) {
-            return;
-        }
-        openAddPlaylistPage({
-            playlistDetail: meta.pages.map(e => ({
-                author: meta.owner.name ?? "",
-                bvid: meta.bvid ?? "",
-                duration: e.duration,
-                episode: e.page,
-                title: e.part,
-                imgUrl: meta.pic ?? "",
-                id: 0,
-                playlistId: 0,
-                extendedData: null,
-            })),
-            name: meta.title,
-            description: meta.desc,
-            source: {
-                type: "video",
-                bvid: meta.bvid,
-                originalTitle: meta.title,
-                lastSyncAt: new Date().getTime(),
-            },
-            cover: meta.pic,
-        });
-    }
-
     return (
         <GestureHandlerRootView>
             <Layout
@@ -436,7 +407,10 @@ export default function Page() {
                             onAction={action => {
                                 switch (action) {
                                     case "addPlaylist":
-                                        handleAddPlaylist();
+                                        if (!data) {
+                                            return;
+                                        }
+                                        handleAddPlaylist(data);
                                         break;
                                     default:
                                         break;
@@ -500,7 +474,23 @@ export default function Page() {
                         }
                         switch (action) {
                             case "addPlaylist":
-                                handleAddPlaylist();
+                                openAddPlaylistPage({
+                                    playlistDetail: [
+                                        {
+                                            author: data?.owner.name ?? "",
+                                            bvid: data?.bvid ?? "",
+                                            duration: displayTrack.duration,
+                                            episode: displayTrack.page,
+                                            title: displayTrack.part,
+                                            imgUrl: data?.pic ?? "",
+                                            id: 0,
+                                            playlistId: 0,
+                                            extendedData: null,
+                                        },
+                                    ],
+                                    name: data?.title ?? "",
+                                    description: data?.desc ?? "",
+                                });
                                 break;
                             case "close":
                                 break;
