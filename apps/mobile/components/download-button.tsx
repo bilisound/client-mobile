@@ -4,15 +4,21 @@ import { addDownloadTask } from "~/business/download";
 import Toast from "react-native-toast-message";
 import React, { memo } from "react";
 import useDownloadStore from "~/store/download";
+import { useWindowDimensions } from "react-native";
 
 export interface DownloadButtonProps {
     items: { id: string; episode: number; title: string }[];
 }
 
 function DownloadButtonRaw({ items }: DownloadButtonProps) {
+    const { width } = useWindowDimensions();
+    const showFullText = width >= 768;
+
     return (
         <ButtonOuter className={"rounded-full"}>
             <Button
+                icon={!showFullText}
+                aria-label={"下载"}
                 className={"rounded-full"}
                 onPress={() => {
                     for (let i = 0; i < items.length; i++) {
@@ -30,7 +36,7 @@ function DownloadButtonRaw({ items }: DownloadButtonProps) {
                 }}
             >
                 <ButtonMonIcon name={"fa6-solid:download"} size={16} />
-                <ButtonText>下载</ButtonText>
+                {showFullText ? <ButtonText>下载</ButtonText> : null}
             </Button>
         </ButtonOuter>
     );
