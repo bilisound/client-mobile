@@ -1,4 +1,4 @@
-import { Layout } from "~/components/layout";
+import { Layout, LayoutButton } from "~/components/layout";
 import { Text } from "~/components/ui/text";
 import { router, useLocalSearchParams } from "expo-router";
 import { convertToHTTPS } from "~/utils/string";
@@ -7,7 +7,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import useHistoryStore from "~/store/history";
 import { getBilisoundMetadata } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
-import { View, ViewStyle } from "react-native";
+import { Linking, View, ViewStyle } from "react-native";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "~/components/ui/skeleton";
 import { getImageProxyUrl } from "~/business/constant-helper";
@@ -44,6 +44,7 @@ import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
 import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
 import { DownloadButton } from "~/components/download-button";
 import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
+import * as Clipboard from "expo-clipboard";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -115,6 +116,70 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, da
                 </ActionsheetItem>
             </ActionsheetContent>
         </Actionsheet>
+    );
+}
+
+interface PageMenuProps {
+    data: GetMetadataResponse;
+}
+
+/**
+ * 右侧菜单操作
+ */
+function PageMenu({ data }: PageMenuProps) {
+    const { colorValue } = useRawThemeValues();
+    const [showActionSheet, setShowActionSheet] = useState(false);
+
+    function onClose() {
+        setShowActionSheet(false);
+    }
+
+    const menuItems: ActionMenuItem[] = [
+        {
+            text: "在浏览器打开",
+            icon: "fa6-solid:link",
+            iconSize: 16,
+            show: true,
+            async action() {
+                await Linking.openURL("https://www.bilibili.com/video/" + data.bvid + "/");
+                onClose();
+            },
+        },
+        {
+            text: "复制视频链接",
+            icon: "fa6-solid:copy",
+            show: true,
+            async action() {
+                await Clipboard.setStringAsync("https://www.bilibili.com/video/" + data.bvid + "/");
+                onClose();
+            },
+        },
+    ];
+
+    return (
+        <>
+            <LayoutButton iconName={"fa6-solid:ellipsis-vertical"} onPress={() => setShowActionSheet(true)} />
+            <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
+                <ActionsheetBackdrop />
+                <ActionsheetContent style={{ zIndex: 999 }}>
+                    <ActionsheetDragIndicatorWrapper>
+                        <ActionsheetDragIndicator />
+                    </ActionsheetDragIndicatorWrapper>
+                    <ActionSheetCurrent
+                        line1={data.title}
+                        line2={data.owner.name}
+                        image={getImageProxyUrl(data.pic, "https://www.bilibili.com/video/" + data.bvid)}
+                    />
+                    <ActionMenu menuItems={menuItems} />
+                    <ActionsheetItem onPress={onClose}>
+                        <View className={"size-6 items-center justify-center"}>
+                            <Monicon name={"fa6-solid:xmark"} size={20} color={colorValue("--color-typography-700")} />
+                        </View>
+                        <ActionsheetItemText>取消</ActionsheetItemText>
+                    </ActionsheetItem>
+                </ActionsheetContent>
+            </Actionsheet>
+        </>
     );
 }
 
@@ -309,7 +374,12 @@ export default function Page() {
 
     return (
         <GestureHandlerRootView>
-            <Layout title={"查看详情"} leftAccessories={"BACK_BUTTON"} disableContentPadding={true}>
+            <Layout
+                title={"查看详情"}
+                leftAccessories={"BACK_BUTTON"}
+                rightAccessories={data ? <PageMenu data={data} /> : null}
+                disableContentPadding={true}
+            >
                 {error ? (
                     <View className={"flex-1 items-center justify-center"}>
                         <ErrorContent message={error.message} />

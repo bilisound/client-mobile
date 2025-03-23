@@ -8,7 +8,7 @@ export interface ActionMenuItem {
     show?: boolean;
     disabled?: boolean;
     icon: string;
-    iconSize: number;
+    iconSize?: number;
     text: string;
     action: () => void;
 }
@@ -25,7 +25,7 @@ export function ActionMenu({ menuItems }: ActionSheetProps) {
         .map(item => (
             <ActionsheetItem key={item.text} onPress={item.action} isDisabled={item.disabled}>
                 <View className={"size-6 items-center justify-center"}>
-                    <Monicon name={item.icon} size={item.iconSize} color={colorValue("--color-typography-700")} />
+                    <Monicon name={item.icon} size={item.iconSize ?? 18} color={colorValue("--color-typography-700")} />
                 </View>
                 <ActionsheetItemText>{item.text}</ActionsheetItemText>
             </ActionsheetItem>
