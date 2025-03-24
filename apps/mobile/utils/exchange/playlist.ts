@@ -10,6 +10,7 @@ import Toast from "react-native-toast-message";
 import { importHelper } from "~/utils/exchange/import-helper";
 import { db } from "~/storage/sqlite/main";
 import { playlistDetail, playlistMeta } from "~/storage/sqlite/schema";
+import { BRAND } from "~/constants/branding";
 
 export async function exportPlaylistToFile(id?: number) {
     let output;
@@ -25,7 +26,7 @@ export async function exportPlaylistToFile(id?: number) {
     } else {
         name = output.meta[0].title;
     }
-    const fileName = `[Bilisound 歌单] ${name}.toml`;
+    const fileName = `[${BRAND} 歌单] ${name}.toml`;
     await saveTextFile(fileName, doc, "application/toml");
     Toast.show({
         type: "success",

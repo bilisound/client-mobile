@@ -3,6 +3,7 @@ import * as semver from "semver";
 import { USER_AGENT_BILISOUND } from "~/constants/network";
 import { RELEASE_CHANNEL } from "~/constants/releasing";
 import ReactNativeBlobUtil from "react-native-blob-util";
+import { BRAND } from "~/constants/branding";
 
 export interface CheckLatestVersionReturns {
     isLatest: boolean;
@@ -68,7 +69,7 @@ export function downloadApk(url: string, version: string) {
     return ReactNativeBlobUtil.config({
         addAndroidDownloads: {
             useDownloadManager: true,
-            title: " Bilisound 更新",
+            title: ` ${BRAND} 更新`,
             description: `版本 ${version}`,
             mime: "application/vnd.android.package-archive",
             mediaScannable: true,

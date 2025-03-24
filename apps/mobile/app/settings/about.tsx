@@ -11,6 +11,7 @@ import log from "~/utils/logger";
 import { checkLatestVersion, CheckLatestVersionReturns, downloadApk } from "~/business/check-release";
 import CheckUpdateDialog from "~/components/check-update-dialog";
 import { router } from "expo-router";
+import { BRAND } from "~/constants/branding";
 
 const releaseChannelDict: Record<string, string> = {
     unknown: "未知",
@@ -64,7 +65,7 @@ export default function Page() {
                         className="w-[4.5rem] h-[4.5rem] rounded-xl"
                         source={require("../../assets/images/icon.png")}
                     />
-                    <Text className="text-2xl leading-normal font-semibold mt-2 mb-1">Bilisound</Text>
+                    <Text className="text-2xl leading-normal font-semibold mt-2 mb-1">{BRAND}</Text>
                     <Text className="text-sm leading-normal opacity-50 text-center">{`版本 ${VERSION} ・ ${releaseChannelDict[RELEASE_CHANNEL ?? "unknown"]}`}</Text>
                 </View>
                 <SettingMenuItem

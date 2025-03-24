@@ -21,6 +21,7 @@ import log from "~/utils/logger";
 import { handleQrCode } from "~/business/qrcode";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Monicon } from "@monicon/native";
+import { BRAND } from "~/constants/branding";
 
 export default function Page() {
     const [hasPermission, setHasPermission] = useState<PermissionStatus | null>(null);
@@ -42,7 +43,7 @@ export default function Page() {
         setDialogInfo(e => ({
             ...e,
             title: "扫描失败",
-            description: errorMessage ?? "Bilisound 无法识别此二维码中的信息，请尝试使用其它的 APP 扫描。",
+            description: errorMessage ?? `${BRAND} 无法识别此二维码中的信息，请尝试使用其它的 APP 扫描。`,
         }));
         setModalVisible(true);
     };

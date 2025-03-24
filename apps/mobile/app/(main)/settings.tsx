@@ -12,6 +12,7 @@ import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
 import { FEATURE_DOWNLOAD_MANAGER } from "~/constants/feature";
 import useDownloadStore, { DownloadItem } from "~/store/download";
 import { Text } from "~/components/ui/text";
+import { BRAND } from "~/constants/branding";
 
 function DownloadDescription() {
     const { downloadList } = useDownloadStore();
@@ -155,7 +156,7 @@ export default function Page() {
                     <SettingMenuItem
                         key="settings_10050"
                         icon={"fa6-solid:circle-info"}
-                        title="关于 Bilisound"
+                        title={`关于 ${BRAND}`}
                         subTitle={`版本 ${VERSION}`}
                         onPress={async () => {
                             router.navigate("/settings/about");

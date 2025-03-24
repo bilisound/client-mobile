@@ -2,6 +2,7 @@ import "ts-node/register";
 import { ExpoConfig, ConfigContext } from "expo/config";
 
 import packageJson from "./package.json";
+import { BRAND } from "./constants/branding";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
     name: "Bilisound",
@@ -15,7 +16,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ios: {
         supportsTablet: true,
         infoPlist: {
-            NSCameraUsageDescription: "Bilisound 需要通过摄像头扫描二维码",
+            NSCameraUsageDescription: `${BRAND} 需要通过摄像头扫描二维码`,
             UIBackgroundModes: ["audio"],
         },
         bundleIdentifier: "moe.bilisound.app",
@@ -63,7 +64,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         [
             "expo-camera",
             {
-                cameraPermission: "Bilisound 需要通过摄像头扫描二维码",
+                cameraPermission: `${BRAND} 需要通过摄像头扫描二维码`,
             },
         ],
         [

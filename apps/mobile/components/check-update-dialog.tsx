@@ -12,6 +12,7 @@ import { Heading } from "~/components/ui/heading";
 import { Text } from "~/components/ui/text";
 import { CheckLatestVersionReturns } from "~/business/check-release";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
+import { BRAND } from "~/constants/branding";
 
 export interface CheckUpdateDialogProps {
     open: boolean;
@@ -31,7 +32,7 @@ export default function CheckUpdateDialog({ open, onClose, result }: CheckUpdate
                 </AlertDialogHeader>
                 <AlertDialogBody className="mt-4 mb-6">
                     <Text size="sm" className="leading-normal">
-                        {`Bilisound ${result?.latestVersion} 现已发布，而您当前正在使用 ${result?.currentVersion}。${
+                        {`${BRAND} ${result?.latestVersion} 现已发布，而您当前正在使用 ${result?.currentVersion}。${
                             result?.extraInfo ? `\n\n${result?.extraInfo}\n` : ""
                         }\n${result?.downloadUrl ? "想要立即下载吗？" : "想要前往最新版本下载页面吗？"}`}
                     </Text>

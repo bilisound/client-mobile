@@ -18,6 +18,7 @@ import { router } from "expo-router";
 import { resolveVideo, resolveVideoAndJump } from "~/business/format";
 import { Monicon } from "@monicon/native";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { BRAND } from "~/constants/branding";
 
 export default function MainScreen() {
     const edgeInsets = useTabSafeAreaInsets();
@@ -80,7 +81,7 @@ export default function MainScreen() {
                             fontFamily: "Poppins_700Bold",
                         }}
                     >
-                        BILISOUND
+                        {BRAND.toUpperCase()}
                     </Text>
                 </View>
                 <View className="px-4 items-center">

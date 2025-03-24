@@ -5,6 +5,7 @@ import Toast from "react-native-toast-message";
 import React, { memo } from "react";
 import useDownloadStore from "~/store/download";
 import { useWindowDimensions } from "react-native";
+import { BRAND } from "~/constants/branding";
 
 export interface DownloadButtonProps {
     items: { id: string; episode: number; title: string }[];
@@ -30,7 +31,7 @@ function DownloadButtonRaw({ items }: DownloadButtonProps) {
                         Toast.show({
                             type: "success",
                             text1: "下载任务已添加",
-                            text2: "让 Bilisound 一直播放音乐，可以加快下载速度",
+                            text2: `让 ${BRAND} 一直播放音乐，可以加快下载速度`,
                         });
                     }
                 }}
