@@ -1,7 +1,7 @@
 import useDownloadStore from "~/store/download";
 import { TrackData } from "@bilisound/player/build/types";
 import { Platform } from "react-native";
-import { downloadResource, downloadResourceNow } from "~/business/download";
+import { downloadResourceNow } from "~/business/download";
 import { useActionSheetStore } from "~/components/main-bottom-sheet/stores";
 import Toast from "react-native-toast-message";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -12,6 +12,7 @@ import { bv2av } from "~/utils/vendors/av-bv";
 import { getCacheAudioPath, saveAudioFile, uriToPath } from "~/utils/file";
 import log from "~/utils/logger";
 import { ActionMenuItem } from "~/components/action-menu";
+import { deleteCurrentTrackCache } from "~/business/playlist/handler";
 
 export function useDownloadMenuItem(
     currentTrack: TrackData | null | undefined,
@@ -80,6 +81,24 @@ export function useDownloadMenuItem(
                     ).url,
                 );
                 closeCallback();
+            },
+        },
+        {
+            show: Platform.OS !== "web" && currentCache,
+            disabled: false,
+            icon: "fa6-solid:trash",
+            iconSize: 18,
+            text: "删除缓存",
+            action: async () => {
+                if (!currentTrack?.extendedData) {
+                    return;
+                }
+                closeCallback();
+                await deleteCurrentTrackCache();
+                Toast.show({
+                    type: "info",
+                    text1: "已删除当前播放曲目的缓存",
+                });
             },
         },
         {

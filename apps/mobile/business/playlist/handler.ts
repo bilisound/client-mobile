@@ -1,5 +1,5 @@
 import * as Player from "@bilisound/player";
-import { getCurrentTrackIndex, getTracks, RepeatMode } from "@bilisound/player";
+import { getCurrentTrack, getCurrentTrackIndex, getTracks, RepeatMode } from "@bilisound/player";
 
 import {
     addToQueueListBackup,
@@ -29,6 +29,7 @@ import { convertToHTTPS } from "~/utils/string";
 import useSettingsStore from "~/store/settings";
 import useErrorMessageStore from "~/store/error-message";
 import { downloadResourceNow } from "~/business/download";
+import * as FileSystem from "expo-file-system";
 
 interface TrackDataOld {
     /** The track title */
@@ -397,4 +398,37 @@ export async function saveCurrentAndNextTrack() {
         tasks.push(downloadResourceNow(nextId, nextEpisode, nextTitle ?? "未知曲目"));
     }
     await Promise.all(tasks);
+}
+
+export async function deleteCurrentTrackCache() {
+    const currentTrack = await getCurrentTrack();
+    const currentTrackIndex = await getCurrentTrackIndex();
+    if (!currentTrack?.extendedData) {
+        log.warn("无效的待删除缓存曲目");
+        return;
+    }
+    const deleteTarget = currentTrack.uri;
+    currentTrack.uri = PLACEHOLDER_AUDIO;
+    currentTrack.extendedData.isLoaded = false;
+    currentTrack.extendedData.expireAt = Date.now() - 1;
+
+    if ((await Player.getRepeatMode()) === RepeatMode.ONE) {
+        // 缓解 Android 端特有的 bug：在单曲循环模式下切歌到会被触发替换操作的歌曲，会在歌曲被替换后自动跳转回第一首
+        playlistStorage.set(PLAYLIST_RESTORE_LOOP_ONCE, true);
+        await Player.setRepeatMode(RepeatMode.OFF);
+    }
+
+    console.log(currentTrack);
+    log.debug("进行曲目替换操作");
+    try {
+        await Player.replaceTrack(currentTrackIndex, currentTrack);
+        await FileSystem.deleteAsync(deleteTarget);
+        cacheStatusStorage.delete(currentTrack.extendedData.id + "_" + currentTrack.extendedData.episode);
+    } catch (e) {
+        log.error("错误捕获：" + e);
+        useErrorMessageStore.getState().setMessage(String((e as Error)?.message || e));
+        await Player.next();
+    }
+
+    await refreshCurrentTrack();
 }
