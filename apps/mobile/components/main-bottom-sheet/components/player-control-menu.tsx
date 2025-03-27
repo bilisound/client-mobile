@@ -165,7 +165,7 @@ export function PlayerControlMenu() {
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>
-                    <View className={"w-full px-2 pt-4 pb-6"}>
+                    <View className={"w-full px-4 pt-4 pb-6"}>
                         {/*<Text className={"font-semibold text-lg leading-tight"}>调节播放速度</Text>*/}
                         <SpeedControlPanel />
                         <View className="flex-row flex-wrap justify-center gap-2 mt-4">
