@@ -30,14 +30,10 @@ import {
     ActionsheetContent,
     ActionsheetDragIndicator,
     ActionsheetDragIndicatorWrapper,
-    ActionsheetItem,
-    ActionsheetItemText,
 } from "~/components/ui/actionsheet";
 import log from "~/utils/logger";
 import { GetMetadataResponse } from "@bilisound/sdk";
 import { openAddPlaylistPage } from "~/business/playlist/misc";
-import { Monicon } from "@monicon/native";
-import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
 import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
@@ -85,8 +81,6 @@ interface LongPressActionsProps {
  * 长按操作
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, data }: LongPressActionsProps) {
-    const { colorValue } = useRawThemeValues();
-
     const menuItems: ActionMenuItem[] = [
         ...useDownloadMenuItem(
             {
@@ -119,6 +113,16 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, da
                 onAction("addPlaylist");
             },
         },
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:xmark",
+            iconSize: 20,
+            text: "取消",
+            action: () => {
+                onAction("close");
+            },
+        },
     ];
 
     return (
@@ -136,12 +140,6 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose, da
                     />
                 )}
                 <ActionMenu menuItems={menuItems} />
-                <ActionsheetItem onPress={() => onAction("close")}>
-                    <View className={"size-6 items-center justify-center"}>
-                        <Monicon name={"fa6-solid:xmark"} size={20} color={colorValue("--color-typography-700")} />
-                    </View>
-                    <ActionsheetItemText>取消</ActionsheetItemText>
-                </ActionsheetItem>
             </ActionsheetContent>
         </Actionsheet>
     );
