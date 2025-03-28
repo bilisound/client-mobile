@@ -6,6 +6,7 @@ import { SystemBars, SystemBarStyle } from "react-native-edge-to-edge";
 import { Button, ScrollView, useColorScheme as useColorSchemeRN, View } from "react-native";
 import { shadow } from "~/constants/styles";
 import { Layout } from "~/components/layout";
+import init from "~/utils/init";
 
 export default function Test() {
     const colorScheme = useColorScheme();
@@ -33,6 +34,7 @@ export default function Test() {
                             <Button title={"auto"} onPress={() => setTheme("auto")} />
                             <Button title={"light"} onPress={() => setTheme("light")} />
                             <Button title={"dark"} onPress={() => setTheme("dark")} />
+                            <Button title={"force init"} onPress={init} />
                         </Box>
                         <Box className={"flex-row gap-4"}>
                             <Button title={"RN Shadow"} onPress={() => setNativeWindShadow(0)} />

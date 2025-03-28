@@ -15,13 +15,13 @@ export default async function init() {
     await useSettingsStore.persist.rehydrate();
     const settings = useSettingsStore.getState();
     log.setSeverity(settings.debugMode ? "debug" : "info");
+    if (!(await FileSystem.getInfoAsync(BILISOUND_LOG_URI)).exists) {
+        await FileSystem.makeDirectoryAsync(BILISOUND_LOG_URI);
+    }
     await deleteOldLogContent();
 
     // 目录初始化
     try {
-        if (!(await FileSystem.getInfoAsync(BILISOUND_LOG_URI)).exists) {
-            await FileSystem.makeDirectoryAsync(BILISOUND_LOG_URI);
-        }
         if (!(await FileSystem.getInfoAsync(BILISOUND_OFFLINE_URI)).exists) {
             await FileSystem.makeDirectoryAsync(BILISOUND_OFFLINE_URI);
         }

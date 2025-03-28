@@ -358,41 +358,51 @@ export default function Page() {
 
     // 播放请求
     async function handlePlay(index = 0) {
-        const from = (await Player.getTracks())[index];
-        const to = playlistDetail?.[index];
-        const activeTrack = await Player.getCurrentTrack();
-        const onQueue = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) ?? "{}")?.value;
-        // 前提条件：
-        // playlistOnQueue 的 id 是这个歌单的 id
-        // 有 activeTrack
-        // 当前 queue 对应 index 的 bvid 和 episode 与请求播放的一致
-        if (
-            onQueue?.id === Number(id) &&
-            activeTrack &&
-            from?.extendedData?.id === to?.bvid &&
-            from?.extendedData?.episode === to?.episode
-        ) {
-            log.debug("当前队列中的内容来自本歌单，就地跳转");
-            await Player.jump(index);
-            return;
-        }
-        if (onQueue || (await Player.getTracks()).length <= 0) {
-            return handlePlayConfirm(index);
-        }
-        dialogCallback.current = () => {
-            return handlePlayConfirm(index);
-        };
+        try {
+            const from = (await Player.getTracks())?.[index];
+            const to = playlistDetail?.[index];
+            let activeTrack = null;
+            try {
+                activeTrack = await Player.getCurrentTrack();
+            } catch (error) {
+                // TODO Bilisound 播放器在 iOS 的行为与其它端不一样，如果没有播放曲目会直接抛出错误。因此这里需要兜底一下。日后考虑改造播放器 native 模块实现行为一致
+                log.debug("错误兜底：" + error);
+            }
+            const onQueue = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) ?? "{}")?.value;
+            // 前提条件：
+            // playlistOnQueue 的 id 是这个歌单的 id
+            // 有 activeTrack
+            // 当前 queue 对应 index 的 bvid 和 episode 与请求播放的一致
+            if (
+                onQueue?.id === Number(id) &&
+                activeTrack &&
+                from?.extendedData?.id === to?.bvid &&
+                from?.extendedData?.episode === to?.episode
+            ) {
+                log.debug("当前队列中的内容来自本歌单，就地跳转");
+                await Player.jump(index);
+                return;
+            }
+            if (onQueue || (await Player.getTracks()).length <= 0) {
+                return handlePlayConfirm(index);
+            }
+            dialogCallback.current = () => {
+                return handlePlayConfirm(index);
+            };
 
-        // 播放列表可能是脏的，需要进行替换操作
-        setDialogInfo(prevState => ({
-            ...prevState,
-            title: "替换播放队列确认",
-            description: "播放本歌单中的歌曲，将会把当前播放队列替换为本歌单。确定要继续吗？",
-        }));
-        setModalVisible(true);
-        dialogCallback.current = async () => {
-            return handlePlayConfirm(index);
-        };
+            // 播放列表可能是脏的，需要进行替换操作
+            setDialogInfo(prevState => ({
+                ...prevState,
+                title: "替换播放队列确认",
+                description: "播放本歌单中的歌曲，将会把当前播放队列替换为本歌单。确定要继续吗？",
+            }));
+            setModalVisible(true);
+            dialogCallback.current = async () => {
+                return handlePlayConfirm(index);
+            };
+        } catch (e) {
+            log.error("操作失败：" + e);
+        }
     }
 
     // 播放请求确认
