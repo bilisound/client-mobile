@@ -362,6 +362,9 @@ importers:
       semver:
         specifier: ^7.7.1
         version: 7.7.1
+      sleep-promise:
+        specifier: ^9.1.0
+        version: 9.1.0
       smol-toml:
         specifier: ^1.3.1
         version: 1.3.1
@@ -1842,7 +1845,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.22.13':
     resolution: {integrity: sha512-GpRkCt5Eb0pWXrvpvYswFhUxm0R5197P1acAgj242XfsdNhjVUfjScj+Z6raTRsW0SdIxmingpef2fZaHvUFKQ==}
@@ -7659,6 +7662,9 @@ packages:
   slash@5.1.0:
     resolution: {integrity: sha512-ZA6oR3T/pEyuqwMgAKT0/hAv8oAXckzbkmR0UkUosQ+Mc4RxGoJkRmwHgHufaenlyAgE1Mxgpdcrf75y6XcnDg==}
     engines: {node: '>=14.16'}
+
+  sleep-promise@9.1.0:
+    resolution: {integrity: sha512-UHYzVpz9Xn8b+jikYSD6bqvf754xL2uBUzDFwiU6NcdZeifPr6UfgU43xpkPu67VMS88+TI2PSI7Eohgqf2fKA==}
 
   slugify@1.6.6:
     resolution: {integrity: sha512-h+z7HKHYXj6wJU+AnS/+IH8Uh9fdcX1Lrhg1/VMdf9PwoBQXFcXiAdsy2tSK0P6gKwJLXp02r90ahUCqHk9rrw==}
@@ -17472,6 +17478,8 @@ snapshots:
   slash@3.0.0: {}
 
   slash@5.1.0: {}
+
+  sleep-promise@9.1.0: {}
 
   slugify@1.6.6: {}
 
