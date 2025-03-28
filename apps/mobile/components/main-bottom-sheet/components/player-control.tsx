@@ -3,7 +3,6 @@ import { InsidePageContext } from "~/components/main-bottom-sheet/utils";
 import { useCurrentTrack } from "@bilisound/player";
 import { useActionSheetStore } from "~/components/main-bottom-sheet/stores";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
-import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { router } from "expo-router";
 import { useWindowDimensions, View } from "react-native";
 import { breakpoints, shadow } from "~/constants/styles";
@@ -14,13 +13,11 @@ import { Text } from "~/components/ui/text";
 import { PlayerPicture } from "./player-picture";
 import { PlayerQueueList } from "./player-queue-list";
 import { Pressable } from "~/components/ui/pressable";
-import MaskedView from "@react-native-masked-view/masked-view";
-import { Marquee } from "@animatereactnative/marquee";
-import { LinearGradient } from "expo-linear-gradient";
 import { PlayerProgressBar } from "./player-progress-bar";
 import { PlayerProgressTimer } from "./player-progress-timer";
 import { PlayerControlButtons } from "./player-control-buttons";
 import { PlayerControlMenu } from "./player-control-menu";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function PlayerControl() {
     const isInsidePage = useContext(InsidePageContext);
@@ -33,11 +30,8 @@ export function PlayerControl() {
     }));
     const [closing, setClosing] = useState(false);
     const [value, setValue] = useState<"current" | "list">("current");
-    const [rotateTitle, setRotateTitle] = useState(false);
-
-    // 滚动字幕
-    const { colorValue } = useRawThemeValues();
-    const [width, setWidth] = useState(320);
+    const { width, height } = useWindowDimensions();
+    const { top, left, right } = useSafeAreaInsets();
 
     function handleJump() {
         if (closing) {
@@ -58,11 +52,12 @@ export function PlayerControl() {
         }, 250);
     }
 
-    const isHorizontal = useWindowDimensions().width >= breakpoints.md;
+    const isHorizontal = width >= breakpoints.md;
 
     return (
-        <View className={"flex-1 flex-col md:flex-row"}>
-            <View className={"left-[10px] top-[10px] absolute z-10"}>
+        // iOS 下播放界面横屏布局问题的 workaround
+        <View className={"flex-col md:flex-row p-safe"} style={{ width, height }}>
+            <View className={"absolute z-10"} style={{ left: 10 + left, top: 10 + top }}>
                 <LayoutButton
                     iconName={"fa6-solid:angle-down"}
                     onPress={() => {
@@ -78,7 +73,7 @@ export function PlayerControl() {
                     }}
                 />
             </View>
-            <View className={"right-[10px] top-[10px] absolute z-10"}>
+            <View className={"absolute z-10"} style={{ right: 10 + right, top: 10 + top }}>
                 <LayoutButton
                     iconName={"fa6-solid:ellipsis-vertical"}
                     onPress={() => {
@@ -134,47 +129,15 @@ export function PlayerControl() {
             {/* 右侧：播放控制 */}
             <View
                 className={"@container flex-0 basis-auto md:flex-1 md:justify-center gap-3 @sm:gap-4 " + DEBUG_COLOR[0]}
-                onLayout={event => {
-                    setWidth(event.nativeEvent.layout.width);
-                }}
             >
                 {/* 曲目信息，可点击 */}
-                <Pressable
-                    className={"gap-1.5 @sm:gap-2 py-2 @sm:py-4 " + DEBUG_COLOR[1]}
-                    onPress={handleJump}
-                    onLongPress={() => setRotateTitle(p => !p)}
-                >
-                    {rotateTitle ? (
-                        <MaskedView
-                            maskElement={
-                                <Marquee speed={0.5}>
-                                    <Text className={"text-lg @sm:text-xl font-extrabold color-typography-700 pl-8"}>
-                                        {currentTrack?.title}
-                                    </Text>
-                                </Marquee>
-                            }
-                        >
-                            <LinearGradient
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                colors={[
-                                    "transparent",
-                                    colorValue("--color-typography-700"),
-                                    colorValue("--color-typography-700"),
-                                    "transparent",
-                                ]}
-                                locations={[16 / width, 64 / width, (width - 64) / width, (width - 16) / width]}
-                                className={"h-[28px] @sm:h-[28px]"}
-                            />
-                        </MaskedView>
-                    ) : (
-                        <Text
-                            className={"leading-normal text-lg @sm:text-xl font-extrabold color-typography-700 px-8"}
-                            isTruncated
-                        >
-                            {currentTrack?.title}
-                        </Text>
-                    )}
+                <Pressable className={"gap-1.5 @sm:gap-2 py-2 @sm:py-4 " + DEBUG_COLOR[1]} onPress={handleJump}>
+                    <Text
+                        className={"leading-normal text-lg @sm:text-xl font-extrabold color-typography-700 px-8"}
+                        isTruncated
+                    >
+                        {currentTrack?.title}
+                    </Text>
 
                     <Text className={"leading-normal text-sm color-typography-500 px-8"}>{currentTrack?.artist}</Text>
                 </Pressable>

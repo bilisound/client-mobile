@@ -50,7 +50,7 @@ export function MainBottomSheet() {
             activeOffsetY={[-1, 1]}
             failOffsetX={[-5, 5]}
         >
-            <BottomSheetView className={"w-full h-full p-safe flex-1 " + DEBUG_COLOR[2]}>
+            <BottomSheetView className={"w-full h-full flex-1 " + DEBUG_COLOR[2]}>
                 <PlayerControl />
             </BottomSheetView>
             <Toast config={toastConfig} topOffset={edgeInsets.top} />
