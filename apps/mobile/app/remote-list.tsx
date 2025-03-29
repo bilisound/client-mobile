@@ -11,7 +11,7 @@ import { formatSecond } from "~/utils/datetime";
 import { decodeHTML } from "entities";
 import { SkeletonText } from "~/components/skeleton-text";
 import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
-import { ActivityIndicator, ScrollView, View, ViewStyle } from "react-native";
+import { ActivityIndicator, View, ViewStyle } from "react-native";
 import { Image } from "expo-image";
 import React, { useState } from "react";
 import { ErrorContent } from "~/components/error-content";

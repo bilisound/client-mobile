@@ -43,6 +43,7 @@ export default function Page() {
     const edgeInsets = useTabSafeAreaInsets();
     const { id } = useLocalSearchParams<{ id: string }>();
     const queryClient = useQueryClient();
+    const tabSafeAreaEdgeInsets = useTabSafeAreaInsets();
     const { data } = useQuery({
         queryKey: [`playlist_meta_${id}`],
         queryFn: () => getPlaylistMeta(Number(id)),
@@ -155,8 +156,20 @@ export default function Page() {
     }
 
     return (
-        <Layout title={id === MAGIC_ID_NEW_ENTRY ? "新建歌单" : "修改歌单信息"} leftAccessories="BACK_BUTTON">
-            <ScrollView className="flex-1">
+        <Layout
+            title={id === MAGIC_ID_NEW_ENTRY ? "新建歌单" : "修改歌单信息"}
+            leftAccessories="BACK_BUTTON"
+            edgeInsets={{ ...tabSafeAreaEdgeInsets, bottom: 0 }}
+        >
+            <ScrollView
+                className="flex-1"
+                contentContainerStyle={{
+                    paddingBottom: edgeInsets.bottom,
+                }}
+                scrollIndicatorInsets={{
+                    bottom: Number.MIN_VALUE,
+                }}
+            >
                 <View className="p-4 gap-4" style={{ paddingBottom: Math.max(edgeInsets.bottom, 16) }}>
                     {/*<View className={"h-[400px] w-16 bg-yellow-500"}></View>*/}
                     <FormControl isRequired isInvalid={"title" in errors}>
