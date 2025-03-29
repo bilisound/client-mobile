@@ -1,7 +1,8 @@
 import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, QueuePlayingMode, queueStorage } from "~/storage/queue";
 import { loadBackupTrackData } from "~/business/playlist/handler";
-import { addTracks, deleteTracks, getCurrentTrackIndex, getTracks, setQueue } from "@bilisound/player";
+import { addTracks, deleteTracks, getCurrentTrackIndex, getTracks, jump, setQueue } from "@bilisound/player";
 import { TrackData } from "@bilisound/player/build/types";
+import { Platform } from "react-native";
 
 /**
  * 切换播放模式
@@ -151,4 +152,8 @@ export async function restoreQueue(originalTracks: TrackData[]): Promise<void> {
 
     // 在后面插入新列表的曲目
     await addTracks(insertRight);
+
+    if (Platform.OS === "ios") {
+        await jump(originalIndex);
+    }
 }
