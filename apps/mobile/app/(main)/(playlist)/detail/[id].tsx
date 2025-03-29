@@ -545,6 +545,9 @@ export default function Page() {
                                 ...contentContainerStyle,
                                 paddingBottom: tabSafeAreaEdgeInsets.bottom + (editing ? editingHeight : 0),
                             }}
+                            scrollIndicatorInsets={{
+                                bottom: Number.MIN_VALUE,
+                            }}
                             data={playlistDetail}
                             extraData={[editing, selected.size]}
                             renderItem={({ item, index }) => (

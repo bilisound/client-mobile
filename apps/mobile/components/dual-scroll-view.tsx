@@ -14,6 +14,9 @@ export function DualScrollView({ edgeInsets, header, list, headerContainerStyle 
     return (
         <View className={"flex-1 flex-row"}>
             <ScrollView
+                scrollIndicatorInsets={{
+                    bottom: Number.MIN_VALUE,
+                }}
                 className={"hidden md:flex flex-1"}
                 style={{
                     paddingLeft: edgeInsets.left,

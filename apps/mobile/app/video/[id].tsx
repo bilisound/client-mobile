@@ -429,6 +429,9 @@ export default function Page() {
                         header={<MetaData data={data} showFullMeta />}
                         list={({ contentContainerStyle }) => (
                             <FlashList
+                                scrollIndicatorInsets={{
+                                    bottom: Number.MIN_VALUE,
+                                }}
                                 estimatedItemSize={64}
                                 contentContainerStyle={contentContainerStyle}
                                 ListHeaderComponent={<MetaData data={data} className={"flex md:hidden px-4 pb-4"} />}

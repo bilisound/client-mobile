@@ -22,6 +22,7 @@ import Toast from "react-native-toast-message";
 import { GetEpisodeUserResponse } from "@bilisound/sdk";
 import { UserListMode } from "@bilisound/sdk";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
+import { DualScrollView } from "~/components/dual-scroll-view";
 
 interface MetaDataProps {
     data?: GetEpisodeUserResponse["meta"];
@@ -164,56 +165,53 @@ export default function Page() {
     };
 
     return (
-        <Layout title={"合集详情"} leftAccessories={"BACK_BUTTON"}>
+        <Layout title={"合集详情"} leftAccessories={"BACK_BUTTON"} edgeInsets={{ ...edgeInsets, bottom: 0 }}>
             {error ? (
                 <View className={"flex-1 items-center justify-center"}>
                     <ErrorContent message={error.message} />
                 </View>
             ) : (
-                <View className={"flex-1 flex-row"}>
-                    <ScrollView className={"hidden md:flex flex-1"}>
-                        <View
-                            style={{
-                                paddingLeft: 16,
-                                paddingRight: 16,
-                                paddingBottom: edgeInsets.bottom + 16,
+                <DualScrollView
+                    edgeInsets={{ ...edgeInsets, left: 0, right: 0 }}
+                    header={<MetaData mode={mode} data={data?.pages[0].meta} />}
+                    list={({ contentContainerStyle }) => (
+                        <FlashList
+                            scrollIndicatorInsets={{
+                                bottom: Number.MIN_VALUE,
                             }}
-                        >
-                            {/*<MetaData />*/}
-                            <MetaData mode={mode} data={data?.pages[0].meta} />
-                        </View>
-                    </ScrollView>
-                    <FlashList
-                        estimatedItemSize={64}
-                        contentContainerStyle={{
-                            paddingLeft: 0,
-                            paddingRight: edgeInsets.right,
-                            paddingBottom: edgeInsets.bottom,
-                        }}
-                        ListHeaderComponent={
-                            <MetaData mode={mode} data={data?.pages[0].meta} className={"flex md:hidden px-4 pb-4"} />
-                        }
-                        ListFooterComponent={
-                            isFetchingNextPage ? (
-                                <ActivityIndicator color={colorValue("--color-typography-500")} />
-                            ) : null
-                        }
-                        renderItem={e => (
-                            <VideoItem
-                                image={getImageProxyUrl(e.item.cover)}
-                                text1={e.item.title}
-                                text2={formatSecond(e.item.duration)}
-                                onPress={() => {
-                                    router.navigate(`/video/${e.item.bvid}`);
-                                }}
-                            />
-                        )}
-                        data={data?.pages.flatMap(page => page.rows) || []}
-                        keyExtractor={item => item.bvid}
-                        onEndReached={loadMore}
-                        onEndReachedThreshold={0.5}
-                    />
-                </View>
+                            estimatedItemSize={64}
+                            contentContainerStyle={{
+                                ...contentContainerStyle,
+                            }}
+                            ListHeaderComponent={
+                                <MetaData
+                                    mode={mode}
+                                    data={data?.pages[0].meta}
+                                    className={"flex md:hidden px-4 pb-4"}
+                                />
+                            }
+                            ListFooterComponent={
+                                isFetchingNextPage ? (
+                                    <ActivityIndicator color={colorValue("--color-typography-500")} />
+                                ) : null
+                            }
+                            renderItem={e => (
+                                <VideoItem
+                                    image={getImageProxyUrl(e.item.cover)}
+                                    text1={e.item.title}
+                                    text2={formatSecond(e.item.duration)}
+                                    onPress={() => {
+                                        router.navigate(`/video/${e.item.bvid}`);
+                                    }}
+                                />
+                            )}
+                            data={data?.pages.flatMap(page => page.rows) || []}
+                            keyExtractor={item => item.bvid}
+                            onEndReached={loadMore}
+                            onEndReachedThreshold={0.5}
+                        />
+                    )}
+                />
             )}
         </Layout>
     );
