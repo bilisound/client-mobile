@@ -36,6 +36,12 @@ export interface GetMetadataResponse {
         name: string;
         face: string;
     };
+    staff?: {
+        mid: number;
+        name: string;
+        face: string;
+        title: string;
+    }[];
     pages: {
         page: number;
         part: string;

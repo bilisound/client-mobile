@@ -3,7 +3,7 @@ import { Text } from "~/components/ui/text";
 import { router, useLocalSearchParams } from "expo-router";
 import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
 import useHistoryStore from "~/store/history";
 import { getBilisoundMetadata } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
@@ -255,6 +255,39 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
         }));
     }, [data]);
 
+    let staff: ReactNode = null;
+    if (data?.staff) {
+        const groupedArray: Exclude<GetMetadataResponse["staff"], undefined>[] = [];
+        for (let i = 0; i < data.staff.length; i += 2) {
+            groupedArray.push(data.staff.slice(i, i + 2));
+        }
+
+        staff = (
+            <View className={"flex-col gap-4"}>
+                {groupedArray.map(e => (
+                    <View className={"flex-row"}>
+                        {e.map(f => (
+                            <View className={"flex-1 flex-row gap-3 w-full items-center"}>
+                                <Image
+                                    source={getImageProxyUrl(f.face, "https://www.bilibili.com/video/" + data.bvid)}
+                                    className="flex-0 basis-auto size-10 rounded-full aspect-square"
+                                />
+                                <View className={"flex-1 gap-1"}>
+                                    <Text className="text-sm font-semibold text-typography-700" isTruncated>
+                                        {f.name}
+                                    </Text>
+                                    <Text className="text-sm text-typography-500" isTruncated>
+                                        {f.title}
+                                    </Text>
+                                </View>
+                            </View>
+                        ))}
+                    </View>
+                ))}
+            </View>
+        );
+    }
+
     return (
         <View className={twMerge("gap-4", className)} style={style}>
             {data ? (
@@ -267,7 +300,10 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
             )}
             <View>
                 {data ? (
-                    <Text className="text-base font-bold mb-4 leading-6 text-typography-700" selectable>
+                    <Text
+                        className={`text-base font-bold ${data?.staff ? "mb-2" : "mb-4"} leading-6 text-typography-700`}
+                        selectable
+                    >
                         {data.title}
                     </Text>
                 ) : (
@@ -276,20 +312,26 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                         <Skeleton className="rounded-full h-4 w-1/2" />
                     </View>
                 )}
-                <View className="flex-row items-center gap-3 mb-4">
+                <View className={`${data?.staff ? "flex-col-reverse mb-6 gap-4" : "flex-row items-center mb-4 gap-3"}`}>
                     {data ? (
                         <>
-                            <Image
-                                source={getImageProxyUrl(
-                                    data.owner.face,
-                                    "https://www.bilibili.com/video/" + data.bvid,
-                                )}
-                                className="w-9 h-9 rounded-full aspect-square flex-shrink-0"
-                            />
-                            <Text className="flex-grow text-sm font-bold text-typography-700" isTruncated>
-                                {data.owner.name}
-                            </Text>
-                            <Text className="flex-shrink-0 text-sm opacity-50 text-typography-700">
+                            {data.staff ? (
+                                staff
+                            ) : (
+                                <>
+                                    <Image
+                                        source={getImageProxyUrl(
+                                            data.owner.face,
+                                            "https://www.bilibili.com/video/" + data.bvid,
+                                        )}
+                                        className="w-9 h-9 rounded-full aspect-square flex-shrink-0"
+                                    />
+                                    <Text className="flex-grow text-sm font-bold text-typography-700" isTruncated>
+                                        {data.owner.name}
+                                    </Text>
+                                </>
+                            )}
+                            <Text className="flex-shrink-0 text-sm opacity-50 text-typography-700 ">
                                 {formatDate(data.pubDate, "yyyy-MM-dd")}
                             </Text>
                         </>

@@ -354,7 +354,7 @@ export class BilisoundSDK {
                     pages[0].part = data.title;
                 }
 
-                return {
+                const built: GetMetadataResponse = {
                     bvid: data.bvid,
                     aid: data.aid,
                     title: data.title,
@@ -367,6 +367,15 @@ export class BilisoundSDK {
                     }),
                     seasonId: data.season_id,
                 };
+                if (data.staff) {
+                    built.staff = data.staff.map(e => ({
+                        mid: e.mid,
+                        name: e.name,
+                        face: e.face,
+                        title: e.title,
+                    }));
+                }
+                return  built
             }
             case "festival": {
                 const videoInfo = initialState.videoInfo;
