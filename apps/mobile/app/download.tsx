@@ -3,7 +3,6 @@ import { Text } from "~/components/ui/text";
 import useDownloadStore, { DownloadItem } from "~/store/download";
 import { ActivityIndicator, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { Pressable } from "~/components/ui/pressable";
 import { filesize } from "filesize";
 import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
 import Toast from "react-native-toast-message";
@@ -17,7 +16,7 @@ interface DownloadEntryProps {
 
 function DownloadEntry({ item }: DownloadEntryProps) {
     return (
-        <Pressable className={"flex-row px-4 items-center"}>
+        <View className={"flex-row px-4 items-center"}>
             <View className={"h-[4rem] flex-1 gap-3 justify-center"}>
                 <View className={"flex-row gap-4"}>
                     <Text className={"text-sm flex-1"} isTruncated>
@@ -60,7 +59,7 @@ function DownloadEntry({ item }: DownloadEntryProps) {
                     )}
                 </View>
             </View>
-        </Pressable>
+        </View>
     );
 }
 

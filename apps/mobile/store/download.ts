@@ -43,7 +43,7 @@ export interface DownloadMethods {
 
 const useDownloadStore = create<DownloadProps & DownloadMethods>()((set, get) => ({
     downloadList: new Map(),
-    max: 3,
+    max: 5,
     count: 0,
     processTasks: [],
     abortController: new AbortController(),
