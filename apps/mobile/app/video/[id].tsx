@@ -264,10 +264,10 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
 
         staff = (
             <View className={"flex-col gap-4"}>
-                {groupedArray.map(e => (
-                    <View className={"flex-row"}>
-                        {e.map(f => (
-                            <View className={"flex-1 flex-row gap-3 w-full items-center"}>
+                {groupedArray.map((e, i) => (
+                    <View key={i} className={"flex-row"}>
+                        {e.map((f, j) => (
+                            <View key={j} className={"flex-1 flex-row gap-3 w-full items-center"}>
                                 <Image
                                     source={getImageProxyUrl(f.face, "https://www.bilibili.com/video/" + data.bvid)}
                                     className="flex-0 basis-auto size-10 rounded-full aspect-square"

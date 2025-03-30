@@ -24,8 +24,8 @@ export function ActionMenu({ menuItems }: ActionSheetProps) {
 
     const elArray = menuItems
         .filter(e => e.show)
-        .map(item => (
-            <ActionsheetItem key={item.text} onPress={item.action} isDisabled={item.disabled}>
+        .map((item, index) => (
+            <ActionsheetItem key={index} onPress={item.action} isDisabled={item.disabled}>
                 <View className={"size-6 items-center justify-center"}>
                     <Monicon name={item.icon} size={item.iconSize ?? 18} color={colorValue("--color-typography-700")} />
                 </View>
