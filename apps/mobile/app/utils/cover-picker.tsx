@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { Layout } from "~/components/layout";
-import { useWindowDimensions, View } from "react-native";
+import { View } from "react-native";
 import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPlaylistDetail, setPlaylistMeta } from "~/storage/sqlite/playlist";
@@ -19,6 +19,7 @@ import {
 import { Heading } from "~/components/ui/heading";
 import Toast from "react-native-toast-message";
 import { getImageProxyUrl } from "~/business/constant-helper";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 function determinePadding(index: number, amount: number, columns: number) {
     const row = Math.floor(index / columns);
@@ -85,7 +86,7 @@ export default function CoverPicker() {
     }
 
     // 布局管理
-    const windowDimensions = useWindowDimensions();
+    const windowDimensions = useSafeAreaFrame();
     let windowWidth = windowDimensions.width;
     const columns = Math.max(Math.floor(windowWidth / 200), 2);
     const columnHeight = windowWidth / columns;

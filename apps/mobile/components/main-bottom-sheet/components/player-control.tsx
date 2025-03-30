@@ -4,7 +4,7 @@ import { useCurrentTrack } from "@bilisound/player";
 import { useActionSheetStore } from "~/components/main-bottom-sheet/stores";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { router } from "expo-router";
-import { useWindowDimensions, View } from "react-native";
+import { View } from "react-native";
 import { breakpoints, shadow } from "~/constants/styles";
 import { LayoutButton } from "~/components/layout-button";
 import * as TabsPrimitive from "@rn-primitives/tabs";
@@ -17,7 +17,7 @@ import { PlayerProgressBar } from "./player-progress-bar";
 import { PlayerProgressTimer } from "./player-progress-timer";
 import { PlayerControlButtons } from "./player-control-buttons";
 import { PlayerControlMenu } from "./player-control-menu";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function PlayerControl() {
     const isInsidePage = useContext(InsidePageContext);
@@ -30,7 +30,7 @@ export function PlayerControl() {
     }));
     const [closing, setClosing] = useState(false);
     const [value, setValue] = useState<"current" | "list">("current");
-    const { width, height } = useWindowDimensions();
+    const { width, height } = useSafeAreaFrame();
     const { top, left, right } = useSafeAreaInsets();
 
     function handleJump() {

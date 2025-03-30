@@ -1,16 +1,17 @@
-import { ScrollView, useWindowDimensions, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { useLocalSearchParams } from "expo-router";
 import { getBilisoundMetadata } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function Page() {
     const { id } = useLocalSearchParams<{ id: string }>();
 
-    const { height } = useWindowDimensions();
+    const { height } = useSafeAreaFrame();
 
     // 数据请求
-    const { isLoading, data, error } = useQuery({
+    const { data } = useQuery({
         queryKey: [id],
         queryFn: () => {
             if (!id) {

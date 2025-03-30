@@ -1,8 +1,9 @@
-import { Dimensions, useWindowDimensions } from "react-native";
+import { Dimensions } from "react-native";
 import { useEffect, useState } from "react";
 
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "tailwind.config";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 const TailwindTheme = resolveConfig(tailwindConfig);
 const screenSize = TailwindTheme.theme.screens;
@@ -60,7 +61,7 @@ export const getBreakPointValue = (values: any, width: any) => {
 };
 
 export function useBreakpointValue(values: BreakPointValue): any {
-    const { width } = useWindowDimensions();
+    const { width } = useSafeAreaFrame();
 
     const [currentBreakPointValue, setCurrentBreakPointValue] = useState(getBreakPointValue(values, width));
 

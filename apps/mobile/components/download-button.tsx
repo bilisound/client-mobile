@@ -4,15 +4,15 @@ import { addDownloadTask } from "~/business/download";
 import Toast from "react-native-toast-message";
 import React, { memo } from "react";
 import useDownloadStore from "~/store/download";
-import { useWindowDimensions } from "react-native";
 import { BRAND } from "~/constants/branding";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export interface DownloadButtonProps {
     items: { id: string; episode: number; title: string }[];
 }
 
 function DownloadButtonRaw({ items }: DownloadButtonProps) {
-    const { width } = useWindowDimensions();
+    const { width } = useSafeAreaFrame();
     const showFullText = width >= 768;
 
     return (

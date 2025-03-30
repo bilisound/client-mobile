@@ -1,6 +1,6 @@
-import { useWindowDimensions } from "react-native";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export function useIsNarrowWidth() {
-    const windowDimensions = useWindowDimensions();
+    const windowDimensions = useSafeAreaFrame();
     return windowDimensions.height < 480;
 }

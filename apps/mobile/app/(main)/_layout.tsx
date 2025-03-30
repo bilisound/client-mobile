@@ -1,10 +1,10 @@
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from "expo-router/ui";
 import { Text } from "~/components/ui/text";
-import { ActivityIndicator, useWindowDimensions, View, Pressable, Platform } from "react-native";
+import { ActivityIndicator, View, Pressable, Platform } from "react-native";
 import { forwardRef, Ref } from "react";
 import { twMerge } from "tailwind-merge";
 import { TabSafeAreaContext } from "~/hooks/useTabSafeAreaInsets";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
 import { breakpoints } from "~/constants/styles";
 import { simpleCopy } from "~/utils/misc";
 import { YuruChara } from "~/components/yuru-chara";
@@ -238,7 +238,7 @@ function CurrentPlaying() {
 export default function TabLayout() {
     const edgeInsets = useSafeAreaInsets();
     const edgeInsetsTab = simpleCopy(edgeInsets);
-    const windowDimensions = useWindowDimensions();
+    const windowDimensions = useSafeAreaFrame();
     const { showYuruChara } = useSettingsStore(state => ({
         showYuruChara: state.showYuruChara,
     }));

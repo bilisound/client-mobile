@@ -20,7 +20,7 @@ import { convertToRelativeTime } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
 import { getImageProxyUrl } from "~/business/constant-helper";
 import { Circle as OrigCircle, Svg } from "react-native-svg";
-import { Platform, useWindowDimensions, Vibration, View } from "react-native";
+import { Platform, Vibration, View } from "react-native";
 import { Image } from "expo-image";
 import { cssInterop } from "nativewind";
 import Toast from "react-native-toast-message";
@@ -59,6 +59,7 @@ import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { RELEASE_CHANNEL } from "~/constants/releasing";
 import { DownloadButton } from "~/components/download-button";
 import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 cssInterop(OrigCircle, {
     className: {
@@ -493,7 +494,7 @@ export default function Page() {
         clear();
     });
 
-    const isDeleteButtonIcon = useWindowDimensions().width < 768;
+    const isDeleteButtonIcon = useSafeAreaFrame().width < 768;
 
     // 菜单管理
     const [showActionSheet, setShowActionSheet] = useState(false);
