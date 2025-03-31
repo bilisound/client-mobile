@@ -3,7 +3,7 @@ import { Platform, View } from "react-native";
 import { Monicon } from "@monicon/native";
 import React from "react";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { useWindowSize } from "~/hooks/useWindowSize";
 
 export interface ActionMenuItem {
     show?: boolean;
@@ -20,7 +20,7 @@ export interface ActionSheetProps {
 
 export function ActionMenu({ menuItems }: ActionSheetProps) {
     const { colorValue } = useRawThemeValues();
-    const { width } = useSafeAreaFrame();
+    const { width } = useWindowSize();
 
     const elArray = menuItems
         .filter(e => e.show)

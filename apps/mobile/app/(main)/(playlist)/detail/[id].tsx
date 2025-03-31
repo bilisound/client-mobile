@@ -56,10 +56,9 @@ import {
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { Monicon } from "@monicon/native";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
-import { RELEASE_CHANNEL } from "~/constants/releasing";
 import { DownloadButton } from "~/components/download-button";
 import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { useWindowSize } from "~/hooks/useWindowSize";
 
 cssInterop(OrigCircle, {
     className: {
@@ -494,7 +493,7 @@ export default function Page() {
         clear();
     });
 
-    const isDeleteButtonIcon = useSafeAreaFrame().width < 768;
+    const isDeleteButtonIcon = useWindowSize().width < 768;
 
     // 菜单管理
     const [showActionSheet, setShowActionSheet] = useState(false);

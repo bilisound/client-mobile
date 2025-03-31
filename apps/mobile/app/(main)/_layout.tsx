@@ -4,7 +4,7 @@ import { ActivityIndicator, View, Pressable, Platform } from "react-native";
 import { forwardRef, Ref } from "react";
 import { twMerge } from "tailwind-merge";
 import { TabSafeAreaContext } from "~/hooks/useTabSafeAreaInsets";
-import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { breakpoints } from "~/constants/styles";
 import { simpleCopy } from "~/utils/misc";
 import { YuruChara } from "~/components/yuru-chara";
@@ -18,6 +18,7 @@ import { ButtonOuter } from "~/components/ui/button";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { convertToHTTPS } from "~/utils/string";
 import { router } from "expo-router";
+import { useWindowSize } from "~/hooks/useWindowSize";
 
 type TabTriggerChildProps = TabTriggerSlotProps & {
     iconName: string;
@@ -238,7 +239,7 @@ function CurrentPlaying() {
 export default function TabLayout() {
     const edgeInsets = useSafeAreaInsets();
     const edgeInsetsTab = simpleCopy(edgeInsets);
-    const windowDimensions = useSafeAreaFrame();
+    const windowDimensions = useWindowSize();
     const { showYuruChara } = useSettingsStore(state => ({
         showYuruChara: state.showYuruChara,
     }));

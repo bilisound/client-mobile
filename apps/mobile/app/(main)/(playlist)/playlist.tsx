@@ -40,7 +40,7 @@ import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { getImageProxyUrl } from "~/business/constant-helper";
 import useSettingsStore from "~/store/settings";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { useWindowSize } from "~/hooks/useWindowSize";
 
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
@@ -163,7 +163,7 @@ export default function Page() {
     };
 
     // 布局管理
-    const windowDimensions = useSafeAreaFrame();
+    const windowDimensions = useWindowSize();
     let windowWidth = windowDimensions.width;
     if (windowDimensions.width >= 768) {
         windowWidth = windowDimensions.width - 64;

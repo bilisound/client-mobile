@@ -17,7 +17,8 @@ import { PlayerProgressBar } from "./player-progress-bar";
 import { PlayerProgressTimer } from "./player-progress-timer";
 import { PlayerControlButtons } from "./player-control-buttons";
 import { PlayerControlMenu } from "./player-control-menu";
-import { useSafeAreaFrame, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useWindowSize } from "~/hooks/useWindowSize";
 
 export function PlayerControl() {
     const isInsidePage = useContext(InsidePageContext);
@@ -30,7 +31,7 @@ export function PlayerControl() {
     }));
     const [closing, setClosing] = useState(false);
     const [value, setValue] = useState<"current" | "list">("current");
-    const { width, height } = useSafeAreaFrame();
+    const { width, height } = useWindowSize();
     const { top, left, right } = useSafeAreaInsets();
 
     function handleJump() {

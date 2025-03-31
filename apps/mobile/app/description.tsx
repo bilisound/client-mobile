@@ -3,12 +3,12 @@ import { Text } from "~/components/ui/text";
 import { useLocalSearchParams } from "expo-router";
 import { getBilisoundMetadata } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { useWindowSize } from "~/hooks/useWindowSize";
 
 export default function Page() {
     const { id } = useLocalSearchParams<{ id: string }>();
 
-    const { height } = useSafeAreaFrame();
+    const { height } = useWindowSize();
 
     // 数据请求
     const { data } = useQuery({

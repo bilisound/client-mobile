@@ -19,7 +19,7 @@ import {
 import { Heading } from "~/components/ui/heading";
 import Toast from "react-native-toast-message";
 import { getImageProxyUrl } from "~/business/constant-helper";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { useWindowSize } from "~/hooks/useWindowSize";
 
 function determinePadding(index: number, amount: number, columns: number) {
     const row = Math.floor(index / columns);
@@ -86,7 +86,7 @@ export default function CoverPicker() {
     }
 
     // 布局管理
-    const windowDimensions = useSafeAreaFrame();
+    const windowDimensions = useWindowSize();
     let windowWidth = windowDimensions.width;
     const columns = Math.max(Math.floor(windowWidth / 200), 2);
     const columnHeight = windowWidth / columns;
