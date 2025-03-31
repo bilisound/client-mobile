@@ -91,7 +91,7 @@ export function PlayerControlMenu() {
                                     duration: currentTrack.duration ?? 0,
                                     episode: currentTrack.extendedData?.episode ?? 1,
                                     title: currentTrack.title ?? "",
-                                    imgUrl: currentTrack.artworkUri ?? "",
+                                    imgUrl: currentTrack.extendedData?.artworkUrl ?? "",
                                     id: 0,
                                     playlistId: 0,
                                     extendedData: null,
