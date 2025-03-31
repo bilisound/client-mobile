@@ -41,6 +41,7 @@ import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { getImageProxyUrl } from "~/business/constant-helper";
 import useSettingsStore from "~/store/settings";
 import { useWindowSize } from "~/hooks/useWindowSize";
+import { ActionMenu, ActionMenuItem } from "~/components/action-menu"; // Fixing the import path for ActionMenu and ActionMenuItem components
 
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
@@ -86,6 +87,49 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
     const { colorValue } = useRawThemeValues();
     const showEditCover = !displayTrack?.source;
 
+    const menuItems: ActionMenuItem[] = [
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:pen",
+            iconSize: 18,
+            text: "修改信息",
+            action: () => onAction("edit"),
+        },
+        {
+            show: showEditCover && (displayTrack?.amount ?? 0) > 0,
+            disabled: false,
+            icon: "fa6-solid:images",
+            iconSize: 18,
+            text: "修改封面",
+            action: () => onAction("editCover"),
+        },
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:trash",
+            iconSize: 18,
+            text: "删除",
+            action: () => onAction("delete"),
+        },
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:file-export",
+            iconSize: 18,
+            text: "导出",
+            action: () => onAction("export"),
+        },
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:xmark",
+            iconSize: 20,
+            text: "取消",
+            action: () => onAction("close"),
+        },
+    ];
+
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose}>
             <ActionsheetBackdrop />
@@ -100,46 +144,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
                         image={getImageProxyUrl(displayTrack.imgUrl!)}
                     />
                 )}
-                <ActionsheetItem onPress={() => onAction("edit")}>
-                    <View className={"size-6 items-center justify-center"}>
-                        <Monicon name={"fa6-solid:pen"} size={18} color={colorValue("--color-typography-700")} />
-                    </View>
-                    <ActionsheetItemText>修改信息</ActionsheetItemText>
-                </ActionsheetItem>
-                {showEditCover && (displayTrack?.amount ?? 0) > 0 ? (
-                    <ActionsheetItem onPress={() => onAction("editCover")}>
-                        <View className={"size-6 items-center justify-center"}>
-                            <Monicon name={"fa6-solid:images"} size={18} color={colorValue("--color-typography-700")} />
-                        </View>
-                        <ActionsheetItemText>修改封面</ActionsheetItemText>
-                    </ActionsheetItem>
-                ) : null}
-                <ActionsheetItem onPress={() => onAction("delete")}>
-                    <View className={"size-6 items-center justify-center"}>
-                        <Monicon name={"fa6-solid:trash"} size={18} color={colorValue("--color-typography-700")} />
-                    </View>
-                    <ActionsheetItemText>删除</ActionsheetItemText>
-                </ActionsheetItem>
-                <ActionsheetItem
-                    onPress={() => {
-                        onAction("export");
-                    }}
-                >
-                    <View className={"size-6 items-center justify-center"}>
-                        <Monicon
-                            name={"fa6-solid:file-export"}
-                            size={18}
-                            color={colorValue("--color-typography-700")}
-                        />
-                    </View>
-                    <ActionsheetItemText>导出</ActionsheetItemText>
-                </ActionsheetItem>
-                <ActionsheetItem onPress={() => onAction("close")}>
-                    <View className={"size-6 items-center justify-center"}>
-                        <Monicon name={"fa6-solid:xmark"} size={20} color={colorValue("--color-typography-700")} />
-                    </View>
-                    <ActionsheetItemText>取消</ActionsheetItemText>
-                </ActionsheetItem>
+                <ActionMenu menuItems={menuItems} />
             </ActionsheetContent>
         </Actionsheet>
     );
