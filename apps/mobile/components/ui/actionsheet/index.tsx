@@ -87,7 +87,7 @@ cssInterop(PrimitiveIcon, {
 const actionsheetStyle = tva({ base: "h-full mx-safe web:pointer-events-none" });
 
 const actionsheetContentStyle = tva({
-    base: "items-center rounded-tl-3xl rounded-tr-3xl p-2 pt-2 pb-safe bg-background-0 web:pointer-events-auto web:select-none shadow-hard-5 border border-b-0 border-outline-100",
+    base: "max-w-screen-lg w-full mx-auto items-center rounded-tl-3xl rounded-tr-3xl p-2 pt-2 pb-safe bg-background-0 web:pointer-events-auto web:select-none shadow-hard-5 border border-b-0 border-outline-100",
 });
 
 const actionsheetItemStyle = tva({
