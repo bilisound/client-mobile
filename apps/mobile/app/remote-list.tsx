@@ -116,7 +116,7 @@ function MetaData({ data, className, style, mode }: MetaDataProps) {
                     {data ? (
                         <>
                             <ButtonOuter className={"rounded-full"}>
-                                <Button className={"rounded-full"} onPress={handleCreatePlaylist}>
+                                <Button className={"rounded-full"} onPress={handleCreatePlaylist} disabled={loading}>
                                     {loading ? (
                                         <View className={"size-[18px] items-center justify-center"}>
                                             <ActivityIndicator
