@@ -55,6 +55,7 @@ expo-env.d.ts
 .gluestack
 
 third-party-licenses.txt
+assets/licenses.json
 
 # 我们已经升级到 Nativewind 4.1 了，所以并不需要这玩意。但是 Gluestack UI 会自动添加这个文件，所以目前需要排除掉
 patches/react-native-css-interop+0.0.36.patch
