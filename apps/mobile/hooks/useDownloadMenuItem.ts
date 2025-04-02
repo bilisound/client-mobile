@@ -113,14 +113,11 @@ export function useDownloadMenuItem(
                 }
                 closeCallback();
 
-                const fileName = `[${useSettingsStore.getState().useLegacyID ? bv2av(currentTrack.extendedData.id) : currentTrack.extendedData.id}] [P${currentTrack.extendedData.episode}] ${currentTrack.title}.m4a`;
+                const { id, episode } = currentTrack.extendedData;
+                const { useLegacyID } = useSettingsStore.getState();
+                const fileName = `[${useLegacyID ? "av" + bv2av(id) : id}] [P${episode}] ${currentTrack.title}.m4a`;
                 try {
-                    await saveAudioFile(
-                        uriToPath(
-                            getCacheAudioPath(currentTrack.extendedData.id, currentTrack.extendedData.episode, false),
-                        ),
-                        fileName,
-                    );
+                    await saveAudioFile(uriToPath(getCacheAudioPath(id, episode, false)), fileName);
                     Toast.show({
                         type: "success",
                         text1: "文件已保存",
