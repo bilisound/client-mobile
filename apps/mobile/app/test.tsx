@@ -3,10 +3,30 @@ import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 import { useState } from "react";
 import { SystemBars, SystemBarStyle } from "react-native-edge-to-edge";
-import { Button, ScrollView, useColorScheme as useColorSchemeRN, View } from "react-native";
+import { Button, Platform, ScrollView, useColorScheme as useColorSchemeRN, View } from "react-native";
 import { shadow } from "~/constants/styles";
 import { Layout } from "~/components/layout";
 import init from "~/utils/init";
+
+async function opfsTest() {
+    if (Platform.OS !== "web") {
+        return;
+    }
+    const opfsRoot = await navigator.storage.getDirectory();
+    // A FileSystemDirectoryHandle whose type is "directory"
+    // and whose name is "".
+    console.log(opfsRoot);
+    const fileHandle = await opfsRoot.getFileHandle("test.txt", { create: true });
+    const contents = "Some text 123456";
+    // Get a writable stream.
+    const writable = await fileHandle.createWritable();
+    // Write the contents of the file to the stream.
+    await writable.write(contents);
+    // Close the stream, which persists the contents.
+    await writable.close();
+
+    console.log(await navigator.storage.estimate());
+}
 
 export default function Test() {
     const colorScheme = useColorScheme();
@@ -35,6 +55,7 @@ export default function Test() {
                             <Button title={"light"} onPress={() => setTheme("light")} />
                             <Button title={"dark"} onPress={() => setTheme("dark")} />
                             <Button title={"force init"} onPress={init} />
+                            <Button title={"opfs test"} onPress={opfsTest} />
                         </Box>
                         <Box className={"flex-row gap-4"}>
                             <Button title={"RN Shadow"} onPress={() => setNativeWindShadow(0)} />
