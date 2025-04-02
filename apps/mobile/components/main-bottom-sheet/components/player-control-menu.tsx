@@ -172,6 +172,7 @@ export function PlayerControlMenu() {
                             {SPEED_PRESETS.map(item => (
                                 <ButtonOuter key={item.text}>
                                     <Button
+                                        className={"w-14 p-0"}
                                         variant={"outline"}
                                         size={"sm"}
                                         onPress={() => {
