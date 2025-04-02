@@ -618,21 +618,35 @@ export default function Page() {
                                 </Button>
                             </ButtonOuter>
                         </View>
-                        {isEditLocked ? null : (
+                        <View className={"flex-row items-center gap-2"}>
+                            {isEditLocked ? null : (
+                                <ButtonOuter>
+                                    <Button
+                                        variant={"ghost"}
+                                        onPress={() => handleDelete()}
+                                        className={"px-4"}
+                                        disabled={selected.size <= 0}
+                                        icon={isDeleteButtonIcon}
+                                        aria-label={"删除"}
+                                    >
+                                        <ButtonMonIcon name={"fa6-solid:trash"} />
+                                        <ButtonText className={"hidden md:flex"}>删除</ButtonText>
+                                    </Button>
+                                </ButtonOuter>
+                            )}
                             <ButtonOuter>
                                 <Button
                                     variant={"ghost"}
-                                    onPress={() => handleDelete()}
+                                    onPress={() => {}}
                                     className={"px-4"}
                                     disabled={selected.size <= 0}
-                                    icon={isDeleteButtonIcon}
-                                    aria-label={"删除"}
+                                    aria-label={"更多操作"}
+                                    icon
                                 >
-                                    <ButtonMonIcon name={"fa6-solid:trash"} />
-                                    <ButtonText className={"hidden md:flex"}>删除</ButtonText>
+                                    <ButtonMonIcon name={"fa6-solid:ellipsis-vertical"} />
                                 </Button>
                             </ButtonOuter>
-                        )}
+                        </View>
                     </View>
                 </View>
             ) : null}
