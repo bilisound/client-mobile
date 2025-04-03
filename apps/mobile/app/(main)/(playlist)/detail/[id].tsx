@@ -577,7 +577,7 @@ export default function Page() {
 
     // 菜单管理
     const [showActionSheet, setShowActionSheet] = useState(false);
-    const [showSelectActionSheet, setShowSelectActionSheet] = useState(false);
+    // const [showSelectActionSheet, setShowSelectActionSheet] = useState(false);
 
     return (
         <Layout
@@ -715,7 +715,7 @@ export default function Page() {
                                     </Button>
                                 </ButtonOuter>
                             )}
-                            <ButtonOuter>
+                            {/*<ButtonOuter>
                                 <Button
                                     variant={"ghost"}
                                     onPress={() => setShowSelectActionSheet(true)}
@@ -726,7 +726,7 @@ export default function Page() {
                                 >
                                     <ButtonMonIcon name={"fa6-solid:ellipsis-vertical"} />
                                 </Button>
-                            </ButtonOuter>
+                            </ButtonOuter>*/}
                         </View>
                     </View>
                 </View>
