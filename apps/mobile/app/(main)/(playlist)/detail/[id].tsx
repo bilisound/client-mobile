@@ -340,6 +340,45 @@ function LongPressActions({ showActionSheet, onAction, onClose, current }: LongP
     );
 }
 
+interface SelectActionsProps {
+    showActionSheet: boolean;
+    onClose: () => void;
+    onAction: (action: "close") => void;
+    current: PlaylistDetail[];
+}
+
+function SelectActions({ showActionSheet, onAction, onClose, current }: SelectActionsProps) {
+    const menuItems: ActionMenuItem[] = [
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:xmark",
+            iconSize: 20,
+            text: "取消",
+            action: () => onAction("close"),
+        },
+    ];
+
+    return (
+        <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
+            <ActionsheetBackdrop />
+            <ActionsheetContent style={{ zIndex: 999 }}>
+                <ActionsheetDragIndicatorWrapper>
+                    <ActionsheetDragIndicator />
+                </ActionsheetDragIndicatorWrapper>
+                {current[0] && current.length === 1 && (
+                    <ActionSheetCurrent
+                        line1={current[0].title}
+                        line2={current[0].author}
+                        image={current[0].imgUrl ? getImageProxyUrl(current[0].imgUrl) : undefined}
+                    />
+                )}
+                <ActionMenu menuItems={menuItems} />
+            </ActionsheetContent>
+        </Actionsheet>
+    );
+}
+
 export default function Page() {
     const queryClient = useQueryClient();
     const tabSafeAreaEdgeInsets = useTabSafeAreaInsets();
@@ -503,6 +542,7 @@ export default function Page() {
 
     // 菜单管理
     const [showActionSheet, setShowActionSheet] = useState(false);
+    const [showSelectActionSheet, setShowSelectActionSheet] = useState(false);
 
     return (
         <Layout
@@ -643,7 +683,7 @@ export default function Page() {
                             <ButtonOuter>
                                 <Button
                                     variant={"ghost"}
-                                    onPress={() => {}}
+                                    onPress={() => setShowSelectActionSheet(true)}
                                     className={"px-4"}
                                     disabled={selected.size <= 0}
                                     aria-label={"更多操作"}
@@ -707,6 +747,13 @@ export default function Page() {
                 onClose={() => setShowActionSheet(false)}
                 showActionSheet={showActionSheet}
                 current={meta}
+            />
+
+            <SelectActions
+                onAction={() => {}}
+                onClose={() => setShowSelectActionSheet(false)}
+                showActionSheet={showSelectActionSheet}
+                current={(playlistDetail ?? []).filter((_, i) => selected.has(i))}
             />
         </Layout>
     );
