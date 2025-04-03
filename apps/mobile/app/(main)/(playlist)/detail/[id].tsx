@@ -50,12 +50,9 @@ import {
     ActionsheetContent,
     ActionsheetDragIndicator,
     ActionsheetDragIndicatorWrapper,
-    ActionsheetItem,
-    ActionsheetItemText,
 } from "~/components/ui/actionsheet";
-import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import { Monicon } from "@monicon/native";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
+import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
 import { DownloadButton } from "~/components/download-button";
 import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
 import { useWindowSize } from "~/hooks/useWindowSize";
@@ -286,8 +283,42 @@ interface LongPressActionsProps {
 }
 
 function LongPressActions({ showActionSheet, onAction, onClose, current }: LongPressActionsProps) {
-    const { colorValue } = useRawThemeValues();
     const showEditCover = !current?.source;
+
+    const menuItems: ActionMenuItem[] = [
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:pen",
+            iconSize: 18,
+            text: "修改信息",
+            action: () => onAction("editMeta"),
+        },
+        {
+            show: showEditCover && (current?.amount ?? 0) > 0,
+            disabled: false,
+            icon: "fa6-solid:images",
+            iconSize: 18,
+            text: "修改封面",
+            action: () => onAction("editCover"),
+        },
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:list-check",
+            iconSize: 18,
+            text: "批量管理",
+            action: () => onAction("editMass"),
+        },
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:xmark",
+            iconSize: 20,
+            text: "取消",
+            action: () => onAction("close"),
+        },
+    ];
 
     return (
         <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
@@ -303,32 +334,7 @@ function LongPressActions({ showActionSheet, onAction, onClose, current }: LongP
                         image={current?.imgUrl ? getImageProxyUrl(current.imgUrl) : undefined}
                     />
                 )}
-                <ActionsheetItem onPress={() => onAction("editMeta")}>
-                    <View className={"size-6 items-center justify-center"}>
-                        <Monicon name={"fa6-solid:pen"} size={18} color={colorValue("--color-typography-700")} />
-                    </View>
-                    <ActionsheetItemText>修改信息</ActionsheetItemText>
-                </ActionsheetItem>
-                {showEditCover && (current?.amount ?? 0) > 0 ? (
-                    <ActionsheetItem onPress={() => onAction("editCover")}>
-                        <View className={"size-6 items-center justify-center"}>
-                            <Monicon name={"fa6-solid:images"} size={18} color={colorValue("--color-typography-700")} />
-                        </View>
-                        <ActionsheetItemText>修改封面</ActionsheetItemText>
-                    </ActionsheetItem>
-                ) : null}
-                <ActionsheetItem onPress={() => onAction("editMass")}>
-                    <View className={"size-6 items-center justify-center"}>
-                        <Monicon name={"fa6-solid:list-check"} size={18} color={colorValue("--color-typography-700")} />
-                    </View>
-                    <ActionsheetItemText>批量管理</ActionsheetItemText>
-                </ActionsheetItem>
-                <ActionsheetItem onPress={() => onAction("close")}>
-                    <View className={"size-6 items-center justify-center"}>
-                        <Monicon name={"fa6-solid:xmark"} size={20} color={colorValue("--color-typography-700")} />
-                    </View>
-                    <ActionsheetItemText>取消</ActionsheetItemText>
-                </ActionsheetItem>
+                <ActionMenu menuItems={menuItems} />
             </ActionsheetContent>
         </Actionsheet>
     );
