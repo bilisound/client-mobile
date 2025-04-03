@@ -68,7 +68,7 @@ export function useDownloadMenuItem(
             disabled: false,
             icon: "fa6-solid:download",
             iconSize: 18,
-            text: "下载",
+            text: "缓存",
             action: async () => {
                 if (!currentTrack?.extendedData) {
                     return;

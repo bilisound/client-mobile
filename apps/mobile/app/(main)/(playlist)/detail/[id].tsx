@@ -340,7 +340,7 @@ function LongPressActions({ showActionSheet, onAction, onClose, current }: LongP
     );
 }
 
-interface SelectActionsProps {
+/*interface SelectActionsProps {
     showActionSheet: boolean;
     onClose: () => void;
     onAction: (action: "close") => void;
@@ -349,6 +349,34 @@ interface SelectActionsProps {
 
 function SelectActions({ showActionSheet, onAction, onClose, current }: SelectActionsProps) {
     const menuItems: ActionMenuItem[] = [
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:copy",
+            text: "复制到其它歌单",
+            action: () => console.log("Copy action placeholder"),
+        },
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:trash",
+            text: "删除",
+            action: () => console.log("Delete action placeholder"),
+        },
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:download",
+            text: "缓存所选",
+            action: () => console.log("Download selected action placeholder"),
+        },
+        {
+            show: true,
+            disabled: false,
+            icon: "fa6-solid:trash-can",
+            text: "删除所选缓存",
+            action: () => console.log("Delete selected cache action placeholder"),
+        },
         {
             show: true,
             disabled: false,
@@ -373,11 +401,18 @@ function SelectActions({ showActionSheet, onAction, onClose, current }: SelectAc
                         image={current[0].imgUrl ? getImageProxyUrl(current[0].imgUrl) : undefined}
                     />
                 )}
+                {current.length > 1 && (
+                    <View className={"w-full px-3 py-3 items-start"}>
+                        <Text className={"font-semibold color-typography-500"}>
+                            {"已选择 " + current.length + " 首歌曲"}
+                        </Text>
+                    </View>
+                )}
                 <ActionMenu menuItems={menuItems} />
             </ActionsheetContent>
         </Actionsheet>
     );
-}
+}*/
 
 export default function Page() {
     const queryClient = useQueryClient();
@@ -749,12 +784,12 @@ export default function Page() {
                 current={meta}
             />
 
-            <SelectActions
+            {/*<SelectActions
                 onAction={() => {}}
                 onClose={() => setShowSelectActionSheet(false)}
                 showActionSheet={showSelectActionSheet}
                 current={(playlistDetail ?? []).filter((_, i) => selected.has(i))}
-            />
+            />*/}
         </Layout>
     );
 }
