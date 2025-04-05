@@ -89,11 +89,7 @@ export default function bilisound(router: RouterType) {
 
     router.get("/api/internal/user-list-all", async (request, env) => {
         const { userId, listId, mode } = request.query;
-        if (
-            typeof userId !== "string" ||
-            typeof listId !== "string" ||
-            typeof mode !== "string"
-        ) {
+        if (typeof userId !== "string" || typeof listId !== "string" || typeof mode !== "string") {
             return ajaxError("api usage error", 400);
         }
 
@@ -184,4 +180,37 @@ export default function bilisound(router: RouterType) {
     router.post("/api/internal/transfer-list", async (request, env) => {});
 
     router.get("/api/internal/transfer-list/:id", async (request, env) => {});
+
+    router.get("/api/internal/app/update", async (request, env) => {
+        const arch = request.query.arch;
+        const nightly = request.query.nightly;
+        if (typeof arch !== "string") {
+            return ajaxError("bad param", 400);
+        }
+
+        // 未来可能会增加其它的 arch，但是目前先只判断 android
+        if (arch !== "android") {
+            return ajaxError("bad arch", 400);
+        }
+
+        const endpoint = nightly
+            ? "https://api.github.com/repos/bilisound/client-mobile/releases"
+            : "https://api.github.com/repos/bilisound/client-mobile/releases/latest";
+        const response = (await fetch(endpoint, {
+            headers: {
+                "User-Agent": "Bilisound Server",
+            },
+        }).then(e => e.json())) as any;
+
+        console.log(response);
+        const latestRelease = nightly ? response.find((r: any) => r.prerelease) || response[0] : response;
+        const version = latestRelease.tag_name.replace("v", "");
+
+        return ajaxSuccess({
+            version,
+            info: "",
+            downloadPage: latestRelease.html_url,
+            downloadUrl: latestRelease.assets[0].browser_download_url,
+        });
+    });
 }
