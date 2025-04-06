@@ -51,7 +51,7 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
         } else if (segments[0] === "download" && segments.length >= 3) {
             const tag = segments[1];
             const filename = segments.slice(2).join("/");
-            return await downloadReleaseAsset(tag, filename);
+            return await downloadReleaseAsset(tag, filename, event);
         } else if (segments[0] === "upload" && segments.length >= 3) {
             const tag = segments[1];
             const filename = segments.slice(2).join("/");
@@ -144,86 +144,170 @@ async function listReleases(): Promise<NetlifyResponse> {
 /**
  * Download a specific release asset
  */
-async function downloadReleaseAsset(tag: string, filename: string): Promise<NetlifyResponse> {
-    // First, get the release to find the asset
-    const releaseResponse = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO}/releases/tags/${tag}`, {
-        headers: {
-            Accept: "application/vnd.github.v3+json",
-            "User-Agent": "Bilisound-Netlify-Function",
-        },
-    });
+async function downloadReleaseAsset(tag: string, filename: string, event: HandlerEvent): Promise<NetlifyResponse> {
+    try {
+        // Try to get the file from Netlify Blobs first
+        // Access the blobs property from the event object (it might be added by Netlify runtime)
+        const blobsData = (event as any).blobs;
+        if (blobsData) {
+            const rawData = Buffer.from(blobsData, 'base64');
+            const data = JSON.parse(rawData.toString('ascii'));
+            const store = getStore({
+                edgeURL: data.url,
+                name: `bilisound-${tag}`,
+                token: data.token,
+                siteID: '587240bf-c056-4920-bf0b-7b0d29ad6a38',
+            });
 
-    if (!releaseResponse.ok) {
-        return {
-            statusCode: releaseResponse.status,
-            body: JSON.stringify({ error: "Failed to fetch release information" }),
-        };
-    }
+            // Try to get the file from the blob store
+            const blob = await store.get(filename);
+            
+            if (blob) {
+                // If found in blob store, return it
+                // Handle the blob data correctly based on its type
+                let buffer: Buffer;
+                if (typeof blob === 'string') {
+                    buffer = Buffer.from(blob);
+                } else if (Buffer.isBuffer(blob)) {
+                    buffer = blob;
+                } else {
+                    // Fallback for other types - convert to string first
+                    buffer = Buffer.from(String(blob));
+                }
+                
+                // Determine content type based on file extension
+                const contentType = getContentType(filename);
+                
+                return {
+                    statusCode: 200,
+                    headers: {
+                        "Content-Type": contentType,
+                        "Content-Disposition": `attachment; filename="${filename}"`,
+                        "Cache-Control": CACHE_CONTROL,
+                    },
+                    body: buffer.toString("base64"),
+                    isBase64Encoded: true,
+                };
+            }
+        }
+        
+        // If not found in blob store or blobs data not available, fall back to GitHub releases
+        // First, get the release to find the asset
+        const releaseResponse = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO}/releases/tags/${tag}`, {
+            headers: {
+                Accept: "application/vnd.github.v3+json",
+                "User-Agent": "Bilisound-Netlify-Function",
+            },
+        });
 
-    const releaseData = (await releaseResponse.json()) as GitHubRelease;
+        if (!releaseResponse.ok) {
+            return {
+                statusCode: releaseResponse.status,
+                body: JSON.stringify({ error: "Failed to fetch release information" }),
+            };
+        }
 
-    // Find the asset with the matching name
-    const asset = releaseData.assets.find(asset => asset.name === filename);
+        const releaseData = (await releaseResponse.json()) as GitHubRelease;
 
-    if (!asset) {
-        // If no exact match is found, try to download directly from the release tag
-        // This is useful for files that are not uploaded as release assets but are part of the source code
-        const directUrl = `${GITHUB_RAW_BASE}/${GITHUB_REPO}/releases/download/${tag}/${filename}`;
+        // Find the asset with the matching name
+        const asset = releaseData.assets.find(asset => asset.name === filename);
 
-        try {
-            const directResponse = await fetch(directUrl);
+        if (!asset) {
+            // If no exact match is found, try to download directly from the release tag
+            // This is useful for files that are not uploaded as release assets but are part of the source code
+            const directUrl = `${GITHUB_RAW_BASE}/${GITHUB_REPO}/releases/download/${tag}/${filename}`;
 
-            if (!directResponse.ok) {
+            try {
+                const directResponse = await fetch(directUrl);
+
+                if (!directResponse.ok) {
+                    return {
+                        statusCode: 404,
+                        body: JSON.stringify({ error: "Asset not found" }),
+                    };
+                }
+
+                const contentType = directResponse.headers.get("content-type") || "application/octet-stream";
+                const buffer = await directResponse.buffer();
+
+                return {
+                    statusCode: 200,
+                    headers: {
+                        "Content-Type": contentType,
+                        "Content-Disposition": `attachment; filename="${filename}"`,
+                        "Cache-Control": CACHE_CONTROL,
+                    },
+                    body: buffer.toString("base64"),
+                    isBase64Encoded: true,
+                };
+            } catch (error) {
                 return {
                     statusCode: 404,
                     body: JSON.stringify({ error: "Asset not found" }),
                 };
             }
+        }
 
-            const contentType = directResponse.headers.get("content-type") || "application/octet-stream";
-            const buffer = await directResponse.buffer();
+        // Download the asset
+        const downloadResponse = await fetch(asset.browser_download_url);
 
+        if (!downloadResponse.ok) {
             return {
-                statusCode: 200,
-                headers: {
-                    "Content-Type": contentType,
-                    "Content-Disposition": `attachment; filename="${filename}"`,
-                    "Cache-Control": CACHE_CONTROL,
-                },
-                body: buffer.toString("base64"),
-                isBase64Encoded: true,
-            };
-        } catch (error) {
-            return {
-                statusCode: 404,
-                body: JSON.stringify({ error: "Asset not found" }),
+                statusCode: downloadResponse.status,
+                body: JSON.stringify({ error: "Failed to download asset" }),
             };
         }
-    }
 
-    // Download the asset
-    const downloadResponse = await fetch(asset.browser_download_url);
+        const contentType = downloadResponse.headers.get("content-type") || "application/octet-stream";
+        const buffer = await downloadResponse.buffer();
 
-    if (!downloadResponse.ok) {
         return {
-            statusCode: downloadResponse.status,
-            body: JSON.stringify({ error: "Failed to download asset" }),
+            statusCode: 200,
+            headers: {
+                "Content-Type": contentType,
+                "Content-Disposition": `attachment; filename="${filename}"`,
+                "Cache-Control": CACHE_CONTROL,
+            },
+            body: buffer.toString("base64"),
+            isBase64Encoded: true,
+        };
+    } catch (error) {
+        console.error("Error downloading asset:", error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ 
+                error: "Failed to download asset",
+                details: error instanceof Error ? error.message : String(error),
+            }),
         };
     }
+}
 
-    const contentType = downloadResponse.headers.get("content-type") || "application/octet-stream";
-    const buffer = await downloadResponse.buffer();
-
-    return {
-        statusCode: 200,
-        headers: {
-            "Content-Type": contentType,
-            "Content-Disposition": `attachment; filename="${filename}"`,
-            "Cache-Control": CACHE_CONTROL,
-        },
-        body: buffer.toString("base64"),
-        isBase64Encoded: true,
+/**
+ * Get content type based on file extension
+ */
+function getContentType(filename: string): string {
+    const extension = filename.split('.').pop()?.toLowerCase() || '';
+    const contentTypeMap: Record<string, string> = {
+        'json': 'application/json',
+        'txt': 'text/plain',
+        'html': 'text/html',
+        'css': 'text/css',
+        'js': 'application/javascript',
+        'png': 'image/png',
+        'jpg': 'image/jpeg',
+        'jpeg': 'image/jpeg',
+        'gif': 'image/gif',
+        'svg': 'image/svg+xml',
+        'pdf': 'application/pdf',
+        'zip': 'application/zip',
+        'mp3': 'audio/mpeg',
+        'mp4': 'video/mp4',
+        'webm': 'video/webm',
+        'webp': 'image/webp',
     };
+    
+    return contentTypeMap[extension] || 'application/octet-stream';
 }
 
 /**
@@ -237,7 +321,7 @@ async function uploadFile(
 ): Promise<NetlifyResponse> {
     try {
         // Create a store with the tag as the namespace
-        const rawData = Buffer.from(event.blobs, 'base64')
+        const rawData = Buffer.from((event as any).blobs, 'base64')
         const data = JSON.parse(rawData.toString('ascii'))
         const store = getStore({
             edgeURL: data.url,
