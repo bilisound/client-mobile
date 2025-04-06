@@ -201,8 +201,6 @@ export default function bilisound(router: RouterType) {
                 "User-Agent": "Bilisound Server",
             },
         }).then(e => e.json())) as any;
-
-        console.log(response);
         const latestRelease = nightly ? response.find((r: any) => r.prerelease) || response[0] : response;
         const version = latestRelease.tag_name.replace("v", "");
 

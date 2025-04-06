@@ -1,0 +1,18 @@
+{
+    "name": "@bilisound/server-netlify",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "deploy": "netlify deploy --prod",
+        "dev": "netlify dev"
+    },
+    "dependencies": {
+        "@bilisound/sdk": "workspace:*",
+        "node-fetch": "^3.3.2"
+    },
+    "devDependencies": {
+        "netlify-cli": "^17.19.0",
+        "@netlify/functions": "^2.4.1"
+    }
+}
