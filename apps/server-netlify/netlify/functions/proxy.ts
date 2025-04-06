@@ -1,5 +1,6 @@
 import { Handler, HandlerContext, HandlerEvent } from "@netlify/functions";
 import fetch from "node-fetch";
+import { getStore } from "@netlify/blobs";
 
 const GITHUB_API_BASE = "https://api.github.com";
 const GITHUB_REPO = "bilisound/client-mobile";
@@ -34,6 +35,7 @@ interface GitHubRelease {
  * - /latest - Get latest release info
  * - /releases - List all releases
  * - /download/:tag/:filename - Download a specific release asset
+ * - /upload/:tag/:filename - Upload a file to Netlify Blobs
  */
 export const handler: Handler = async (event: HandlerEvent, context: HandlerContext): Promise<NetlifyResponse> => {
     const { path } = event;
@@ -50,6 +52,20 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
             const tag = segments[1];
             const filename = segments.slice(2).join("/");
             return await downloadReleaseAsset(tag, filename);
+        } else if (segments[0] === "upload" && segments.length >= 3) {
+            const tag = segments[1];
+            const filename = segments.slice(2).join("/");
+            // Check if we have a request body
+            if (!event.body) {
+                return {
+                    statusCode: 400,
+                    body: JSON.stringify({ error: "No file content provided" }),
+                };
+            }
+            // Handle both base64 encoded and raw binary data
+            const fileContent = event.isBase64Encoded ? Buffer.from(event.body, "base64") : Buffer.from(event.body);
+
+            return await uploadFile(tag, filename, fileContent, event);
         } else {
             return {
                 statusCode: 404,
@@ -208,4 +224,53 @@ async function downloadReleaseAsset(tag: string, filename: string): Promise<Netl
         body: buffer.toString("base64"),
         isBase64Encoded: true,
     };
+}
+
+/**
+ * Upload a file to Netlify Blobs storage
+ */
+async function uploadFile(
+    tag: string,
+    filename: string,
+    fileContent: Buffer,
+    event: HandlerEvent,
+): Promise<NetlifyResponse> {
+    try {
+        // Create a store with the tag as the namespace
+        const rawData = Buffer.from(event.blobs, 'base64')
+        const data = JSON.parse(rawData.toString('ascii'))
+        const store = getStore({
+            edgeURL: data.url,
+            name: `bilisound-${tag}`,
+            token: data.token,
+            siteID: '587240bf-c056-4920-bf0b-7b0d29ad6a38',
+        })
+
+        // Store the file with the filename as the key
+        await store.set(filename, fileContent);
+
+        // Return success response
+        return {
+            statusCode: 200,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                success: true,
+                message: "File uploaded successfully",
+                tag,
+                filename,
+                size: fileContent.length,
+            }),
+        };
+    } catch (error) {
+        console.error("Error uploading file:", error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                error: "Failed to upload file",
+                details: error instanceof Error ? error.message : String(error),
+            }),
+        };
+    }
 }
