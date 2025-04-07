@@ -1,19 +1,13 @@
-import { Handler, HandlerContext, HandlerEvent } from "@netlify/functions";
+import { HandlerContext, HandlerEvent, StreamingHandler } from "@netlify/functions";
 import fetch from "node-fetch";
 import { getStore } from "@netlify/blobs";
+import { StreamingResponse } from "@netlify/functions/dist/function/handler_response";
+import { Readable } from "node:stream";
 
 const GITHUB_API_BASE = "https://api.github.com";
 const GITHUB_REPO = "bilisound/client-mobile";
 const GITHUB_RAW_BASE = "https://github.com";
 const CACHE_CONTROL = "public, max-age=3600"; // Cache for 1 hour
-
-// Define response types
-interface NetlifyResponse {
-    statusCode: number;
-    headers?: Record<string, string>;
-    body: string;
-    isBase64Encoded?: boolean;
-}
 
 interface GitHubAsset {
     name: string;
@@ -37,7 +31,7 @@ interface GitHubRelease {
  * - /download/:tag/:filename - Download a specific release asset
  * - /upload/:tag/:filename - Upload a file to Netlify Blobs
  */
-export const handler: Handler = async (event: HandlerEvent, context: HandlerContext): Promise<NetlifyResponse> => {
+export const handler: StreamingHandler = async (event: HandlerEvent, context: HandlerContext): Promise<StreamingResponse> => {
     const { path } = event;
     // Get the segments after the function name
     const segments = path ? path.split("/").filter(Boolean) : [];
@@ -84,7 +78,7 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
 /**
  * Get the latest release information
  */
-async function getLatestRelease(): Promise<NetlifyResponse> {
+async function getLatestRelease(): Promise<StreamingResponse> {
     const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO}/releases/latest`, {
         headers: {
             Accept: "application/vnd.github.v3+json",
@@ -114,7 +108,7 @@ async function getLatestRelease(): Promise<NetlifyResponse> {
 /**
  * List all releases
  */
-async function listReleases(): Promise<NetlifyResponse> {
+async function listReleases(): Promise<StreamingResponse> {
     const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO}/releases`, {
         headers: {
             Accept: "application/vnd.github.v3+json",
@@ -144,7 +138,7 @@ async function listReleases(): Promise<NetlifyResponse> {
 /**
  * Download a specific release asset
  */
-async function downloadReleaseAsset(tag: string, filename: string, event: HandlerEvent): Promise<NetlifyResponse> {
+async function downloadReleaseAsset(tag: string, filename: string, event: HandlerEvent): Promise<StreamingResponse> {
     try {
         // Try to get the file from Netlify Blobs first
         // Access the blobs property from the event object (it might be added by Netlify runtime)
@@ -159,35 +153,28 @@ async function downloadReleaseAsset(tag: string, filename: string, event: Handle
                 siteID: '587240bf-c056-4920-bf0b-7b0d29ad6a38',
             });
 
-            // Try to get the file from the blob store
-            const blob = await store.get(filename);
-            
-            if (blob) {
-                // If found in blob store, return it
-                // Handle the blob data correctly based on its type
-                let buffer: Buffer;
-                if (typeof blob === 'string') {
-                    buffer = Buffer.from(blob);
-                } else if (Buffer.isBuffer(blob)) {
-                    buffer = blob;
-                } else {
-                    // Fallback for other types - convert to string first
-                    buffer = Buffer.from(String(blob));
+            try {
+                // Get the file from the blob store
+                const blob = await store.get(filename, { type: "stream" });
+                
+                if (blob) {
+                    // Determine content type based on file extension
+                    const contentType = getContentType(filename);
+
+                    return {
+                        statusCode: 200,
+                        headers: {
+                            "Content-Type": contentType,
+                            "Content-Disposition": `attachment; filename="${filename}"`,
+                            "Cache-Control": CACHE_CONTROL,
+                        },
+                        body: blob,
+                        isBase64Encoded: true,
+                    };
                 }
-                
-                // Determine content type based on file extension
-                const contentType = getContentType(filename);
-                
-                return {
-                    statusCode: 200,
-                    headers: {
-                        "Content-Type": contentType,
-                        "Content-Disposition": `attachment; filename="${filename}"`,
-                        "Cache-Control": CACHE_CONTROL,
-                    },
-                    body: buffer.toString("base64"),
-                    isBase64Encoded: true,
-                };
+            } catch (error) {
+                console.log(`Error retrieving from blob store: ${error}`);
+                // Continue to fallback if blob retrieval fails
             }
         }
         
@@ -318,7 +305,7 @@ async function uploadFile(
     filename: string,
     fileContent: Buffer,
     event: HandlerEvent,
-): Promise<NetlifyResponse> {
+): Promise<StreamingResponse> {
     try {
         // Create a store with the tag as the namespace
         const rawData = Buffer.from((event as any).blobs, 'base64')
@@ -331,6 +318,7 @@ async function uploadFile(
         })
 
         // Store the file with the filename as the key
+        // Store the raw buffer directly
         await store.set(filename, fileContent);
 
         // Return success response
