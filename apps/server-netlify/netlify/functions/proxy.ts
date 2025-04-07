@@ -161,6 +161,13 @@ async function downloadReleaseAsset(tag: string, filename: string, event: Handle
                     // Determine content type based on file extension
                     const contentType = getContentType(filename);
 
+                    // Convert the stream to a buffer
+                    const chunks: Buffer[] = [];
+                    for await (const chunk of blob) {
+                        chunks.push(Buffer.from(chunk));
+                    }
+                    const buffer = Buffer.concat(chunks);
+
                     return {
                         statusCode: 200,
                         headers: {
@@ -168,7 +175,7 @@ async function downloadReleaseAsset(tag: string, filename: string, event: Handle
                             "Content-Disposition": `attachment; filename="${filename}"`,
                             "Cache-Control": CACHE_CONTROL,
                         },
-                        body: blob,
+                        body: buffer.toString("base64"),
                         isBase64Encoded: true,
                     };
                 }
