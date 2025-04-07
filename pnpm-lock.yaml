@@ -128,6 +128,9 @@ importers:
       '@react-navigation/native':
         specifier: ^7.0.14
         version: 7.0.14(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)
+      '@reactioncommerce/babel-remove-es-create-require':
+        specifier: ^1.0.0
+        version: 1.0.0(@babel/core@7.26.8)
       '@rn-primitives/tabs':
         specifier: ^1.1.0
         version: 1.1.0(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react-native-web@0.19.13(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)
@@ -170,6 +173,9 @@ importers:
       babel-plugin-module-resolver:
         specifier: ^5.0.2
         version: 5.0.2
+      babel-plugin-transform-import-meta:
+        specifier: ^2.3.2
+        version: 2.3.2(@babel/core@7.26.8)
       core-js:
         specifier: ^3.40.0
         version: 3.40.0
@@ -2185,7 +2191,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.22.13':
     resolution: {integrity: sha512-GpRkCt5Eb0pWXrvpvYswFhUxm0R5197P1acAgj242XfsdNhjVUfjScj+Z6raTRsW0SdIxmingpef2fZaHvUFKQ==}
@@ -3750,6 +3756,11 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
+  '@reactioncommerce/babel-remove-es-create-require@1.0.0':
+    resolution: {integrity: sha512-yR1vMj76hK5D9/VcXjFpk2OMoYpQdbvEgGcJ79cEzTL/jkFwIs53Zl6PNBjcC608P8qHl5eypEYRwG7CCGLzwQ==}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+
   '@remix-run/node@2.15.3':
     resolution: {integrity: sha512-TYfS6BPhbABBpSRZ6WBA4qIWSwWvJhRVQGXCHUtgOwkuW863rcFmjh9g2Xj/IHyTmbOYPdcjHsIgZ9el4CHOKQ==}
     engines: {node: '>=18.0.0'}
@@ -4700,6 +4711,11 @@ packages:
 
   babel-plugin-transform-flow-enums@0.0.2:
     resolution: {integrity: sha512-g4aaCrDDOsWjbm0PUUeVnkcVd6AKJsVc/MbnPhEotEpkeJQP6b8nzewohQi7+QS8UyPehOhGWn0nOwjvWpmMvQ==}
+
+  babel-plugin-transform-import-meta@2.3.2:
+    resolution: {integrity: sha512-902o4GiQqI1GqAXfD5rEoz0PJamUfJ3VllpdWaNsFTwdaNjFSFHawvBO+cp5K2j+g2h3bZ4lnM1Xb6yFYGihtA==}
+    peerDependencies:
+      '@babel/core': ^7.10.0
 
   babel-preset-current-node-syntax@1.1.0:
     resolution: {integrity: sha512-ldYss8SbBlWva1bs28q78Ju5Zq1F+8BrqBZZ0VFhLBvhh6lCpC2o3gDJi/5DRLs9FgYZCnmPYIVFU4lRXCkyUw==}
@@ -11641,7 +11657,7 @@ snapshots:
 
   '@babel/helper-wrap-function@7.25.9':
     dependencies:
-      '@babel/template': 7.25.9
+      '@babel/template': 7.26.8
       '@babel/traverse': 7.26.7
       '@babel/types': 7.26.7
     transitivePeerDependencies:
@@ -11924,7 +11940,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.26.8
       '@babel/helper-plugin-utils': 7.26.5
-      '@babel/template': 7.25.9
+      '@babel/template': 7.26.8
 
   '@babel/plugin-transform-destructuring@7.25.9(@babel/core@7.26.8)':
     dependencies:
@@ -15542,6 +15558,10 @@ snapshots:
       '@react-types/shared': 3.27.0(react@18.3.1)
       react: 18.3.1
 
+  '@reactioncommerce/babel-remove-es-create-require@1.0.0(@babel/core@7.26.8)':
+    dependencies:
+      '@babel/core': 7.26.8
+
   '@remix-run/node@2.15.3(typescript@5.7.3)':
     dependencies:
       '@remix-run/server-runtime': 2.15.3(typescript@5.7.3)
@@ -16605,6 +16625,12 @@ snapshots:
       '@babel/plugin-syntax-flow': 7.26.0(@babel/core@7.26.8)
     transitivePeerDependencies:
       - '@babel/core'
+
+  babel-plugin-transform-import-meta@2.3.2(@babel/core@7.26.8):
+    dependencies:
+      '@babel/core': 7.26.8
+      '@babel/template': 7.26.8
+      tslib: 2.8.1
 
   babel-preset-current-node-syntax@1.1.0(@babel/core@7.26.8):
     dependencies:

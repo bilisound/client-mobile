@@ -25,5 +25,15 @@ module.exports = function (api) {
                 },
             ],
         ],
+
+        overrides: [
+            {
+                test: [/sqlocal/],
+                plugins: [
+                    "babel-plugin-transform-import-meta",
+                    "module:@reactioncommerce/babel-remove-es-create-require",
+                ],
+            },
+        ],
     };
 };
