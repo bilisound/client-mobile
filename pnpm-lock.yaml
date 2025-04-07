@@ -368,6 +368,9 @@ importers:
       smol-toml:
         specifier: ^1.3.1
         version: 1.3.1
+      sqlocal:
+        specifier: 0.14.0
+        version: 0.14.0(drizzle-orm@0.36.4(@cloudflare/workers-types@4.20250204.0)(@opentelemetry/api@1.8.0)(@types/react@18.3.18)(expo-sqlite@15.1.2(expo@52.0.31(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@expo/metro-runtime@4.0.1(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1)))(encoding@0.1.13)(react-native-webview@13.12.5(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react@18.3.1))
       superjson:
         specifier: ^2.2.2
         version: 2.2.2
@@ -3983,6 +3986,10 @@ packages:
   '@sinonjs/fake-timers@10.3.0':
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
 
+  '@sqlite.org/sqlite-wasm@3.48.0-build4':
+    resolution: {integrity: sha512-hI6twvUkzOmyGZhQMza1gpfqErZxXRw6JEsiVjUbo7tFanVD+8Oil0Ih3l2nGzHdxPI41zFmfUQG7GHqhciKZQ==}
+    hasBin: true
+
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
@@ -4226,6 +4233,9 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+
+  '@ungap/with-resolvers@0.1.0':
+    resolution: {integrity: sha512-g7f0IkJdPW2xhY7H4iE72DAsIyfuwEFc6JWc2tYFwKDMWWAF699vGjrM348cwQuOXgHpe1gWFe+Eiyjx/ewvvw==}
 
   '@urql/core@5.1.0':
     resolution: {integrity: sha512-yC3sw8yqjbX45GbXxfiBY8GLYCiyW/hLBbQF9l3TJrv4ro00Y0ChkKaD9I2KntRxAVm9IYBqh0awX8fwWAe/Yw==}
@@ -5104,6 +5114,9 @@ packages:
   co@4.6.0:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
     engines: {iojs: '>= 1.0.0', node: '>= 0.12.0'}
+
+  coincident@1.2.3:
+    resolution: {integrity: sha512-Uxz3BMTWIslzeWjuQnizGWVg0j6khbvHUQ8+5BdM7WuJEm4ALXwq3wluYoB+uF68uPBz/oUOeJnYURKyfjexlA==}
 
   collect-v8-coverage@1.0.2:
     resolution: {integrity: sha512-lHl4d5/ONEbLlJvaJNtsF/Lz+WvB07u2ycqTYbdrq7UypDXailES4valYb2eWiJFxZlVmpGekfqoxQhzyFdT4Q==}
@@ -6708,6 +6721,9 @@ packages:
     resolution: {integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==}
     engines: {node: '>=10'}
     deprecated: This package is no longer supported.
+
+  gc-hook@0.3.1:
+    resolution: {integrity: sha512-E5M+O/h2o7eZzGhzRZGex6hbB3k4NWqO0eA+OzLRLXxhdbYPajZnynPwAtphnh+cRHPwsj5Z80dqZlfI4eK55A==}
 
   generate-license-file@3.7.0:
     resolution: {integrity: sha512-xcIYkLsX4IoSB72eJhCZ91+pI0xF/8O99iETxugkbg8xwqVsXwVHQ7xOHJNtEhQsqxnTzQpLLbzoCyWk9Llrzw==}
@@ -9290,6 +9306,9 @@ packages:
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
+  proxy-target@3.0.2:
+    resolution: {integrity: sha512-FFE1XNwXX/FNC3/P8HiKaJSy/Qk68RitG/QEcLy/bVnTAPlgTAWPZKh0pARLAnpfXQPKyalBhk009NRTgsk8vQ==}
+
   ps-list@8.1.1:
     resolution: {integrity: sha512-OPS9kEJYVmiO48u/B9qneqhkMvgCxT+Tm28VCEJpheTpl8cJ0ffZRRNgS5mrQRTrX5yRTpaJ+hRDeefXYmmorQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -10177,6 +10196,17 @@ packages:
 
   sprintf-js@1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}
+
+  sqlocal@0.14.0:
+    resolution: {integrity: sha512-qhkjWXrvh0aG0IwMeuTznCozNTJvlp2hr+JlSGOx2c1vpjgWoXYvZEf4jcynJ5n/pm05mdKNcDFzb/9KJL/IHQ==}
+    peerDependencies:
+      drizzle-orm: '*'
+      kysely: '*'
+    peerDependenciesMeta:
+      drizzle-orm:
+        optional: true
+      kysely:
+        optional: true
 
   ssri@10.0.6:
     resolution: {integrity: sha512-MGrFH9Z4NP9Iyhqn16sDtBpRRNJ0Y2hNa6D65h736fVSaPCHr4DM4sWUNvVaSuC+0OBGhwsrydQwmgfg5LncqQ==}
@@ -15727,6 +15757,8 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
+  '@sqlite.org/sqlite-wasm@3.48.0-build4': {}
+
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
@@ -16003,6 +16035,8 @@ snapshots:
       eslint-visitor-keys: 4.2.0
 
   '@ungap/structured-clone@1.3.0': {}
+
+  '@ungap/with-resolvers@0.1.0': {}
 
   '@urql/core@5.1.0':
     dependencies:
@@ -17031,6 +17065,18 @@ snapshots:
   cmd-shim@7.0.0: {}
 
   co@4.6.0: {}
+
+  coincident@1.2.3:
+    dependencies:
+      '@ungap/structured-clone': 1.3.0
+      '@ungap/with-resolvers': 0.1.0
+      gc-hook: 0.3.1
+      proxy-target: 3.0.2
+    optionalDependencies:
+      ws: 8.18.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   collect-v8-coverage@1.0.2: {}
 
@@ -18926,6 +18972,8 @@ snapshots:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       wide-align: 1.1.5
+
+  gc-hook@0.3.1: {}
 
   generate-license-file@3.7.0(typescript@5.7.3):
     dependencies:
@@ -22095,6 +22143,8 @@ snapshots:
 
   proxy-from-env@1.1.0: {}
 
+  proxy-target@3.0.2: {}
+
   ps-list@8.1.1: {}
 
   psl@1.15.0:
@@ -23150,6 +23200,16 @@ snapshots:
   sprintf-js@1.0.3: {}
 
   sprintf-js@1.1.3: {}
+
+  sqlocal@0.14.0(drizzle-orm@0.36.4(@cloudflare/workers-types@4.20250204.0)(@opentelemetry/api@1.8.0)(@types/react@18.3.18)(expo-sqlite@15.1.2(expo@52.0.31(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@expo/metro-runtime@4.0.1(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1)))(encoding@0.1.13)(react-native-webview@13.12.5(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react@18.3.1)):
+    dependencies:
+      '@sqlite.org/sqlite-wasm': 3.48.0-build4
+      coincident: 1.2.3
+    optionalDependencies:
+      drizzle-orm: 0.36.4(@cloudflare/workers-types@4.20250204.0)(@opentelemetry/api@1.8.0)(@types/react@18.3.18)(expo-sqlite@15.1.2(expo@52.0.31(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@expo/metro-runtime@4.0.1(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1)))(encoding@0.1.13)(react-native-webview@13.12.5(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react-native@0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.7(@babel/core@7.26.8))(@types/react@18.3.18)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react@18.3.1)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   ssri@10.0.6:
     dependencies:

@@ -1,5 +1,4 @@
 import { eq, isNull, sql } from "drizzle-orm";
-import * as FileSystem from "expo-file-system";
 
 import log from "../logger";
 
@@ -13,8 +12,7 @@ import {
 } from "~/storage/playlist";
 import { db } from "~/storage/sqlite/main";
 import { playlistDetail, playlistMeta } from "~/storage/sqlite/schema";
-
-const PLAYLIST_V0_BACKUP_URI = FileSystem.documentDirectory + "migration_backup/playlist_v0";
+import { mayBackupLegacyPlaylist } from "~/utils/migration/legacy-playlist-backup";
 
 export async function handlePlaylist() {
     let version = playlistStorage.getNumber(PLAYLIST_DB_VERSION) || 0;
@@ -28,22 +26,7 @@ export async function handlePlaylist() {
             log.info("正在执行 v0 -> v3 升级程序……");
 
             // 备份旧数据
-            const got = playlistStorage.getString(LEGACY_PLAYLIST_INDEX_KEY);
-            if (got) {
-                log.info("发现旧版数据，正在备份……");
-                await FileSystem.makeDirectoryAsync(PLAYLIST_V0_BACKUP_URI);
-                await FileSystem.writeAsStringAsync(`${PLAYLIST_V0_BACKUP_URI}/index.json`, got);
-                const index: LegacyPlaylistMeta[] = JSON.parse(got);
-
-                // 遍历歌单 index，备份单个歌单
-                for (let i = 0; i < index.length; i++) {
-                    const e = index[i];
-                    await FileSystem.writeAsStringAsync(
-                        `${PLAYLIST_V0_BACKUP_URI}/${e.id}.json`,
-                        playlistStorage.getString(LEGACY_PLAYLIST_ITEM_KEY_PREFIX + e.id) || "[]",
-                    );
-                }
-            }
+            await mayBackupLegacyPlaylist();
 
             log.info("正在创建数据库……");
             db.transaction(tx => {
