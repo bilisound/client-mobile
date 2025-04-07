@@ -28,7 +28,7 @@ interface GitHubRelease {
  * - /latest - Get latest release info
  * - /releases - List all releases
  * - /download/:tag/:filename - Download a specific release asset
- * - /upload/:tag/:filename - Upload a file to Netlify Blobs
+ * - /upload/:tag/:filename - Upload a file to Netlify Blobs（实际上不可用，因为我们的 Release 产物还是太大了）
  */
 export const handler: StreamingHandler = async (event: HandlerEvent, context: HandlerContext): Promise<StreamingResponse> => {
     const { path } = event;
