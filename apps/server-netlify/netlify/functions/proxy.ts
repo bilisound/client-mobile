@@ -2,7 +2,6 @@ import { HandlerContext, HandlerEvent, StreamingHandler } from "@netlify/functio
 import fetch from "node-fetch";
 import { getStore } from "@netlify/blobs";
 import { StreamingResponse } from "@netlify/functions/dist/function/handler_response";
-import { Readable } from "node:stream";
 
 const GITHUB_API_BASE = "https://api.github.com";
 const GITHUB_REPO = "bilisound/client-mobile";
@@ -313,6 +312,15 @@ async function uploadFile(
     fileContent: Buffer,
     event: HandlerEvent,
 ): Promise<StreamingResponse> {
+    if (event.queryStringParameters?.key !== process.env.UPLOAD_KEY) {
+        return {
+            statusCode: 403,
+            body: JSON.stringify({
+                error: "unauthorized",
+            }),
+        };
+    }
+
     try {
         // Create a store with the tag as the namespace
         const rawData = Buffer.from((event as any).blobs, 'base64')
