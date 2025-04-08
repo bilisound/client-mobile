@@ -124,7 +124,7 @@ export async function getUserListFull(
  * @param id
  */
 export async function getTransferList(id: string) {
-    const response = await fetch(`${BILISOUND_API_PREFIX}/api/internal/transfer-list/${id}`, {
+    const response = await fetch(`${BILISOUND_API_PREFIX}/internal/transfer-list/${id}`, {
         headers: {
             "user-agent": USER_AGENT_BILISOUND,
         },
@@ -140,7 +140,7 @@ export interface GetUpdateResponse {
 }
 
 export async function getUpdate() {
-    const response = await fetch(`${BILISOUND_API_PREFIX}/api/internal/app/update`, {
+    const response = await fetch(`${BILISOUND_API_PREFIX}/internal/app/update`, {
         headers: {
             "user-agent": USER_AGENT_BILISOUND,
         },

@@ -6,11 +6,11 @@ const path = require("path");
 
 const config = mergeConfig(getDefaultConfig(__dirname), {
     projectRoot: path.resolve(__dirname, ".."),
-    resolver: {
+    /*resolver: {
         unstable_enableSymlinks: true,
         unstable_enablePackageExports: true,
         unstable_conditionNames: ["browser", "require", "react-native"],
-    },
+    },*/
 });
 
 config.resolver.assetExts.push("txt");
