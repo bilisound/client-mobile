@@ -124,10 +124,26 @@ export async function getUserListFull(
  * @param id
  */
 export async function getTransferList(id: string) {
-    const response = await fetch(`https://bilisound.tuu.run/api/internal/transfer-list/${id}`, {
+    const response = await fetch(`${BILISOUND_API_PREFIX}/api/internal/transfer-list/${id}`, {
         headers: {
             "user-agent": USER_AGENT_BILISOUND,
         },
     });
     return defineWrap<PlaylistDetail[] | null>(await response.json());
+}
+
+export interface GetUpdateResponse {
+    version: string;
+    info: string;
+    downloadPage: string;
+    downloadUrl: string;
+}
+
+export async function getUpdate() {
+    const response = await fetch(`${BILISOUND_API_PREFIX}/api/internal/app/update`, {
+        headers: {
+            "user-agent": USER_AGENT_BILISOUND,
+        },
+    });
+    return defineWrap<GetUpdateResponse>(await response.json());
 }
