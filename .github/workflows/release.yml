@@ -21,10 +21,12 @@ jobs:
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "version=v0.0.0-next-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
             echo "channel=android_github_beta" >> $GITHUB_OUTPUT
+            echo "channel_web=web_beta" >> $GITHUB_OUTPUT
             echo "is_prerelease=--prerelease" >> $GITHUB_OUTPUT
           else
             echo "version=${{ github.ref_name }}" >> $GITHUB_OUTPUT
             echo "channel=android_github" >> $GITHUB_OUTPUT
+            echo "channel_web=web" >> $GITHUB_OUTPUT
             echo "is_prerelease=" >> $GITHUB_OUTPUT
           fi
 
@@ -70,11 +72,17 @@ jobs:
       - name: 🏗 Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: 🚀 Build app
+      - name: 🚀 Build Android app
         working-directory: apps/mobile
         env:
           EXPO_PUBLIC_RELEASE_CHANNEL: ${{ steps.build_version.outputs.channel }}
         run: pnpm run build:android
+
+      - name: 🚀 Build Web app
+        working-directory: apps/mobile
+        env:
+          EXPO_PUBLIC_RELEASE_CHANNEL: ${{ steps.build_version.outputs.channel_web }}
+        run: pnpm run build:web
 
       - name: 📝 Extract Release Notes
         id: extract_release_notes
