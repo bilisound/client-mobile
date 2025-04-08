@@ -141,7 +141,7 @@ export default function Page() {
                         router.navigate("/settings/data");
                     }}
                 />
-                {FEATURE_DOWNLOAD_MANAGER ? (
+                {FEATURE_DOWNLOAD_MANAGER && Platform.OS !== "web" ? (
                     <SettingMenuItem
                         key="settings_10041"
                         icon={"fa6-solid:download"}

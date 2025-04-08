@@ -6,6 +6,7 @@ import React, { memo } from "react";
 import useDownloadStore from "~/store/download";
 import { BRAND } from "~/constants/branding";
 import { useWindowSize } from "~/hooks/useWindowSize";
+import { Platform } from "react-native";
 
 export interface DownloadButtonProps {
     items: { id: string; episode: number; title: string }[];
@@ -14,6 +15,10 @@ export interface DownloadButtonProps {
 function DownloadButtonRaw({ items }: DownloadButtonProps) {
     const { width } = useWindowSize();
     const showFullText = width >= 768;
+
+    if (Platform.OS === "web") {
+        return null;
+    }
 
     return (
         <ButtonOuter className={"rounded-full"}>
