@@ -23,5 +23,7 @@ export default async function init() {
     // 隐藏 Splash Screen
     await SplashScreen.hideAsync();
 
+    document.getElementById("loading-logo")?.remove();
+
     return "done";
 }
