@@ -41,6 +41,7 @@ import { DownloadButton } from "~/components/download-button";
 import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
 import * as Clipboard from "expo-clipboard";
 import Toast from "react-native-toast-message";
+import { pause } from "@bilisound/player";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -177,6 +178,7 @@ function PageMenu({ data, onAction }: PageMenuProps) {
             iconSize: 16,
             show: true,
             async action() {
+                await pause();
                 await Linking.openURL("https://www.bilibili.com/video/" + data.bvid + "/");
                 onClose();
             },
