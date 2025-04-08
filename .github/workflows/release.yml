@@ -89,7 +89,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/mobile/dist --project-name=client-mobile --branch=${{ github.ref == 'refs/heads/main' && 'preview' || 'main' }}
+          command: pages deploy apps/mobile/dist --project-name=client-mobile --branch=${{ github.ref == 'refs/heads/main' && 'preview' || 'main' }} --commit-dirty=true
 
       - name: 📝 Extract Release Notes
         id: extract_release_notes
