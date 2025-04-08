@@ -84,6 +84,13 @@ jobs:
           EXPO_PUBLIC_RELEASE_CHANNEL: ${{ steps.build_version.outputs.channel_web }}
         run: pnpm run build:web
 
+      - name: 🚀 Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/mobile/dist --project-name=bilisound --production=${{ github.ref != 'refs/heads/main' }}
+
       - name: 📝 Extract Release Notes
         id: extract_release_notes
         uses: ffurrer2/extract-release-notes@v2
