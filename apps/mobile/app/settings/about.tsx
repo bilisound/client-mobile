@@ -1,4 +1,4 @@
-import { Linking, ScrollView, View } from "react-native";
+import { Linking, Platform, ScrollView, View } from "react-native";
 import { Layout } from "~/components/layout";
 import { RELEASE_CHANNEL, VERSION } from "~/constants/releasing";
 import React, { useState } from "react";
@@ -68,12 +68,14 @@ export default function Page() {
                     <Text className="text-2xl leading-normal font-semibold mt-2 mb-1">{BRAND}</Text>
                     <Text className="text-sm leading-normal opacity-50 text-center">{`版本 ${VERSION} ・ ${releaseChannelDict[RELEASE_CHANNEL ?? "unknown"]}`}</Text>
                 </View>
-                <SettingMenuItem
-                    disabled={checking}
-                    icon={checking ? "loading" : "fa6-solid:circle-up"}
-                    title="检查更新"
-                    onPress={() => handleCheck()}
-                />
+                {Platform.OS !== "web" && (
+                    <SettingMenuItem
+                        disabled={checking}
+                        icon={checking ? "loading" : "fa6-solid:circle-up"}
+                        title="检查更新"
+                        onPress={() => handleCheck()}
+                    />
+                )}
                 <SettingMenuItem
                     icon={"fa6-solid:award"}
                     title="开源软件许可证"
