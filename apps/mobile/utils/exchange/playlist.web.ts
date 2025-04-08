@@ -1,9 +1,43 @@
 import Toast from "react-native-toast-message";
 import log from "~/utils/logger";
 import { importHelper } from "~/utils/exchange/import-helper";
-import { addToPlaylist, insertPlaylistMeta } from "~/storage/sqlite/playlist";
+import { addToPlaylist, exportAllPlaylist, exportPlaylist, insertPlaylistMeta } from "~/storage/sqlite/playlist";
+import { stringify } from "smol-toml";
+import { BRAND } from "~/constants/branding";
+export async function exportPlaylistToFile(id?: number) {
+    let output;
+    let name;
+    if (typeof id === "number") {
+        output = await exportPlaylist(id);
+    } else {
+        output = await exportAllPlaylist();
+    }
+    const doc = stringify(output);
+    if (output.meta.length > 1) {
+        name = output.meta.length + " 个歌单导出";
+    } else {
+        name = output.meta[0].title;
+    }
+    const fileName = `[${BRAND} 歌单] ${name}.toml`;
 
-export async function exportPlaylistToFile(id?: number) {}
+    const url = window.URL.createObjectURL(new Blob([doc]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    }, 0);
+
+    Toast.show({
+        type: "success",
+        text1: "文件已保存",
+        text2: fileName,
+    });
+}
 
 function readPlaylistFromFile() {
     return new Promise<string>((resolve, reject) => {
