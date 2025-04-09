@@ -188,7 +188,7 @@ export function PlayerControlMenu() {
 
                                 if (item.speed === 1) {
                                     return (
-                                        <View className={"gap-1 items-center"}>
+                                        <View className={"gap-1 items-center"} key={item.text}>
                                             {button}
                                             <Text className={"text-primary-500 text-xs"}>正常速度</Text>
                                         </View>
