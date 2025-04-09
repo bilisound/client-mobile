@@ -23,6 +23,7 @@ import { CheckIcon } from "~/components/ui/icon";
 import { SpeedControlPanel } from "./speed-control-panel";
 import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
 import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
+import { Text } from "~/components/ui/text";
 
 export function PlayerControlMenu() {
     const isInsidePage = useContext(InsidePageContext);
@@ -169,20 +170,33 @@ export function PlayerControlMenu() {
                         {/*<Text className={"font-semibold text-lg leading-tight"}>调节播放速度</Text>*/}
                         <SpeedControlPanel />
                         <View className="flex-row flex-wrap justify-center gap-2 mt-4">
-                            {SPEED_PRESETS.map(item => (
-                                <ButtonOuter key={item.text}>
-                                    <Button
-                                        className={"w-14 p-0"}
-                                        variant={"outline"}
-                                        size={"sm"}
-                                        onPress={() => {
-                                            applySpeed(item.speed, retainPitch);
-                                        }}
-                                    >
-                                        <ButtonText>{item.text}</ButtonText>
-                                    </Button>
-                                </ButtonOuter>
-                            ))}
+                            {SPEED_PRESETS.map(item => {
+                                const button = (
+                                    <ButtonOuter key={item.text}>
+                                        <Button
+                                            className={"w-14 p-0"}
+                                            variant={"outline"}
+                                            size={"sm"}
+                                            onPress={() => {
+                                                applySpeed(item.speed, retainPitch);
+                                            }}
+                                        >
+                                            <ButtonText>{item.text}</ButtonText>
+                                        </Button>
+                                    </ButtonOuter>
+                                );
+
+                                if (item.speed === 1) {
+                                    return (
+                                        <View className={"gap-1 items-center"}>
+                                            {button}
+                                            <Text className={"text-primary-500 text-xs"}>正常速度</Text>
+                                        </View>
+                                    );
+                                }
+
+                                return button;
+                            })}
                         </View>
                         <Checkbox
                             size="md"
