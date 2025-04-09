@@ -1,6 +1,6 @@
 import { Linking, Platform, ScrollView, View } from "react-native";
 import { Layout } from "~/components/layout";
-import { RELEASE_CHANNEL, VERSION } from "~/constants/releasing";
+import { RELEASE_CHANNEL, ReleaseChannel, VERSION } from "~/constants/releasing";
 import React, { useState } from "react";
 
 import { Text } from "~/components/ui/text";
@@ -13,10 +13,12 @@ import CheckUpdateDialog from "~/components/check-update-dialog";
 import { router } from "expo-router";
 import { BRAND } from "~/constants/branding";
 
-const releaseChannelDict: Record<string, string> = {
+const releaseChannelDict: Record<ReleaseChannel, string> = {
     unknown: "未知",
     android_github: "安卓 GitHub 正式版",
     android_github_beta: "安卓 GitHub 测试版",
+    web: "Web 正式版",
+    web_beta: "Web 测试版",
 };
 
 export default function Page() {
