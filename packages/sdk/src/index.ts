@@ -70,7 +70,7 @@ export class BilisoundSDK {
                 }
                 if (!req.disableWbi) {
                     const params = req.params || {};
-                    const encodedParams = await signParam(params, this.apiPrefix, this.userAgent);
+                    const encodedParams = await signParam(params, this.apiPrefix, this.userAgent, this.key);
                     req.url = `${req.url}?${encodedParams}`;
                     delete req.params;
                 }

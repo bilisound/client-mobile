@@ -55,7 +55,7 @@ export function encWbi(params: Record<string, string | number | object | boolean
     return `${query}&w_rid=${wbi_sign}`;
 }
 // 获取最新的 img_key 和 sub_key
-export async function getWbiKeys(SESSDATA: string | undefined, sitePrefix: string, userAgent: string) {
+export async function getWbiKeys(SESSDATA: string | undefined, sitePrefix: string, userAgent: string, token: string) {
     const cache = WbiCache.getInstance();
     if (cache.lastResult && new Date().getTime() - cache.lastAccess < 2 * 3600 * 1000) {
         return cache.lastResult;
@@ -66,6 +66,9 @@ export async function getWbiKeys(SESSDATA: string | undefined, sitePrefix: strin
     };
     if (SESSDATA) {
         headers.Cookie = `SESSDATA=${SESSDATA}`;
+    }
+    if (token) {
+        headers["Bilisound-Token"] = token;
     }
     const res = await fetch(sitePrefix + "/x/web-interface/nav", {
         headers,
@@ -89,7 +92,7 @@ export async function getWbiKeys(SESSDATA: string | undefined, sitePrefix: strin
     return result;
 }
 
-export async function signParam(params: Record<string, string | number | object | boolean>, sitePrefix: string, userAgent: string) {
-    const { img_key, sub_key } = await getWbiKeys(undefined, sitePrefix, userAgent);
+export async function signParam(params: Record<string, string | number | object | boolean>, sitePrefix: string, userAgent: string, token: string) {
+    const { img_key, sub_key } = await getWbiKeys(undefined, sitePrefix, userAgent, token);
     return encWbi(params, img_key, sub_key);
 }
