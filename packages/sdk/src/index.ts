@@ -125,12 +125,7 @@ export class BilisoundSDK {
 
         // [dash] 遍历获取最佳音质视频
         if (Array.isArray(dashAudio) && dashAudio.length > 0) {
-            let maxQualityIndex = 0;
-            dashAudio.forEach((_, index, array) => {
-                if (array[maxQualityIndex].codecid < maxQualityIndex) {
-                    maxQualityIndex = index;
-                }
-            });
+            let maxQualityIndex = findBestAudio(dashAudio);
 
             const { baseUrl, backupUrl } = dashAudio[maxQualityIndex];
             const urlList = [baseUrl];

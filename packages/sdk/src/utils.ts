@@ -35,10 +35,14 @@ export function convertToHTTPS(url: string) {
 
 export function findBestAudio(dashAudio: WebPlayInfo["data"]["dash"]["audio"]) {
     let maxQualityIndex = 0;
-    dashAudio.forEach((value, index, array) => {
-        if (array[maxQualityIndex].codecid < maxQualityIndex) {
+
+    let maxId = dashAudio[0]?.id ?? 0;
+    dashAudio.forEach((audio, index) => {
+        if (audio.id > maxId) {
+            maxId = audio.id;
             maxQualityIndex = index;
         }
     });
+
     return maxQualityIndex;
 }
