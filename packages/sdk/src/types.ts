@@ -84,6 +84,12 @@ export interface GetEpisodeUserResponse {
     };
 }
 
+export interface GetResourceUrlResponse {
+    url: string;
+    isAudio: boolean;
+    volume?: WebPlayInfo["data"]["volume"];
+}
+
 export type UserListMode = "season" | "series";
 
 export interface GetResourceOptions {

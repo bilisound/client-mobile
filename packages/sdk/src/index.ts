@@ -8,7 +8,7 @@ import {
     UserListMode,
     EpisodeItem,
     GetResourceOptions,
-    CacheProvider,
+    CacheProvider, GetResourceUrlResponse,
 } from "./types";
 import { filterCdnUrls } from "./cdn";
 import {
@@ -117,7 +117,7 @@ export class BilisoundSDK {
         return this.parseVideoData(videoData);
     }
 
-    async getResourceUrl(id: string, episode: number | string, filterResourceURL = false) {
+    async getResourceUrl(id: string, episode: number | string, filterResourceURL = false): Promise<GetResourceUrlResponse> {
         // 获取视频
         const { playInfo } = await this.getVideo(id, episode);
         const dashAudio = playInfo.data?.dash?.audio;
@@ -135,7 +135,7 @@ export class BilisoundSDK {
 
             if (!filterResourceURL) {
                 this.logger.info(`没有进行过滤。来源域名列表: ${this.filterHostname(urlList).join(", ")}`);
-                return { url: urlList[0], isAudio: true };
+                return { url: urlList[0], volume: playInfo.data.volume, isAudio: true };
             }
 
             const newUrlList = filterCdnUrls(urlList);
@@ -143,10 +143,10 @@ export class BilisoundSDK {
                 this.logger.warn(
                     `过滤失败，因此使用原始地址列表中的第一项。来源域名列表: ${this.filterHostname(urlList).join(", ")}`,
                 );
-                return { url: urlList[0], isAudio: true };
+                return { url: urlList[0], volume: playInfo.data.volume, isAudio: true };
             }
             this.logger.info(`过滤成功！来源域名列表: ${this.filterHostname(newUrlList).join(", ")}`);
-            return { url: newUrlList[0], isAudio: true };
+            return { url: newUrlList[0], volume: playInfo.data.volume, isAudio: true };
         }
 
         // [legacy] 尝试获取传统方式的视频
@@ -155,7 +155,7 @@ export class BilisoundSDK {
                 this.logger.info(
                     `没有进行过滤。来源域名列表: ${this.filterHostname(legacyVideo.map(e => e.url)).join(", ")}`,
                 );
-                return { url: legacyVideo[0].url, isAudio: false };
+                return { url: legacyVideo[0].url, volume: playInfo.data.volume, isAudio: false };
             }
 
             const newUrlList = filterCdnUrls(legacyVideo.map(e => e.url));
@@ -163,10 +163,10 @@ export class BilisoundSDK {
                 this.logger.warn(
                     `过滤失败，因此使用原始地址列表中的第一项。来源域名列表: ${this.filterHostname(legacyVideo.map(e => e.url)).join(", ")}`,
                 );
-                return { url: legacyVideo[0].url, isAudio: false };
+                return { url: legacyVideo[0].url, volume: playInfo.data.volume, isAudio: false };
             }
             this.logger.info(`过滤成功！来源域名列表: ${this.filterHostname(newUrlList).join(", ")}`);
-            return { url: newUrlList[0], isAudio: false };
+            return { url: newUrlList[0], volume: playInfo.data.volume, isAudio: false };
         }
 
         throw new Error("找不到可用的音频资源");
