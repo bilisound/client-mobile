@@ -119,19 +119,6 @@ export async function getUserListFull(
     return sdk.getUserListFull(mode, userId, listId, progressCallback);
 }
 
-/**
- * 获取 PC 端歌单转移数据
- * @param id
- */
-export async function getTransferList(id: string) {
-    const response = await fetch(`${BILISOUND_API_PREFIX}/internal/transfer-list/${id}`, {
-        headers: {
-            "user-agent": USER_AGENT_BILISOUND,
-        },
-    });
-    return defineWrap<PlaylistDetail[] | null>(await response.json());
-}
-
 export interface GetUpdateResponse {
     version: string;
     info: string;
