@@ -5,9 +5,9 @@ import { convertToHTTPS } from "~/utils/string";
 import { v4 } from "uuid";
 import React, { ReactNode, useEffect, useMemo, useState } from "react";
 import useHistoryStore from "~/store/history";
-import { getBilisoundMetadata } from "~/api/bilisound";
+import { getBilisoundMetadata, getBilisoundResourceUrlOnline } from "~/api/bilisound";
 import { useQuery } from "@tanstack/react-query";
-import { Linking, View, ViewStyle } from "react-native";
+import { Linking, Platform, View, ViewStyle } from "react-native";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "~/components/ui/skeleton";
 import { getImageProxyUrl } from "~/business/constant-helper";
@@ -42,6 +42,12 @@ import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
 import * as Clipboard from "expo-clipboard";
 import Toast from "react-native-toast-message";
 import { pause } from "@bilisound/player";
+import { isCacheExists } from "~/storage/cache-status";
+import { addDownloadTask } from "~/business/download";
+import useDownloadStore from "~/store/download";
+import { BRAND } from "~/constants/branding";
+import { useWindowSize } from "~/hooks/useWindowSize";
+import useSettingsStore from "~/store/settings";
 
 type PageItem = GetMetadataResponse["pages"][number];
 
@@ -237,6 +243,8 @@ interface MetaDataProps {
 
 function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
     const [alwaysShowFullMeta, setAlwaysShowFullMeta] = useState(false);
+    const { width } = useWindowSize();
+    const showFullText = width >= 768;
 
     function handleCreatePlaylist() {
         if (!data) {
@@ -256,6 +264,18 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
             title: e.partDisplayName,
         }));
     }, [data]);
+
+    const downloadWeb = () => {
+        if (!data) {
+            return;
+        }
+        if (data.pages.length === 1) {
+            globalThis.window.open(
+                getBilisoundResourceUrlOnline(data.bvid, 1, useSettingsStore.getState().useLegacyID ? "av" : "bv").url,
+            );
+        }
+        router.navigate(`/download-web?id=${data.bvid}`);
+    };
 
     let staff: ReactNode = null;
     if (data?.staff) {
@@ -368,6 +388,19 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
                     {data ? (
                         <>
                             {FEATURE_MASS_DOWNLOAD ? <DownloadButton items={downloadItems} /> : null}
+                            {Platform.OS === "web" && (
+                                <ButtonOuter className={"rounded-full"}>
+                                    <Button
+                                        icon={!showFullText}
+                                        aria-label={"下载"}
+                                        className={"rounded-full"}
+                                        onPress={() => downloadWeb()}
+                                    >
+                                        <ButtonMonIcon name={"fa6-solid:download"} size={16} />
+                                        {showFullText ? <ButtonText>下载</ButtonText> : null}
+                                    </Button>
+                                </ButtonOuter>
+                            )}
                             <ButtonOuter className={"rounded-full"}>
                                 <Button className={"rounded-full"} onPress={handleCreatePlaylist}>
                                     <ButtonMonIcon name={"fa6-solid:plus"} size={18} />
