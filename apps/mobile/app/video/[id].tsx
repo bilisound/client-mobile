@@ -42,10 +42,6 @@ import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
 import * as Clipboard from "expo-clipboard";
 import Toast from "react-native-toast-message";
 import { pause } from "@bilisound/player";
-import { isCacheExists } from "~/storage/cache-status";
-import { addDownloadTask } from "~/business/download";
-import useDownloadStore from "~/store/download";
-import { BRAND } from "~/constants/branding";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import useSettingsStore from "~/store/settings";
 
@@ -176,6 +172,29 @@ function PageMenu({ data, onAction }: PageMenuProps) {
             action() {
                 onAction("addPlaylist");
                 onClose();
+            },
+        },
+        {
+            show: Platform.OS === "web",
+            text: "下载",
+            icon: "fa6-solid:download",
+            iconSize: 18,
+            action() {
+                onClose();
+                if (!data) {
+                    return;
+                }
+                if (data.pages.length === 1) {
+                    globalThis.window.open(
+                        getBilisoundResourceUrlOnline(
+                            data.bvid,
+                            1,
+                            useSettingsStore.getState().useLegacyID ? "av" : "bv",
+                        ).url,
+                    );
+                    return;
+                }
+                router.navigate(`/download-web?id=${data.bvid}`);
             },
         },
         {
