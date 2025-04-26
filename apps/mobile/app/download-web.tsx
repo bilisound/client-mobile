@@ -1,6 +1,6 @@
 import { Layout } from "~/components/layout";
 import { Text } from "~/components/ui/text";
-import { Link, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { getBilisoundMetadata, getBilisoundResourceUrlOnline } from "~/api/bilisound";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";

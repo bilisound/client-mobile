@@ -273,6 +273,7 @@ function MetaData({ data, className, style, showFullMeta }: MetaDataProps) {
             globalThis.window.open(
                 getBilisoundResourceUrlOnline(data.bvid, 1, useSettingsStore.getState().useLegacyID ? "av" : "bv").url,
             );
+            return;
         }
         router.navigate(`/download-web?id=${data.bvid}`);
     };
