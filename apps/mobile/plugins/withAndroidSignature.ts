@@ -3,6 +3,9 @@ import { ExpoConfig } from "expo/config";
 import fs from "fs";
 import path from "path";
 
+// 不使用 import { withAppBuildGradle } from "@expo/config-plugins"; 写法的原因：
+// 会导致无法编译，是因为 ESM 和 CJS 互操作性问题导致的
+// （此解决方法由 @suemor233 提出）
 const { withAppBuildGradle } = configPlugins;
 
 export default function withAndroidSignature(config: ExpoConfig) {
