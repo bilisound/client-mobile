@@ -1,9 +1,10 @@
-import { withAppBuildGradle } from "@expo/config-plugins";
+import configPlugins from "@expo/config-plugins";
 import { ExpoConfig } from "expo/config";
 import fs from "fs";
 import path from "path";
 
 export default function withAndroidSignature(config: ExpoConfig) {
+    const { withAppBuildGradle } = configPlugins;
     return withAppBuildGradle(config, config => {
         if (config.modResults.language === "groovy") {
             config.modResults.contents = setAndroidSignature(config.modResults.contents);
