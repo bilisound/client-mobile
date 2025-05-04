@@ -147,7 +147,9 @@ export async function restoreQueue(originalTracks: TrackData[]): Promise<void> {
         // If the current track is not in the original list, just set the queue to the original tracks
         return setQueue(originalTracks);
     }
+
     const [removeLeft, removeRight] = generateIndicesArrays(currentQueue.length, currentTrackIndex);
+
     // 移除当前播放的曲目后面的所有曲目
     await deleteTracks(removeRight);
 
