@@ -6,7 +6,7 @@ on:
     tags:
       - '*'
     branches:
-      - main
+      - preview
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
       - name: 🏗 Generate build version
         id: build_version
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/preview" ]]; then
             echo "version=v0.0.0-next-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
             echo "channel=android_github_beta" >> $GITHUB_OUTPUT
             echo "channel_web=web_beta" >> $GITHUB_OUTPUT
@@ -89,14 +89,14 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/mobile/dist --project-name=client-mobile --branch=${{ github.ref == 'refs/heads/main' && 'preview' || 'main' }} --commit-dirty=true
+          command: pages deploy apps/mobile/dist --project-name=client-mobile --branch=${{ github.ref == 'refs/heads/preview' && 'preview' || 'main' }} --commit-dirty=true
 
       - name: 📝 Extract Release Notes
         id: extract_release_notes
         uses: ffurrer2/extract-release-notes@v2
         with:
           changelog_file: apps/mobile/CHANGELOG.md
-          prerelease: ${{ github.ref == 'refs/heads/main' }}
+          prerelease: ${{ github.ref == 'refs/heads/preview' }}
 
       - name: 🚀 Create Release
         working-directory: apps/mobile
