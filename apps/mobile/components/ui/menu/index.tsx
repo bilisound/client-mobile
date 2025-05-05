@@ -120,9 +120,10 @@ const Menu = React.forwardRef<React.ElementRef<typeof UIMenu>, IMenuProps>(({ cl
     return (
         <UIMenu
             ref={ref}
+            // 要暫時刪除scale動畫，因為存在bug: https://github.com/gluestack/gluestack-ui/issues/2613#issuecomment-2606537026
             initial={{
                 opacity: 0,
-                scale: 0.8,
+                scale: 1,
             }}
             animate={{
                 opacity: 1,

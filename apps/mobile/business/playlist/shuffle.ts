@@ -1,6 +1,15 @@
 import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, QueuePlayingMode, queueStorage } from "~/storage/queue";
 import { loadBackupTrackData } from "~/business/playlist/handler";
-import { addTracks, deleteTracks, getCurrentTrackIndex, getTracks, jump, setQueue } from "@bilisound/player";
+import {
+    addTracks,
+    deleteTracks,
+    getCurrentTrackIndex,
+    getProgress,
+    getTracks,
+    jump,
+    seek,
+    setQueue,
+} from "@bilisound/player";
 import { TrackData } from "@bilisound/player/build/types";
 import { Platform } from "react-native";
 
@@ -121,6 +130,8 @@ export async function shuffleQueue() {
 export async function restoreQueue(originalTracks: TrackData[]): Promise<void> {
     const currentTrackIndex = await getCurrentTrackIndex();
     const currentQueue = await getTracks();
+    const progress = await getProgress();
+
     const currentTrack = currentQueue[currentTrackIndex];
 
     // Find the index of the current track in the original list
@@ -144,9 +155,9 @@ export async function restoreQueue(originalTracks: TrackData[]): Promise<void> {
 
     // 移除当前播放的曲目前面的所有曲目
     await deleteTracks(removeLeft);
-
     const [insertLeft, insertRight] = splitArrayAtIndex(originalTracks, originalIndex);
 
+    // ! 這裏會導致 iOS 列表錯亂
     // 在前面插入新列表的曲目
     await addTracks(insertLeft, 0);
 
@@ -154,6 +165,8 @@ export async function restoreQueue(originalTracks: TrackData[]): Promise<void> {
     await addTracks(insertRight);
 
     if (Platform.OS === "ios") {
+        // ! 臨時解決方案，應該修改player部分
         await jump(originalIndex);
+        await seek(progress.position);
     }
 }
