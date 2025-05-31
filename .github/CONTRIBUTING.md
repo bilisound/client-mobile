@@ -1,35 +1,64 @@
 # Bilisound 项目贡献指南
 
-感谢您投入时间为我们的项目做出贡献！如果您希望为 Bilisound 项目作出贡献，请先阅读一下我们的贡献指南。
+感谢您愿意为 Bilisound 做出贡献！我们欢迎任何形式的协助：无论是修复 Bug、撰写文档，还是开发新特性。但在开始之前，请先阅读本贡献指南，以便我们可以高效且愉快地协作。
 
-## 新手入门
+---
 
-要了解项目概况，请阅读 [README](../README.md) 文件。如果您是第一次尝试在对开源项目作出贡献，以下是一些帮助您开始参与开源贡献的资源：
+## 🧭 新手入门
 
-- [在 GitHub 上寻找参与开源的方式](https://docs.github.com/en/get-started/exploring-projects-on-github/finding-ways-to-contribute-to-open-source-on-github)
-- [设置 Git](https://docs.github.com/en/get-started/git-basics/set-up-git)
-- [GitHub 工作流程](https://docs.github.com/en/get-started/using-github/github-flow)
-- [使用拉取请求进行协作](https://docs.github.com/en/github/collaborating-with-pull-requests)
+- 项目概览请见 [README](../README.md)。
+- 如果您是首次参与开源项目，建议先参考以下资料：
+    - [如何在 GitHub 上参与开源](https://docs.github.com/en/get-started/exploring-projects-on-github/finding-ways-to-contribute-to-open-source-on-github)
+    - [设置 Git 环境](https://docs.github.com/en/get-started/git-basics/set-up-git)
+    - [GitHub Flow 工作流程](https://docs.github.com/en/get-started/using-github/github-flow)
+    - [如何使用 Pull Request 协作](https://docs.github.com/en/github/collaborating-with-pull-requests)
 
-## 问题（Issues）
+---
 
-### 创建新问题
+## 🐛 问题（Issues）
+
+### 提交问题
+
+请先搜索现有的 [Issues](https://github.com/bilisound/client-mobile/issues)，确保没有重复。如果没有，就大胆提交吧！
+
+### 处理问题
+
+如果您想帮助解决某个 issue：
+- 可自由挑选，无需申请「认领」；
+- 欢迎在 Issue 下留言说明打算如何处理；
+- 然后提交 PR。
+
+---
+
+## 🔀 提交 Pull Request（PR）
 
 如果您发现项目有问题，请先确认是否有其它人已经提出相应的问题。如果没有看见别人提出过相关问题，就直接提 issue 吧。
 
-### 解决问题
+### 🛠 技术协作流程建议
 
-浏览我们的 [现有问题](https://github.com/bilisound/client-mobile/issues)，找到您感兴趣的问题。您可以使用 `labels`（标签）作为过滤器缩小搜索范围。考虑到当前项目的体量，我们不会将问题分配给任何人（通常是目前某位唯一的主要维护者考虑是否处理）。如果您找到要处理的问题，欢迎提交包含修复的 PR。
+- **建议先开 issue**：如果您想添加新功能、修改架构，欢迎先通过 issue 简要说明想法，避免方向跑偏。
+- **已有 issue：** 处理现有问题前，建议简单说明解决思路，方便协作与沟通。
+- **新功能 / 大改动：** 请先将 PR 设置为 Draft，最好在 24 小时内完成初版内容。
+- **我们不接受完全通过 Vibe Coding 方式生成的 PR。**
+    - 请确保您的修改能通过构建，且行为已验证可用。
+    - 不建议完全依赖 AI 工具一键生成复杂改动。
 
-## 提交合并请求 (Pull Requests)
+### 📚 文档类 PR
 
-我们非常欢迎社区成员为 Bilisound 项目贡献代码！无论是修复 bug、改进文档还是添加新功能，每一个贡献都很有价值。为了让协作更加顺畅，在提交 PR 时请注意以下几点建议：
+拼写修正、格式优化等轻量 PR 可直接提交，无需提前沟通。
 
-- 如果您想要为项目添加新功能，建议先创建一个 issue 来讨论您的想法和实现方案。这样可以确保您的工作方向与项目目标一致，也能获得社区的反馈和建议。
-- 如果您打算解决现有的问题，建议先在相关 issue 下留言，简单说明您的解决思路。这样可以避免重复工作，也方便与其他贡献者协调。
+---
 
-对于文案或文档中的小修正（如修正拼写错误），您可以直接提交 PR。
+## 🧱 稳定性优先
 
-为了确保项目的稳定性和可维护性，我们建议采用渐进式的改进方案。如果您有重大的架构改进建议，欢迎先通过 issue 与我们深入讨论，这样可以更好地规划改进路径。
+Bilisound 已有一定用户规模。我们希望在持续改进的同时，保持代码质量和稳定性。因此：
 
-Bilisound 已经有一定规模的用户群体，我们致力于在**持续改进**的同时确保项目的稳定性，让每一位用户都能获得更好的使用体验。
+- 不鼓励一次性提交大规模重构；
+- 优先接受渐进式、小步快走的修改；
+- 架构级别的建议，请优先使用 issue 讨论。
+
+---
+
+## 🤝 感谢每一位贡献者
+
+开源是共同建设的过程，感谢您的支持与理解w
