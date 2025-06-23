@@ -1,141 +1,97 @@
-# Bilisound Client Mobile Project Architecture
+# Bilisound 客户端项目架构
 
-## 1. Project Overview
-Bilisound is a mobile application project with a monorepo structure, utilizing modern web technologies and a modular architecture.
+## 1. 项目概述
+Bilisound 是一个第三方音视频客户端，采用 monorepo 结构，支持 iOS、Android 和 Web 平台。项目旨在提供一个纯净、专注的音视频播放体验，特别是针对播放列表和离线使用的场景。
 
-## 2. Project Structure
-```
-bilisound/client-mobile/
-├── apps/
-│   ├── mobile/           # Main mobile application
-│   └── server-cf/        # Cloudflare server-side components
-├── packages/
-│   └── sdk/              # Shared SDK and utilities
-├── package.json          # Project-level dependency management
-├── pnpm-workspace.yaml   # Workspace configuration
-└── turbo.json            # Turborepo configuration
-```
+## 2. 项目目标
+- **跨平台体验**: 提供在移动端和 Web 上一致的用户体验。
+- **播放列表中心**: 方便用户创建、管理和分享音视频播放列表（歌单）。
+- **离线播放**: 支持将音视频内容下载到本地，供离线使用。
+- **纯净播放**: 专注于核心的播放功能，无广告和不相关的社交元素。
 
-## 3. Technology Stack
-- Package Manager: pnpm
-- Build System: Turborepo
-- Mobile Framework: React Native (based on the `.tsx` file extension)
-- Development Tools:
-  - Prettier for code formatting
-  - TypeScript for type safety
+## 3. 技术栈
+- **包管理器**: pnpm
+- **构建系统**: Turborepo
+- **移动端框架**: React Native & Expo
+- **Web框架**: React Native for Web
+- **后端服务**: Cloudflare Workers
+- **UI**: Tailwind CSS (via NativeWind), gluestack-ui
+- **状态管理**: Zustand
+- **数据库**: Drizzle ORM + SQLite
+- **类型系统**: TypeScript
 
-## 4. Key Directories and Their Purposes
-
-### Apps Directory
-- `mobile/`: Primary mobile application
-  - Contains the main application code
-  - Includes components, screens, and app-specific logic
-
-### Packages Directory
-- `sdk/`: Shared SDK
-  - Contains reusable utilities, types, and shared logic across the project
-
-## 5. Dependency Management
-- Uses `pnpm` for package management
-- Workspace configuration in [pnpm-workspace.yaml](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/pnpm-workspace.yaml:0:0-0:0)
-- Dependency versions managed in [package.json](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/package.json:0:0-0:0)
-
-## 6. Code File Dependencies
-
-### Mobile App Key Files
-
-## 7. Code File Dependencies and Module Relationships
-
-### Key Modules and Components
-
-#### Main Application Structure
-- [app/_layout.tsx](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/app/_layout.tsx:0:0-0:0): Root layout configuration
-- `app/(main)/_layout.tsx`: Main application layout
-- `app/(main)/index.tsx`: Main landing page/home screen
-
-#### Feature Modules
-1. **Playlist Management**
-   - `app/(main)/(playlist)/playlist.tsx`
-   - `app/(main)/(playlist)/detail/[id].tsx`
-   - `app/(main)/(playlist)/meta/[id].tsx`
-
-2. **Player Controls**
-   - `components/main-bottom-sheet/` directory contains player-related components:
-     - [player-control.tsx](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/components/main-bottom-sheet/components/player-control.tsx:0:0-0:0)
-     - [player-progress-bar.tsx](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/components/main-bottom-sheet/components/player-progress-bar.tsx:0:0-0:0)
-     - [player-queue-list.tsx](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/components/main-bottom-sheet/components/player-queue-list.tsx:0:0-0:0)
-     - [speed-control-panel.tsx](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/components/main-bottom-sheet/components/speed-control-panel.tsx:0:0-0:0)
-
-3. **Settings**
-   - `app/settings/` directory with multiple configuration screens:
-     - [about.tsx](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/app/settings/about.tsx:0:0-0:0)
-     - [data.tsx](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/app/settings/data.tsx:0:0-0:0)
-     - [theme.tsx](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/app/settings/theme.tsx:0:0-0:0)
-     - [license.tsx](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/app/settings/license.tsx:0:0-0:0)
-
-4. **Utility Components**
-   - `components/` directory with various utility and UI components
-   - [app/utils/cover-picker.tsx](cci:7://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/app/utils/cover-picker.tsx:0:0-0:0)
-
-## 8. Dependency Flow
+## 4. 整体架构图
 
 ```mermaid
 graph TD
-    A[Root Layout: _layout.tsx] --> B[Main Layout: (main)/_layout.tsx]
-    B --> C[Home Screen: index.tsx]
-    B --> D[Playlist Module]
-    B --> E[Player Controls]
-    B --> F[Settings Module]
+    subgraph 用户端
+        A[apps/mobile <br/> React Native App]
+        W[Web Browser]
+    end
+
+    subgraph 服务端
+        B[apps/server-cf <br/> Cloudflare Worker]
+    end
     
-    D --> D1[Playlist List]
-    D --> D2[Playlist Detail]
+    subgraph 核心库
+        C[packages/sdk <br/> 音视频平台 API 封装]
+    end
+
+    subgraph 外部服务
+        D[音视频内容平台 API]
+    end
+
+    W -- HTTP请求 --> B
+    A -- 直接调用 --> C
+    B -- 代理请求 --> D
+    C -- API请求 --> D
     
-    E --> E1[Player Control Buttons]
-    E --> E2[Progress Bar]
-    E --> E3[Queue Management]
-    
-    F --> F1[Theme Settings]
-    F --> F2[Data Management]
-    F --> F3[About Page]
+    linkStyle 0 stroke-width:2px,fill:none,stroke:green;
+    linkStyle 1 stroke-width:2px,fill:none,stroke:blue;
+    linkStyle 2 stroke-width:2px,fill:none,stroke:orange;
+    linkStyle 3 stroke-width:2px,fill:none,stroke:orange;
 ```
+*   **蓝色箭头**: 原生 App（iOS/Android）的数据流。它直接使用 `packages/sdk` 与音视频内容平台 API 通信。
+*   **橙色箭头**: Web App 的数据流。它通过 `apps/server-cf` 后端服务代理所有对音视频内容平台 API 的请求，以规避浏览器的跨域限制。
 
-## 9. Key Implementation Details
+## 5. 项目结构与模块职责
 
-### Download Functionality
+### `apps/mobile/`
+这是项目的主应用，包含了所有的UI界面、业务逻辑和状态管理。
+- **平台**: 基于 Expo 和 React Native，可同时构建到 iOS, Android 和 Web。
+- **目录结构**:
+    - `app/`: 页面路由，遵循 Expo Router 的文件路由规范。
+    - `components/`: 可复用的 UI 组件。
+    - `store/`: Zustand 状态管理模块。
+    - `storage/`: 数据库（SQLite）和本地存储相关逻辑。
+    - `business/`: 核心业务逻辑，如下载、播放列表处理等。
+    - `api/`: 应用层 API 封装，处理原生和 Web 端的数据请求分发。
 
-## 10. Download Management
-The download management module provides a comprehensive view of ongoing downloads:
+### `apps/server-cf/`
+一个部署在 Cloudflare Workers 上的轻量级后端服务。
+- **主要职责**: 作为 Web 端访问音视频内容平台 API 的代理。由于浏览器安全策略（CORS），Web 端无法直接请求音视频内容平台 API，因此需要通过这个服务器进行转发。
+- **实现**: 使用 Hono 框架构建，简单、高效。
 
-- Uses `useDownloadStore` for state management
-- Implements a [DownloadEntry](cci:1://file:///Users/tcdw/Projects/bilisound/client-mobile/apps/mobile/app/download.tsx:13:0-54:1) component to render individual download items
-- Features:
-  - Download status tracking (queued, in progress)
-  - Download speed calculation
-  - Progress bar visualization
-  - Sorting downloads by start time
+### `packages/sdk/`
+共享的软件开发工具包（SDK），用于封装与音视频内容平台 API 的交互逻辑。
+- **主要职责**: 提供统一、简洁的函数来获取音视频内容平台的视频信息、播放地址、用户列表等。它处理了API签名、参数构造等复杂细节。
+- **复用性**: 被 `apps/mobile` (原生端) 直接调用，同时其逻辑也被 `apps/server-cf` 在服务端复用。
 
-## 11. State Management
-The project appears to use a custom store implementation, likely based on Zustand, for managing application state:
-- `~/store/download.ts`: Manages download-related state
-- Centralized state management for downloads, player controls, and other app features
+## 6. 核心功能实现
 
-## 12. UI/UX Considerations
-- Uses Tailwind CSS for styling (evident from `className` attributes)
-- Responsive layout with flex and grid-based designs
-- Custom components like `Layout`, `Text`, and `Pressable`
-- Performance optimization with `FlashList` for rendering long lists
+### 平台差异性处理
+项目在多个文件中使用了 `Platform.OS === 'web'` 的判断来执行不同平台的代码，尤其是在 API 请求模块 (`apps/mobile/api/bilisound.ts`)。
+- **原生端**: 直接调用 `packages/sdk` 中的函数，向音视频内容平台 API 发起请求。
+- **Web端**: 请求发送到 `apps/server-cf` 提供的接口，由后者代为请求音视频内容平台 API。
 
-## 13. Development Recommendations
-1. Modularize state management
-2. Continue using TypeScript for type safety
-3. Maintain component-based architecture
-4. Consider adding more comprehensive error handling
-5. Implement comprehensive logging and monitoring
+### 状态管理
+项目使用 Zustand 进行全局状态管理，它以其简洁的 API 和基于 Hooks 的特性而闻名。
+- **模块化**: 状态被分割到不同的 "slice" 中，例如 `download.ts`, `settings.ts` 等，分别管理不同模块的状态，便于维护。
+- **位置**: `apps/mobile/store/`
 
-## 14. Performance Insights
-- Uses `FlashList` for efficient list rendering
-- Implements lazy loading and virtualization
-- Calculates download speeds with minimal overhead
+### 数据持久化
+- **数据库**: 使用 Drizzle ORM 配合 Expo SQLite，提供类型安全的关系型数据存储能力，主要用于存储播放列表、音视频信息等。
+- **文件存储**: 使用 Expo FileSystem 来管理下载的音视频文件和封面图片。
 
-## Conclusion
-Bilisound is a well-structured mobile application with a modular architecture, focusing on clean code organization, performance, and user experience. The use of modern web technologies and a monorepo structure allows for efficient development and maintenance.
+## 7. 总结
+Bilisound 项目是一个架构设计清晰、技术选型现代化的全栈应用。它通过 Monorepo 有效地组织了前端、后端和共享库代码。对原生和Web平台的差异化处理方案，以及对核心业务逻辑的良好封装，使其成为一个高质量的 React Native 跨平台项目典范。
