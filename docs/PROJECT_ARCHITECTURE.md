@@ -46,10 +46,10 @@ graph TD
     B -- 代理调用 --> C
     C -- API 请求 --> D
     
-    linkStyle 0 stroke-width:2px,fill:none,stroke:green;
+    linkStyle 0 stroke-width:2px,fill:none,stroke:orange;
     linkStyle 1 stroke-width:2px,fill:none,stroke:blue;
     linkStyle 2 stroke-width:2px,fill:none,stroke:orange;
-    linkStyle 3 stroke-width:2px,fill:none,stroke:orange;
+    linkStyle 3 stroke-width:2px,fill:none,stroke:green;
 ```
 *   **蓝色箭头**: 原生 App（iOS/Android）的数据流。它直接使用 `packages/sdk` 与音视频内容平台 API 通信。
 *   **橙色箭头**: Web App 的数据流。它通过 `apps/server-cf` 后端服务代理所有对音视频内容平台 API 的请求，以规避浏览器的跨域限制。
