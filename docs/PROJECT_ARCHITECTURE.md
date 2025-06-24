@@ -24,9 +24,9 @@ Bilisound 是一个第三方音视频客户端，采用 monorepo 结构，支持
 
 ```mermaid
 graph TD
-    subgraph 用户端
-        A[apps/mobile <br/> React Native App]
-        W[Web Browser]
+    subgraph "用户端 (apps/mobile)"
+        A[React Native 应用]
+        W[React Native for Web 应用]
     end
 
     subgraph 服务端
@@ -41,10 +41,10 @@ graph TD
         D[音视频内容平台 API]
     end
 
-    W -- HTTP请求 --> B
+    W -- HTTP 请求 --> B
     A -- 直接调用 --> C
-    B -- 代理请求 --> D
-    C -- API请求 --> D
+    B -- 代理调用 --> C
+    C -- API 请求 --> D
     
     linkStyle 0 stroke-width:2px,fill:none,stroke:green;
     linkStyle 1 stroke-width:2px,fill:none,stroke:blue;
@@ -57,7 +57,7 @@ graph TD
 ## 5. 项目结构与模块职责
 
 ### `apps/mobile/`
-这是项目的主应用，包含了所有的UI界面、业务逻辑和状态管理。
+这是项目的主应用，包含了所有的 UI 界面、业务逻辑和状态管理。
 - **平台**: 基于 Expo 和 React Native，可同时构建到 iOS, Android 和 Web。
 - **目录结构**:
     - `app/`: 页面路由，遵循 Expo Router 的文件路由规范。
@@ -74,7 +74,7 @@ graph TD
 
 ### `packages/sdk/`
 共享的软件开发工具包（SDK），用于封装与音视频内容平台 API 的交互逻辑。
-- **主要职责**: 提供统一、简洁的函数来获取音视频内容平台的视频信息、播放地址、用户列表等。它处理了API签名、参数构造等复杂细节。
+- **主要职责**: 提供统一、简洁的函数来获取音视频内容平台的视频信息、播放地址、用户列表等。它处理了 API 签名、参数构造等复杂细节。
 - **复用性**: 被 `apps/mobile` (原生端) 直接调用，同时其逻辑也被 `apps/server-cf` 在服务端复用。
 
 ## 6. 核心功能实现
@@ -94,4 +94,4 @@ graph TD
 - **文件存储**: 使用 Expo FileSystem 来管理下载的音视频文件和封面图片。
 
 ## 7. 总结
-Bilisound 项目是一个架构设计清晰、技术选型现代化的全栈应用。它通过 Monorepo 有效地组织了前端、后端和共享库代码。对原生和Web平台的差异化处理方案，以及对核心业务逻辑的良好封装，使其成为一个高质量的 React Native 跨平台项目典范。
+Bilisound 项目是一个架构设计清晰、技术选型现代化的全栈应用。它通过 Monorepo 有效地组织了前端、后端和共享库代码。对原生和 Web 平台的差异化处理方案，以及对核心业务逻辑的良好封装，使其成为一个高质量的 React Native 跨平台项目典范。
