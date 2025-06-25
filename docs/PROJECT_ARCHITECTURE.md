@@ -59,18 +59,21 @@ graph TD
 ### `apps/mobile/`
 这是项目的主应用，包含了所有的 UI 界面、业务逻辑和状态管理。
 - **平台**: 基于 Expo 和 React Native，可同时构建到 iOS, Android 和 Web。
-- **目录结构**:
-    - `app/`: 页面路由，遵循 Expo Router 的文件路由规范。
-    - `components/`: 可复用的 UI 组件。
-    - `store/`: Zustand 状态管理模块。
-    - `storage/`: 数据库（SQLite）和本地存储相关逻辑。
-    - `business/`: 核心业务逻辑，如下载、播放列表处理等。
+- **重要目录**:
     - `api/`: 应用层 API 封装，处理原生和 Web 端的数据请求分发。
+    - `app/`: 页面路由，遵循 Expo Router 的文件路由规范。
+    - `assets/`: 嵌入到应用安装包中的资源文件。
+    - `business/`: 核心业务逻辑，如下载、播放列表处理等。
+    - `components/`: 可复用的 UI 组件。
+    - `plugins/`: 用于 Expo CLI 的项目级插件。
+    - `public/`: 用于 Web 端的静态资源文件。
+    - `storage/`: 数据库（SQLite）和本地存储相关逻辑。
+    - `store/`: Zustand 状态管理模块。
 
 ### `apps/server-cf/`
 一个部署在 Cloudflare Workers 上的轻量级后端服务。
 - **主要职责**: 作为 Web 端访问音视频内容平台 API 的代理。由于浏览器安全策略（CORS），Web 端无法直接请求音视频内容平台 API，因此需要通过这个服务器进行转发。
-- **实现**: 使用 Hono 框架构建，简单、高效。
+- **实现**: 使用 itty-router 框架构建，简单、高效。
 
 ### `packages/sdk/`
 共享的软件开发工具包（SDK），用于封装与音视频内容平台 API 的交互逻辑。
