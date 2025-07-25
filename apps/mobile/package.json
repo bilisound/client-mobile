@@ -104,6 +104,7 @@
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.10",
     "filesize": "^10.1.6",
+    "fuse.js": "^7.1.0",
     "generate-license-file": "^3.8.1",
     "idb": "^8.0.3",
     "jest": "^29.7.0",

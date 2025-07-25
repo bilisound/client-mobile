@@ -260,6 +260,9 @@ importers:
       filesize:
         specifier: ^10.1.6
         version: 10.1.6
+      fuse.js:
+        specifier: ^7.1.0
+        version: 7.1.0
       generate-license-file:
         specifier: ^3.8.1
         version: 3.8.1(typescript@5.8.3)
@@ -6636,6 +6639,10 @@ packages:
 
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
+
+  fuse.js@7.1.0:
+    resolution: {integrity: sha512-trLf4SzuuUxfusZADLINj+dE8clK1frKdmqiJNb1Es75fmI5oY6X2mxLVUciLLjxqw/xr72Dhy+lER6dGd02FQ==}
+    engines: {node: '>=10'}
 
   fuuu@0.0.8:
     resolution: {integrity: sha512-zQFHWeevoaQRBtrXoHJ/qz/HvhkSz5+ZPu1+sIqXQxfh/MlB0Mi1G+1wAfaZS6z4mRtp9BgPqyYOWwBTka96SA==}
@@ -18457,6 +18464,8 @@ snapshots:
       is-callable: 1.2.7
 
   functions-have-names@1.2.3: {}
+
+  fuse.js@7.1.0: {}
 
   fuuu@0.0.8: {}
 

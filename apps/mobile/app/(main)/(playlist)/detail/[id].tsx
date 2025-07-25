@@ -14,7 +14,7 @@ import { FlashList } from "@shopify/flash-list";
 import { SongItem } from "~/components/song-item";
 import { DualScrollView } from "~/components/dual-scroll-view";
 import { PlaylistDetail, PlaylistMeta } from "~/storage/sqlite/schema";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
 import { convertToRelativeTime } from "~/utils/datetime";
 import { updatePlaylist } from "~/business/playlist/update";
@@ -26,6 +26,8 @@ import { cssInterop } from "nativewind";
 import Toast from "react-native-toast-message";
 import { twMerge } from "tailwind-merge";
 import log from "~/utils/logger";
+import Fuse from "fuse.js";
+import { Input, InputField, InputSlot } from "~/components/ui/input";
 import { Button, ButtonMonIcon, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Modal, ModalBackdrop, ModalBody, ModalContent } from "~/components/ui/modal";
 import { replaceQueueWithPlaylist } from "~/business/playlist/handler";
@@ -433,6 +435,35 @@ export default function Page() {
         queryFn: () => getPlaylistDetail(Number(id)),
     });
 
+    // 搜索功能状态
+    const [searchQuery, setSearchQuery] = useState("");
+    
+    // 配置 Fuse.js 搜索选项
+    const fuseOptions = useMemo(() => ({
+        keys: [
+            { name: 'title', weight: 0.7 },
+            { name: 'author', weight: 0.3 }
+        ],
+        threshold: 0.3, // 模糊匹配阈值，0.3 表示相对宽松的匹配
+        includeScore: true,
+        minMatchCharLength: 1
+    }), []);
+    
+    // 创建 Fuse 实例
+    const fuse = useMemo(() => {
+        if (!playlistDetail || playlistDetail.length === 0) return null;
+        return new Fuse(playlistDetail, fuseOptions);
+    }, [playlistDetail, fuseOptions]);
+    
+    // 过滤后的播放列表数据
+    const filteredPlaylistDetail = useMemo(() => {
+        if (!playlistDetail) return [];
+        if (!searchQuery.trim() || !fuse) return playlistDetail;
+        
+        const results = fuse.search(searchQuery.trim());
+        return results.map(result => result.item);
+    }, [playlistDetail, searchQuery, fuse]);
+
     // 模态框管理
     const { dialogInfo, setDialogInfo, modalVisible, setModalVisible, handleClose, dialogCallback } = useConfirm();
 
@@ -440,7 +471,11 @@ export default function Page() {
     async function handlePlay(index = 0) {
         try {
             const from = (await Player.getTracks())?.[index];
-            const to = playlistDetail?.[index];
+            const to = filteredPlaylistDetail?.[index];
+            // 如果使用了搜索过滤，需要找到原始数据中的索引
+            const originalIndex = searchQuery.trim() && playlistDetail && to 
+                ? playlistDetail.findIndex(item => item.id === to.id)
+                : index;
             let activeTrack = null;
             try {
                 activeTrack = await Player.getCurrentTrack();
@@ -460,14 +495,14 @@ export default function Page() {
                 from?.extendedData?.episode === to?.episode
             ) {
                 log.debug("当前队列中的内容来自本歌单，就地跳转");
-                await Player.jump(index);
+                await Player.jump(originalIndex);
                 return;
             }
             if (onQueue || (await Player.getTracks()).length <= 0) {
-                return handlePlayConfirm(index);
+                return handlePlayConfirm(originalIndex);
             }
             dialogCallback.current = () => {
-                return handlePlayConfirm(index);
+                return handlePlayConfirm(originalIndex);
             };
 
             // 播放列表可能是脏的，需要进行替换操作
@@ -478,7 +513,7 @@ export default function Page() {
             }));
             setModalVisible(true);
             dialogCallback.current = async () => {
-                return handlePlayConfirm(index);
+                return handlePlayConfirm(originalIndex);
             };
         } catch (e) {
             log.error("操作失败：" + e);
@@ -525,14 +560,17 @@ export default function Page() {
     // 删除项目操作
     function handleDelete() {
         dialogCallback.current = async () => {
-            if (!playlistDetail) {
+            if (!playlistDetail || !filteredPlaylistDetail) {
                 return;
             }
             const onQueue = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) ?? "{}")?.value;
 
-            // 注意，这里的 selected 是数组的 index，不是项目在数据库中的 id！！
+            // 注意，这里的 selected 是过滤后数组的 index，需要映射到原始数据的 id
             for (const e of selected) {
-                await deletePlaylistDetail(playlistDetail[e].id);
+                const itemToDelete = filteredPlaylistDetail[e];
+                if (itemToDelete) {
+                    await deletePlaylistDetail(itemToDelete.id);
+                }
             }
             await syncPlaylistAmount(Number(id));
             await Promise.all([
@@ -557,12 +595,12 @@ export default function Page() {
 
     // 复制项目操作
     function handleCopy() {
-        if (!loaded) {
+        if (!loaded || !filteredPlaylistDetail) {
             return;
         }
         const state = useApplyPlaylistStore.getState();
         state.setName(meta.title + "（副本）");
-        state.setPlaylistDetail([...selected].map(e => playlistDetail[e]));
+        state.setPlaylistDetail([...selected].map(e => filteredPlaylistDetail[e]).filter(Boolean));
         state.setSource(undefined);
         router.push("/apply-playlist");
     }
@@ -629,8 +667,8 @@ export default function Page() {
                             scrollIndicatorInsets={{
                                 bottom: Number.MIN_VALUE,
                             }}
-                            data={playlistDetail}
-                            extraData={[editing, selected.size]}
+                            data={filteredPlaylistDetail}
+                            extraData={[editing, selected.size, searchQuery]}
                             renderItem={({ item, index }) => (
                                 <SongItem
                                     data={item}
@@ -644,14 +682,47 @@ export default function Page() {
                             )}
                             estimatedItemSize={64}
                             ListHeaderComponent={
-                                <Header
-                                    className={"flex md:hidden px-4 pb-4"}
-                                    meta={meta}
-                                    detail={playlistDetail}
-                                    images={extractAndProcessImgUrls(playlistDetail)}
-                                    showPlayButton={playlistDetail.length > 0}
-                                    onPlay={() => handlePlay()}
-                                />
+                                <View>
+                                    <Header
+                                        className={"flex md:hidden px-4 pb-4"}
+                                        meta={meta}
+                                        detail={playlistDetail}
+                                        images={extractAndProcessImgUrls(playlistDetail || [])}
+                                        showPlayButton={(playlistDetail?.length || 0) > 0}
+                                        onPlay={() => handlePlay()}
+                                    />
+                                    {/* 搜索输入框 */}
+                                    <View className="px-4 pb-4">
+                                        <Input className="bg-background-50">
+                                            <InputSlot className="pl-3">
+                                                <Text className="text-typography-500 text-base">🔍</Text>
+                                            </InputSlot>
+                                            <InputField
+                                                placeholder="搜索歌曲或作者..."
+                                                value={searchQuery}
+                                                onChangeText={setSearchQuery}
+                                                className="flex-1"
+                                            />
+                                            {searchQuery.length > 0 && (
+                                                <InputSlot className="pr-3">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="xs"
+                                                        onPress={() => setSearchQuery("")}
+                                                        className="p-1"
+                                                    >
+                                                        <Text className="text-typography-500 text-sm">✕</Text>
+                                                    </Button>
+                                                </InputSlot>
+                                            )}
+                                        </Input>
+                                        {searchQuery.trim() && (
+                                            <Text className="text-sm text-typography-500 mt-2 px-1">
+                                                找到 {filteredPlaylistDetail.length} 首歌曲
+                                            </Text>
+                                        )}
+                                    </View>
+                                </View>
                             }
                         />
                     )}
@@ -672,7 +743,7 @@ export default function Page() {
                                 <Button
                                     variant={"ghost"}
                                     onPress={() =>
-                                        setAll(Array.from({ length: playlistDetail.length }).map((_, i) => i))
+                                        setAll(Array.from({ length: filteredPlaylistDetail.length }).map((_, i) => i))
                                     }
                                     className={"px-4"}
                                 >
@@ -684,7 +755,7 @@ export default function Page() {
                                 <Button
                                     variant={"ghost"}
                                     onPress={() =>
-                                        reverse(Array.from({ length: playlistDetail.length }).map((_, i) => i))
+                                        reverse(Array.from({ length: filteredPlaylistDetail.length }).map((_, i) => i))
                                     }
                                     className={"px-4"}
                                 >
