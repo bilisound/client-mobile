@@ -98,9 +98,9 @@ const Item = React.forwardRef<React.ElementRef<typeof Pressable>, IMenuItemProps
     );
 });
 
-const Separator = React.forwardRef(({ className, ...props }: any, ref?: any) => {
+const Separator = ({ className, ref, ...props }: React.ComponentPropsWithoutRef<typeof View> & VariantProps<typeof menuSeparatorStyle> & { ref?: React.Ref<React.ElementRef<typeof View>> }) => {
     return <View ref={ref} className={menuSeparatorStyle({ class: className })} {...props} />;
-});
+};
 export const UIMenu = createMenu({
     Root: Motion.View,
     Item: Item,

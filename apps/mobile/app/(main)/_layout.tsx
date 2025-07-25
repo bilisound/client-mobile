@@ -1,7 +1,7 @@
 import { Tabs, TabList, TabTrigger, TabSlot, TabTriggerSlotProps } from "expo-router/ui";
 import { Text } from "~/components/ui/text";
 import { ActivityIndicator, View, Pressable, Platform } from "react-native";
-import { forwardRef, Ref } from "react";
+import React from "react";
 import { twMerge } from "tailwind-merge";
 import { TabSafeAreaContext } from "~/hooks/useTabSafeAreaInsets";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -25,10 +25,7 @@ type TabTriggerChildProps = TabTriggerSlotProps & {
     title: string;
 };
 
-const TabTriggerChild = forwardRef(function TabTriggerChild(
-    { isFocused, onPress, iconName, title, style, className, ...props }: TabTriggerChildProps,
-    ref: Ref<View>,
-) {
+const TabTriggerChild = ({ isFocused, onPress, iconName, title, style, className, ref, ...props }: TabTriggerChildProps & { ref?: React.Ref<View> }) => {
     const { colorValue } = useRawThemeValues();
 
     return (
@@ -53,7 +50,7 @@ const TabTriggerChild = forwardRef(function TabTriggerChild(
             </Text>
         </Pressable>
     );
-});
+};
 
 // 播放状态图标
 function PlayingIcon() {
