@@ -57,7 +57,8 @@ export function PlayerControl() {
 
     return (
         // iOS 下播放界面横屏布局问题的 workaround
-        <View className={"flex-col md:flex-row p-safe"} style={{ width, height }}>
+        // 新增：key={isHorizontal} 以确保在横屏切换时重新渲染
+        <View className={"flex-col md:flex-row p-safe"} style={{ width, height }} key={`${isHorizontal}`}>
             <View className={"absolute z-10"} style={{ left: 10 + left, top: 10 + top }}>
                 <LayoutButton
                     iconName={"fa6-solid:angle-down"}
