@@ -86,7 +86,7 @@ export function PlayerControl() {
             <TabsPrimitive.Root
                 value={value}
                 onValueChange={setValue as Dispatch<SetStateAction<string>>}
-                className={"flex-1 md:flex-row bg-red-300"}
+                className={"flex-1 md:flex-row"}
             >
                 <View className={"items-center p-3 " + "md:justify-center"}>
                     <TabsPrimitive.List
@@ -130,7 +130,7 @@ export function PlayerControl() {
             {/* 右侧：播放控制 */}
             <View
                 className={
-                    "bg-green-300 @container flex-0 basis-auto md:flex-1 md:justify-center gap-3 @sm:gap-4 " +
+                    "@container flex-0 basis-auto md:flex-1 md:justify-center gap-3 @sm:gap-4 " +
                     DEBUG_COLOR[0]
                 }
             >
