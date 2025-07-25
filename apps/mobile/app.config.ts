@@ -22,6 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         bundleIdentifier: "moe.bilisound.app",
     },
     android: {
+        edgeToEdgeEnabled: true,
         adaptiveIcon: {
             foregroundImage: "./assets/images/adaptive-icon.png",
             backgroundColor: "#97E7DC",
