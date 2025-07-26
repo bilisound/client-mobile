@@ -58,6 +58,8 @@ import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
 import { DownloadButton } from "~/components/download-button";
 import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
 import { useWindowSize } from "~/hooks/useWindowSize";
+import Monicon from "@monicon/native";
+import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 
 cssInterop(OrigCircle, {
     className: {
@@ -342,83 +344,10 @@ function LongPressActions({ showActionSheet, onAction, onClose, current }: LongP
     );
 }
 
-/*interface SelectActionsProps {
-    showActionSheet: boolean;
-    onClose: () => void;
-    onAction: (action: "close") => void;
-    current: PlaylistDetail[];
-}
-
-function SelectActions({ showActionSheet, onAction, onClose, current }: SelectActionsProps) {
-    const menuItems: ActionMenuItem[] = [
-        {
-            show: true,
-            disabled: false,
-            icon: "fa6-solid:copy",
-            text: "复制到其它歌单",
-            action: () => console.log("Copy action placeholder"),
-        },
-        {
-            show: true,
-            disabled: false,
-            icon: "fa6-solid:trash",
-            text: "删除",
-            action: () => console.log("Delete action placeholder"),
-        },
-        {
-            show: true,
-            disabled: false,
-            icon: "fa6-solid:download",
-            text: "缓存所选",
-            action: () => console.log("Download selected action placeholder"),
-        },
-        {
-            show: true,
-            disabled: false,
-            icon: "fa6-solid:trash-can",
-            text: "删除所选缓存",
-            action: () => console.log("Delete selected cache action placeholder"),
-        },
-        {
-            show: true,
-            disabled: false,
-            icon: "fa6-solid:xmark",
-            iconSize: 20,
-            text: "取消",
-            action: () => onAction("close"),
-        },
-    ];
-
-    return (
-        <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
-            <ActionsheetBackdrop />
-            <ActionsheetContent style={{ zIndex: 999 }}>
-                <ActionsheetDragIndicatorWrapper>
-                    <ActionsheetDragIndicator />
-                </ActionsheetDragIndicatorWrapper>
-                {current[0] && current.length === 1 && (
-                    <ActionSheetCurrent
-                        line1={current[0].title}
-                        line2={current[0].author}
-                        image={current[0].imgUrl ? getImageProxyUrl(current[0].imgUrl) : undefined}
-                    />
-                )}
-                {current.length > 1 && (
-                    <View className={"w-full px-3 py-3 items-start"}>
-                        <Text className={"font-semibold color-typography-500"}>
-                            {"已选择 " + current.length + " 首歌曲"}
-                        </Text>
-                    </View>
-                )}
-                <ActionMenu menuItems={menuItems} />
-            </ActionsheetContent>
-        </Actionsheet>
-    );
-}*/
-
 export default function Page() {
     const queryClient = useQueryClient();
     const tabSafeAreaEdgeInsets = useTabSafeAreaInsets();
+    const {colorValue} = useRawThemeValues();
     const { id } = useLocalSearchParams<{ id: string }>();
 
     const [, setPlaylistOnQueue] = usePlaylistOnQueue();
@@ -437,29 +366,27 @@ export default function Page() {
 
     // 搜索功能状态
     const [searchQuery, setSearchQuery] = useState("");
-    
-    // 配置 Fuse.js 搜索选项
-    const fuseOptions = useMemo(() => ({
-        keys: [
-            { name: 'title', weight: 0.7 },
-            { name: 'author', weight: 0.3 }
-        ],
-        threshold: 0.3, // 模糊匹配阈值，0.3 表示相对宽松的匹配
-        includeScore: true,
-        minMatchCharLength: 1
-    }), []);
-    
+
     // 创建 Fuse 实例
     const fuse = useMemo(() => {
         if (!playlistDetail || playlistDetail.length === 0) return null;
-        return new Fuse(playlistDetail, fuseOptions);
-    }, [playlistDetail, fuseOptions]);
-    
+        return new Fuse(playlistDetail, {
+            keys: [
+                { name: "title", weight: 0.7 },
+                { name: "author", weight: 0.3 },
+            ],
+            threshold: 0.3, // 模糊匹配阈值，0.3 表示相对宽松的匹配
+            includeScore: true,
+            ignoreFieldNorm: true,
+            ignoreLocation: true,
+        });
+    }, [playlistDetail]);
+
     // 过滤后的播放列表数据
     const filteredPlaylistDetail = useMemo(() => {
         if (!playlistDetail) return [];
         if (!searchQuery.trim() || !fuse) return playlistDetail;
-        
+
         const results = fuse.search(searchQuery.trim());
         return results.map(result => result.item);
     }, [playlistDetail, searchQuery, fuse]);
@@ -473,9 +400,10 @@ export default function Page() {
             const from = (await Player.getTracks())?.[index];
             const to = filteredPlaylistDetail?.[index];
             // 如果使用了搜索过滤，需要找到原始数据中的索引
-            const originalIndex = searchQuery.trim() && playlistDetail && to 
-                ? playlistDetail.findIndex(item => item.id === to.id)
-                : index;
+            const originalIndex =
+                searchQuery.trim() && playlistDetail && to
+                    ? playlistDetail.findIndex(item => item.id === to.id)
+                    : index;
             let activeTrack = null;
             try {
                 activeTrack = await Player.getCurrentTrack();
@@ -692,36 +620,43 @@ export default function Page() {
                                         onPlay={() => handlePlay()}
                                     />
                                     {/* 搜索输入框 */}
-                                    <View className="px-4 pb-4">
-                                        <Input className="bg-background-50">
-                                            <InputSlot className="pl-3">
-                                                <Text className="text-typography-500 text-base">🔍</Text>
-                                            </InputSlot>
-                                            <InputField
-                                                placeholder="搜索歌曲或作者..."
-                                                value={searchQuery}
-                                                onChangeText={setSearchQuery}
-                                                className="flex-1"
-                                            />
-                                            {searchQuery.length > 0 && (
-                                                <InputSlot className="pr-3">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="xs"
-                                                        onPress={() => setSearchQuery("")}
-                                                        className="p-1"
-                                                    >
-                                                        <Text className="text-typography-500 text-sm">✕</Text>
-                                                    </Button>
+                                    {(playlistDetail?.length || 0) > 0 && (
+                                        <View className="px-4 pb-2">
+                                            <Input className="rounded-xl" size="lg">
+                                                <InputSlot className="pl-4">
+                                                    <Monicon name="fa6-solid:filter" size={16} color={colorValue("--color-primary-500")} />
                                                 </InputSlot>
+                                                <InputField
+                                                    placeholder="过滤歌曲或作者……"
+                                                    value={searchQuery}
+                                                    onChangeText={setSearchQuery}
+                                                    className="flex-1 text-sm px-3"
+                                                    placeholderTextColor="rgba(0,0,0,0.4)"
+                                                />
+                                                {searchQuery.length > 0 && (
+                                                    <InputSlot
+                                                    className="h-12 px-3 items-center justify-center"
+                                                    onPress={() => {
+                                                        setSearchQuery("");
+                                                    }}
+                                                >
+                                                    <Monicon
+                                                        name="fa6-solid:xmark"
+                                                        size={20}
+                                                        color={colorValue("--color-typography-700")}
+                                                    />
+                                                </InputSlot>
+                                                )}
+                                            </Input>
+                                            {searchQuery.trim() && (
+                                                <View className="flex-row items-center justify-between mt-3 px-1">
+                                                    <Text className="text-sm text-typography-500">
+                                                        过滤后有 {filteredPlaylistDetail.length} 首歌曲
+                                                    </Text>
+                                                </View>
                                             )}
-                                        </Input>
-                                        {searchQuery.trim() && (
-                                            <Text className="text-sm text-typography-500 mt-2 px-1">
-                                                找到 {filteredPlaylistDetail.length} 首歌曲
-                                            </Text>
-                                        )}
-                                    </View>
+                                        </View>
+                                    )}
                                 </View>
                             }
                         />
