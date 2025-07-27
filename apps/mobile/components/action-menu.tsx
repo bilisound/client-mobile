@@ -4,6 +4,7 @@ import { Monicon } from "@monicon/native";
 import React from "react";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { useWindowSize } from "~/hooks/useWindowSize";
+import { breakpoints } from "~/constants/styles";
 
 export interface ActionMenuItem {
     show?: boolean;
@@ -35,10 +36,10 @@ export function ActionMenu({ menuItems }: ActionSheetProps) {
 
     // Web 可以直接用 CSS Grid 实现网格布局，但是 Native 目前还需要用 flex 模拟
     if (Platform.OS === "web") {
-        return <View className={"w-full grid grid-cols-1 md:grid-cols-2"}>{elArray}</View>;
+        return <View className={"w-full grid grid-cols-1 sm:grid-cols-2"}>{elArray}</View>;
     }
 
-    if (width >= 768) {
+    if (width >= breakpoints.sm) {
         // Group elArray into 2 columns
         const groupedArray = [];
         for (let i = 0; i < elArray.length; i += 2) {

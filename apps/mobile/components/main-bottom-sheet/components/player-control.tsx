@@ -53,12 +53,12 @@ export function PlayerControl() {
         }, 250);
     }
 
-    const isHorizontal = width >= breakpoints.md;
+    const isHorizontal = width >= breakpoints.sm;
 
     return (
         // iOS 下播放界面横屏布局问题的 workaround
         // 新增：key={isHorizontal} 以确保在横屏切换时重新渲染
-        <View className={"flex-col md:flex-row p-safe"} style={{ width, height }} key={`${isHorizontal}`}>
+        <View className={"flex-col sm:flex-row p-safe"} style={{ width, height }} key={`${isHorizontal}`}>
             <View className={"absolute z-10"} style={{ left: 10 + left, top: 10 + top }}>
                 <LayoutButton
                     iconName={"fa6-solid:angle-down"}
@@ -87,13 +87,13 @@ export function PlayerControl() {
             <TabsPrimitive.Root
                 value={value}
                 onValueChange={setValue as Dispatch<SetStateAction<string>>}
-                className={"flex-1 md:flex-row"}
+                className={"flex-1 sm:flex-row"}
             >
-                <View className={"items-center p-3 " + "md:justify-center"}>
+                <View className={"items-center p-3 " + "sm:justify-center"}>
                     <TabsPrimitive.List
                         className={
                             "flex-0 w-48 h-10 flex-row items-center justify-center rounded-md bg-background-100 px-1 py-0 " +
-                            "md:w-10 md:h-56 md:flex-col md:px-0 md:py-1"
+                            "sm:w-10 sm:h-56 sm:flex-col sm:px-0 sm:py-1"
                         }
                     >
                         {TABS.map(tab => (
@@ -101,8 +101,8 @@ export function PlayerControl() {
                                 key={tab.value}
                                 value={tab.value}
                                 className={
-                                    "flex-1 items-center justify-center rounded-sm max-md:h-8 px-3 py-0 " +
-                                    "md:w-8 md:px-0 md:py-3 " +
+                                    "flex-1 items-center justify-center rounded-sm max-sm:h-8 px-3 py-0 " +
+                                    "sm:w-8 sm:px-0 sm:py-3 " +
                                     (value === tab.value ? "bg-background-0" : "")
                                 }
                                 style={{ boxShadow: value === tab.value ? shadow["sm"] : undefined }}
@@ -110,7 +110,7 @@ export function PlayerControl() {
                             >
                                 <Text
                                     className={
-                                        "text-sm font-medium md:leading-tight " +
+                                        "text-sm font-medium sm:leading-tight " +
                                         (value === tab.value ? "text-typography-700" : "text-typography-500")
                                     }
                                 >
@@ -131,7 +131,7 @@ export function PlayerControl() {
             {/* 右侧：播放控制 */}
             <View
                 className={
-                    "@container flex-0 basis-auto md:flex-1 md:justify-center gap-3 @sm:gap-4 " +
+                    "@container flex-0 basis-auto sm:flex-1 sm:justify-center gap-3 @sm:gap-4 " +
                     DEBUG_COLOR[0]
                 }
             >

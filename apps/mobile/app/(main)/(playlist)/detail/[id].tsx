@@ -612,7 +612,7 @@ export default function Page() {
                             ListHeaderComponent={
                                 <View>
                                     <Header
-                                        className={"flex md:hidden px-4 pb-4"}
+                                        className={"flex sm:hidden px-4 pb-4"}
                                         meta={meta}
                                         detail={playlistDetail}
                                         images={extractAndProcessImgUrls(playlistDetail || [])}
@@ -717,7 +717,7 @@ export default function Page() {
                                         aria-label={"删除"}
                                     >
                                         <ButtonMonIcon name={"fa6-solid:trash"} />
-                                        <ButtonText className={"hidden md:flex"}>删除</ButtonText>
+                                        <ButtonText className={"hidden sm:flex"}>删除</ButtonText>
                                     </Button>
                                 </ButtonOuter>
                             )}

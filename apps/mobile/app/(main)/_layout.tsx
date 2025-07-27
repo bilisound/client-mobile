@@ -25,15 +25,24 @@ type TabTriggerChildProps = TabTriggerSlotProps & {
     title: string;
 };
 
-const TabTriggerChild = ({ isFocused, onPress, iconName, title, style, className, ref, ...props }: TabTriggerChildProps & { ref?: React.Ref<View> }) => {
+const TabTriggerChild = ({
+    isFocused,
+    onPress,
+    iconName,
+    title,
+    style,
+    className,
+    ref,
+    ...props
+}: TabTriggerChildProps & { ref?: React.Ref<View> }) => {
     const { colorValue } = useRawThemeValues();
 
     return (
         <Pressable
             onPress={onPress}
             className={
-                "{}-[android_ripple.color]/color:color-background-200 max-md:flex-1 md:basis-auto h-16 gap-2 w-full flex-col items-center justify-center " +
-                "md:w-16 " +
+                "{}-[android_ripple.color]/color:color-background-200 max-sm:flex-1 sm:basis-auto h-16 gap-2 w-full flex-col items-center justify-center " +
+                "sm:w-16 " +
                 "xl:flex-row xl:gap-3 xl:h-12 xl:justify-start xl:px-5 xl:w-56 xl:rounded-full " +
                 (isFocused ? "xl:bg-background-0" : "")
             }
@@ -105,7 +114,7 @@ function CurrentPlayingTablet() {
 
     return (
         <View
-            className={"hidden absolute left-safe bottom-safe w-16 xl:w-64 items-center " + " md:flex" + " xl:flex-row"}
+            className={"hidden absolute left-safe bottom-safe w-16 xl:w-64 items-center " + " sm:flex" + " xl:flex-row"}
         >
             <View className={"w-16 h-10 items-center xl:hidden"}>
                 <ButtonOuter>
@@ -195,7 +204,7 @@ function CurrentPlaying() {
         <View
             className={
                 "bg-background-50 w-full h-16 border-b border-typography-700/10 flex-row items-center pr-3 gap-3 " +
-                "md:hidden"
+                "sm:hidden"
             }
             // onLayout={e => console.log(e.nativeEvent.layout)}
         >
@@ -250,7 +259,7 @@ export default function TabLayout() {
 
     return (
         <TabSafeAreaContext.Provider value={edgeInsetsTab}>
-            <Tabs className={"md:flex-row-reverse"}>
+            <Tabs className={"sm:flex-row-reverse"}>
                 <View className={"flex-1"}>
                     <TabSlot />
                 </View>
@@ -258,11 +267,11 @@ export default function TabLayout() {
                 <TabList
                     className={
                         "flex-0 basis-auto pl-safe pr-safe pb-safe !flex-row !justify-around bg-background-50 " +
-                        "max-md:w-full md:h-full md:!flex-col md:pl-safe md:pr-0 md:pt-safe md:!justify-start " +
+                        "max-sm:w-full sm:h-full sm:!flex-col sm:pl-safe sm:pr-0 sm:pt-safe sm:!justify-start " +
                         "xl:w-64 xl:items-center"
                     }
                 >
-                    <View className={"hidden md:flex h-3 xl:h-4"} aria-hidden={true} />
+                    <View className={"hidden sm:flex h-3 xl:h-4"} aria-hidden={true} />
                     <TabTrigger asChild name="playlist" href="/(main)/(playlist)/playlist">
                         <TabTriggerChild iconName={"fa6-solid:list"} title={"歌单"} />
                     </TabTrigger>
