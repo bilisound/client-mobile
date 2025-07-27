@@ -1,10 +1,15 @@
-import "ts-node/register";
+import "tsx/cjs";
 import { ExpoConfig, ConfigContext } from "expo/config";
+import { merge } from "lodash";
 
 import packageJson from "./package.json";
 import { BRAND } from "./constants/branding";
 
-export default ({ config }: ConfigContext): ExpoConfig => ({
+type Env = "development" | "production";
+
+const env: Env = process.env.APP_ENV as Env;
+
+const baseConfig: ExpoConfig = {
     name: "Bilisound",
     slug: "bilisound-client-mobile",
     version: packageJson.version,
@@ -96,4 +101,24 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             origin: false,
         },
     },
-});
+};
+
+export default ({ config }: ConfigContext): ExpoConfig => {
+    if (!env) {
+        throw new Error("Please configure APP_ENV before processing!");
+    }
+    let dynamicConfig: Partial<ExpoConfig> = {};
+    if (env === "development") {
+        dynamicConfig = {
+            name: "Bilisound Dev",
+            ios: {
+                bundleIdentifier: "moe.bilisound.app.dev",
+            },
+            android: {
+                package: "moe.bilisound.app.dev",
+            },
+        };
+    }
+
+    return merge(baseConfig, dynamicConfig);
+};
