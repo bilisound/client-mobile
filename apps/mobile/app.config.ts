@@ -111,11 +111,16 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     if (env === "development") {
         dynamicConfig = {
             name: "Bilisound Dev",
+            icon: "./assets/images/icon-dev.png",
             ios: {
                 bundleIdentifier: "moe.bilisound.app.dev",
             },
             android: {
                 package: "moe.bilisound.app.dev",
+                adaptiveIcon: {
+                    foregroundImage: "./assets/images/adaptive-icon-dev.png",
+                    backgroundColor: "#e79797",
+                },
             },
         };
     }
