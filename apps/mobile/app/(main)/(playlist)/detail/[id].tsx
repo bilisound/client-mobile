@@ -347,7 +347,7 @@ function LongPressActions({ showActionSheet, onAction, onClose, current }: LongP
 export default function Page() {
     const queryClient = useQueryClient();
     const tabSafeAreaEdgeInsets = useTabSafeAreaInsets();
-    const {colorValue} = useRawThemeValues();
+    const { colorValue } = useRawThemeValues();
     const { id } = useLocalSearchParams<{ id: string }>();
 
     const [, setPlaylistOnQueue] = usePlaylistOnQueue();
@@ -545,6 +545,38 @@ export default function Page() {
     const [showActionSheet, setShowActionSheet] = useState(false);
     // const [showSelectActionSheet, setShowSelectActionSheet] = useState(false);
 
+    const listArea = (playlistDetail?.length || 0) > 0 && (
+        <View className="px-4 pb-2">
+            <Input className="rounded-xl">
+                <InputSlot className="pl-4">
+                    <Monicon name="fa6-solid:filter" size={16} color={colorValue("--color-primary-500")} />
+                </InputSlot>
+                <InputField
+                    placeholder="过滤歌曲或作者……"
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                    className="flex-1 text-sm px-3"
+                    placeholderTextColor="rgba(0,0,0,0.4)"
+                />
+                {searchQuery.length > 0 && (
+                    <InputSlot
+                        className="h-12 px-3 items-center justify-center"
+                        onPress={() => {
+                            setSearchQuery("");
+                        }}
+                    >
+                        <Monicon name="fa6-solid:xmark" size={20} color={colorValue("--color-typography-700")} />
+                    </InputSlot>
+                )}
+            </Input>
+            {searchQuery.trim() && (
+                <View className="flex-row items-center justify-between mt-3 px-1">
+                    <Text className="text-sm text-typography-500">过滤后有 {filteredPlaylistDetail.length} 首歌曲</Text>
+                </View>
+            )}
+        </View>
+    );
+
     return (
         <Layout
             title={"查看详情"}
@@ -620,43 +652,7 @@ export default function Page() {
                                         onPlay={() => handlePlay()}
                                     />
                                     {/* 搜索输入框 */}
-                                    {(playlistDetail?.length || 0) > 0 && (
-                                        <View className="px-4 pb-2">
-                                            <Input className="rounded-xl" size="lg">
-                                                <InputSlot className="pl-4">
-                                                    <Monicon name="fa6-solid:filter" size={16} color={colorValue("--color-primary-500")} />
-                                                </InputSlot>
-                                                <InputField
-                                                    placeholder="过滤歌曲或作者……"
-                                                    value={searchQuery}
-                                                    onChangeText={setSearchQuery}
-                                                    className="flex-1 text-sm px-3"
-                                                    placeholderTextColor="rgba(0,0,0,0.4)"
-                                                />
-                                                {searchQuery.length > 0 && (
-                                                    <InputSlot
-                                                    className="h-12 px-3 items-center justify-center"
-                                                    onPress={() => {
-                                                        setSearchQuery("");
-                                                    }}
-                                                >
-                                                    <Monicon
-                                                        name="fa6-solid:xmark"
-                                                        size={20}
-                                                        color={colorValue("--color-typography-700")}
-                                                    />
-                                                </InputSlot>
-                                                )}
-                                            </Input>
-                                            {searchQuery.trim() && (
-                                                <View className="flex-row items-center justify-between mt-3 px-1">
-                                                    <Text className="text-sm text-typography-500">
-                                                        过滤后有 {filteredPlaylistDetail.length} 首歌曲
-                                                    </Text>
-                                                </View>
-                                            )}
-                                        </View>
-                                    )}
+                                    {listArea}
                                 </View>
                             }
                         />
