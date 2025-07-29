@@ -9,10 +9,10 @@
 	},
 	"dependencies": {
 		"@bilisound/sdk": "workspace:*",
-		"itty-router": "^5.0.18"
+		"itty-router": "^5.0.20"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20250705.0",
-		"wrangler": "^4.23.0"
+		"@cloudflare/workers-types": "^4.20250726.0",
+		"wrangler": "^4.26.1"
 	}
 }
