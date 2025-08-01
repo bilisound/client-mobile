@@ -182,10 +182,10 @@ export default function bilisound(router: RouterType) {
     router.get("/api/internal/transfer-list/:id", async (request, env) => {});
 
     router.get("/api/internal/app/update", async (request, env) => {
-        const arch = request.query.arch;
+        let arch = request.query.arch;
         const nightly = request.query.nightly;
         if (typeof arch !== "string") {
-            return ajaxError("bad param", 400);
+            arch = "android";
         }
 
         // 未来可能会增加其它的 arch，但是目前先只判断 android
