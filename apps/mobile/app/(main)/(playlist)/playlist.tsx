@@ -301,7 +301,6 @@ export default function Page() {
                             onRefresh={() => refetch()}
                             data={data}
                             renderItem={e => <PlaylistActionItem grid={showPlaylistInGrid} {...e.item} />}
-                            estimatedItemSize={showPlaylistInGrid ? columnHeight : 80}
                             numColumns={columns}
                             onLayout={e => {
                                 setWidth(e.nativeEvent.layout.width);

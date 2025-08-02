@@ -529,7 +529,6 @@ export default function Page() {
                                 scrollIndicatorInsets={{
                                     bottom: Number.MIN_VALUE,
                                 }}
-                                estimatedItemSize={64}
                                 contentContainerStyle={contentContainerStyle}
                                 ListHeaderComponent={<MetaData data={data} className={"flex md:hidden px-4 pb-4"} />}
                                 renderItem={e => (

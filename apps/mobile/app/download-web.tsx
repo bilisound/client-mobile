@@ -35,7 +35,6 @@ export default function Page() {
                         </Text>
                     </View>
                     <FlashList
-                        estimatedItemSize={48}
                         renderItem={({ item }) => (
                             <a
                                 className={"flex flex-row items-center gap-3 px-3 h-12 hover:bg-background-50"}

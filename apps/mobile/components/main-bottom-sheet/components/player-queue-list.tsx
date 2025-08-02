@@ -19,7 +19,6 @@ export function PlayerQueueList() {
     return (
         <View className={"pb-2 md:py-0 flex-1"}>
             <FlashListComponent
-                estimatedItemSize={64}
                 data={queue}
                 className={"md:py-2.5"}
                 renderItem={({ item, index }) => (

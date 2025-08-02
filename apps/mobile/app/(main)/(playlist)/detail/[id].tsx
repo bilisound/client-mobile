@@ -640,7 +640,6 @@ export default function Page() {
                                     isChecked={selected.has(index)}
                                 />
                             )}
-                            estimatedItemSize={64}
                             ListHeaderComponent={
                                 <View>
                                     <Header

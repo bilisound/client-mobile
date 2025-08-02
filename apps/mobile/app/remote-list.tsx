@@ -19,8 +19,7 @@ import { FlashList } from "@shopify/flash-list";
 import { VideoItem } from "~/components/video-item";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import Toast from "react-native-toast-message";
-import { GetEpisodeUserResponse } from "@bilisound/sdk";
-import { UserListMode } from "@bilisound/sdk";
+import { GetEpisodeUserResponse, UserListMode } from "@bilisound/sdk";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { DualScrollView } from "~/components/dual-scroll-view";
 
@@ -179,7 +178,6 @@ export default function Page() {
                             scrollIndicatorInsets={{
                                 bottom: Number.MIN_VALUE,
                             }}
-                            estimatedItemSize={64}
                             contentContainerStyle={{
                                 ...contentContainerStyle,
                             }}

@@ -111,7 +111,6 @@ export default function Page() {
                 </ButtonOuter>
             </View>
             <FlashList
-                estimatedItemSize={64}
                 data={displayList}
                 renderItem={e => <DownloadEntry item={e.item} />}
                 ListFooterComponent={

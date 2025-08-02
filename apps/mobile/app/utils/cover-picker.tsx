@@ -114,7 +114,6 @@ export default function CoverPicker() {
                     }}
                     data={data ?? []}
                     numColumns={columns}
-                    estimatedItemSize={columnHeight}
                 ></FlashList>
             </View>
             <View className={"p-2 gap-2"}>

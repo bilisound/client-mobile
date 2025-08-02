@@ -2,7 +2,7 @@ import useHistoryStore from "~/store/history";
 import { Layout, LayoutButton } from "~/components/layout";
 import { FlashList } from "@shopify/flash-list";
 import { VideoItem } from "~/components/video-item";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getImageProxyUrl } from "~/business/constant-helper";
@@ -17,7 +17,6 @@ import {
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { Heading } from "~/components/ui/heading";
-import React from "react";
 import Toast from "react-native-toast-message";
 import { View } from "react-native";
 
@@ -113,7 +112,6 @@ export default function Page() {
                         );
                     }}
                     data={historyList}
-                    estimatedItemSize={72}
                 />
             ) : (
                 <View className={"flex-1 items-center justify-center gap-4"}>

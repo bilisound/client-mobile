@@ -61,7 +61,6 @@ export default function Page() {
         >
             <FlashList
                 contentContainerStyle={{ paddingBottom: edgeInsets.bottom }}
-                estimatedItemSize={72}
                 ListFooterComponent={
                     <Text
                         className="text-sm px-5 opacity-60 pt-4 text-center"

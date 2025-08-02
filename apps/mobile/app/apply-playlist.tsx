@@ -136,7 +136,6 @@ export default function Page() {
                     return <PlaylistItem item={item.item} onPress={() => handleAddToPlaylist(item.item.id)} />;
                 }}
                 data={data}
-                estimatedItemSize={86}
             />
         </Layout>
     );
