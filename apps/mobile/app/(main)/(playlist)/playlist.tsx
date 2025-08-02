@@ -1,31 +1,23 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { deletePlaylistMeta, getPlaylistMetas } from "~/storage/sqlite/playlist";
-import { Layout, LayoutButton } from "~/components/layout";
-import React, { createContext, useContext, useState } from "react";
-import { FlashList } from "@shopify/flash-list";
-import { PlaylistItem } from "~/components/playlist-item";
-import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
 import { Monicon } from "@monicon/native";
-import { Box } from "~/components/ui/box";
-import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
-import { exportPlaylistToFile, importPlaylistFromFile } from "~/utils/exchange/playlist";
+import { FlashList } from "@shopify/flash-list";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { router } from "expo-router";
+import Fuse from "fuse.js";
+import React, { createContext, useContext, useMemo, useState } from "react";
+import { View } from "react-native";
+import Toast from "react-native-toast-message";
+import { getImageProxyUrl } from "~/business/constant-helper";
+import { ActionMenu, ActionMenuItem } from "~/components/action-menu"; // Fixing the import path for ActionMenu and ActionMenuItem components
+import { ActionSheetCurrent } from "~/components/action-sheet-current";
+import { Layout, LayoutButton } from "~/components/layout";
+import { PlaylistItem } from "~/components/playlist-item";
 import {
     Actionsheet,
     ActionsheetBackdrop,
     ActionsheetContent,
     ActionsheetDragIndicator,
     ActionsheetDragIndicatorWrapper,
-    ActionsheetItem,
-    ActionsheetItemText,
 } from "~/components/ui/actionsheet";
-import { Text } from "~/components/ui/text";
-import { PlaylistMeta } from "~/storage/sqlite/schema";
-import { View } from "react-native";
-import { useConfirm } from "~/hooks/useConfirm";
-import log from "~/utils/logger";
-import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
-import Toast from "react-native-toast-message";
-import { router } from "expo-router";
 import {
     AlertDialog,
     AlertDialogBackdrop,
@@ -34,14 +26,22 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
 } from "~/components/ui/alert-dialog";
-import { Heading } from "~/components/ui/heading";
+import { Box } from "~/components/ui/box";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
-import { ActionSheetCurrent } from "~/components/action-sheet-current";
-import { getImageProxyUrl } from "~/business/constant-helper";
-import useSettingsStore from "~/store/settings";
+import { Heading } from "~/components/ui/heading";
+import { Input, InputField, InputSlot } from "~/components/ui/input";
+import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
+import { Text } from "~/components/ui/text";
+import { useConfirm } from "~/hooks/useConfirm";
+import { useTabSafeAreaInsets } from "~/hooks/useTabSafeAreaInsets";
 import { useWindowSize } from "~/hooks/useWindowSize";
-import { ActionMenu, ActionMenuItem } from "~/components/action-menu"; // Fixing the import path for ActionMenu and ActionMenuItem components
+import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
+import { deletePlaylistMeta, getPlaylistMetas } from "~/storage/sqlite/playlist";
+import { PlaylistMeta } from "~/storage/sqlite/schema";
+import useSettingsStore from "~/store/settings";
+import { exportPlaylistToFile, importPlaylistFromFile } from "~/utils/exchange/playlist";
+import log from "~/utils/logger";
 
 interface PlaylistContextProps {
     onLongPress: (id: number) => void;
@@ -84,7 +84,6 @@ interface LongPressActionsProps {
  * 长按操作
  */
 function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
-    const { colorValue } = useRawThemeValues();
     const showEditCover = !displayTrack?.source;
 
     const menuItems: ActionMenuItem[] = [
@@ -153,6 +152,7 @@ function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: 
 export default function Page() {
     const edgeInsets = useTabSafeAreaInsets();
     const queryClient = useQueryClient();
+    const { colorValue } = useRawThemeValues();
     const { data, refetch, isLoading } = useQuery({
         queryKey: ["playlist_meta"],
         queryFn: () => getPlaylistMetas(),
@@ -166,6 +166,33 @@ export default function Page() {
             await refetch();
         }
     };
+
+    // 搜索过滤功能
+    const [searchQuery, setSearchQuery] = useState("");
+
+    // 创建 Fuse 实例
+    const fuse = useMemo(() => {
+        if (!data || data.length === 0) return null;
+        return new Fuse(data, {
+            keys: [
+                { name: "title", weight: 0.7 },
+                { name: "description", weight: 0.3 },
+            ],
+            threshold: 0.3, // 模糊匹配阈值，0.3 表示相对宽松的匹配
+            includeScore: true,
+            ignoreFieldNorm: true,
+            ignoreLocation: true,
+        });
+    }, [data]);
+
+    // 过滤后的播放列表数据
+    const filteredData = useMemo(() => {
+        if (!data) return [];
+        if (!searchQuery.trim() || !fuse) return data;
+
+        const results = fuse.search(searchQuery.trim());
+        return results.map(result => result.item);
+    }, [data, searchQuery, fuse]);
 
     // 布局管理
     const windowDimensions = useWindowSize();
@@ -184,7 +211,6 @@ export default function Page() {
         toggle: state.toggle,
     }));
     const columns = showPlaylistInGrid ? Math.max(Math.floor(windowWidth / 200), 2) : windowWidth > 1024 ? 2 : 1;
-    const columnHeight = windowWidth / columns + 72;
     const gridSidePadding = windowWidth >= 448 ? 12 : 8;
     const [width, setWidth] = useState(0);
 
@@ -294,12 +320,55 @@ export default function Page() {
                 }
             >
                 <View className={"flex-1 @container"}>
+                    {/* 搜索过滤组件 */}
+                    {(data || []).length > 0 && (
+                        <View className="px-4 pb-2">
+                            <Input className="rounded-xl">
+                                <InputSlot className="pl-4">
+                                    <Monicon
+                                        name="fa6-solid:filter"
+                                        size={16}
+                                        color={colorValue("--color-primary-500")}
+                                    />
+                                </InputSlot>
+                                <InputField
+                                    placeholder="过滤歌单标题或描述……"
+                                    value={searchQuery}
+                                    onChangeText={setSearchQuery}
+                                    className="flex-1 text-sm px-3"
+                                    placeholderTextColor="rgba(0,0,0,0.4)"
+                                />
+                                {searchQuery.length > 0 && (
+                                    <InputSlot
+                                        className="h-12 px-3 items-center justify-center"
+                                        onPress={() => {
+                                            setSearchQuery("");
+                                        }}
+                                    >
+                                        <Monicon
+                                            name="fa6-solid:xmark"
+                                            size={20}
+                                            color={colorValue("--color-typography-700")}
+                                        />
+                                    </InputSlot>
+                                )}
+                            </Input>
+                            {searchQuery.trim() && (
+                                <View className="flex-row items-center justify-between mt-3 px-1">
+                                    <Text className="text-sm text-typography-500">
+                                        过滤后有 {filteredData.length} 个歌单
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+                    )}
+
                     {/* 不能用 ListEmptyComponent 做空内容提示的原因：https://github.com/Shopify/flash-list/issues/848 */}
                     {(data || []).length > 0 ? (
                         <FlashList
                             refreshing={isLoading}
                             onRefresh={() => refetch()}
-                            data={data}
+                            data={filteredData}
                             renderItem={e => <PlaylistActionItem grid={showPlaylistInGrid} {...e.item} />}
                             numColumns={columns}
                             onLayout={e => {
@@ -309,7 +378,7 @@ export default function Page() {
                                 paddingBottom: edgeInsets.bottom,
                                 paddingHorizontal: showPlaylistInGrid ? gridSidePadding : 0,
                             }}
-                            extraData={showPlaylistInGrid}
+                            extraData={[showPlaylistInGrid, searchQuery]}
                         />
                     ) : (
                         <View className={"flex-1 items-center justify-center gap-4"}>
