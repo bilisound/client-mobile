@@ -365,21 +365,22 @@ export default function Page() {
 
                     {/* 不能用 ListEmptyComponent 做空内容提示的原因：https://github.com/Shopify/flash-list/issues/848 */}
                     {(data || []).length > 0 ? (
-                        <FlashList
-                            refreshing={isLoading}
-                            onRefresh={() => refetch()}
-                            data={filteredData}
-                            renderItem={e => <PlaylistActionItem grid={showPlaylistInGrid} {...e.item} />}
-                            numColumns={columns}
-                            onLayout={e => {
-                                setWidth(e.nativeEvent.layout.width);
-                            }}
-                            contentContainerStyle={{
-                                paddingBottom: edgeInsets.bottom,
-                                paddingHorizontal: showPlaylistInGrid ? gridSidePadding : 0,
-                            }}
-                            extraData={[showPlaylistInGrid, searchQuery]}
-                        />
+                        <View style={{ paddingHorizontal: showPlaylistInGrid ? gridSidePadding : 0, flex: 1 }}>
+                            <FlashList
+                                refreshing={isLoading}
+                                onRefresh={() => refetch()}
+                                data={filteredData}
+                                renderItem={e => <PlaylistActionItem grid={showPlaylistInGrid} {...e.item} />}
+                                numColumns={columns}
+                                onLayout={e => {
+                                    setWidth(e.nativeEvent.layout.width);
+                                }}
+                                contentContainerStyle={{
+                                    paddingBottom: edgeInsets.bottom,
+                                }}
+                                extraData={[showPlaylistInGrid, searchQuery]}
+                            />
+                        </View>
                     ) : (
                         <View className={"flex-1 items-center justify-center gap-4"}>
                             <Text className={"leading-normal text-sm font-semibold color-typography-500"}>
