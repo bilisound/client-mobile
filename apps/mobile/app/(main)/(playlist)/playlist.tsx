@@ -1,10 +1,9 @@
 import { Monicon } from "@monicon/native";
-import { FlashList } from "@shopify/flash-list";
+import { FlatList, View } from "react-native";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import Fuse from "fuse.js";
 import React, { createContext, useContext, useMemo, useState } from "react";
-import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import { getImageProxyUrl } from "~/business/constant-helper";
 import { ActionMenu, ActionMenuItem } from "~/components/action-menu"; // Fixing the import path for ActionMenu and ActionMenuItem components
@@ -363,22 +362,24 @@ export default function Page() {
                         </View>
                     )}
 
-                    {/* 不能用 ListEmptyComponent 做空内容提示的原因：https://github.com/Shopify/flash-list/issues/848 */}
                     {(data || []).length > 0 ? (
-                        <View style={{ paddingHorizontal: showPlaylistInGrid ? gridSidePadding : 0, flex: 1 }}>
-                            <FlashList
+                        <View style={{ flex: 1 }}>
+                            <FlatList
+                                key={columns}
                                 refreshing={isLoading}
                                 onRefresh={() => refetch()}
                                 data={filteredData}
-                                renderItem={e => <PlaylistActionItem grid={showPlaylistInGrid} {...e.item} />}
+                                renderItem={({ item }) => <PlaylistActionItem grid={showPlaylistInGrid} {...item} />}
                                 numColumns={columns}
                                 onLayout={e => {
                                     setWidth(e.nativeEvent.layout.width);
                                 }}
                                 contentContainerStyle={{
+                                    paddingHorizontal: showPlaylistInGrid ? gridSidePadding : 0,
                                     paddingBottom: edgeInsets.bottom,
                                 }}
                                 extraData={[showPlaylistInGrid, searchQuery]}
+                                keyExtractor={item => item.id.toString()}
                             />
                         </View>
                     ) : (
