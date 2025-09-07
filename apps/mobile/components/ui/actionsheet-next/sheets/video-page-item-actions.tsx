@@ -1,31 +1,24 @@
 "use client";
 import React from "react";
-import ActionSheet, { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
 import { View } from "react-native";
+import ActionSheet, { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
+import { getImageProxyUrl } from "~/business/constant-helper";
+import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import {
   ActionsheetContent,
   ActionsheetDragIndicator,
   ActionsheetDragIndicatorWrapper,
 } from "~/components/ui/actionsheet-next";
-import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { ActionMenuNext, type ActionMenuItem } from "~/components/ui/actionsheet-next/menu";
-import { getImageProxyUrl } from "~/business/constant-helper";
-import type { GetMetadataResponse } from "@bilisound/sdk";
-import { formatSecond } from "~/utils/datetime";
 import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
+import { formatSecond } from "~/utils/datetime";
 
-type PageItem = GetMetadataResponse["pages"][number];
+// Types are provided via actionsheet-types.d.ts module augmentation
 
-type Payload = {
-  displayTrack: PageItem;
-  data: GetMetadataResponse;
-  onAction: (action: "addPlaylist" | "addPlaylistRecent" | "close") => void;
-};
-
-const SHEET_ID = "video-page-item-actions";
+const SHEET_ID = "video-page-item-actions" as const;
 
 function VideoPageItemActionsSheet() {
-  const payload = useSheetPayload() as Payload | undefined;
+  const payload = useSheetPayload<typeof SHEET_ID>();
   const displayTrack = payload?.displayTrack;
   const data = payload?.data;
 

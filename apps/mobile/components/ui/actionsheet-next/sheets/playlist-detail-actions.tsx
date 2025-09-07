@@ -1,23 +1,18 @@
 "use client";
 import React from "react";
-import ActionSheet, { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
 import { View } from "react-native";
+import ActionSheet, { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
 import {
   ActionsheetContent,
   ActionsheetDragIndicator,
   ActionsheetDragIndicatorWrapper,
 } from "~/components/ui/actionsheet-next";
 import { ActionMenuNext, type ActionMenuItem } from "~/components/ui/actionsheet-next/menu";
-import type { PlaylistMeta } from "~/storage/sqlite/schema";
 
-type Payload = {
-  current: PlaylistMeta;
-};
-
-const SHEET_ID = "playlist-detail-actions";
+const SHEET_ID = "playlist-detail-actions" as const;
 
 function PlaylistDetailActionsSheet() {
-  const payload = useSheetPayload() as Payload | undefined;
+  const payload = useSheetPayload<typeof SHEET_ID>();
   const current = payload?.current;
   const showEditCover = !current?.source;
 

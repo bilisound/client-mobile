@@ -21,7 +21,7 @@ export function PlayerControlMenu() {
   useEffect(() => {
     if (!showActionSheet) return;
     handleClose();
-    SheetManager.show<string>("player-control-menu").then(action => {
+    SheetManager.show("player-control-menu").then(action => {
       if (!currentTrack?.extendedData) return;
       switch (action) {
         case "view":

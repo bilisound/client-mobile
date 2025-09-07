@@ -81,7 +81,7 @@ export function PlayerControl() {
         <LayoutButton
           iconName={"fa6-solid:ellipsis-vertical"}
           onPress={() => {
-            SheetManager.show<string>("player-control-menu").then(action => {
+            SheetManager.show("player-control-menu").then(action => {
               if (!currentTrack?.extendedData) return;
               switch (action) {
                 case "view": {

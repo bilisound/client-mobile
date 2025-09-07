@@ -1,27 +1,23 @@
 "use client";
-import React, { useContext } from "react";
-import ActionSheet, { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
+import { useCurrentTrack } from "@bilisound/player";
+import React from "react";
 import { View } from "react-native";
+import ActionSheet, { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
+import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import {
   ActionsheetContent,
   ActionsheetDragIndicator,
   ActionsheetDragIndicatorWrapper,
 } from "~/components/ui/actionsheet-next";
-import { ActionSheetCurrent } from "~/components/action-sheet-current";
-import { formatSecond } from "~/utils/datetime";
-import { useCurrentTrack } from "@bilisound/player";
-import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
 import { ActionMenuNext, type ActionMenuItem } from "~/components/ui/actionsheet-next/menu";
+import { useDownloadMenuItem } from "~/hooks/useDownloadMenuItem";
+import { formatSecond } from "~/utils/datetime";
 
-type Payload = {
-  // placeholder for future needs
-};
-
-const SHEET_ID = "player-control-menu";
+const SHEET_ID = "player-control-menu" as const;
 
 function PlayerControlMenuSheet() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const payload = useSheetPayload() as Payload | undefined;
+  const payload = useSheetPayload<typeof SHEET_ID>();
   const currentTrack = useCurrentTrack();
 
   const menuItems: ActionMenuItem[] = [

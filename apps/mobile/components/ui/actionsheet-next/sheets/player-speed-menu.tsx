@@ -1,17 +1,17 @@
 "use client";
 import React from "react";
-import ActionSheet, { registerSheet } from "react-native-actions-sheet";
 import { View } from "react-native";
+import ActionSheet, { registerSheet } from "react-native-actions-sheet";
+import { SpeedControlPanel } from "~/components/main-bottom-sheet/components/speed-control-panel";
+import { SPEED_PRESETS } from "~/components/main-bottom-sheet/constants";
 import {
   ActionsheetContent,
   ActionsheetDragIndicator,
   ActionsheetDragIndicatorWrapper,
 } from "~/components/ui/actionsheet-next";
-import { SPEED_PRESETS } from "~/components/main-bottom-sheet/constants";
 import { Button, ButtonOuter, ButtonText } from "~/components/ui/button";
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from "~/components/ui/checkbox";
 import { CheckIcon } from "~/components/ui/icon";
-import { SpeedControlPanel } from "~/components/main-bottom-sheet/components/speed-control-panel";
 import { Text } from "~/components/ui/text";
 import { usePlaybackSpeedStore } from "~/store/playback-speed";
 

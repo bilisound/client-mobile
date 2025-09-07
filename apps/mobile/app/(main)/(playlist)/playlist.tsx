@@ -136,7 +136,7 @@ export default function Page() {
   const handleLongPress = (id: number) => {
     const playlist = data?.find(e => e.id === id);
     if (!playlist) return;
-    SheetManager.show<string>("playlist-actions", { payload: { displayTrack: playlist } }).then(action => {
+    SheetManager.show("playlist-actions", { payload: { displayTrack: playlist } }).then(action => {
       switch (action) {
         case "delete":
           handleDelete(playlist);

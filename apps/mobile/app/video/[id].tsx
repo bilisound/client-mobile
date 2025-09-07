@@ -358,7 +358,7 @@ export default function Page() {
                   <SongItem
                     onRequestPlay={() => addTrackFromDetail(data!.bvid, e.item.page)}
                     onLongPress={() => {
-                      SheetManager.show<string>("video-page-item-actions", {
+                      SheetManager.show("video-page-item-actions", {
                         payload: { displayTrack: e.item, data: data! },
                       }).then(action => {
                         if (action === "addPlaylist") {

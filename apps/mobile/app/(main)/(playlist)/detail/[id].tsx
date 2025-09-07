@@ -522,7 +522,7 @@ export default function Page() {
           <LayoutButton
             iconName={"fa6-solid:ellipsis-vertical"}
             onPress={() => {
-              SheetManager.show<string>("playlist-detail-actions", {
+              SheetManager.show("playlist-detail-actions", {
                 payload: { current: meta },
               }).then(action => {
                 switch (action) {

@@ -1,33 +1,28 @@
 "use client";
+import { pause } from "@bilisound/player";
+import * as Clipboard from "expo-clipboard";
+import { router } from "expo-router";
 import React from "react";
+import { Platform, View } from "react-native";
 import ActionSheet, { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
-import { View, Platform } from "react-native";
+import Toast from "react-native-toast-message";
+import { getBilisoundResourceUrlOnline } from "~/api/bilisound";
+import { getImageProxyUrl } from "~/business/constant-helper";
+import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import {
   ActionsheetContent,
   ActionsheetDragIndicator,
   ActionsheetDragIndicatorWrapper,
 } from "~/components/ui/actionsheet-next";
-import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { ActionMenuNext, type ActionMenuItem } from "~/components/ui/actionsheet-next/menu";
-import { getImageProxyUrl } from "~/business/constant-helper";
-import type { GetMetadataResponse } from "@bilisound/sdk";
-import { pause } from "@bilisound/player";
-import * as Clipboard from "expo-clipboard";
-import Toast from "react-native-toast-message";
-import { router } from "expo-router";
 import useSettingsStore from "~/store/settings";
-import { getBilisoundResourceUrlOnline } from "~/api/bilisound";
-import { formatSecond } from "~/utils/datetime";
 
-type Payload = {
-  data: GetMetadataResponse;
-  onAction: (action: "addPlaylist") => void;
-};
+// Types are provided via actionsheet-types.d.ts module augmentation
 
-const SHEET_ID = "video-page-menu-actions";
+const SHEET_ID = "video-page-menu-actions" as const;
 
 function VideoPageMenuActionsSheet() {
-  const payload = useSheetPayload() as Payload | undefined;
+  const payload = useSheetPayload<typeof SHEET_ID>();
   const data = payload?.data;
 
   if (!data) return null;
