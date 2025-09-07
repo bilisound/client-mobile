@@ -18,6 +18,7 @@ import { PlayerProgressTimer } from "./player-progress-timer";
 import { PlayerControlButtons } from "./player-control-buttons";
 // import { PlayerControlMenu } from "./player-control-menu";
 import { SheetManager } from "react-native-actions-sheet";
+import { openAddPlaylistPage } from "~/business/playlist/misc";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useWindowSize } from "~/hooks/useWindowSize";
 
@@ -97,13 +98,25 @@ export function PlayerControl() {
                   break;
                 }
                 case "addPlaylist": {
-                  if (!isInsidePage) close();
-                  setTimeout(
-                    () => {
-                      router.navigate(`/video/${currentTrack.extendedData?.id}`);
-                    },
-                    isInsidePage ? 0 : 250,
-                  );
+                  if (!currentTrack?.extendedData) break;
+                  openAddPlaylistPage({
+                    name: currentTrack.title ?? "",
+                    description: "",
+                    playlistDetail: [
+                      {
+                        author: currentTrack.artist ?? "",
+                        bvid: currentTrack.extendedData?.id ?? "",
+                        duration: currentTrack.duration ?? 0,
+                        episode: currentTrack.extendedData?.episode ?? 1,
+                        title: currentTrack.title ?? "",
+                        imgUrl: currentTrack.extendedData?.artworkUrl ?? "",
+                        id: 0,
+                        playlistId: 0,
+                        extendedData: null,
+                      },
+                    ],
+                    cover: currentTrack.artworkUri ?? "",
+                  });
                   break;
                 }
                 case "speed":
