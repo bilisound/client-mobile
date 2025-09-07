@@ -46,15 +46,8 @@ import { QUEUE_IS_RANDOMIZED, QUEUE_PLAYING_MODE, queueStorage } from "~/storage
 import useMultiSelect from "~/hooks/useMultiSelect";
 import useApplyPlaylistStore from "~/store/apply-playlist";
 import { usePreventRemove } from "@react-navigation/native";
-import {
-  Actionsheet,
-  ActionsheetBackdrop,
-  ActionsheetContent,
-  ActionsheetDragIndicator,
-  ActionsheetDragIndicatorWrapper,
-} from "~/components/ui/actionsheet";
-import { ActionSheetCurrent } from "~/components/action-sheet-current";
-import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
+// import { ActionMenu, ActionMenuItem } from "~/components/action-menu";
+import { SheetManager } from "react-native-actions-sheet";
 import { DownloadButton } from "~/components/download-button";
 import { FEATURE_MASS_DOWNLOAD } from "~/constants/feature";
 import { useWindowSize } from "~/hooks/useWindowSize";
@@ -279,70 +272,7 @@ function Header({ meta, detail, images, onPlay, showPlayButton, className }: Hea
   );
 }
 
-interface LongPressActionsProps {
-  showActionSheet: boolean;
-  onClose: () => void;
-  onAction: (action: "editMeta" | "editCover" | "editMass" | "close") => void;
-  current?: PlaylistMeta;
-}
-
-function LongPressActions({ showActionSheet, onAction, onClose, current }: LongPressActionsProps) {
-  const showEditCover = !current?.source;
-
-  const menuItems: ActionMenuItem[] = [
-    {
-      show: true,
-      disabled: false,
-      icon: "fa6-solid:pen",
-      iconSize: 18,
-      text: "修改信息",
-      action: () => onAction("editMeta"),
-    },
-    {
-      show: showEditCover && (current?.amount ?? 0) > 0,
-      disabled: false,
-      icon: "fa6-solid:images",
-      iconSize: 18,
-      text: "修改封面",
-      action: () => onAction("editCover"),
-    },
-    {
-      show: true,
-      disabled: false,
-      icon: "fa6-solid:list-check",
-      iconSize: 18,
-      text: "批量管理",
-      action: () => onAction("editMass"),
-    },
-    {
-      show: true,
-      disabled: false,
-      icon: "fa6-solid:xmark",
-      iconSize: 20,
-      text: "取消",
-      action: () => onAction("close"),
-    },
-  ];
-
-  return (
-    <Actionsheet isOpen={showActionSheet} onClose={onClose} style={{ zIndex: 999 }}>
-      <ActionsheetBackdrop />
-      <ActionsheetContent style={{ zIndex: 999 }}>
-        <ActionsheetDragIndicatorWrapper>
-          <ActionsheetDragIndicator />
-        </ActionsheetDragIndicatorWrapper>
-        {!!current && (
-          <ActionSheetCurrent
-            line1={current.title}
-            line2={`${current.amount} 首歌曲`}
-            image={current?.imgUrl ? getImageProxyUrl(current.imgUrl) : undefined}
-          />
-        )}
-        <ActionMenu menuItems={menuItems} />
-      </ActionsheetContent>
-    </Actionsheet>
-  );
-}
+// LongPressActions replaced by SheetManager (playlist-detail-actions)
 
 export default function Page() {
   const queryClient = useQueryClient();
@@ -539,8 +469,7 @@ export default function Page() {
 
   const isDeleteButtonIcon = useWindowSize().width < 768;
 
-  // 菜单管理
-  const [showActionSheet, setShowActionSheet] = useState(false);
+  // 菜单管理：改用 SheetManager
   // const [showSelectActionSheet, setShowSelectActionSheet] = useState(false);
 
   const listArea = (playlistDetail?.length || 0) > 0 && (
@@ -593,7 +522,27 @@ export default function Page() {
           <LayoutButton
             iconName={"fa6-solid:ellipsis-vertical"}
             onPress={() => {
-              setShowActionSheet(true);
+              SheetManager.show("playlist-detail-actions", {
+                payload: {
+                  current: meta,
+                  onAction: action => {
+                    switch (action) {
+                      case "editMeta":
+                        router.push(`/(main)/(playlist)/meta/${id}`);
+                        break;
+                      case "editCover":
+                        router.push(`/utils/cover-picker?listId=${id}`);
+                        break;
+                      case "editMass":
+                        setEditing(true);
+                        break;
+                      case "close":
+                      default:
+                        break;
+                    }
+                  },
+                },
+              });
             }}
           />
         )
@@ -753,28 +702,7 @@ export default function Page() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <LongPressActions
-        onAction={action => {
-          setShowActionSheet(false);
-          switch (action) {
-            case "editMeta":
-              router.push(`/(main)/(playlist)/meta/${id}`);
-              break;
-            case "editCover":
-              router.push(`/utils/cover-picker?listId=${id}`);
-              break;
-            case "editMass":
-              setEditing(true);
-              break;
-            case "close":
-            default:
-              break;
-          }
-        }}
-        onClose={() => setShowActionSheet(false)}
-        showActionSheet={showActionSheet}
-        current={meta}
-      />
+      {/* 操作菜单改用 SheetManager（playlist-detail-actions） */}
 
       {/*<SelectActions
                 onAction={() => {}}

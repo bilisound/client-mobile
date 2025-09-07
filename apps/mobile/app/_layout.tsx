@@ -30,6 +30,9 @@ import { MainBottomSheet } from "~/components/main-bottom-sheet";
 import { SheetProvider } from "react-native-actions-sheet";
 // Register global ActionSheets (SheetManager)
 import "~/components/ui/actionsheet-next/sheets/playlist-actions";
+import "~/components/ui/actionsheet-next/sheets/playlist-detail-actions";
+import "~/components/ui/actionsheet-next/sheets/video-page-item-actions";
+import "~/components/ui/actionsheet-next/sheets/video-page-menu-actions";
 
 // todo 把它们放到主题管理模块里
 const defaultTheme = structuredClone(DefaultTheme);
