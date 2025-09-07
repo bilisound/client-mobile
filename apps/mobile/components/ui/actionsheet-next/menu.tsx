@@ -62,4 +62,3 @@ export function ActionMenuNext({ menuItems }: { menuItems: ActionMenuItem[] }) {
 
   return <View className="w-full">{elements}</View>;
 }
-

@@ -98,9 +98,12 @@ export function PlayerControl() {
                 }
                 case "addPlaylist": {
                   if (!isInsidePage) close();
-                  setTimeout(() => {
-                    router.navigate(`/video/${currentTrack.extendedData?.id}`);
-                  }, isInsidePage ? 0 : 250);
+                  setTimeout(
+                    () => {
+                      router.navigate(`/video/${currentTrack.extendedData?.id}`);
+                    },
+                    isInsidePage ? 0 : 250,
+                  );
                   break;
                 }
                 case "speed":

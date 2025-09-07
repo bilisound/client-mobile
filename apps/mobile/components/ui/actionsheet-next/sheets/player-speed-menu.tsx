@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import ActionSheet from "react-native-actions-sheet";
-import { registerSheet } from "react-native-actions-sheet";
+import ActionSheet, { registerSheet } from "react-native-actions-sheet";
 import { View } from "react-native";
 import {
   ActionsheetContent,
@@ -28,7 +27,14 @@ function PlayerSpeedMenuSheet() {
   return (
     <ActionSheet
       sheetId={SHEET_ID}
-      containerStyle={{ backgroundColor: "transparent", borderColor: "transparent", borderWidth: 0, shadowColor: "transparent", shadowOpacity: 0, elevation: 0 }}
+      containerStyle={{
+        backgroundColor: "transparent",
+        borderColor: "transparent",
+        borderWidth: 0,
+        shadowColor: "transparent",
+        shadowOpacity: 0,
+        elevation: 0,
+      }}
       indicatorStyle={{ backgroundColor: "transparent" }}
       elevation={0}
       CustomHeaderComponent={<View style={{ height: 0 }} />}
@@ -95,4 +101,3 @@ function PlayerSpeedMenuSheet() {
 registerSheet(SHEET_ID, PlayerSpeedMenuSheet);
 
 export {};
-

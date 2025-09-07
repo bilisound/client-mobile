@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import ActionSheet from "react-native-actions-sheet";
-import { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
+import ActionSheet, { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
 import { View, Platform } from "react-native";
 import {
   ActionsheetContent,
@@ -52,11 +51,7 @@ function VideoPageMenuActionsSheet() {
         SheetManager.hide(SHEET_ID);
         if (data.pages.length === 1) {
           globalThis.window.open(
-            getBilisoundResourceUrlOnline(
-              data.bvid,
-              1,
-              useSettingsStore.getState().useLegacyID ? "av" : "bv",
-            ).url,
+            getBilisoundResourceUrlOnline(data.bvid, 1, useSettingsStore.getState().useLegacyID ? "av" : "bv").url,
           );
           return;
         }

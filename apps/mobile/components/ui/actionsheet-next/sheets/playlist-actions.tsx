@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import ActionSheet from "react-native-actions-sheet";
-import { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
+import ActionSheet, { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
 import { View } from "react-native";
 import {
   ActionsheetContent,
