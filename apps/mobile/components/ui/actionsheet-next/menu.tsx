@@ -1,11 +1,14 @@
 import React from "react";
 import { Platform, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Pressable } from "react-native-gesture-handler";
 import { Monicon } from "@monicon/native";
 import { useRawThemeValues } from "~/components/ui/gluestack-ui-provider/theme";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import { breakpoints } from "~/constants/styles";
 import { Text } from "~/components/ui/text";
+import { cssInterop } from "nativewind";
+
+cssInterop(Pressable, { className: "style" });
 
 export interface ActionMenuItem {
   show?: boolean;
@@ -23,19 +26,25 @@ export function ActionMenuNext({ menuItems }: { menuItems: ActionMenuItem[] }) {
   const elements = menuItems
     .filter(e => e.show)
     .map((item, index) => (
-      <TouchableOpacity
-        key={index}
-        onPress={item.action}
-        disabled={item.disabled}
-        activeOpacity={0.6}
-        style={{ width: "100%" }}
-        className="flex-row items-center p-3 rounded-lg opacity-100 disabled:opacity-40 gap-2"
-      >
-        <View className="size-6 items-center justify-center">
-          <Monicon name={item.icon} size={item.iconSize ?? 18} color={colorValue("--color-typography-700")} />
-        </View>
-        <Text>{item.text}</Text>
-      </TouchableOpacity>
+      <View key={index} className="overflow-hidden rounded-lg">
+        <Pressable
+          onPress={item.action}
+          disabled={item.disabled}
+          style={{ width: "100%" }}
+          android_ripple={{ color: "red" }}
+          className={
+            "w-full flex-row items-center p-3 disabled:opacity-40 disabled:web:pointer-events-auto disabled:web:cursor-not-allowed hover:bg-background-50 web:focus-visible:bg-background-100 web:data-focus-visible:outline-indicator-primary gap-2 " +
+            (Platform.OS === "android"
+              ? "{}-[android_ripple.color]/color:color-background-100"
+              : "active:bg-background-100 focus:bg-background-100")
+          }
+        >
+          <View className="size-6 items-center justify-center">
+            <Monicon name={item.icon} size={item.iconSize ?? 18} color={colorValue("--color-typography-700")} />
+          </View>
+          <Text className="text-typography-700 font-normal font-body">{item.text}</Text>
+        </Pressable>
+      </View>
     ));
 
   if (Platform.OS === "web") {
