@@ -358,37 +358,28 @@ export default function Page() {
                   <SongItem
                     onRequestPlay={() => addTrackFromDetail(data!.bvid, e.item.page)}
                     onLongPress={() => {
-                      SheetManager.show("video-page-item-actions", {
-                        payload: {
-                          displayTrack: e.item,
-                          data: data!,
-                          onAction: action => {
-                            switch (action) {
-                              case "addPlaylist":
-                                openAddPlaylistPage({
-                                  playlistDetail: [
-                                    {
-                                      author: data?.owner.name ?? "",
-                                      bvid: data?.bvid ?? "",
-                                      duration: e.item.duration,
-                                      episode: e.item.page,
-                                      title: e.item.part,
-                                      imgUrl: data?.pic ?? "",
-                                      id: 0,
-                                      playlistId: 0,
-                                      extendedData: null,
-                                    },
-                                  ],
-                                  name: data?.title ?? "",
-                                  description: data?.desc ?? "",
-                                });
-                                break;
-                              case "close":
-                              default:
-                                break;
-                            }
-                          },
-                        },
+                      SheetManager.show<string>("video-page-item-actions", {
+                        payload: { displayTrack: e.item, data: data! },
+                      }).then(action => {
+                        if (action === "addPlaylist") {
+                          openAddPlaylistPage({
+                            playlistDetail: [
+                              {
+                                author: data?.owner.name ?? "",
+                                bvid: data?.bvid ?? "",
+                                duration: e.item.duration,
+                                episode: e.item.page,
+                                title: e.item.part,
+                                imgUrl: data?.pic ?? "",
+                                id: 0,
+                                playlistId: 0,
+                                extendedData: null,
+                              },
+                            ],
+                            name: data?.title ?? "",
+                            description: data?.desc ?? "",
+                          });
+                        }
                       });
                     }}
                     data={{

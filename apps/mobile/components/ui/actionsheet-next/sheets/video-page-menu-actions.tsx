@@ -9,7 +9,7 @@ import {
   ActionsheetDragIndicatorWrapper,
 } from "~/components/ui/actionsheet-next";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
-import { ActionMenu, type ActionMenuItem } from "~/components/action-menu";
+import { ActionMenuNext, type ActionMenuItem } from "~/components/ui/actionsheet-next/menu";
 import { getImageProxyUrl } from "~/business/constant-helper";
 import type { GetMetadataResponse } from "@bilisound/sdk";
 import { pause } from "@bilisound/player";
@@ -40,8 +40,7 @@ function VideoPageMenuActionsSheet() {
       iconSize: 16,
       show: true,
       action() {
-        SheetManager.hide(SHEET_ID);
-        payload?.onAction("addPlaylist");
+        SheetManager.hide(SHEET_ID, { payload: "addPlaylist" });
       },
     },
     {
@@ -125,7 +124,7 @@ function VideoPageMenuActionsSheet() {
           line2={data.owner.name}
           image={getImageProxyUrl(data.pic, "https://www.bilibili.com/video/" + data.bvid)}
         />
-        <ActionMenu menuItems={menuItems} />
+        <ActionMenuNext menuItems={menuItems} />
       </ActionsheetContent>
     </ActionSheet>
   );
@@ -134,4 +133,3 @@ function VideoPageMenuActionsSheet() {
 registerSheet(SHEET_ID, VideoPageMenuActionsSheet);
 
 export {};
-

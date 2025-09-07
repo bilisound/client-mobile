@@ -9,7 +9,7 @@ import {
   ActionsheetDragIndicatorWrapper,
 } from "~/components/ui/actionsheet-next";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
-import { ActionMenu, type ActionMenuItem } from "~/components/action-menu";
+import { ActionMenuNext, type ActionMenuItem } from "~/components/ui/actionsheet-next/menu";
 import { getImageProxyUrl } from "~/business/constant-helper";
 import type { GetMetadataResponse } from "@bilisound/sdk";
 import { formatSecond } from "~/utils/datetime";
@@ -59,8 +59,7 @@ function VideoPageItemActionsSheet() {
       iconSize: 16,
       show: true,
       action() {
-        SheetManager.hide(SHEET_ID);
-        payload?.onAction("addPlaylist");
+        SheetManager.hide(SHEET_ID, { payload: "addPlaylist" });
       },
     },
     {
@@ -69,10 +68,7 @@ function VideoPageItemActionsSheet() {
       icon: "fa6-solid:xmark",
       iconSize: 20,
       text: "取消",
-      action: () => {
-        SheetManager.hide(SHEET_ID);
-        payload?.onAction("close");
-      },
+      action: () => SheetManager.hide(SHEET_ID, { payload: "close" }),
     },
   ];
 
@@ -104,7 +100,7 @@ function VideoPageItemActionsSheet() {
           line2={formatSecond(displayTrack.duration)}
           image={getImageProxyUrl(data.pic, "https://www.bilibili.com/video/" + data.bvid)}
         />
-        <ActionMenu menuItems={menuItems} />
+        <ActionMenuNext menuItems={menuItems} />
       </ActionsheetContent>
     </ActionSheet>
   );
@@ -113,4 +109,3 @@ function VideoPageItemActionsSheet() {
 registerSheet(SHEET_ID, VideoPageItemActionsSheet);
 
 export {};
-

@@ -522,26 +522,23 @@ export default function Page() {
           <LayoutButton
             iconName={"fa6-solid:ellipsis-vertical"}
             onPress={() => {
-              SheetManager.show("playlist-detail-actions", {
-                payload: {
-                  current: meta,
-                  onAction: action => {
-                    switch (action) {
-                      case "editMeta":
-                        router.push(`/(main)/(playlist)/meta/${id}`);
-                        break;
-                      case "editCover":
-                        router.push(`/utils/cover-picker?listId=${id}`);
-                        break;
-                      case "editMass":
-                        setEditing(true);
-                        break;
-                      case "close":
-                      default:
-                        break;
-                    }
-                  },
-                },
+              SheetManager.show<string>("playlist-detail-actions", {
+                payload: { current: meta },
+              }).then(action => {
+                switch (action) {
+                  case "editMeta":
+                    router.push(`/(main)/(playlist)/meta/${id}`);
+                    break;
+                  case "editCover":
+                    router.push(`/utils/cover-picker?listId=${id}`);
+                    break;
+                  case "editMass":
+                    setEditing(true);
+                    break;
+                  case "close":
+                  default:
+                    break;
+                }
               });
             }}
           />

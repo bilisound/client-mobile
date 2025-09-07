@@ -136,30 +136,25 @@ export default function Page() {
   const handleLongPress = (id: number) => {
     const playlist = data?.find(e => e.id === id);
     if (!playlist) return;
-    SheetManager.show("playlist-actions", {
-      payload: {
-        displayTrack: playlist,
-        onAction: action => {
-          switch (action) {
-            case "delete":
-              handleDelete(playlist);
-              break;
-            case "close":
-              break;
-            case "edit":
-              router.push(`./meta/${playlist.id}`);
-              break;
-            case "editCover":
-              router.push(`/utils/cover-picker?listId=${playlist.id}`);
-              break;
-            case "export":
-              exportPlaylistToFile(playlist.id);
-              break;
-            default:
-              break;
-          }
-        },
-      },
+    SheetManager.show<string>("playlist-actions", { payload: { displayTrack: playlist } }).then(action => {
+      switch (action) {
+        case "delete":
+          handleDelete(playlist);
+          break;
+        case "close":
+          break;
+        case "edit":
+          router.push(`./meta/${playlist.id}`);
+          break;
+        case "editCover":
+          router.push(`/utils/cover-picker?listId=${playlist.id}`);
+          break;
+        case "export":
+          exportPlaylistToFile(playlist.id);
+          break;
+        default:
+          break;
+      }
     });
   };
 

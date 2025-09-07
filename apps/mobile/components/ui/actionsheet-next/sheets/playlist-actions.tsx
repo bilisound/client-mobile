@@ -9,13 +9,12 @@ import {
   ActionsheetDragIndicatorWrapper,
 } from "~/components/ui/actionsheet-next";
 import { ActionSheetCurrent } from "~/components/action-sheet-current";
-import { ActionMenu, type ActionMenuItem } from "~/components/action-menu";
+import { ActionMenuNext, type ActionMenuItem } from "~/components/ui/actionsheet-next/menu";
 import { getImageProxyUrl } from "~/business/constant-helper";
 import type { PlaylistMeta } from "~/storage/sqlite/schema";
 
 type Payload = {
   displayTrack?: PlaylistMeta;
-  onAction: (action: "delete" | "close" | "edit" | "editCover" | "export") => void;
 };
 
 const SHEET_ID = "playlist-actions";
@@ -33,10 +32,7 @@ function PlaylistActionsSheet() {
       icon: "fa6-solid:pen",
       iconSize: 18,
       text: "修改信息",
-      action: () => {
-        SheetManager.hide(SHEET_ID);
-        payload?.onAction("edit");
-      },
+      action: () => SheetManager.hide(SHEET_ID, { payload: "edit" }),
     },
     {
       show: !!displayTrack && showEditCover && (displayTrack?.amount ?? 0) > 0,
@@ -44,10 +40,7 @@ function PlaylistActionsSheet() {
       icon: "fa6-solid:images",
       iconSize: 18,
       text: "修改封面",
-      action: () => {
-        SheetManager.hide(SHEET_ID);
-        payload?.onAction("editCover");
-      },
+      action: () => SheetManager.hide(SHEET_ID, { payload: "editCover" }),
     },
     {
       show: true,
@@ -55,10 +48,7 @@ function PlaylistActionsSheet() {
       icon: "fa6-solid:trash",
       iconSize: 18,
       text: "删除",
-      action: () => {
-        SheetManager.hide(SHEET_ID);
-        payload?.onAction("delete");
-      },
+      action: () => SheetManager.hide(SHEET_ID, { payload: "delete" }),
     },
     {
       show: true,
@@ -66,10 +56,7 @@ function PlaylistActionsSheet() {
       icon: "fa6-solid:file-export",
       iconSize: 18,
       text: "导出",
-      action: () => {
-        SheetManager.hide(SHEET_ID);
-        payload?.onAction("export");
-      },
+      action: () => SheetManager.hide(SHEET_ID, { payload: "export" }),
     },
     {
       show: true,
@@ -77,10 +64,7 @@ function PlaylistActionsSheet() {
       icon: "fa6-solid:xmark",
       iconSize: 20,
       text: "取消",
-      action: () => {
-        SheetManager.hide(SHEET_ID);
-        payload?.onAction("close");
-      },
+      action: () => SheetManager.hide(SHEET_ID, { payload: "close" }),
     },
   ];
 
@@ -112,7 +96,7 @@ function PlaylistActionsSheet() {
             image={getImageProxyUrl(displayTrack.imgUrl!)}
           />
         )}
-        <ActionMenu menuItems={menuItems} />
+        <ActionMenuNext menuItems={menuItems} />
       </ActionsheetContent>
     </ActionSheet>
   );
