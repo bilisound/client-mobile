@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import { InsidePageContext } from "~/components/main-bottom-sheet/utils";
 import { useCurrentTrack } from "@bilisound/player";
-import { useActionSheetStore } from "~/components/main-bottom-sheet/stores";
+// import { useActionSheetStore } from "~/components/main-bottom-sheet/stores";
 import { useBottomSheetStore } from "~/store/bottom-sheet";
 import { router } from "expo-router";
 import { View } from "react-native";
@@ -16,16 +16,17 @@ import { Pressable } from "~/components/ui/pressable";
 import { PlayerProgressBar } from "./player-progress-bar";
 import { PlayerProgressTimer } from "./player-progress-timer";
 import { PlayerControlButtons } from "./player-control-buttons";
-import { PlayerControlMenu } from "./player-control-menu";
+// import { PlayerControlMenu } from "./player-control-menu";
+import { SheetManager } from "react-native-actions-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useWindowSize } from "~/hooks/useWindowSize";
 
 export function PlayerControl() {
   const isInsidePage = useContext(InsidePageContext);
   const currentTrack = useCurrentTrack();
-  const { setShowActionSheet } = useActionSheetStore(state => ({
-    setShowActionSheet: state.setShowActionSheet,
-  }));
+  // const { setShowActionSheet } = useActionSheetStore(state => ({
+  //   setShowActionSheet: state.setShowActionSheet,
+  // }));
   const { close } = useBottomSheetStore(state => ({
     close: state.close,
   }));
@@ -79,7 +80,36 @@ export function PlayerControl() {
         <LayoutButton
           iconName={"fa6-solid:ellipsis-vertical"}
           onPress={() => {
-            setShowActionSheet(true);
+            SheetManager.show<string>("player-control-menu").then(action => {
+              if (!currentTrack?.extendedData) return;
+              switch (action) {
+                case "view": {
+                  if (isInsidePage) {
+                    router.replace(`/video/${currentTrack.extendedData.id}`);
+                  } else {
+                    close();
+                    setClosing(true);
+                    setTimeout(() => {
+                      router.navigate(`/video/${currentTrack.extendedData?.id}`);
+                      setClosing(false);
+                    }, 250);
+                  }
+                  break;
+                }
+                case "addPlaylist": {
+                  if (!isInsidePage) close();
+                  setTimeout(() => {
+                    router.navigate(`/video/${currentTrack.extendedData?.id}`);
+                  }, isInsidePage ? 0 : 250);
+                  break;
+                }
+                case "speed":
+                  SheetManager.show("player-speed-menu");
+                  break;
+                default:
+                  break;
+              }
+            });
           }}
         />
       </View>
@@ -153,8 +183,7 @@ export function PlayerControl() {
         <PlayerControlButtons />
       </View>
 
-      {/* 控制菜单 */}
-      <PlayerControlMenu />
+      {/* 控制菜单改用 SheetManager（player-control-menu/player-speed-menu） */}
     </View>
   );
 }

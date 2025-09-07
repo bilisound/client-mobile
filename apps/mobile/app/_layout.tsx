@@ -33,6 +33,8 @@ import "~/components/ui/actionsheet-next/sheets/playlist-actions";
 import "~/components/ui/actionsheet-next/sheets/playlist-detail-actions";
 import "~/components/ui/actionsheet-next/sheets/video-page-item-actions";
 import "~/components/ui/actionsheet-next/sheets/video-page-menu-actions";
+import "~/components/ui/actionsheet-next/sheets/player-control-menu";
+import "~/components/ui/actionsheet-next/sheets/player-speed-menu";
 
 // todo 把它们放到主题管理模块里
 const defaultTheme = structuredClone(DefaultTheme);
