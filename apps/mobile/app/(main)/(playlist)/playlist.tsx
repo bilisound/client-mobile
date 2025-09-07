@@ -5,18 +5,9 @@ import { router } from "expo-router";
 import Fuse from "fuse.js";
 import React, { createContext, useContext, useMemo, useState } from "react";
 import Toast from "react-native-toast-message";
-import { getImageProxyUrl } from "~/business/constant-helper";
-import { ActionMenu, ActionMenuItem } from "~/components/action-menu"; // Fixing the import path for ActionMenu and ActionMenuItem components
-import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import { Layout, LayoutButton } from "~/components/layout";
 import { PlaylistItem } from "~/components/playlist-item";
-import {
-  Actionsheet,
-  ActionsheetBackdrop,
-  ActionsheetContent,
-  ActionsheetDragIndicator,
-  ActionsheetDragIndicatorWrapper,
-} from "~/components/ui/actionsheet";
+// Old in-page Actionsheet usage removed in favor of SheetManager
 import {
   AlertDialog,
   AlertDialogBackdrop,
@@ -38,6 +29,7 @@ import { useWindowSize } from "~/hooks/useWindowSize";
 import { invalidateOnQueueStatus, PLAYLIST_ON_QUEUE, playlistStorage } from "~/storage/playlist";
 import { deletePlaylistMeta, getPlaylistMetas } from "~/storage/sqlite/playlist";
 import { PlaylistMeta } from "~/storage/sqlite/schema";
+import { SheetManager } from "react-native-actions-sheet";
 import useSettingsStore from "~/store/settings";
 import { exportPlaylistToFile, importPlaylistFromFile } from "~/utils/exchange/playlist";
 import log from "~/utils/logger";
@@ -72,81 +64,7 @@ function PlaylistActionItem(item: PlaylistMeta & { grid: boolean }) {
   );
 }
 
-interface LongPressActionsProps {
-  showActionSheet: boolean;
-  displayTrack?: PlaylistMeta;
-  onClose: () => void;
-  onAction: (action: "delete" | "close" | "edit" | "editCover" | "export") => void;
-}
-
-/**
- * 长按操作
- */
-function LongPressActions({ showActionSheet, displayTrack, onAction, onClose }: LongPressActionsProps) {
-  const showEditCover = !displayTrack?.source;
-
-  const menuItems: ActionMenuItem[] = [
-    {
-      show: true,
-      disabled: false,
-      icon: "fa6-solid:pen",
-      iconSize: 18,
-      text: "修改信息",
-      action: () => onAction("edit"),
-    },
-    {
-      show: showEditCover && (displayTrack?.amount ?? 0) > 0,
-      disabled: false,
-      icon: "fa6-solid:images",
-      iconSize: 18,
-      text: "修改封面",
-      action: () => onAction("editCover"),
-    },
-    {
-      show: true,
-      disabled: false,
-      icon: "fa6-solid:trash",
-      iconSize: 18,
-      text: "删除",
-      action: () => onAction("delete"),
-    },
-    {
-      show: true,
-      disabled: false,
-      icon: "fa6-solid:file-export",
-      iconSize: 18,
-      text: "导出",
-      action: () => onAction("export"),
-    },
-    {
-      show: true,
-      disabled: false,
-      icon: "fa6-solid:xmark",
-      iconSize: 20,
-      text: "取消",
-      action: () => onAction("close"),
-    },
-  ];
-
-  return (
-    <Actionsheet isOpen={showActionSheet} onClose={onClose}>
-      <ActionsheetBackdrop />
-      <ActionsheetContent className="z-50">
-        <ActionsheetDragIndicatorWrapper>
-          <ActionsheetDragIndicator />
-        </ActionsheetDragIndicatorWrapper>
-        {!!displayTrack && (
-          <ActionSheetCurrent
-            line1={displayTrack.title}
-            line2={`${displayTrack.amount} 首歌曲`}
-            image={getImageProxyUrl(displayTrack.imgUrl!)}
-          />
-        )}
-        <ActionMenu menuItems={menuItems} />
-      </ActionsheetContent>
-    </Actionsheet>
-  );
-}
+// In-page LongPressActions removed; replaced by global SheetManager sheet
 
 export default function Page() {
   const edgeInsets = useTabSafeAreaInsets();
@@ -212,41 +130,62 @@ export default function Page() {
   const gridSidePadding = windowWidth >= 448 ? 12 : 8;
   const [width, setWidth] = useState(0);
 
-  // 模态框管理
-  const [showActionSheet, setShowActionSheet] = useState(false);
-  const [displayTrack, setDisplayTrack] = useState<PlaylistMeta | undefined>();
+  // 模态框管理（ActionSheet 由 SheetManager 负责）
   const { dialogInfo, setDialogInfo, modalVisible, setModalVisible, handleClose, dialogCallback } = useConfirm();
 
-  const handleActionSheetClose = () => setShowActionSheet(prevState => !prevState);
-
   const handleLongPress = (id: number) => {
-    setDisplayTrack(data?.find(e => e.id === id));
-    setShowActionSheet(true);
+    const playlist = data?.find(e => e.id === id);
+    if (!playlist) return;
+    SheetManager.show("playlist-actions", {
+      payload: {
+        displayTrack: playlist,
+        onAction: action => {
+          switch (action) {
+            case "delete":
+              handleDelete(playlist);
+              break;
+            case "close":
+              break;
+            case "edit":
+              router.push(`./meta/${playlist.id}`);
+              break;
+            case "editCover":
+              router.push(`/utils/cover-picker?listId=${playlist.id}`);
+              break;
+            case "export":
+              exportPlaylistToFile(playlist.id);
+              break;
+            default:
+              break;
+          }
+        },
+      },
+    });
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (item: PlaylistMeta) => {
     dialogCallback.current = async () => {
       log.info("用户删除歌单");
-      await deletePlaylistMeta(displayTrack!.id);
+      await deletePlaylistMeta(item.id);
       await queryClient.refetchQueries({ queryKey: ["playlist_meta"] });
       await queryClient.refetchQueries({ queryKey: ["playlist_meta_apply"] });
 
       // 清空当前播放队列隶属歌单的状态机
       const got: { value?: PlaylistMeta } = JSON.parse(playlistStorage.getString(PLAYLIST_ON_QUEUE) || "{}");
-      if (got?.value?.id === displayTrack?.id) {
+      if (got?.value?.id === item?.id) {
         invalidateOnQueueStatus();
       }
 
       Toast.show({
         type: "success",
         text1: "歌单删除成功",
-        text2: displayTrack?.title,
+        text2: item?.title,
       });
     };
     setDialogInfo(e => ({
       ...e,
       title: "删除歌单确认",
-      description: `确定要删除歌单「${displayTrack?.title}」吗？`,
+      description: `确定要删除歌单「${item?.title}」吗？`,
     }));
     setModalVisible(true);
   };
@@ -382,35 +321,7 @@ export default function Page() {
           )}
         </View>
 
-        {/* 操作菜单 */}
-        <LongPressActions
-          showActionSheet={showActionSheet}
-          onClose={handleActionSheetClose}
-          displayTrack={displayTrack}
-          onAction={action => {
-            setShowActionSheet(false);
-            switch (action) {
-              case "delete":
-                handleDelete();
-                break;
-              case "close":
-                break;
-              case "edit":
-                router.push(`./meta/${displayTrack?.id}`);
-                break;
-              case "editCover":
-                router.push(`/utils/cover-picker?listId=${displayTrack?.id}`);
-                break;
-              case "export":
-                if (displayTrack?.id) {
-                  exportPlaylistToFile(displayTrack.id);
-                }
-                break;
-              default:
-                break;
-            }
-          }}
-        />
+        {/* 操作菜单已改用 SheetManager（见 components/ui/actionsheet-next/sheets/playlist-actions） */}
 
         {/* 对话框 */}
         <AlertDialog isOpen={modalVisible} onClose={() => handleClose(false)} size="md">

@@ -27,6 +27,9 @@ import CheckUpdateDialog from "~/components/check-update-dialog";
 import { checkLatestVersion, downloadApk } from "~/business/check-release";
 import { VERSION } from "~/constants/releasing";
 import { MainBottomSheet } from "~/components/main-bottom-sheet";
+import { SheetProvider } from "react-native-actions-sheet";
+// Register global ActionSheets (SheetManager)
+import "~/components/ui/actionsheet-next/sheets/playlist-actions";
 
 // todo 把它们放到主题管理模块里
 const defaultTheme = structuredClone(DefaultTheme);
@@ -132,25 +135,27 @@ export default function RootLayout() {
         <ThemeProvider value={colorScheme === "dark" ? darkTheme : defaultTheme}>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <BottomSheetModalProvider>
-              <SystemBars style={colorScheme === "dark" ? "light" : "dark"} />
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen
-                  name="description"
-                  options={{
-                    presentation: "formSheet",
-                    sheetAllowedDetents: "fitToContents",
-                    gestureEnabled: false,
+              <SheetProvider>
+                <SystemBars style={colorScheme === "dark" ? "light" : "dark"} />
+                <Stack
+                  screenOptions={{
+                    headerShown: false,
                   }}
-                />
-              </Stack>
-              <MainBottomSheet />
-              <ErrorToastHost />
-              <CheckUpdate />
-              <Toast config={toastConfig} topOffset={edgeInsets.top} />
+                >
+                  <Stack.Screen
+                    name="description"
+                    options={{
+                      presentation: "formSheet",
+                      sheetAllowedDetents: "fitToContents",
+                      gestureEnabled: false,
+                    }}
+                  />
+                </Stack>
+                <MainBottomSheet />
+                <ErrorToastHost />
+                <CheckUpdate />
+                <Toast config={toastConfig} topOffset={edgeInsets.top} />
+              </SheetProvider>
             </BottomSheetModalProvider>
           </GestureHandlerRootView>
         </ThemeProvider>
