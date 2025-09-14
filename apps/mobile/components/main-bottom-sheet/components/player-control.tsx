@@ -82,9 +82,9 @@ export function PlayerControl() {
           iconName={"fa6-solid:ellipsis-vertical"}
           onPress={() => {
             SheetManager.show("player-control-menu").then(action => {
-              if (!currentTrack?.extendedData) return;
               switch (action) {
                 case "view": {
+                  if (!currentTrack?.extendedData) break;
                   if (isInsidePage) {
                     router.replace(`/video/${currentTrack.extendedData.id}`);
                   } else {
@@ -119,9 +119,13 @@ export function PlayerControl() {
                   });
                   break;
                 }
-                case "speed":
-                  SheetManager.show("player-speed-menu");
+                case "speed": {
+                  // Delay slightly to avoid gesture/backdrop interference when chaining sheets
+                  setTimeout(() => {
+                    SheetManager.show("player-speed-menu");
+                  }, 120);
                   break;
+                }
                 default:
                   break;
               }
