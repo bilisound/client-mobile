@@ -2,6 +2,8 @@
 import React from "react";
 import { View } from "react-native";
 import ActionSheet, { registerSheet, SheetManager, useSheetPayload } from "react-native-actions-sheet";
+import { getImageProxyUrl } from "~/business/constant-helper";
+import { ActionSheetCurrent } from "~/components/action-sheet-current";
 import {
   ActionsheetContent,
   ActionsheetDragIndicator,
@@ -72,6 +74,13 @@ function PlaylistDetailActionsSheet() {
         <ActionsheetDragIndicatorWrapper>
           <ActionsheetDragIndicator />
         </ActionsheetDragIndicatorWrapper>
+        {!!current && (
+          <ActionSheetCurrent
+            line1={current.title}
+            line2={`${current.amount} 首歌曲`}
+            image={getImageProxyUrl(current.imgUrl!)}
+          />
+        )}
         <ActionMenuNext menuItems={menuItems} />
       </ActionsheetContent>
     </ActionSheet>
