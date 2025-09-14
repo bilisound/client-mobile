@@ -42,7 +42,7 @@ export function ActionMenuNext({ menuItems }: { menuItems: ActionMenuItem[] }) {
           <View className="size-6 items-center justify-center">
             <Monicon name={item.icon} size={item.iconSize ?? 18} color={colorValue("--color-typography-700")} />
           </View>
-          <Text className="text-typography-700 font-normal font-body">{item.text}</Text>
+          <Text className="text-typography-700 font-normal text-sm">{item.text}</Text>
         </Pressable>
       </View>
     ));
